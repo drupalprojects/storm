@@ -1,0 +1,26 @@
+table.formgroup {
+  width: auto;
+  margin: 0;
+}
+
+#main tr td table.formgroup tr td {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+table.stormtimetracking_block tr td {
+  width: auto;
+}
+
+tbody {
+  border:none !important;
+}
+
+th.storm_list_operations {
+  text-align: right;
+  white-space: nowrap;
+}
+td.storm_list_operations {
+  text-align: right;
+  white-space: nowrap;
+}

@@ -1,0 +1,232 @@
+<?php
+// $Id$
+
+include_once(drupal_get_path('module', 'storm') .'/storm.inc');
+
+function storm_help($path, $arg) {
+  $output = '';
+
+  switch ($path) {
+    case "admin/help#storm":
+      $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
+      break;
+  }
+
+  return $output;
+}
+
+function storm_perm() {
+  return array('STORM: access');
+}
+
+function storm_init() {
+  drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
+}
+
+function storm_menu() {
+  $items = array();
+
+  $items['storm'] = array(
+            'title' => t('STORM'),
+            'description' => t('SpeedTech Organizer and Resource Manager'),
+            'page callback' => 'storm_storm',
+            'access arguments' => array('STORM: access'),
+            'parent' => '',
+            'type' => MENU_NORMAL_ITEM);
+
+  $items['admin/storm'] = array(
+            'title' => t('STORM'),
+            'description' => t('SpeedTech Organizer and Resource Manager'),
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('storm_admin_settings'),
+            'access arguments' => array('access administration pages'),
+            'type' => MENU_NORMAL_ITEM);
+  return $items;
+}
+
+function storm_theme() {
+  return array(
+    'storm_form_group' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('header', 'form'),
+    ),
+    'datetime' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('element'),
+    ),
+    'extselect' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('element'),
+    ),
+  );
+}
+
+function storm_storm() {
+  $o = '<dl>';
+  foreach (module_invoke_all('storm_indexpage') as $key => $content) {
+    $o .= '<dt>'. $content['title'] .'</dt>';
+  }
+  $o .= '</dl>';
+  return $o;
+}
+
+function storm_admin_settings() {
+  $form = array();
+  return system_settings_form($form);
+}
+
+function storm_elements() {
+  $type['datetime'] = array(
+    '#input' => TRUE,
+    '#process' => array('storm_datetime_expand'),
+    '#element_validate' => array('storm_datetime_validate' => array()),
+    '#default_value' => array(
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
+      'hour' => format_date(time(), 'custom', 'H'),
+      'minute' => format_date(time(), 'custom', 'i'),
+    ),
+  );
+  return $type;
+}
+
+function storm_datetime_expand($element) {
+  if (empty($element['#value'])) {
+    $element['#value'] = array(
+                          'day' => format_date(time(), 'custom', 'j'),
+                          'month' => format_date(time(), 'custom', 'n'),
+                          'year' => format_date(time(), 'custom', 'Y'),
+                          'hour' => format_date(time(), 'custom', 'H'),
+                          'minute' => format_date(time(), 'custom', 'i'),
+    );
+  }
+
+  $element['#tree'] = TRUE;
+
+  // Determine the order of day, month, year in the site's chosen date format.
+  $format = variable_get('date_format_short', 'm/d/Y - H:i');
+  $sort = array();
+  $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
+  $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
+  $sort['year'] = strpos($format, 'Y');
+  $sort['hour'] = strpos($format, 'H');
+  $sort['minute'] = strpos($format, 'i');
+  asort($sort);
+  $order = array_keys($sort);
+
+  // Output multi-selector for date.
+  foreach ($order as $type) {
+    switch ($type) {
+      case 'year':
+        $options = drupal_map_assoc(range(1970, 2037));
+        break;
+      case 'year':
+        $options = drupal_map_assoc(range(1970, 2037));
+        break;
+      case 'month':
+        $options = drupal_map_assoc(range(1, 12), 'map_month');
+        break;
+      case 'day':
+        $options = drupal_map_assoc(range(1, 31));
+        break;
+      case 'hour':
+        $options = drupal_map_assoc(range(0, 23));
+        break;
+      case 'minute':
+        $options = drupal_map_assoc(range(0, 59));
+        break;
+    }
+    $parents = $element['#parents'];
+    $parents[] = $type;
+    $element[$type] = array(
+      '#type' => 'select',
+      '#value' => $element['#value'][$type],
+      '#attributes' => $element['#attributes'],
+      '#options' => $options,
+    );
+  }
+  return $element;
+}
+
+function storm_datetime_validate($form) {
+  if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
+    form_error($form, t('The specified date is invalid.'));
+  }
+}
+
+function storm_dependent_select_process($form, $edit, $form_state, $complete_form) {
+  unset($form['#needs_validation']);
+  return $form;
+}
+
+function storm_icon_add_node($node, $params=array()) {
+  return storm_icon_add('node/add/'. $node->type, $node, $params);
+}
+
+function storm_icon_edit_node($node, $params=array()) {
+  return storm_icon_edit('node/'. $node->nid .'/edit', $node, $params);
+}
+
+function storm_icon_delete_node($node, $params=array()) {
+  return storm_icon_delete('node/'. $node->nid .'/delete', $node, $params);
+}
+
+function storm_icon_add($path, $item, $params=array()) {
+  global $user;
+  $type = $item->type;
+  $af = $type .'_access';
+  if (!$af('create', $item, $user)) return '';
+  return storm_icon_l('application_add', $path, t('Add'), '', $params);
+}
+
+function storm_icon_edit($path, $item, $params=array()) {
+  global $user;
+  $type = $item->type;
+  $af = $type .'_access';
+  if (!$af('update', $item, $user)) return '';
+  return storm_icon_l('application_edit', $path, t('Edit'), '', $params);
+}
+
+function storm_icon_delete($path, $item, $params=array()) {
+  global $user;
+  $type = $item->type;
+  $af = $type .'_access';
+  if (!$af('delete', $item, $user)) return '';
+  return storm_icon_l('application_delete', $path, t('Delete'), '', $params);
+}
+
+function storm_icon_l($icon, $path, $title, $permission='', $params=array()) {
+  if ($permission && !user_access($permission)) return '';
+  $icon = storm_icon($icon, $title);
+  $attributes = array('title' => $title);
+
+  $query = '';
+  
+  if (array_key_exists('q', $params)) {
+    $destination = $params['q'];
+    unset($params['q']);
+    if (array_key_exists('page', $params)) {
+      $destination .= '?page='. $params['page'];
+      unset($params['page']);
+    }
+    $query .= 'destination='. urlencode($destination);
+  }
+  
+  foreach ($params as $key => $value) {
+    if ($query) $query .= '&';
+    $query .= $key .'='. urlencode($value);
+  }
+
+  $o = l($icon, $path, array('attributes' => $attributes, 'query' => $query, 'html' => TRUE));
+  return $o;
+}
+
+function storm_icon($icon, $title) {
+  global $base_path;
+  $icon = str_replace(' ', '_', $icon);
+  $img_src = $base_path . drupal_get_path('module', 'storm') .'/icons/'. $icon .'.png';
+  $o = '<img src="'. $img_src .'" alt="'. $title .'" title="'. $title .'" />';
+  return $o;
+}

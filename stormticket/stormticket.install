@@ -1,0 +1,32 @@
+<?php
+// $Id$
+
+function stormticket_install() {
+  drupal_install_schema('stormticket');
+}
+
+function stormticket_uninstall() {
+  drupal_uninstall_schema('stormticket');
+}
+
+function stormticket_schema() {
+  $schema['stormticket'] = array(
+    'fields'        => array(
+      'vid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'organization_nid'    => array('type' => 'int'),
+      'organization_title'  => array('type' => 'varchar', 'length' => 128),
+      'project_nid'         => array('type' => 'int'),
+      'project_title'       => array('type' => 'varchar', 'length' => 128),
+      'task_nid'            => array('type' => 'int'),
+      'task_stepno'         => array('type' => 'varchar', 'length' => 128),
+      'task_title'          => array('type' => 'varchar', 'length' => 128),
+      'ticketcategory'      => array('type' => 'varchar', 'length' => 20),
+      'ticketstatus'        => array('type' => 'varchar', 'length' => 20),
+      'ticketpriority'      => array('type' => 'varchar', 'length' => 20),
+    ),
+    'primary key' => array('vid', 'nid'),
+  );
+
+  return $schema;
+}

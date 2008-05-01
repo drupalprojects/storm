@@ -1,0 +1,247 @@
+<?php
+function stormtimetracking_list() {
+  $i = new stdClass();
+  $i->type = 'stormtimetracking';
+
+  $o = drupal_get_form('stormtimetracking_list_filter');
+
+  $header = array(
+    array (
+      'data' => t('Organization'),
+      'field' => 'stt.organization_title',
+    ),
+    array (
+      'data' => t('Project'),
+      'field' => 'stt.project_title',
+    ),
+    array (
+      'data' => t('Task'),
+      'field' => 'stt.task_title',
+    ),
+    array (
+      'data' => t('Title'),
+      'field' => 'n.title',
+    ),
+    array (
+      'data' => t('Date'),
+      'field' => 'stt.trackingdate',
+      'sort' => 'desc',
+    ),
+    array (
+      'data' => t('Duration (hours)'),
+      'style'=>'text-align: right;'
+    ),
+    array(
+      'data' => storm_icon_add_node($i, $_GET),
+      'class' => 'storm_list_operations',
+    ),
+  );
+
+  $s  = "SELECT n.title, n.uid,  stt.* FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
+
+  $s_duration = "SELECT SUM(duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
+
+  if($_SESSION['stormtimetracking_list_filter']['organization_nid']) {
+    $where[] = 'stt.organization_nid=' . $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+  }
+  if($_SESSION['stormtimetracking_list_filter']['project_nid']) {
+    $where[] = 'stt.project_nid=' . $_SESSION['stormtimetracking_list_filter']['project_nid'];
+  }
+  if($_SESSION['stormtimetracking_list_filter']['task_nid']) {
+    $where[] = 'stt.task_nid=' . $_SESSION['stormtimetracking_list_filter']['task_nid'];
+  }
+  if($_SESSION['stormtimetracking_list_filter']['ticket_nid']) {
+    $where[] = 'stt.ticket_nid=' . $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+  }
+  if($_SESSION['stormtimetracking_list_filter']['datefrom']) {
+    $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
+    $where[] = 'stt.trackingdate>=' . _storm_date_to_gmtimestamp($datefrom);
+  }
+  if($_SESSION['stormtimetracking_list_filter']['dateto']) {
+    $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
+    $where[] = 'stt.trackingdate<=' . _storm_date_to_gmtimestamp($dateto);
+  }
+  $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
+
+  $tablesort = tablesort_sql($header);
+  $sql = stormtimetracking_access_sql($s, $where) . $tablesort;
+  $r = pager_query($sql, $itemsperpage, 0, NULL);
+  $duration = db_result(db_query(stormtimetracking_access_sql($s_duration, $where)));
+
+  $_SESSION['stormtimetracking_list_filter']['sql'] = $sql;
+
+  $timetrackings = array();
+  while($item = db_fetch_object($r)) {
+    $timetrackings[] = $item;
+  }
+
+  $o .= theme('stormtimetracking_list', $header, $timetrackings, $duration);
+  $o .= theme('pager', NULL, $itemsperpage, 0);
+  print theme('page', $o);
+}
+
+function stormtimetracking_list_filter() {
+  $organization_nid = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+  $project_nid = $_SESSION['stormtimetracking_list_filter']['project_nid'];
+  $task_nid = $_SESSION['stormtimetracking_list_filter']['task_nid'];
+  $ticket_nid = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+  $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = 10;
+    $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $itemsperpage;
+  }
+
+  $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
+  if(!$datefrom) {
+    $datefrom = array('day' => 1,
+                      'month' => format_date(time(), 'custom', 'n'),
+                      'year' => format_date(time(), 'custom', 'Y'),
+                      'hour' => 0,
+                      'minute' => 0,
+                      );
+    $_SESSION['stormtimetracking_list_filter']['datefrom'] = $datefrom;
+  }
+
+  $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
+  if(!$dateto) {
+    $year = format_date(time(), 'custom', 'Y');
+    $month = format_date(time(), 'custom', 'n');
+    $day = idate('d', mktime(0, 0, 0, ($month + 1), 0, $year));
+    $dateto = array('day' => $day,
+                     'month' => $month,
+                     'year' => $year,
+                     'hour' => 23,
+                     'minute' => 59,
+                   );
+    $_SESSION['stormtimetracking_list_filter']['dateto'] = $dateto;
+  }
+
+  $form = array();
+
+  $form['filter'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Filter'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#theme' => 'stormtimetracking_list_filter',
+  );
+
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -20,
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $r = db_query(stormorganization_access_sql($s));
+  $organizations = array();
+  while ($organization = db_fetch_object($r)) {
+    $organizations[$organization->nid] = $organization->title;
+  }
+  $organizations = array(0 => t('All')) + $organizations;
+  $form['filter']['group1']['organization_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Organization'),
+    '#default_value' => $organization_nid,
+    '#options' => $organizations,
+    '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid 
+  WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
+  $r = db_query(stormproject_access_sql($s), $organization_nid);
+  $projects = array();
+  while ($project = db_fetch_object($r)) {
+    $projects[$project->nid] = $project->title;
+  }
+  $projects = array(0 => t('All')) + $projects;
+  $form['filter']['group1']['project_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Project'),
+    '#default_value' => $project_nid,
+    '#options' => $projects,
+    '#process' => array('storm_dependent_select_process'),
+    '#attributes' => array('onchange' => "stormticket_project_task_tickets(this, 'edit-organization-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
+  );
+
+  $tree = _stormtask_get_tree($project_nid);
+  $tasks = _stormtask_plain_tree($tree);
+  $tasks = array(0 => t('All')) + $tasks;
+  $form['filter']['group1']['task_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Task'),
+    '#default_value' => $task_nid,
+    '#options' => $tasks,
+    '#process' => array('storm_dependent_select_process'),
+    '#attributes' => array('onchange'=>"stormticket_task_tickets(this, 'edit-organization-nid', 'edit-project-nid', 'edit-ticket-nid', true, 'All')"),
+  );
+
+  $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} sti INNER JOIN {node} n ON sti.nid=n.nid WHERE n.status=1 AND n.type='stormticket' AND sti.organization_nid=%d AND sti.project_nid=%d AND sti.task_nid=%d ORDER BY title "), $organization_nid, $project_nid, $task_nid);
+  $tickets = array();
+  while($ticket = db_fetch_object($r)) {
+    $tickets[$ticket->nid] = $ticket->title;
+  }
+  if($tickets) $tickets = array(0 => t('All')) + $tickets;
+  $form['filter']['group1']['ticket_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Ticket'),
+    '#default_value' => $ticket_nid,
+    '#process' => array('storm_dependent_select_process'),
+    '#options' => array(0 => t('all')) + $tickets,
+  );
+
+  $form['filter']['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -19,
+  );
+
+  $form['filter']['group2']['datefrom'] = array(
+    '#type' => 'date',
+    '#title' => t('Date from'),
+    '#default_value' => $datefrom,
+  );
+
+  $form['filter']['group2']['dateto'] = array(
+    '#type' => 'date',
+    '#title' => t('Date to'),
+    '#default_value' => $dateto,
+  );
+
+  $form['filter']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items per page'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+  );
+
+  $form['filter']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter')
+  );
+
+  return $form;
+}
+
+function stormtimetracking_list_filter_submit($form, &$form_state) {
+  $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
+  $_SESSION['stormtimetracking_list_filter']['project_nid'] = $form_state['values']['project_nid'];
+  $_SESSION['stormtimetracking_list_filter']['task_nid'] = $form_state['values']['task_nid'];
+  $_SESSION['stormtimetracking_list_filter']['ticket_nid'] = $form_state['values']['ticket_nid'];
+  $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_state['values']['datefrom'];
+  $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_state['values']['dateto'];
+  $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+function stormtimetracking_list_report($format) {
+  $timetrackings = array();
+
+  $sql = $_SESSION['stormtimetracking_list_filter']['sql'];
+  $r = db_query($sql);
+  while($t = db_fetch_object($r)) {
+    $timetracking = node_load($t->nid);
+    $timetrackings[] = $timetracking;
+  }
+  theme('stormtimetracking_list_report', $format, $timetrackings);
+}
+

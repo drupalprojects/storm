@@ -1,0 +1,8 @@
+; $Id$
+name = STORM Organization
+description = "SpeedTech Organizer and Resource Manager - Organization"
+dependencies[] = storm
+dependencies[] = stormattribute
+package = STORM
+core = 6.x
+version = 6.x-0.0

@@ -1,0 +1,11 @@
+; $Id$
+name = STORM Timetracking
+description = "SpeedTech Organizer and Resource Manager - Timetracking"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormproject
+dependencies[] = stormtask
+dependencies[] = stormticket
+package = STORM
+core = 6.x
+version = 6.x-0.0

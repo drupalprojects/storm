@@ -1,0 +1,116 @@
+<?php
+function stormattribute_install() {
+  drupal_install_schema('stormattribute');
+    
+  $attributes = array();
+  
+  $attributes['Ticket status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Ticket status search'] = array(
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Ticket category'] = array(
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $attributes['Ticket priority'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Ticket priority search'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Project status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project status search'] = array(
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project category'] = array(
+    'development' => 'development',
+    'support' => 'support',
+  );
+
+  $attributes['Task status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Task status search'] = array(
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Price mode'] = array(
+    'fixed' => 'Fixed',
+    'hourly' => 'Hourly',
+    'daily' => 'Daily',
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain=>$attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key=>$value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
+}
+
+function stormattribute_uninstall() {
+  drupal_uninstall_schema('stormattribute');
+}
+
+function stormattribute_schema() {
+  $schema['stormattribute'] = array(
+    'fields'    => array(
+      'aid'     => array('type' => 'serial', 'not null' => TRUE),
+      'domain'  => array('type' => 'varchar', 'length' => 100),
+      'akey'    => array('type' => 'varchar', 'length' => 100),
+      'avalue'  => array('type' => 'varchar', 'length' => 100),
+      'weight'  => array('type' => 'int', 'not null' => FALSE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'primary key' => array('aid'),
+  );
+
+  return $schema;
+}
+

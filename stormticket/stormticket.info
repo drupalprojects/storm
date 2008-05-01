@@ -1,0 +1,10 @@
+; $Id$
+name = STORM Ticket
+description = "SpeedTech Organizer and Resource Manager - Ticket"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormproject
+dependencies[] = stormtask
+package = STORM
+core = 6.x
+version = 6.x-0.0

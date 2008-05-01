@@ -1,0 +1,9 @@
+; $Id$
+name = STORM Task
+description = "SpeedTech Organizer and Resource Manager - Task"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormproject
+package = STORM
+core = 6.x
+version = 6.x-0.0

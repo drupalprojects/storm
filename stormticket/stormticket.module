@@ -1,0 +1,418 @@
+<?php
+// $Id$
+
+function stormticket_help($path, $arg) {
+  $o = '';
+
+  switch ($section) {
+    case "admin/help#stormticket":
+      $o = '<p>'. t("Provides ticket support for STORM") .'</p>';
+      break;
+  }
+
+  return $o;
+}
+
+function stormticket_perm() {
+  return array(
+                'STORM ticket: access',
+                'STORM ticket: add',
+                'STORM ticket: delete all',
+                'STORM ticket: delete own',
+                'STORM ticket: delete of user organization',
+                'STORM ticket: edit all',
+                'STORM ticket: edit own',
+                'STORM ticket: edit of user organization',
+                'STORM ticket: view all',
+                'STORM ticket: view own',
+                'STORM ticket: view of user organization',
+  );
+}
+
+function stormticket_init() {
+  drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
+
+  $settings = array(
+                    'storm' => array(
+                      'task_tickets_url' => url('storm/task_tickets_js/')
+                    ),
+              );
+  drupal_add_js($settings, 'setting');
+}
+
+function stormticket_access($op, $node, $account) {
+  if ($op == 'create') {
+    return user_access('STORM ticket: add');
+  }
+
+  if (is_numeric($node)) $node = node_load($node);
+
+  if ($op == 'delete') {
+    if (user_access('STORM ticket: delete all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: delete own') && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+      return TRUE;
+    }
+  }
+
+  if ($op == 'update') {
+    if (user_access('STORM ticket: edit all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: edit own') && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+      return TRUE;
+    }
+  }
+
+  if ($op == 'view') {
+    if (user_access('STORM ticket: view all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: view own') && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+    else if (user_access('STORM ticket: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+function stormticket_access_sql($sql, $where = array(), $join = array()) {
+  if (user_access('STORM ticket: view all')) {
+    return storm_rewrite_sql($sql, $where);
+  }
+
+  global $user;
+
+  $cond = '';
+  if (user_access('STORM ticket: view own')) {
+    $cond .= 'n.uid='. $user->uid;
+  }
+  if (user_access('STORM ticket: view of user organization')) {
+    if ($cond) $cond .= ' OR ';
+    $cond .= 'sti.organization_nid='. $user->stormorganization_nid;
+  }
+  if (!$cond) {
+    $cond = '0=1';
+  }
+  $where[] = $cond;
+
+  return storm_rewrite_sql($sql, $where);
+}
+
+function stormticket_menu() {
+  $items = array();
+
+  $items['storm/tickets'] = array(
+            'title' => t('Tickets'),
+            'description' => t('STORM Tickets'),
+            'page callback' => 'stormticket_list',
+            'access arguments' => array('STORM ticket: access'),
+            'type' => MENU_NORMAL_ITEM,
+            'file' => 'stormticket.admin.inc',
+  );
+
+  $items['storm/task_tickets_js/%/%'] = array(
+    'title' => t('Tickets'),
+    'page callback' => '_stormticket_task_tickets_js',
+    'page arguments' => array(2, 3, 4),
+    'access arguments' => array('STORM ticket: access'),
+    'file' => 'stormticket.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function stormticket_theme() {
+  return array(
+    'stormticket_list' => array(
+      'file'      => 'stormticket.theme.inc',
+      'arguments' => array('header', 'tickets'),
+    ),
+  );
+}
+
+function stormticket_node_info() {
+  return array(
+    'stormticket' => array(
+      'name' => t('Ticket'),
+      'module' => 'stormticket',
+      'description' => t("A ticket for STORM."),
+      'title_label' => t("Title"),
+      'body_label' => t("Description"),
+    )
+  );
+}
+
+function stormticket_storm_indexpage() {
+  $o = array();
+  $o['stormticket']['title'] =  l(t('Tickets'), 'storm/tickets');
+  return $o;
+}
+
+function stormticket_stormorganization_change($organization_nid, $organization_title) {
+  $s = "UPDATE {stormticket} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
+  db_query($s, $organization_title, $organization_nid, $organization_title);
+}
+
+function stormticket_stormproject_change($project_nid, $project_title) {
+  $s = "UPDATE {stormticket} SET project_title='%s' WHERE project_nid=%d AND project_title <> '%s'";
+  db_query($s, $project_title, $project_nid, $project_title);
+}
+
+function stormticket_stormtask_change($task_nid, $task_title, $task_stepno) {
+  $s = "UPDATE {stormticket} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
+      (task_title<>'%s' OR task_stepno<>'%s')";
+  db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
+}
+
+function stormticket_form(&$node) {
+  if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
+  if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
+
+  $type = node_get_types('type', $node);
+
+  $form['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -20,
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $r = db_query(stormorganization_access_sql($s));
+  $organizations = array();
+  while ($organization = db_fetch_object($r)) {
+    $organizations[$organization->nid] = $organization->title;
+    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+  }
+  $form['group1']['organization_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Organization'),
+    '#default_value' => $node->organization_nid,
+    '#options' => $organizations,
+    '#required' => true,
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $r = db_query(stormproject_access_sql($s), $node->organization_nid);
+  $projects = array();
+  while ($project = db_fetch_object($r)) {
+    $projects[$project->nid] = $project->title;
+  }
+  $form['group1']['project_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Project'),
+    '#default_value' => $node->project_nid,
+    '#options' => array(0 => '-') + $projects,
+    '#process' => array('storm_dependent_select_process'),
+    '#required' => true,
+    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
+  );
+
+  $tree = _stormtask_get_tree($node->project_nid);
+  $tasks = _stormtask_plain_tree($tree);
+  $form['group1']['task_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Task'),
+    '#default_value' => $node->task_nid,
+    '#options' => array(0 => '-') + $tasks,
+    '#process' => array('storm_dependent_select_process'),
+  );
+  
+  $form['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -19,
+  );
+
+  $form['group2']['ticketcategory'] = array(
+    '#type' => 'select',
+    '#title' => t('Category'),
+    '#default_value' => $node->ticketcategory,
+    '#options' => stormattribute_attributes_bydomain('Ticket category'),
+  );
+
+  $form['group2']['ticketstatus'] = array(
+    '#type' => 'select',
+    '#title' => t('Status'),
+    '#default_value' => $node->ticketstatus,
+    '#options' => stormattribute_attributes_bydomain('Ticket status'),
+  );
+
+  $form['group2']['ticketpriority'] = array(
+    '#type' => 'select',
+    '#title' => t('Priority'),
+    '#default_value' => $node->ticketpriority,
+    '#options' => stormattribute_attributes_bydomain('Ticket priority'),
+  );
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -18,
+  );
+
+  $form['body_filter']['#weight'] = -18;
+  $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#rows' => 20,
+      '#weight' => -17,
+      '#required' => ($type->min_word_count > 0));
+  $form['body_filter']['format'] = filter_form($node->format);
+
+  $form['title_old'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $node->title_old,
+  );
+
+  return $form;
+}
+
+function stormticket_insert($node) {
+  _stormticket_beforesave($node);
+
+  db_query("INSERT INTO {stormticket}
+           (vid, nid,
+           organization_nid, organization_title,
+           project_nid, project_title,
+           task_nid, task_title, task_stepno,
+           ticketcategory, ticketstatus, ticketpriority) VALUES
+           (%d, %d,
+            %d, '%s',
+            %d, '%s',
+            %d, '%s', '%s',
+            '%s', '%s', '%s')",
+          $node->vid, $node->nid,
+          $node->organization_nid, $node->organization_title,
+          $node->project_nid, $node->project_title,
+          $node->task_nid, $node->task_title, $node->task_stepno,
+          $node->ticketcategory, $node->ticketstatus, $node->ticketpriority);
+}
+
+function stormticket_update($node) {
+  // if this is a new node or we're adding a new revision,
+  if ($node->revision) {
+    stormticket_insert($node);
+  }
+  else {
+    _stormticket_beforesave($node);
+    db_query("UPDATE {stormticket} SET
+             organization_nid=%d, organization_title='%s',
+             project_nid=%d, project_title='%s',
+             task_nid=%d, task_title='%s', task_stepno='%s',
+             ticketcategory='%s', ticketstatus='%s', ticketpriority='%s' WHERE vid = %d",
+            $node->organization_nid, $node->organization_title,
+            $node->project_nid, $node->project_title,
+            $node->task_nid, $node->task_title, $node->task_stepno,
+            $node->ticketcategory, $node->ticketstatus, $node->ticketpriority, $node->vid);
+    if ($node->title != $node->title_old) {
+      module_invoke_all('stormticket_change', $node->nid, $node->title);
+    }
+  }
+}
+
+function _stormticket_beforesave(&$node) {
+  $s = "SELECT n.title
+        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+        WHERE type='stormorganization' AND n.nid=%d";
+  $r = db_query($s, $node->organization_nid);
+  $o = db_fetch_object($r);
+  $node->organization_title = $o->title;
+  
+  $s = "SELECT n.title, p.organization_title
+        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+        WHERE type='stormproject' AND n.nid=%d";
+  $r = db_query($s, $node->project_nid);
+  $p = db_fetch_object($r);
+  $node->project_title = $p->title;
+
+  $s = "SELECT title, stepno FROM {node} n INNER JOIN {stormtask} t ON n.nid=t.nid WHERE n.type='stormtask' AND n.nid=%d";
+  $r = db_query($s, $node->task_nid);
+  $ta = db_fetch_object($r);
+  $node->task_title = $ta->title;
+  $node->task_stepno = $ta->stepno;
+}
+
+function stormticket_load($node) {
+  $additions = db_fetch_object(db_query('SELECT * FROM {stormticket} WHERE vid = %d', $node->vid));
+  $additions->title_old = $node->title;
+  return $additions;
+}
+
+function stormticket_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+
+  $node->content['stormticket'] = array(
+    '#value' => theme('stormticket_view', $node, $teaser, $page),
+    '#weight' => -20,
+  );
+
+  return $node;
+}
+
+function stormticket_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $block[0]['info'] = t('Tickets');
+      break;
+    case 'view':
+      if ($delta == 0) {
+        $block['subject'] = t('Tickets');
+        $block['content'] = stormticket_listblock();
+      }
+      break;
+  }
+  return $block;
+}
+
+function stormticket_listblock($output=FALSE) {
+  if (!user_access('STORM ticket: access')) return;
+
+  drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
+  $status_list = stormattribute_attributes_bydomain('ticket status search');
+  $rstatus_list = array_flip($status_list);
+  $ticketstatus = $rstatus_list['open'];
+
+  $s  = "SELECT n.nid, n.title, n.uid, n.changed, sti.project_title, sti.project_nid, sti.task_title, sti.task_nid, sti.ticketcategory, sti.ticketstatus FROM {stormticket} sti INNER JOIN {node} n ON n.nid=sti.nid WHERE n.status=1 AND n.type='stormticket'";
+  $v = str_replace(',', "','", $ticketstatus);
+  $where[] = "sti.ticketstatus IN ('". $v ."')";
+  $r = pager_query(stormticket_access_sql($s, $where) .' ORDER BY n.changed', 10, 0, NULL);
+
+  $header = array(
+    array(
+      'data' => '',
+    ),
+  );
+
+  $rows = array();
+
+  $tickets = array();
+  while ($item = db_fetch_object($r)) {
+    $tickets[] = $item;
+    $rows[] = array(
+      l($item->title, 'node/'. $item->nid) ."<a href=\"#\" onclick=\"return stormticket_popup_info('info_". $item->nid ."');\">S</a>".'<div id="info_'. $item->nid .'" style="display: none;">'. $item->project_title .'</div>',
+    );
+  }
+
+  $o = theme('table', $header, $rows);
+  if ($output) {
+    echo $o;
+  }
+  else {
+    return $o;
+  }
+}
+
