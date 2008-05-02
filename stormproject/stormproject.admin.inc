@@ -30,7 +30,7 @@ function stormproject_list() {
     ),
   );
 
-  $s  = "SELECT n.nid, n.title, n.changed, spr.* FROM {stormproject} spr INNER JOIN {node} n ON n.nid=spr.nid WHERE n.status=1 AND n.type='stormproject'";
+  $s  = "SELECT n.*, spr.* FROM {stormproject} spr INNER JOIN {node} n ON n.nid=spr.nid WHERE n.status=1 AND n.type='stormproject'";
 
   $where = array();
   if ($_SESSION['stormproject_list_filter']['organization_nid']) {

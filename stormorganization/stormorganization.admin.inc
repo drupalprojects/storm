@@ -23,7 +23,7 @@ function stormorganization_list() {
     ),
   );
 
-  $s = "SELECT n.nid, n.title, n.uid, sor.country FROM {stormorganization} sor INNER JOIN {node} n ON n.nid=sor.nid WHERE n.status=1 AND n.type='stormorganization'";
+  $s = "SELECT n.*, sor.* FROM {stormorganization} sor INNER JOIN {node} n ON n.nid=sor.nid WHERE n.status=1 AND n.type='stormorganization'";
   $where = array();
   if ($_SESSION['stormorganization_list_filter']['country']) {
     $where[] = "sor.country='". $_SESSION['stormorganization_list_filter']['country'] ."'";

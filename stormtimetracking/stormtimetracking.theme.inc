@@ -15,7 +15,6 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
     $rows[] = array(
       l($timetracking->organization_title, 'node/' . $timetracking->organization_nid),
       l($timetracking->project_title, 'node/' . $timetracking->project_nid),
-      l($timetracking->task_title, 'node/' . $timetracking->task_nid),
       l($timetracking->title, 'node/' . $timetracking->nid), 
       format_date($timetracking->trackingdate, 'small'),
       array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),

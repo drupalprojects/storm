@@ -19,10 +19,6 @@ function stormticket_list() {
       'field' => 'sti.project_title',
     ),
     array(
-      'data' => t('Task'),
-      'field' => 'sti.task_title',
-    ),
-    array(
       'data' => t('Title'),
       'field' => 'n.title',
     ),
@@ -49,7 +45,7 @@ function stormticket_list() {
   );
 
   $where = array();
-  $s  = "SELECT n.nid, n.title, n.uid, n.changed, n.created, sti.organization_title, sti.organization_nid, sti.project_title, sti.project_nid, sti.task_title, sti.task_nid, sti.ticketcategory, sti.ticketstatus, sti.ticketpriority FROM {stormticket} sti INNER JOIN {node} n ON n.nid=sti.nid WHERE n.status=1 AND n.type='stormticket' ";
+  $s  = "SELECT n.*, sti.* FROM {stormticket} sti INNER JOIN {node} n ON n.nid=sti.nid WHERE n.status=1 AND n.type='stormticket' ";
   if ($_SESSION['stormticket_list_filter']['organization_nid']) {
     $where[] = 'sti.organization_nid='. $_SESSION['stormticket_list_filter']['organization_nid'];
   }

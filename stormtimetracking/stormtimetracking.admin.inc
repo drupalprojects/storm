@@ -15,10 +15,6 @@ function stormtimetracking_list() {
       'field' => 'stt.project_title',
     ),
     array (
-      'data' => t('Task'),
-      'field' => 'stt.task_title',
-    ),
-    array (
       'data' => t('Title'),
       'field' => 'n.title',
     ),
@@ -37,7 +33,7 @@ function stormtimetracking_list() {
     ),
   );
 
-  $s  = "SELECT n.title, n.uid,  stt.* FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
+  $s  = "SELECT n.*,  stt.* FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
   $s_duration = "SELECT SUM(duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
@@ -55,11 +51,15 @@ function stormtimetracking_list() {
   }
   if($_SESSION['stormtimetracking_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
-    $where[] = 'stt.trackingdate>=' . _storm_date_to_gmtimestamp($datefrom);
+    $datefrom['hour'] = 0;
+    $datefrom['minute'] = 0;    
+    $where[] = 'stt.trackingdate>=' . _storm_datetime_to_gmtimestamp($datefrom);
   }
   if($_SESSION['stormtimetracking_list_filter']['dateto']) {
     $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
-    $where[] = 'stt.trackingdate<=' . _storm_date_to_gmtimestamp($dateto);
+    $dateto['hour'] = 23;
+    $dateto['minute'] = 59;    
+    $where[] = 'stt.trackingdate<=' . _storm_datetime_to_gmtimestamp($dateto);
   }
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
 

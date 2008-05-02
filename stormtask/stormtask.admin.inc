@@ -119,8 +119,7 @@ function stormtask_list() {
   );
 
   $where = array();
-  $s  = "SELECT n.nid, n.title, n.uid, n.changed, sta.organization_title, sta.organization_nid, sta.project_title, sta.project_nid, sta.taskstatus 
-  FROM {stormtask} sta INNER JOIN {node} n ON n.nid=sta.nid WHERE n.status=1 AND n.type='stormtask' ";
+  $s  = "SELECT n.*, sta.* FROM {stormtask} sta INNER JOIN {node} n ON n.nid=sta.nid WHERE n.status=1 AND n.type='stormtask' ";
   if ($_SESSION['stormtask_list_filter']['organization_nid']) {
     $where[] = 'sta.organization_nid='. $_SESSION['stormtask_list_filter']['organization_nid'];
   }
