@@ -53,6 +53,7 @@ function _storm_gmtimestamp_without_time($timestamp, $timezone=NULL) {
 
 function _storm_strtotime($timestr='') {
   $timestr = substr($timestr, 0, 5);
+  $time = array();
   $time['hour'] = 0;
   $time['minute'] = 0;
 
