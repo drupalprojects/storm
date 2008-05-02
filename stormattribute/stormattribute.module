@@ -98,6 +98,7 @@ function stormattribute_access($op, $item=NULL, $account=NULL) {
 
 function stormattribute_attributes_bydomain($domain) {
   static $attributes_cache = array();
+  $attributes = array();
 
   if (array_key_exists($domain, $attributes_cache)) return $attributes_cache[$domain];
 
