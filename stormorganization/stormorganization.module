@@ -353,7 +353,7 @@ function stormorganization_user_form(&$edit, &$account, $category = NULL) {
     $r = db_query(stormorganization_access_sql($s), $account->uid);
     $os = array();
     while ($o = db_fetch_object($r)) {
-      $os[$o['nid']] = $o->title;
+      $os[$o->nid] = $o->title;
     }
 
     $form['stormorganization_nid'] = array(
