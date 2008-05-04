@@ -100,14 +100,19 @@ function stormproject_list_filter() {
     '#options' => array(0 => t('All')) + $organizations,
   );
 
-  $form['filter']['projectcategory'] = array(
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group1']['projectcategory'] = array(
     '#type' => 'select',
     '#title' => t('Category'),
     '#default_value' => $projectcategory,
     '#options' => array('-' => t('all')) + stormattribute_attributes_bydomain('Project category'),
   );
 
-  $form['filter']['projectstatus'] = array(
+  $form['filter']['group1']['projectstatus'] = array(
     '#type' => 'select',
     '#title' => t('Status'),
     '#default_value' => $projectstatus,
