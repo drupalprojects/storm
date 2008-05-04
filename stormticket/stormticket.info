@@ -3,6 +3,7 @@ name = STORM Ticket
 description = "SpeedTech Organizer and Resource Manager - Ticket"
 dependencies[] = storm 
 dependencies[] = stormattribute
+dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
 package = STORM

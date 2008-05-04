@@ -3,6 +3,7 @@ name = STORM Timetracking
 description = "SpeedTech Organizer and Resource Manager - Timetracking"
 dependencies[] = storm 
 dependencies[] = stormattribute
+dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
 dependencies[] = stormticket

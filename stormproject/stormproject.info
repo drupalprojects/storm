@@ -3,6 +3,7 @@ name = STORM Project
 description = "SpeedTech Organizer and Resource Manager - Project"
 dependencies[] = storm 
 dependencies[] = stormattribute
+dependencies[] = stormorganization
 package = STORM
 core = 6.x
 version = 6.x-0.0
