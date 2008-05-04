@@ -63,6 +63,12 @@ function stormtimetracking_list() {
   }
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
 
+  if($_SESSION['stormtimetracking_list_filter']['user']) {
+    $trackinguser = user_load(array('name' => $_SESSION['stormtimetracking_list_filter']['user']));
+    if(!$trackinguser->uid) $trackinguser->uid =  -1; 
+    $where[] = 'n.uid=' . $trackinguser->uid;
+  }
+
   $tablesort = tablesort_sql($header);
   $sql = stormtimetracking_access_sql($s, $where) . $tablesort;
   $r = pager_query($sql, $itemsperpage, 0, NULL);
@@ -106,7 +112,7 @@ function stormtimetracking_list_filter() {
   if(!$dateto) {
     $year = format_date(time(), 'custom', 'Y');
     $month = format_date(time(), 'custom', 'n');
-    $day = idate('d', mktime(0, 0, 0, ($month + 1), 0, $year));
+    $day = format_date(mktime(0, 0, 0, ($month + 1), 0, $year), 'custom', 'd');
     $dateto = array('day' => $day,
                      'month' => $month,
                      'year' => $year,
@@ -115,6 +121,8 @@ function stormtimetracking_list_filter() {
                    );
     $_SESSION['stormtimetracking_list_filter']['dateto'] = $dateto;
   }
+
+  $trackinguser = $_SESSION['stormtimetracking_list_filter']['user'];
 
   $form = array();
 
@@ -208,22 +216,44 @@ function stormtimetracking_list_filter() {
     '#default_value' => $dateto,
   );
 
-  $form['filter']['itemsperpage'] = array(
+  $form['filter']['group2']['user'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items per page'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
+    '#title' => t('User'),
+    '#size' => 25,
+    '#default_value' => $trackinguser,
+    '#autocomplete_path' => 'user/autocomplete',
   );
 
-  $form['filter']['submit'] = array(
+  $form['filter']['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormtimetracking_list_filter_filter'),
+  );
+
+  $form['filter']['group3']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormtimetracking_list_filter_reset'),
+  );
+
+  $form['filter']['group3']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormtimetracking_list_filter_submit($form, &$form_state) {
+function stormtimetracking_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
   $_SESSION['stormtimetracking_list_filter']['project_nid'] = $form_state['values']['project_nid'];
   $_SESSION['stormtimetracking_list_filter']['task_nid'] = $form_state['values']['task_nid'];
@@ -231,6 +261,11 @@ function stormtimetracking_list_filter_submit($form, &$form_state) {
   $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_state['values']['datefrom'];
   $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_state['values']['dateto'];
   $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+  $_SESSION['stormtimetracking_list_filter']['user'] = $form_state['values']['user'];
+}
+
+function stormtimetracking_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormtimetracking_list_filter']);
 }
 
 function stormtimetracking_list_report($format) {
