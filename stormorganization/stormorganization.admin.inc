@@ -33,6 +33,7 @@ function stormorganization_list() {
   }
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
 
+  $s = db_rewrite_sql($s, 'stormorganization', 'nid');
   $s = stormorganization_access_sql($s, $where);
 
   $tablesort = tablesort_sql($header);
@@ -48,6 +49,8 @@ function stormorganization_list() {
 }
 
 function stormorganization_list_filter() {
+  $country = $_SESSION['stormorganization_list_filter']['country'];
+  $name = $_SESSION['stormorganization_list_filter']['name'];
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = 10;
@@ -67,33 +70,52 @@ function stormorganization_list_filter() {
   $form['filter']['country'] = array(
     '#type' => 'select',
     '#title' => t('Country'),
-    '#default_value' => $_SESSION['stormorganization_list_find']['country'],
+    '#default_value' => $country,
     '#options' => array(0 => t('All')) + stormattribute_attributes_bydomain('Country'),
   );
 
   $form['filter']['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#default_value' => $_SESSION['stormorganization_list_find']['name'],
+    '#default_value' => $name,
   );
 
-  $form['filter']['itemsperpage'] = array(
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group1']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+    '#submit' => array('stormorganization_list_filter_filter'),
+  );
+
+  $form['filter']['group1']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormorganization_list_filter_reset'),
+  );
+
+  $form['filter']['group1']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items per page'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
-  );
-
-  $form['filter']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Filter')
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormorganization_list_filter_submit($form, &$form_state) {
+function stormorganization_list_filter_filter($form, &$form_state) {
   $_SESSION['stormorganization_list_filter']['country'] = $form_state['values']['country'];
   $_SESSION['stormorganization_list_filter']['name'] = $form_state['values']['name'];
   $_SESSION['stormorganization_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
+
+function stormorganization_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormorganization_list_filter']);
+}
+

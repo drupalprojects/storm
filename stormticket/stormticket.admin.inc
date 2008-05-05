@@ -67,8 +67,11 @@ function stormticket_list() {
   }
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
 
+  $s = stormticket_access_sql($s, $where);
+  $s = db_rewrite_sql($s, 'stormticket', 'nid');
+
   $tablesort = tablesort_sql($header);
-  $r = pager_query(stormticket_access_sql($s, $where) . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 
   $tickets = array();
   while ($item = db_fetch_object($r)) {
@@ -179,28 +182,46 @@ function stormticket_list_filter() {
     '#options' => array('-' => t('all')) + stormattribute_attributes_bydomain('ticket priority search'),
   );
 
-  $form['filter']['itemsperpage'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Items per page'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
+  $form['filter']['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['submit'] = array(
+  $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormticket_list_filter_filter'),
+  );
+
+  $form['filter']['group3']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormticket_list_filter_reset'),
+  );
+
+  $form['filter']['group3']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormticket_list_filter_submit($form, &$form_state) {
+function stormticket_list_filter_filter($form, &$form_state) {
   $_SESSION['stormticket_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
   $_SESSION['stormticket_list_filter']['project_nid'] = $form_state['values']['project_nid'];
   $_SESSION['stormticket_list_filter']['task_nid'] = $form_state['values']['task_nid'];
   $_SESSION['stormticket_list_filter']['ticketstatus'] = $form_state['values']['ticketstatus'];
   $_SESSION['stormticket_list_filter']['ticketpriority'] = $form_state['values']['ticketpriority'];
   $_SESSION['stormticket_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+function stormticket_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormticket_list_filter']);
 }
 
 function _stormticket_task_tickets_js($organization_nid=0, $project_nid=0, $task_nid=0) {

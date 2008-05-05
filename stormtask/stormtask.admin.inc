@@ -66,17 +66,32 @@ function stormtask_tasks_filter() {
     '#options' => array('-' => t('all')) + $status_list,
   );
 
-  $form['filter']['submit'] = array(
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group1']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormtask_tasks_filter_filter'),
+  );
+
+  $form['filter']['group1']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormtask_tasks_filter_reset'),
   );
 
   return $form;
 }
 
-
-function stormtask_tasks_filter_submit($form, &$form_state) {
+function stormtask_tasks_filter_filter($form, &$form_state) {
   $_SESSION['stormtask_tasks_filter']['taskstatus'] = $form_state['values']['taskstatus'];
+}
+
+function stormtask_tasks_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormtask_tasks_filter']);
 }
 
 function _stormtask_project_tasks_js($project_nid) {
@@ -133,8 +148,11 @@ function stormtask_list() {
   }
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
 
+  $s = stormtask_access_sql($s, $where);
+  $s = db_rewrite_sql($s, 'stormtask', 'nid');
+
   $tablesort = tablesort_sql($header);
-  $r = pager_query(stormtask_access_sql($s, $where) . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 
   $tasks = array();
   while ($item = db_fetch_object($r)) {
@@ -218,25 +236,43 @@ function stormtask_list_filter() {
     '#options' => array('-' => t('all')) + $status_list,
   );
 
-  $form['filter']['itemsperpage'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Items per page'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
+  $form['filter']['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['submit'] = array(
+  $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormtask_list_filter_filter'),
+  );
+
+  $form['filter']['group2']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormtask_list_filter_reset'),
+  );
+
+  $form['filter']['group2']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormtask_list_filter_submit($form, &$form_state) {
+function stormtask_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtask_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
   $_SESSION['stormtask_list_filter']['project_nid'] = $form_state['values']['project_nid'];
   $_SESSION['stormtask_list_filter']['taskstatus'] = $form_state['values']['taskstatus'];
   $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+function stormtask_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormtask_list_filter']);
 }
 

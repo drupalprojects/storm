@@ -47,8 +47,10 @@ function stormproject_list() {
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
-  $sql = stormproject_access_sql($s, $where) . $tablesort;
-  $r = pager_query($sql, $itemsperpage, 0, NULL);
+  
+  $s = db_rewrite_sql($s, 'stormproject', 'nid');
+  $s = stormproject_access_sql($s, $where) . $tablesort;
+  $r = pager_query($s, $itemsperpage, 0, NULL);
 
   $projects = array();
   while ($project = db_fetch_object($r)) {
@@ -119,26 +121,44 @@ function stormproject_list_filter() {
     '#options' => array('-' => t('all')) + $status_list,
   );
 
-  $form['filter']['itemsperpage'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Items per page'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
+  $form['filter']['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['submit'] = array(
+  $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormproject_list_filter_filter'),
+  );
+
+  $form['filter']['group2']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormproject_list_filter_reset'),
+  );
+
+  $form['filter']['group2']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormproject_list_filter_submit($form, &$form_state) {
+function stormproject_list_filter_filter($form, &$form_state) {
   $_SESSION['stormproject_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
   $_SESSION['stormproject_list_filter']['projectcategory'] = $form_state['values']['projectcategory'];
   $_SESSION['stormproject_list_filter']['projectstatus'] = $form_state['values']['projectstatus'];
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+function stormproject_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormproject_list_filter']);
 }
 
 function _stormproject_organization_projects_js($organization_nid=0) {

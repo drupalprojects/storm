@@ -28,7 +28,7 @@ function stormattribute_list() {
     ),
   );
 
-  $sql = "SELECT * FROM {stormattribute}";
+  $s = "SELECT * FROM {stormattribute}";
   $where = array();
 
   if($_SESSION['stormattribute_list_filter']['domain']) {
@@ -38,8 +38,10 @@ function stormattribute_list() {
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
-  $sql = stormtimetracking_access_sql($sql, $where) . $tablesort;
-  $r = pager_query($sql, $itemsperpage, 0, NULL);
+  
+  $s = db_rewrite_sql($s, 'stormattribute', 'aid');
+  $s = stormtimetracking_access_sql($s, $where) . $tablesort;
+  $r = pager_query($s, $itemsperpage, 0, NULL);
 
   $attributes = array();
   while ($attribute = db_fetch_object($r)) {
@@ -83,24 +85,42 @@ function stormattribute_list_filter() {
     '#options' => array('0' => t('All')) + _stormattibute_domain_options(),
   );
 
-  $form['filter']['itemsperpage'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Items per page'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['filter'] = array(
+  $form['filter']['group1']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter')
+    '#value' => t('Filter'),
+    '#submit' => array('stormattribute_list_filter_filter'),
+  );
+
+  $form['filter']['group1']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormattribute_list_filter_reset'),
+  );
+
+  $form['filter']['group1']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
   );
 
   return $form;
 }
 
-function stormattribute_list_filter_submit($form, &$form_state) {
+function stormattribute_list_filter_filter($form, &$form_state) {
   $_SESSION['stormattribute_list_filter']['domain'] = $form_state['values']['domain'];
   $_SESSION['stormattribute_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+function stormattribute_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormattribute_list_filter']);
 }
 
 function stormattribute_add() {
