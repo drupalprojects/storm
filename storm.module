@@ -259,12 +259,13 @@ function _storm_timestamp_to_gm($timestamp, $timezone=NULL) {
 }
 
 function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
-  $gmttimestamp = gmmktime(0, 0, 0, $date['month'], $date['day'], $date['year']);
+  $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
   return _storm_timestamp_to_gm($gmttimestamp, $timezone);
 }
 
 function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
-  $gmttimestamp = gmmktime($datetime['hour'], $datetime['minute'], 0, $datetime['month'], $datetime['day'], $datetime['year']);
+  $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']), 
+  intval($datetime['day']), intval($datetime['year']));
   return _storm_timestamp_to_gm($gmttimestamp, $timezone);
 }
 
