@@ -1,0 +1,9 @@
+; $Id
+name = STORM Person
+description = "SpeedTech Organizer and Resource Manager - Person"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormorganization
+package = STORM
+core = 6.x
+version = 6.x-0.0
