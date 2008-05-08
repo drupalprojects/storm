@@ -36,9 +36,6 @@ function stormticket_list() {
       'field' => 'sti.ticketpriority',
     ),
     array(
-      'data' => storm_icon('user_comment', t('Comments')),
-    ),
-    array(
       'data' => storm_icon_add_node($i, $_GET),
       'class' => 'storm_list_operations',
     ),

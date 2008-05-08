@@ -32,17 +32,11 @@ function theme_stormtask_list($header, $tasks) {
     $n->organization_nid = $task->organization_nid;
     $n->type = 'stormtask';
 
-    $comments_links = l(comment_num_all($task->nid), 'node/'. $task->nid, array(), NULL, 'comments');
-    $num_comment_new = comment_num_new($task->nid);
-    if ($num_comment_new >0) {
-      $comments_links .= ' - '. l($num_comment_new .' new', 'node/'. $task->nid, array(), NULL, 'new');
-    }
     $rows[] = array(
       l($task->organization_title, 'node/'. $task->organization_nid),
       l($task->project_title, 'node/'. $task->project_nid),
       l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
       storm_icon('status_'. $task->taskstatus, $task->taskstatus),
-      $comments_links,
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
