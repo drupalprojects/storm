@@ -42,42 +42,62 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   return $o;
 }
 
-function theme_stormtimetracking_list_report($format, $timetrackings) {
-  if ($format=='pdf') {
-  
-    include_once(drupal_get_path('module', 'storm') . '/libs/fpdf/fpdf.php');
-    $pdf=new FPDF('L');
-    $pdf->AddPage();
-    $pdf->SetFont('Arial','',10);
+function theme_stormtimetracking_list_report_html($header, $timetrackings) {
+  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+  $output .= '<head>';
+  $output .= '<title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
+  $output .= drupal_get_html_head();
+  $output .= drupal_get_css();
 
-    $header = array (
-                  t('Project') => 50,
-                  t('Task') => 50,
-                  t('Ticket') => 50,
-                  t('Title') => 50,
-                  t('Date') => 40,
-                  t('Duration (h)') => 40,
-                  );
-
-    $pdf->SetFont('','B');
-    foreach($header as $col=>$width) {
-      $pdf->Cell($width,7,$col,1);
-    }
-    $pdf->Ln();
-
-    $pdf->SetFont('','');
-    foreach($timetrackings as $timetracking) {
-      $pdf->Cell(50,6,$timetracking->project_title,1);
-      $pdf->Cell(50,6,$timetracking->task_title,1);
-      $pdf->Cell(50,6,$timetracking->ticket_title,1);
-      $pdf->Cell(50,6,$timetracking->title,1);
-      $pdf->Cell(40,6,format_date($timetracking->trackingdate, 'small'), 1);
-      $pdf->Cell(40,6,sprintf('%.2f', $timetracking->duration),1, 0, 'R');
-     $pdf->Ln();
-    }
-
-    //$pdf->Image(drupal_get_path('module', 'storm') . '/tmp/timetrackings.png', 40, 70);
-
-    $pdf->Output('storm_timetrackings_report.pdf', 'I');
+  $output .= '</head>';
+  $output .= '<body style="background-color: #fff; color: #000;">';
+  $output .= '<table>';
+  $output .= '<tr>';
+  foreach ($header as $c) {
+    $output .= '<td>'. $c .'</td>';
   }
+  $output .= '</tr>';
+  foreach ($timetrackings as $i) {
+    $output .= '<tr>';
+    $output .= '<td>'. $i->organization_title .'</td>';
+    $output .= '<td>'. $i->project_title .'</td>';
+    $output .= '<td>'. $i->duration .'</td>';
+    $output .= '</tr>';
+  }
+  $output .= '</table>';
+  $output .= '</body></html>';
+
+  return $output;
+
+}
+
+function theme_stormtimetracking_list_report_html_wo_org($header, $timetrackings) {
+  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+  $output .= '<head>';
+  $output .= '<title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
+  $output .= drupal_get_html_head();
+  $output .= drupal_get_css();
+
+  $output .= '</head>';
+  $output .= '<body style="background-color: #fff; color: #000;">';
+  $output .= '<table>';
+  $output .= '<tr>';
+  foreach ($header as $c) {
+    $output .= '<td>'. $c .'</td>';
+  }
+  $output .= '</tr>';
+  foreach ($timetrackings as $i) {
+    $output .= '<tr>';
+    $output .= '<td>'. $i->project_title .'</td>';
+    $output .= '<td>'. $i->title .'</td>';
+    $output .= '<td>'. $i->duration .'</td>';
+    $output .= '</tr>';
+  }
+  $output .= '</table>';
+  $output .= '</body></html>';
+
+  return $output;
+
 }

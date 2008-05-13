@@ -133,9 +133,13 @@ function stormtimetracking_theme() {
       'file'      => 'stormtimetracking.theme.inc',
       'arguments' => array('node', 'teaser', 'page'),
     ),
-    'stormtimetracking_list_report' => array(
+    'stormtimetracking_list_report_html' => array(
       'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('format', 'timetrackings'),
+      'arguments' => array('header', 'timetrackings'),
+    ),
+    'stormtimetracking_list_report_html_wo_org' => array(
+      'file'      => 'stormtimetracking.theme.inc',
+      'arguments' => array('header', 'timetrackings'),
     ),
   );
 }

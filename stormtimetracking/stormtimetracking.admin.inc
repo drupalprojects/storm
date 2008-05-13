@@ -5,6 +5,10 @@ function stormtimetracking_list() {
 
   $o = drupal_get_form('stormtimetracking_list_filter');
 
+  $report_attrs = array(
+    'onclick' => "storm_popup(this, 'timetracking_list_form_report', 'Timetrackings', 300, 100, 'stormtimetracking_list_form_report', 'l'); return false;",
+  );
+  
   $header = array(
     array (
       'data' => t('Organization'),
@@ -24,11 +28,11 @@ function stormtimetracking_list() {
       'sort' => 'desc',
     ),
     array (
-      'data' => t('Duration (hours)'),
+      'data' => t('Duration (h)'),
       'style'=>'text-align: right;'
     ),
     array(
-      'data' => storm_icon_add_node($i, $_GET),
+      'data' => storm_icon_l('report', '', t('Reports'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
       'class' => 'storm_list_operations',
     ),
   );
@@ -76,7 +80,7 @@ function stormtimetracking_list() {
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
   $duration = db_result(db_query(stormtimetracking_access_sql($s_duration, $where)));
 
-  $_SESSION['stormtimetracking_list_filter']['sql'] = $sql;
+  $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
 
   $timetrackings = array();
   while($item = db_fetch_object($r)) {
@@ -85,6 +89,7 @@ function stormtimetracking_list() {
 
   $o .= theme('stormtimetracking_list', $header, $timetrackings, $duration);
   $o .= theme('pager', NULL, $itemsperpage, 0);
+  $o .= drupal_get_form('stormtimetracking_list_form_report');
   print theme('page', $o);
 }
 
@@ -191,13 +196,13 @@ function stormtimetracking_list_filter() {
   while($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
-  if($tickets) $tickets = array(0 => t('All')) + $tickets;
+  $tickets = array(0 => t('All')) + $tickets;
   $form['filter']['group1']['ticket_nid'] = array(
     '#type' => 'select',
     '#title' => t('Ticket'),
     '#default_value' => $ticket_nid,
     '#process' => array('storm_dependent_select_process'),
-    '#options' => array(0 => t('all')) + $tickets,
+    '#options' => $tickets,
   );
 
   $form['filter']['group2'] = array(
@@ -270,15 +275,46 @@ function stormtimetracking_list_filter_reset($form, &$form_state) {
   unset($_SESSION['stormtimetracking_list_filter']);
 }
 
-function stormtimetracking_list_report($format) {
+function stormtimetracking_list_form_report() {
+  $form = array();
+  $form['#prefix'] = '<div id="stormtimetracking_list_form_report" class="storm_list_form_report">';
+  $form['report'] = array(
+    '#type' => 'select',
+    '#title' => t('Reports'),
+    '#options' => array('html' => 'HTML', 'html_wo_org' => 'HTML without organization'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Report'),
+  );
+  $form['#suffix'] = '</div>';
+  return $form;
+}
+
+function stormtimetracking_list_form_report_submit($form, &$form_state) {
+  $report = $form_state['values']['report'];
+	drupal_goto('storm/timetrackings/report/'. $report);
+}
+
+function stormtimetracking_list_report($report) {
   $timetrackings = array();
 
-  $sql = $_SESSION['stormtimetracking_list_filter']['sql'];
-  $r = db_query($sql);
+  $s = $_SESSION['stormtimetracking_list_filter']['sql'];
+  $r = db_query($s);
   while($t = db_fetch_object($r)) {
     $timetracking = node_load($t->nid);
     $timetrackings[] = $timetracking;
   }
-  theme('stormtimetracking_list_report', $format, $timetrackings);
+
+  switch ($report) {
+    case 'html':
+      $header = array(t('Organization'), t('Project'), t('Duration'));
+      print theme('stormtimetracking_list_report_html', $header, $timetrackings);
+    break;
+    case 'html_wo_org':
+      $header = array(t('Project'), t('Title'), t('Duration'));
+      print theme('stormtimetracking_list_report_html_wo_org', $header, $timetrackings);
+    break;
+  }
 }
 
