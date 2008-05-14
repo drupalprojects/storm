@@ -1,5 +1,5 @@
 <?php
-//Id
+// $Id
 
 function theme_stormtimetracking_list($header, $timetrackings, $duration) {
   $rows = array();
@@ -42,62 +42,105 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   return $o;
 }
 
-function theme_stormtimetracking_list_report_html($header, $timetrackings) {
-  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-  $output .= '<head>';
-  $output .= '<title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
-  $output .= drupal_get_html_head();
-  $output .= drupal_get_css();
+function theme_stormtimetracking_list_form_report_reports() {
+  $reports = array(
+      'std' => t('Standard'),
+      'for_organization' => t('For an organization'),
+      'for_organization_w_task' => t('For an org. with tasks'),
+      'for_project' => t('For a project'),
+  );
 
-  $output .= '</head>';
-  $output .= '<body style="background-color: #fff; color: #000;">';
-  $output .= '<table>';
-  $output .= '<tr>';
-  foreach ($header as $c) {
-    $output .= '<td>'. $c .'</td>';
-  }
-  $output .= '</tr>';
-  foreach ($timetrackings as $i) {
-    $output .= '<tr>';
-    $output .= '<td>'. $i->organization_title .'</td>';
-    $output .= '<td>'. $i->project_title .'</td>';
-    $output .= '<td>'. $i->duration .'</td>';
-    $output .= '</tr>';
-  }
-  $output .= '</table>';
-  $output .= '</body></html>';
-
-  return $output;
-
+  return $reports;
 }
 
-function theme_stormtimetracking_list_report_html_wo_org($header, $timetrackings) {
-  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-  $output .= '<head>';
-  $output .= '<title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
-  $output .= drupal_get_html_head();
-  $output .= drupal_get_css();
+function theme_stormtimetracking_list_report($report, $language, $timetrackings) {
+  switch ($report) {
+    case 'std':
+      $header = array(
+        t('Organization', array(), $language), 
+        t('Project', array(), $language), 
+        t('Title', array(), $language), 
+        t('Date', array(), $language), 
+        t('Duration (hours)', array(), $language));
+      $total_duration = 0;
+      foreach($timetrackings as $timetracking) {
+        $rows[] = array(
+          $timetracking->organization_title,
+          $timetracking->project_title,
+          $timetracking->title, 
+          format_date($timetracking->trackingdate, 'small'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+        );
+        $total_duration += $timetracking->duration;
+      }
+      $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
+    break;
+    case 'for_organization':
+      $organization = node_load($_SESSION['stormtimetracking_list_filter']['organization_nid']);
+      $header = array(
+        t('Project', array(), $language), 
+        t('Title', array(), $language), 
+        t('Date', array(), $language), 
+        t('Duration (hours)', array(), $language));
+      $total_duration = 0;
+      foreach($timetrackings as $timetracking) {
+        $rows[] = array(
+          $timetracking->project_title,
+          $timetracking->title, 
+          format_date($timetracking->trackingdate, 'small'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+        );
+        $total_duration += $timetracking->duration;
+      }
+      $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
+    break;
+    case 'for_organization_w_task':
+      $organization = node_load($_SESSION['stormtimetracking_list_filter']['organization_nid']);
+      $header = array(
+        t('Project', array(), $language), 
+        t('Task', array(), $language), 
+        t('Title', array(), $language), 
+        t('Date', array(), $language), 
+        t('Duration (hours)', array(), $language));
+      $total_duration = 0;
+      foreach($timetrackings as $timetracking) {
+        $rows[] = array(
+          $timetracking->project_title,
+          $timetracking->task_title,
+          $timetracking->title, 
+          format_date($timetracking->trackingdate, 'small'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+        );
+        $total_duration += $timetracking->duration;
+      }
+      $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
+    break;
+    case 'for_project':
+      $organization = node_load($_SESSION['stormtimetracking_list_filter']['organization_nid']);
+      $project = node_load($_SESSION['stormtimetracking_list_filter']['project_nid']);
 
-  $output .= '</head>';
-  $output .= '<body style="background-color: #fff; color: #000;">';
-  $output .= '<table>';
-  $output .= '<tr>';
-  foreach ($header as $c) {
-    $output .= '<td>'. $c .'</td>';
+      $header = array(
+        t('Task', array(), $language), 
+        t('Title', array(), $language), 
+        t('Date', array(), $language), 
+        t('Duration (hours)', array(), $language));
+      $total_duration = 0;
+      foreach($timetrackings as $timetracking) {
+        $rows[] = array(
+          $timetracking->task_title,
+          $timetracking->title, 
+          format_date($timetracking->trackingdate, 'small'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+        );
+        $total_duration += $timetracking->duration;
+      }
+      $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
+      $title .= t('Project : @project', array('@project' => $project->title), $language) .'<br />';
+    break;
   }
-  $output .= '</tr>';
-  foreach ($timetrackings as $i) {
-    $output .= '<tr>';
-    $output .= '<td>'. $i->project_title .'</td>';
-    $output .= '<td>'. $i->title .'</td>';
-    $output .= '<td>'. $i->duration .'</td>';
-    $output .= '</tr>';
-  }
-  $output .= '</table>';
-  $output .= '</body></html>';
-
-  return $output;
-
+  $footer = '<h3>'. t('Total duration : %total_duration', array('%total_duration' => format_plural($total_duration, '1 hour', '@count hours', array(), $language)), $language) .'</h3>';
+  return theme('storm_list_report', $header, $rows, $title, $footer);
 }

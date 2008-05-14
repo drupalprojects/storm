@@ -110,9 +110,9 @@ function stormtimetracking_menu() {
             'file' => 'stormtimetracking.admin.inc',
   );
 
-  $items['storm/timetrackings/report/%'] = array(
+  $items['storm/timetrackings/report/%/%'] = array(
             'title' => t('Timetrackings'),
-            'page arguments' => array(3),
+            'page arguments' => array(3, 4),
             'description' => t('STORM Timetrackings'),
             'page callback' => 'stormtimetracking_list_report',
             'access arguments' => array('STORM timetracking: access'),
@@ -133,13 +133,12 @@ function stormtimetracking_theme() {
       'file'      => 'stormtimetracking.theme.inc',
       'arguments' => array('node', 'teaser', 'page'),
     ),
-    'stormtimetracking_list_report_html' => array(
+    'stormtimetracking_list_form_report_reports' => array(
       'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('header', 'timetrackings'),
     ),
-    'stormtimetracking_list_report_html_wo_org' => array(
+    'stormtimetracking_list_report' => array(
       'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('header', 'timetrackings'),
+      'arguments' => array('report', 'language', 'timetrackings'),
     ),
   );
 }
