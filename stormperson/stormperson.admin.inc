@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormperson_people($organization) {
   $i = new stdClass();
   $i->type = 'stormperson';

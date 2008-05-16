@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormproject_install() {
   drupal_install_schema('stormproject');
 }

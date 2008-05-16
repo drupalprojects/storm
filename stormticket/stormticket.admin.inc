@@ -1,5 +1,10 @@
 <?php
 // $Id$
+
+/**
+ * @file
+ */
+
 function stormticket_list() {
   $i = new stdClass();
   $i->type = 'stormticket';
@@ -130,7 +135,7 @@ function stormticket_list_filter() {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid 
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
   $r = db_query(stormproject_access_sql($s), $organization_nid);
   $projects = array();
@@ -224,8 +229,8 @@ function stormticket_list_filter_reset($form, &$form_state) {
 function _stormticket_task_tickets_js($organization_nid=0, $project_nid=0, $task_nid=0) {
   $tickets = array();
 
-  $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} sti INNER JOIN {node} n 
-  ON n.nid=sti.nid WHERE n.status=1 AND n.type='stormticket' AND sti.organization_nid=%d AND sti.project_nid=%d 
+  $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} sti INNER JOIN {node} n
+  ON n.nid=sti.nid WHERE n.status=1 AND n.type='stormticket' AND sti.organization_nid=%d AND sti.project_nid=%d
   AND sti.task_nid=%d ORDER BY n.title"), $organization_nid, $project_nid, $task_nid);
   while ($item = db_fetch_object($r)) {
     $nid = $item->nid;

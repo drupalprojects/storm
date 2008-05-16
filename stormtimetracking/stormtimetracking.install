@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormtimetracking_install() {
   drupal_install_schema('stormtimetracking');
 }

@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormproject_list() {
   $i = new stdClass();
   $i->type = 'stormproject';
@@ -47,7 +51,7 @@ function stormproject_list() {
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
-  
+
   $s = db_rewrite_sql($s, 'stormproject', 'nid');
   $s = stormproject_access_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL);

@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function storm_help($path, $arg) {
   $output = '';
 
@@ -75,7 +79,7 @@ function storm_storm() {
 
 function storm_admin_settings() {
   $form = array();
-  
+
   $s = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $r = db_query(stormproject_access_sql($s));
   $organizations = array();
@@ -227,7 +231,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
   $attributes ['title'] = $title;
 
   $query = '';
-  
+
   if (array_key_exists('q', $params)) {
     $destination = $params['q'];
     unset($params['q']);
@@ -237,7 +241,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
     }
     $query .= 'destination='. urlencode($destination);
   }
-  
+
   foreach ($params as $key => $value) {
     if ($query) $query .= '&';
     $query .= $key .'='. urlencode($value);
@@ -258,7 +262,7 @@ function storm_icon($icon, $title) {
 function _storm_timestamp_to_gm($timestamp, $timezone=NULL) {
   if (!isset($timezone)) {
     global $user;
-    if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
+    if (variable_get('configurable_timezones', 1) && $user->uid && drupal_strlen($user->timezone)) {
       $timezone = $user->timezone;
     }
     else {
@@ -275,7 +279,7 @@ function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
 }
 
 function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
-  $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']), 
+  $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']),
   intval($datetime['day']), intval($datetime['year']));
   return _storm_timestamp_to_gm($gmttimestamp, $timezone);
 }
@@ -307,7 +311,7 @@ function _storm_gmtimestamp_without_time($timestamp, $timezone=NULL) {
 }
 
 function _storm_strtotime($timestr='') {
-  $timestr = substr($timestr, 0, 5);
+  $timestr = drupal_substr($timestr, 0, 5);
   $time = array();
   $time['hour'] = 0;
   $time['minute'] = 0;

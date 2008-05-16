@@ -1,9 +1,13 @@
 <?php
-// $Id
+// $Id$
+
+/**
+ * @file
+ */
 
 function theme_stormtimetracking_list($header, $timetrackings, $duration) {
   $rows = array();
-  foreach($timetrackings as $timetracking) {
+  foreach ($timetrackings as $timetracking) {
     $n = new stdClass();
     $n->nid = $timetracking->nid;
     $n->uid = $timetracking->uid;
@@ -13,30 +17,30 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
     $n->ticket_nid = $timetracking->ticket_nid;
     $n->type = 'stormtimetracking';
     $rows[] = array(
-      l($timetracking->organization_title, 'node/' . $timetracking->organization_nid),
-      l($timetracking->project_title, 'node/' . $timetracking->project_nid),
-      l($timetracking->title, 'node/' . $timetracking->nid), 
+      l($timetracking->organization_title, 'node/'. $timetracking->organization_nid),
+      l($timetracking->project_title, 'node/'. $timetracking->project_nid),
+      l($timetracking->title, 'node/'. $timetracking->nid),
       format_date($timetracking->trackingdate, 'small'),
-      array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+      array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) . '&nbsp;' . storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
       ),
     );
   }
   $o = theme('table', $header, $rows);
-  $o .= '<span style="font-weight: bold;">' . t('Total duration') . ' : ' . sprintf('%.2f', $duration) . '</span> (hours)'; 
+  $o .= '<span style="font-weight: bold;">'. t('Total duration') .' : '. sprintf('%.2f', $duration) .'</span> (hours)';
   return $o;
 }
 
 function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   $o  = '<div class="stormtimetracking">';
   $o .= '<dl>';
-  $o .= '<dt>' . t('Title') . ' : ' .  check_plain($node->title) . '</dt>';
-  $o .= '<dt>' .  t('Organization') . ' : ' .  l($node->organization_title, 'node/' . $node->organization_nid) . '</dt>';
-  $o .= '<dt>' .  t('Project') . ' : ' .  l($node->project_title, 'node/' . $node->project_nid) . '</dt>';
-  $o .= '<dt>' .  t('Task') . ' : ' .  l($node->task_title, 'node/' . $node->task_nid) . '</dt>';
-  $o .= '<dt>' .  t('Ticket') . ' : ' .  l($node->ticket_title, 'node/' . $node->ticket_nid) . '</dt>';
+  $o .= '<dt>'. t('Title') .' : '.  check_plain($node->title) .'</dt>';
+  $o .= '<dt>'.  t('Organization') .' : '.  l($node->organization_title, 'node/'. $node->organization_nid) .'</dt>';
+  $o .= '<dt>'.  t('Project') .' : '.  l($node->project_title, 'node/'. $node->project_nid) .'</dt>';
+  $o .= '<dt>'.  t('Task') .' : '.  l($node->task_title, 'node/'. $node->task_nid) .'</dt>';
+  $o .= '<dt>'.  t('Ticket') .' : '.  l($node->ticket_title, 'node/'. $node->ticket_nid) .'</dt>';
   $o .= '</dl>';
   $o .= '</div>';
   return $o;
@@ -57,19 +61,19 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
   switch ($report) {
     case 'std':
       $header = array(
-        t('Organization', array(), $language), 
-        t('Project', array(), $language), 
-        t('Title', array(), $language), 
-        t('Date', array(), $language), 
+        t('Organization', array(), $language),
+        t('Project', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
         t('Duration (hours)', array(), $language));
       $total_duration = 0;
-      foreach($timetrackings as $timetracking) {
+      foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->organization_title,
           $timetracking->project_title,
-          $timetracking->title, 
+          $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
         );
         $total_duration += $timetracking->duration;
       }
@@ -78,17 +82,17 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
     case 'for_organization':
       $organization = node_load($_SESSION['stormtimetracking_list_filter']['organization_nid']);
       $header = array(
-        t('Project', array(), $language), 
-        t('Title', array(), $language), 
-        t('Date', array(), $language), 
+        t('Project', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
         t('Duration (hours)', array(), $language));
       $total_duration = 0;
-      foreach($timetrackings as $timetracking) {
+      foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->project_title,
-          $timetracking->title, 
+          $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
         );
         $total_duration += $timetracking->duration;
       }
@@ -98,19 +102,19 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
     case 'for_organization_w_task':
       $organization = node_load($_SESSION['stormtimetracking_list_filter']['organization_nid']);
       $header = array(
-        t('Project', array(), $language), 
-        t('Task', array(), $language), 
-        t('Title', array(), $language), 
-        t('Date', array(), $language), 
+        t('Project', array(), $language),
+        t('Task', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
         t('Duration (hours)', array(), $language));
       $total_duration = 0;
-      foreach($timetrackings as $timetracking) {
+      foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->project_title,
           $timetracking->task_title,
-          $timetracking->title, 
+          $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
         );
         $total_duration += $timetracking->duration;
       }
@@ -122,17 +126,17 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
       $project = node_load($_SESSION['stormtimetracking_list_filter']['project_nid']);
 
       $header = array(
-        t('Task', array(), $language), 
-        t('Title', array(), $language), 
-        t('Date', array(), $language), 
+        t('Task', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
         t('Duration (hours)', array(), $language));
       $total_duration = 0;
-      foreach($timetrackings as $timetracking) {
+      foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->task_title,
-          $timetracking->title, 
+          $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align'=>'right'),
+          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
         );
         $total_duration += $timetracking->duration;
       }

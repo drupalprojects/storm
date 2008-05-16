@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function theme_stormtask_tasks($header, $tasks) {
   $rows = array();
   foreach ($tasks as $task) {

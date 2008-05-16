@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormticket_install() {
   drupal_install_schema('stormticket');
 }

@@ -1,5 +1,9 @@
 <?php
-// $Id
+// $Id$
+
+/**
+ * @file
+ */
 
 function stormtimetracking_list() {
   $i = new stdClass();
@@ -10,28 +14,28 @@ function stormtimetracking_list() {
   $report_attrs = array(
     'onclick' => "storm_popup(this, 'timetracking_list_form_report', 'Timetrackings', 300, 150, 'stormtimetracking_list_form_report', 'l'); return false;",
   );
-  
+
   $header = array(
-    array (
+    array(
       'data' => t('Organization'),
       'field' => 'stt.organization_title',
     ),
-    array (
+    array(
       'data' => t('Project'),
       'field' => 'stt.project_title',
     ),
-    array (
+    array(
       'data' => t('Title'),
       'field' => 'n.title',
     ),
-    array (
+    array(
       'data' => t('Date'),
       'field' => 'stt.trackingdate',
       'sort' => 'desc',
     ),
-    array (
+    array(
       'data' => t('Duration (h)'),
-      'style'=>'text-align: right;'
+      'style' => 'text-align: right;'
     ),
     array(
       'data' => storm_icon_l('report', '', t('Reports'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
@@ -43,36 +47,36 @@ function stormtimetracking_list() {
 
   $s_duration = "SELECT SUM(duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
-  if($_SESSION['stormtimetracking_list_filter']['organization_nid']) {
-    $where[] = 'stt.organization_nid=' . $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+  if ($_SESSION['stormtimetracking_list_filter']['organization_nid']) {
+    $where[] = 'stt.organization_nid='. $_SESSION['stormtimetracking_list_filter']['organization_nid'];
   }
-  if($_SESSION['stormtimetracking_list_filter']['project_nid']) {
-    $where[] = 'stt.project_nid=' . $_SESSION['stormtimetracking_list_filter']['project_nid'];
+  if ($_SESSION['stormtimetracking_list_filter']['project_nid']) {
+    $where[] = 'stt.project_nid='. $_SESSION['stormtimetracking_list_filter']['project_nid'];
   }
-  if($_SESSION['stormtimetracking_list_filter']['task_nid']) {
-    $where[] = 'stt.task_nid=' . $_SESSION['stormtimetracking_list_filter']['task_nid'];
+  if ($_SESSION['stormtimetracking_list_filter']['task_nid']) {
+    $where[] = 'stt.task_nid='. $_SESSION['stormtimetracking_list_filter']['task_nid'];
   }
-  if($_SESSION['stormtimetracking_list_filter']['ticket_nid']) {
-    $where[] = 'stt.ticket_nid=' . $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+  if ($_SESSION['stormtimetracking_list_filter']['ticket_nid']) {
+    $where[] = 'stt.ticket_nid='. $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
   }
-  if($_SESSION['stormtimetracking_list_filter']['datefrom']) {
+  if ($_SESSION['stormtimetracking_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
     $datefrom['hour'] = 0;
-    $datefrom['minute'] = 0;    
-    $where[] = 'stt.trackingdate>=' . _storm_datetime_to_gmtimestamp($datefrom);
+    $datefrom['minute'] = 0;
+    $where[] = 'stt.trackingdate>='. _storm_datetime_to_gmtimestamp($datefrom);
   }
-  if($_SESSION['stormtimetracking_list_filter']['dateto']) {
+  if ($_SESSION['stormtimetracking_list_filter']['dateto']) {
     $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
     $dateto['hour'] = 23;
-    $dateto['minute'] = 59;    
-    $where[] = 'stt.trackingdate<=' . _storm_datetime_to_gmtimestamp($dateto);
+    $dateto['minute'] = 59;
+    $where[] = 'stt.trackingdate<='. _storm_datetime_to_gmtimestamp($dateto);
   }
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
 
-  if($_SESSION['stormtimetracking_list_filter']['user']) {
+  if ($_SESSION['stormtimetracking_list_filter']['user']) {
     $trackinguser = user_load(array('name' => $_SESSION['stormtimetracking_list_filter']['user']));
-    if(!$trackinguser->uid) $trackinguser->uid =  -1; 
-    $where[] = 'n.uid=' . $trackinguser->uid;
+    if (!$trackinguser->uid) $trackinguser->uid =  -1;
+    $where[] = 'n.uid='. $trackinguser->uid;
   }
 
   $s = stormtimetracking_access_sql($s, $where);
@@ -85,7 +89,7 @@ function stormtimetracking_list() {
   $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
 
   $timetrackings = array();
-  while($item = db_fetch_object($r)) {
+  while ($item = db_fetch_object($r)) {
     $timetrackings[] = $item;
   }
 
@@ -107,7 +111,7 @@ function stormtimetracking_list_filter() {
   }
 
   $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
-  if(!$datefrom) {
+  if (!$datefrom) {
     $datefrom = array('day' => 1,
                       'month' => format_date(time(), 'custom', 'n'),
                       'year' => format_date(time(), 'custom', 'Y'),
@@ -118,7 +122,7 @@ function stormtimetracking_list_filter() {
   }
 
   $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
-  if(!$dateto) {
+  if (!$dateto) {
     $year = format_date(time(), 'custom', 'Y');
     $month = format_date(time(), 'custom', 'n');
     $day = format_date(mktime(0, 0, 0, ($month + 1), 0, $year), 'custom', 'd');
@@ -127,7 +131,7 @@ function stormtimetracking_list_filter() {
                      'year' => $year,
                      'hour' => 23,
                      'minute' => 59,
-                   );
+    );
     $_SESSION['stormtimetracking_list_filter']['dateto'] = $dateto;
   }
 
@@ -164,7 +168,7 @@ function stormtimetracking_list_filter() {
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid 
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
   $r = db_query(stormproject_access_sql($s), $organization_nid);
   $projects = array();
@@ -190,12 +194,12 @@ function stormtimetracking_list_filter() {
     '#default_value' => $task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
-    '#attributes' => array('onchange'=>"stormticket_task_tickets(this, 'edit-organization-nid', 'edit-project-nid', 'edit-ticket-nid', true, 'All')"),
+    '#attributes' => array('onchange' => "stormticket_task_tickets(this, 'edit-organization-nid', 'edit-project-nid', 'edit-ticket-nid', true, 'All')"),
   );
 
   $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} sti INNER JOIN {node} n ON sti.nid=n.nid WHERE n.status=1 AND n.type='stormticket' AND sti.organization_nid=%d AND sti.project_nid=%d AND sti.task_nid=%d ORDER BY title "), $organization_nid, $project_nid, $task_nid);
   $tickets = array();
-  while($ticket = db_fetch_object($r)) {
+  while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
   $tickets = array(0 => t('All')) + $tickets;
@@ -286,10 +290,10 @@ function stormtimetracking_list_form_report() {
     '#options' => theme('stormtimetracking_list_form_report_reports'),
   );
 
-  if (module_exists('locale')) {  
+  if (module_exists('locale')) {
     $language_list = language_list();
     $languages = array();
-    foreach ($language_list as $key=>$lang) {
+    foreach ($language_list as $key => $lang) {
       $languages[$key] = $lang->name;
     }
     $form['language'] = array(
@@ -315,7 +319,7 @@ function stormtimetracking_list_form_report() {
 function stormtimetracking_list_form_report_submit($form, &$form_state) {
   $report = $form_state['values']['report'];
   $language = $form_state['values']['language'];
-	drupal_goto('storm/timetrackings/report/'. $report .'/'. $language);
+  drupal_goto('storm/timetrackings/report/'. $report .'/'. $language);
 }
 
 function stormtimetracking_list_report($report, $language) {
@@ -323,7 +327,7 @@ function stormtimetracking_list_report($report, $language) {
 
   $s = $_SESSION['stormtimetracking_list_filter']['sql'];
   $r = db_query($s);
-  while($t = db_fetch_object($r)) {
+  while ($t = db_fetch_object($r)) {
     $timetracking = node_load($t->nid);
     $timetrackings[] = $timetracking;
   }

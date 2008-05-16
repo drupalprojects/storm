@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormtimetracking_help($path, $arg) {
   $o = '';
 
@@ -328,7 +332,7 @@ function stormtimetracking_form(&$node) {
 
 function stormtimetracking_insert($node) {
   _stormtimetracking_beforesave($node);
-  
+
   db_query("INSERT INTO {stormtimetracking}
             (vid, nid,
             organization_nid, organization_title,
@@ -371,7 +375,7 @@ function _stormtimetracking_beforesave(&$node) {
   $timebegin = _storm_strtotime($node->timebegin);
   $timeend = _storm_strtotime($node->timeend);
 
-  $trackingdate = $trackingdate + $timebegin;  
+  $trackingdate = $trackingdate + $timebegin;
 
   $node->trackingdate = _storm_datetime_to_gmtimestamp($trackingdate);
 
@@ -389,7 +393,7 @@ function _stormtimetracking_beforesave(&$node) {
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
-  
+
   $s = "SELECT n.title, p.organization_title
         FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
         WHERE type='stormproject' AND n.nid=%d";

@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormorganization_install() {
   drupal_install_schema('stormorganization');
 }

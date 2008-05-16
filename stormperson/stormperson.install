@@ -1,5 +1,9 @@
 <?php
-// $Id
+// $Id$
+
+/**
+ * @file
+ */
 
 function stormperson_install() {
   drupal_install_schema('stormperson');

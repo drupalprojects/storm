@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormtask_install() {
   drupal_install_schema('stormtask');
 }

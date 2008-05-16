@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function theme_stormticket_list($header, $tickets) {
 
   $rows = array();

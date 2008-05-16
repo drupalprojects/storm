@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormtask_tasks($project) {
   $i = new stdClass();
   $i->type = 'stormtask';
@@ -167,7 +171,7 @@ function stormtask_list_filter() {
   $organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
   $taskstatus = $_SESSION['stormtask_list_filter']['taskstatus'];
-  
+
   if (!$taskstatus) {
     $rstatus_list = array_flip($status_list);
     $taskstatus = $rstatus_list['open'];
@@ -210,7 +214,7 @@ function stormtask_list_filter() {
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid 
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
   $r = db_query(stormproject_access_sql($s), $organization_nid);
   $projects = array();

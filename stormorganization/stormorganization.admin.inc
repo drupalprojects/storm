@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormorganization_list() {
   $i = new stdClass();
   $i->type = 'stormorganization';

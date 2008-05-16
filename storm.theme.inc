@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
   $o = '<table class="formgroup"><tr>';
@@ -18,7 +22,7 @@ function theme_datetime($element) {
 function theme_storm_list_report($header, $rows, $title, $footer) {
   $css_all_file = drupal_get_path('module', 'storm') .'/storm_list_report_all.css';
   $css_print_file = drupal_get_path('module', 'storm') .'/storm_list_report_print.css';
-  $query_string = '?'. substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = '?'. drupal_substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   $o = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $o .= '<html xmlns="http://www.w3.org/1999/xhtml">';

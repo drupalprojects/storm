@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function theme_stormorganization_list($header, $organizations) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 

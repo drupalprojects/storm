@@ -278,7 +278,7 @@ function stormproject_update($node) {
         $node->organization_nid, $o->title, $node->projectcategory, $node->projectstatus,
         $node->pricemode, $node->price, $node->currency, $node->vid);
     if ($node->title != $node->title_old) {
-      module_invoke_all('stormproject_titlechange', $node->nid, $node->title);
+      module_invoke_all('stormproject_change', $node->nid, $node->title);
     }
   }
 }

@@ -1,12 +1,16 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function theme_stormperson_people($header, $people) {
   $rows = array();
   foreach ($people as $person) {
     $n = new stdClass();
-    $n->nid = $task->nid;
-    $n->uid = $task->uid;
+    $n->nid = $person->nid;
+    $n->uid = $person->uid;
     $n->type = 'stormperson';
 
     $rows[] = array(

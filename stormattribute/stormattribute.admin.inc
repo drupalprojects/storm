@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormattribute_list() {
   $o = drupal_get_form('stormattribute_list_filter');
 
@@ -31,14 +35,14 @@ function stormattribute_list() {
   $s = "SELECT * FROM {stormattribute}";
   $where = array();
 
-  if($_SESSION['stormattribute_list_filter']['domain']) {
+  if ($_SESSION['stormattribute_list_filter']['domain']) {
     $where[] = "domain='". $_SESSION['stormattribute_list_filter']['domain'] ."'";
   }
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
-  
+
   $s = db_rewrite_sql($s, 'stormattribute', 'aid');
   $s = stormtimetracking_access_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL);

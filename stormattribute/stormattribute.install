@@ -1,9 +1,15 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ */
+
 function stormattribute_install() {
   drupal_install_schema('stormattribute');
-    
+
   $attributes = array();
-  
+
   $attributes['Ticket status'] = array(
     'inserted' => 'inserted',
     'in progress' => 'in progress',
@@ -84,9 +90,9 @@ function stormattribute_install() {
   $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
-  foreach ($attributes as $domain=>$attribute) {
+  foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
-    foreach ($attribute as $key=>$value) {
+    foreach ($attribute as $key => $value) {
       db_query($s, $domain, $key, $value, $weight);
       $weight++;
     }
