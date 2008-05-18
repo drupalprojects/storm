@@ -5,102 +5,21 @@
  * @file
  */
 
-function stormperson_people($organization) {
-  $i = new stdClass();
-  $i->type = 'stormperson';
-
-  $o = drupal_get_form('stormperson_people_filter');
-
-  $params = $_GET;
-  $params['organization_nid'] = $organization->nid;
-
-  $header = array(
-    array(
-      'data' => t('Name'),
-    ),
-    array(
-      'data' => t('Email'),
-    ),
-    array(
-      'data' => storm_icon_add_node($i, $params),
-      'class' => 'storm_list_operations',
-    ),
-  );
-
-  $where = array();
-  $s  = "SELECT n.*, spe.* FROM {stormperson} spe INNER JOIN {node} n ON n.nid=spe.nid WHERE n.status=1 AND n.type='stormperson' ";
-  $where[] = 'spe.organization_nid='. $organization->nid;
-  if ($_SESSION['stormperson_people_filter']['name']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('%%". $_SESSION['stormperson_people_filter']['name'] ."%%')";
-  }
-
-  $s = stormperson_access_sql($s, $where);
-  $s = db_rewrite_sql($s, 'stormperson', 'nid');
-
-  $tablesort = tablesort_sql($header);
-  $r = db_query($s . $tablesort);
-
-  $people = array();
-  while ($person = db_fetch_object($r)) {
-    $people[] = $person;
-  }
-
-  $o .= theme('stormperson_people', $header, $people);
-  print theme('page', $o);
-}
-
-function stormperson_people_filter() {
-  $name = $_SESSION['stormperson_people_filter']['name'];
-
-  $form = array();
-
-  $form['filter'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Filter'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-  );
-
-  $form['filter']['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Name'),
-    '#default_value' => $name,
-    '#size' => 30,
-  );
-
-  $form['filter']['group1'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-  );
-
-  $form['filter']['group1']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Filter'),
-    '#submit' => array('stormperson_people_filter_filter'),
-  );
-
-  $form['filter']['group1']['reset'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset'),
-    '#submit' => array('stormperson_people_filter_reset'),
-  );
-
-  return $form;
-}
-
-function stormperson_people_filter_filter($form, &$form_state) {
-  $_SESSION['stormperson_people_filter']['name'] = $form_state['values']['name'];
-}
-
-function stormperson_people_filter_reset($form, &$form_state) {
-  unset($_SESSION['stormperson_people_filter']);
-}
-
 function stormperson_list() {
-  $i = new stdClass();
-  $i->type = 'stormperson';
+  if (array_key_exists('organization_nid', $_GET) && 
+    ($_SESSION['stormperson_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
+    $_SESSION['stormperson_list_filter']['organization_nid'] = $_GET['organization_nid'];
+  }
 
   $o = drupal_get_form('stormperson_list_filter');
+
+  $i = new stdClass();
+  $i->type = 'stormperson';
+
+  $params = $_GET;
+  if ($_SESSION['stormperson_list_filter']['organization_nid']) {
+    $params['organization_nid'] = $_SESSION['stormperson_list_filter']['organization_nid'];
+  }
 
   $header = array(
     array(
@@ -116,7 +35,7 @@ function stormperson_list() {
       'field' => 'spe.email',
     ),
     array(
-      'data' => storm_icon_add_node($i, $_GET),
+      'data' => storm_icon_add_node($i, $params),
       'class' => 'storm_list_operations',
     ),
   );

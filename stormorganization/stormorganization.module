@@ -323,8 +323,23 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 0,
   );
   $node->content['www'] = array(
-    '#value' => t('WWW') .' : '. l($node->www, 'http://'. $node->www, array('absolute' => TRUE)) .'<br />',
+    '#value' => l($node->www, 'http://'. $node->www, array('absolute' => TRUE)) .'<br />',
     '#weight' => 1,
+  );
+
+  $node->content['people'] = array(
+    '#value' => l(t('People'), 'storm/people/', array('query'=>array('organization_nid' => $node->nid))) .'<br />',
+    '#weight' => 2,
+  );
+
+  $node->content['projects'] = array(
+    '#value' => l(t('Projects'), 'storm/projects/', array('query'=>array('organization_nid' => $node->nid))) .'<br />',
+    '#weight' => 3,
+  );
+
+  $node->content['notes'] = array(
+    '#value' => l(t('Notes'), 'storm/notes/', array('query'=>array('organization_nid' => $node->nid))) .'<br />',
+    '#weight' => 3,
   );
 
   return $node;

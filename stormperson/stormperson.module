@@ -98,16 +98,6 @@ function stormperson_access_sql($sql, $where = array(), $join = array()) {
 }
 
 function stormperson_menu() {
-  $items['node/%node/people'] = array(
-    'title' => t('People'),
-    'page callback' => 'stormperson_people',
-    'page arguments' => array(1),
-    'access callback' => '_stormperson_people_access',
-    'access arguments' => array(1),
-    'file' => 'stormperson.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3
-  );
   $items['storm/people'] = array(
     'title' => t('People'),
     'description' => t('STORM people'),
@@ -338,7 +328,7 @@ function stormperson_load($node) {
 
 function _stormperson_people_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'stormorganization' && user_access('STORM person: create')) return TRUE;
+  if ($node->type == 'stormorganization') return TRUE;
   return FALSE;
 }
 

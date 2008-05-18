@@ -160,6 +160,8 @@ function stormproject_stormorganization_change($organization_nid, $organization_
 }
 
 function stormproject_form(&$node) {
+  if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
+
   $type = node_get_types('type', $node);
 
   $form['title'] = array(
