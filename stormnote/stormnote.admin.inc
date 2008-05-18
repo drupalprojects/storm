@@ -1,0 +1,188 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ */
+
+function stormnote_list() {
+  if (array_key_exists('organization_nid', $_GET) && 
+    ($_SESSION['stormnote_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
+    $_SESSION['stormnote_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    unset($_SESSION['stormnote_list_filter']['project_nid']);
+    unset($_SESSION['stormnote_list_filter']['task_nid']);
+  }
+
+  $o = drupal_get_form('stormnote_list_filter');
+
+  $i = new stdClass();
+  $i->type = 'stormnote';
+
+  $params = $_GET;
+  if ($_SESSION['stormnote_list_filter']['organization_nid']) {
+    $params['organization_nid'] = $_SESSION['stormnote_list_filter']['organization_nid'];
+  }
+
+  $header = array(
+    array(
+      'data' => t('Organization'),
+      'field' => 'sno.organization_title',
+    ),
+    array(
+      'data' => t('Project'),
+      'field' => 'sno.project_title',
+    ),
+    array(
+      'data' => t('Task'),
+      'field' => 'sno.task_title',
+    ),
+    array(
+      'data' => t('Title'),
+      'field' => 'n.title',
+    ),
+    array(
+      'data' => storm_icon_add_node($i, $params),
+      'class' => 'storm_list_operations',
+    ),
+  );
+
+  $s  = "SELECT n.title, sno.* FROM {stormnote} sno INNER JOIN {node} n ON n.vid=sno.vid WHERE n.status=1 AND n.type='stormnote' ";
+
+  if ($_SESSION['stormnote_list_filter']['organization_nid']) {
+    $where[] = 'sno.organization_nid='. $_SESSION['stormnote_list_filter']['organization_nid'];
+  }
+  if ($_SESSION['stormnote_list_filter']['project_nid']) {
+    $where[] = 'sno.project_nid='. $_SESSION['stormnote_list_filter']['project_nid'];
+  }
+  if ($_SESSION['stormnote_list_filter']['task_nid']) {
+    $where[] = 'sno.task_nid='. $_SESSION['stormnote_list_filter']['task_nid'];
+  }
+  $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
+  if (!$itemsperpage) $itemsperpage = 10;
+
+  $tablesort = tablesort_sql($header);
+  $sql = stormnote_access_sql($s, $where) . $tablesort;
+  $r = pager_query($sql, $itemsperpage, 0, NULL);
+
+  $notes = array();
+  while ($item = db_fetch_object($r)) {
+    $notes[] = $item;
+  }
+
+  $o .= theme('stormnote_list', $header, $notes);
+  $o .= theme('pager', NULL, $itemsperpage, 0);
+  print theme('page', $o);
+}
+
+function stormnote_list_filter() {
+  $organization_nid = $_SESSION['stormnote_list_filter']['organization_nid'];
+  $project_nid = $_SESSION['stormnote_list_filter']['project_nid'];
+  $task_nid = $_SESSION['stormnote_list_filter']['task_nid'];
+
+  $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = 10;
+    $_SESSION['stormnote_list_filter']['itemsperpage'] = $itemsperpage;
+  }
+
+  $form = array();
+
+  $form['filter'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Filter'),
+    '#collapsible' => true,
+    '#collapsed' => true,
+  );
+
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $r = db_query(stormorganization_access_sql($s));
+  $organizations = array();
+  while ($organization = db_fetch_object($r)) {
+    $organizations[$organization->nid] = $organization->title;
+  }
+  $organizations = array(0 => t('All')) + $organizations;
+  $form['filter']['group1']['organization_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Organization'),
+    '#default_value' => $organization_nid,
+    '#options' => $organizations,
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', true, 'All')"),
+  );
+
+  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
+  WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
+  $r = db_query(stormproject_access_sql($s), $organization_nid);
+  $projects = array();
+  while ($project = db_fetch_object($r)) {
+    $projects[$project->nid] = $project->title;
+  }
+  $projects = array(0 => t('All')) + $projects;
+  $form['filter']['group1']['project_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Project'),
+    '#default_value' => $project_nid,
+    '#options' => $projects,
+    '#process' => array('storm_dependent_select_process'),
+    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, 'All')"),
+  );
+
+  $r = db_query(stormtask_access_sql("SELECT n.nid, n.title FROM {stormtask} sta INNER JOIN {node} n ON sta.nid=n.nid WHERE status=1 AND type='stormtask' AND sta.project_nid=%d ORDER BY title "), $project_nid);
+  $tasks = array();
+  while ($task = db_fetch_object($r)) {
+    $tasks[$task->nid] = $task->title;
+  }
+  $tasks = array(0 => t('All')) + $tasks;
+  $form['filter']['group1']['task_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Task'),
+    '#default_value' => $task_nid,
+    '#options' => $tasks,
+  );
+
+  $form['filter']['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group2']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+    '#submit' => array('stormnote_list_filter_filter'),
+  );
+
+  $form['filter']['group2']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('stormnote_list_filter_reset'),
+  );
+
+  $form['filter']['group2']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Items'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+
+}
+
+function stormnote_list_filter_reset($form, &$form_state) {
+  unset($_SESSION['stormnote_list_filter']);
+}
+
+function stormnote_list_filter_filter($form, &$form_state) {
+  $_SESSION['stormnote_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
+  $_SESSION['stormnote_list_filter']['project_nid'] = $form_state['values']['project_nid'];
+  $_SESSION['stormnote_list_filter']['task_nid'] = $form_state['values']['task_nid'];
+  $_SESSION['stormnote_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+}
+
+
