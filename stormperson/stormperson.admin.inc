@@ -6,7 +6,7 @@
  */
 
 function stormperson_list() {
-  if (array_key_exists('organization_nid', $_GET) && 
+  if (array_key_exists('organization_nid', $_GET) &&
     ($_SESSION['stormperson_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
     $_SESSION['stormperson_list_filter']['organization_nid'] = $_GET['organization_nid'];
   }

@@ -188,6 +188,45 @@ function stormtimetracking_stormticket_change($ticket_nid, $ticket_title) {
 
 function stormtimetracking_form(&$node) {
   if (arg(1)=='add') {
+    if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
+      $node->organization_nid = $_GET['organization_nid'];
+    }
+    if (array_key_exists('project_nid', $_GET) && !$node->project_nid) {
+      $node->project_nid = $_GET['project_nid'];
+      $p = node_load($node->project_nid);
+      $node->organization_nid = $p->organization_nid;
+    }
+    if (array_key_exists('task_nid', $_GET) && !$node->task_nid) {
+      $node->task_nid = $_GET['task_nid'];
+      $t = node_load($node->task_nid);
+      $node->organization_nid = $t->organization_nid;
+      $node->project_nid = $t->project_nid;
+    }
+    if (array_key_exists('ticket_nid', $_GET) && !$node->ticket_nid) {
+      $node->ticket_nid = $_GET['ticket_nid'];
+      $t = node_load($node->ticket_nid);
+      $node->organization_nid = $t->organization_nid;
+      $node->project_nid = $t->project_nid;
+      $node->task_nid = $t->task_nid;
+    }
+
+    if ($_SESSION['stormtimetracking_list_filter']['organization_nid'] && !$node->organization_nid) {
+      $node->organization_nid = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+    }
+    if ($_SESSION['stormtimetracking_list_filter']['project_nid'] && !$node->project_nid) {
+      $node->project_nid = $_SESSION['stormtimetracking_list_filter']['project_nid'];
+    }
+    if ($_SESSION['stormtimetracking_list_filter']['task_nid'] && !$node->task_nid) {
+      $node->task_nid = $_SESSION['stormtimetracking_list_filter']['task_nid'];
+    }
+    if ($_SESSION['stormtimetracking_list_filter']['ticket_nid'] && !$node->ticket_nid) {
+      $node->ticket_nid = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+    }
+    if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
+    if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
+    if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
+    if (array_key_exists('ticket_nid', $_GET)) $node->ticket_nid = $_GET['ticket_nid'];
+
     $node->trackingdate = time();
 
     $today = _storm_gmtimestamp_without_time(time());

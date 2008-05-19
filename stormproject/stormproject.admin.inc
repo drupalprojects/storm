@@ -6,7 +6,7 @@
  */
 
 function stormproject_list() {
-  if (array_key_exists('organization_nid', $_GET) && 
+  if (array_key_exists('organization_nid', $_GET) &&
     ($_SESSION['stormproject_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
     $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];
     unset($_SESSION['stormproject_list_filter']['project_nid']);

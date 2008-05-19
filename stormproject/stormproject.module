@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormproject_help($path, $arg) {
   $o = '';
 
@@ -107,8 +111,9 @@ function stormproject_menu() {
     'page callback' => 'stormproject_list',
     'access arguments' => array('STORM project: access'),
     'file' => 'stormproject.admin.inc',
-    'type' => MENU_NORMAL_ITEM);
-    
+    'type' => MENU_NORMAL_ITEM
+  );
+
   $items['storm/organization_projects_js/%'] = array(
     'title' => t('Projects'),
     'page callback' => '_stormproject_organization_projects_js',
@@ -160,7 +165,14 @@ function stormproject_stormorganization_change($organization_nid, $organization_
 }
 
 function stormproject_form(&$node) {
-  if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
+  if (arg(1)=='add') {
+    if (array_key_exists('organization_nid', $_GET) && !$node->organization) {
+      $node->organization_nid = $_GET['organization_nid'];
+    }
+    if ($_SESSION['stormproject_list_filter']['organization_nid'] && !$node->organization_nid) {
+      $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
+    }
+  }
 
   $type = node_get_types('type', $node);
 

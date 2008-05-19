@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormtask_help($path, $arg) {
   $o = '';
 
@@ -179,8 +183,23 @@ function stormtask_stormproject_change($project_nid, $project_title) {
 }
 
 function stormtask_form(&$node) {
-  if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
-  if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
+  if (arg(1)=='add') {
+    if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
+      $node->organization_nid = $_GET['organization_nid'];
+    }
+    if (array_key_exists('project_nid', $_GET) && !$node->project_nid) {
+      $node->project_nid = $_GET['project_nid'];
+      $p = node_load($node->project_nid);
+      $node->organization_nid = $p->organization_nid;
+    }
+
+    if ($_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
+      $node->organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
+    }
+    if ($_SESSION['stormtask_list_filter']['project_nid'] && !$node->project_nid) {
+      $node->project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
+    }
+  }
 
   $type = node_get_types('type', $node);
 

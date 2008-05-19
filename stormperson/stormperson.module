@@ -1,5 +1,9 @@
 <?php
-// $Id
+// $Id$
+
+/**
+ * @file
+ */
 
 function stormperson_help($path, $arg) {
   $o = '';
@@ -146,7 +150,15 @@ function stormperson_stormorganization_change($organization_nid, $organization_t
 }
 
 function stormperson_form(&$node) {
-  if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
+  if (arg(1)=='add') {
+    if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
+      $node->organization_nid = $_GET['organization_nid'];
+    }
+
+    if ($_SESSION['stormperson_list_filter']['organization_nid'] && !$node->organization_nid) {
+      $node->organization_nid = $_SESSION['stormperson_list_filter']['organization_nid'];
+    }
+  }
 
   $type = node_get_types('type', $node);
 
