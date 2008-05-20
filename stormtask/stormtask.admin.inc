@@ -106,10 +106,26 @@ function _stormtask_project_tasks_js($project_nid) {
 }
 
 function stormtask_list() {
-  $i = new stdClass();
-  $i->type = 'stormtask';
+  if (array_key_exists('organization_nid', $_GET)) {
+    if ($_SESSION['stormtask_list_filter']['organization_nid'] != $_GET['organization_nid']) {
+      $_SESSION['stormtask_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    }
+    unset($_SESSION['stormtask_list_filter']['project_nid']);
+  }
+
+  if (array_key_exists('project_nid', $_GET)) {
+    if ($_SESSION['stormtask_list_filter']['project_nid'] != $_GET['project_nid']) {
+      $_SESSION['stormtask_list_filter']['project_nid'] = $_GET['project_nid'];
+    }
+    $p = node_load($_GET['project_nid']);
+    $_SESSION['stormtask_list_filter']['organization_nid'] = $p->organization_nid;
+
+  }
 
   $o = drupal_get_form('stormtask_list_filter');
+
+  $i = new stdClass();
+  $i->type = 'stormtask';
 
   $header = array(
     array(

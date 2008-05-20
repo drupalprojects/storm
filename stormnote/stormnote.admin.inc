@@ -6,11 +6,32 @@
  */
 
 function stormnote_list() {
-  if (array_key_exists('organization_nid', $_GET) && 
-    ($_SESSION['stormnote_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
-    $_SESSION['stormnote_list_filter']['organization_nid'] = $_GET['organization_nid'];
+  if (array_key_exists('organization_nid', $_GET)) {
+    if ($_SESSION['stormnote_list_filter']['organization_nid'] != $_GET['organization_nid']) {
+      $_SESSION['stormnote_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    }
     unset($_SESSION['stormnote_list_filter']['project_nid']);
     unset($_SESSION['stormnote_list_filter']['task_nid']);
+  }
+
+  if (array_key_exists('project_nid', $_GET)) {
+    if ($_SESSION['stormnote_list_filter']['project_nid'] != $_GET['project_nid']) {
+      $_SESSION['stormnote_list_filter']['project_nid'] = $_GET['project_nid'];
+    }
+    $p = node_load($_GET['project_nid']);
+    $_SESSION['stormnote_list_filter']['organization_nid'] = $p->organization_nid;
+
+    unset($_SESSION['stormnote_list_filter']['task_nid']);
+  }
+
+  if (array_key_exists('task_nid', $_GET)) {
+    if ($_SESSION['stormnote_list_filter']['task_nid'] != $_GET['task_nid']) {
+      $_SESSION['stormnote_list_filter']['task_nid'] = $_GET['task_nid'];
+    }
+
+    $t = node_load($_GET['task_nid']);
+    $_SESSION['stormnote_list_filter']['organization_nid'] = $t->organization_nid;
+    $_SESSION['stormnote_list_filter']['project_nid'] = $t->project_nid;
   }
 
   $o = drupal_get_form('stormnote_list_filter');

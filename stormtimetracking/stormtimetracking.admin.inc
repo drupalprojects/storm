@@ -6,10 +6,52 @@
  */
 
 function stormtimetracking_list() {
-  $i = new stdClass();
-  $i->type = 'stormtimetracking';
+  if (array_key_exists('organization_nid', $_GET)) {
+    if ($_SESSION['stormtimetracking_list_filter']['organization_nid'] != $_GET['organization_nid']) {
+      $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    }
+    unset($_SESSION['stormtimetracking_list_filter']['project_nid']);
+    unset($_SESSION['stormtimetracking_list_filter']['task_nid']);
+    unset($_SESSION['stormtimetracking_list_filter']['ticket_nid']);
+  }
+
+  if (array_key_exists('project_nid', $_GET)) {
+    if ($_SESSION['stormtimetracking_list_filter']['project_nid'] != $_GET['project_nid']) {
+      $_SESSION['stormtimetracking_list_filter']['project_nid'] = $_GET['project_nid'];
+    }
+    $p = node_load($_GET['project_nid']);
+    $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $p->organization_nid;
+
+    unset($_SESSION['stormtimetracking_list_filter']['task_nid']);
+    unset($_SESSION['stormtimetracking_list_filter']['ticket_nid']);
+  }
+
+  if (array_key_exists('task_nid', $_GET)) {
+    if ($_SESSION['stormtimetracking_list_filter']['task_nid'] != $_GET['task_nid']) {
+      $_SESSION['stormtimetracking_list_filter']['task_nid'] = $_GET['task_nid'];
+    }
+
+    $t = node_load($_GET['task_nid']);
+    $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $t->organization_nid;
+    $_SESSION['stormtimetracking_list_filter']['project_nid'] = $t->project_nid;
+    unset($_SESSION['stormtimetracking_list_filter']['ticket_nid']);
+  }
+
+  if (array_key_exists('ticket_nid', $_GET)) {
+    if ($_SESSION['stormtimetracking_list_filter']['ticket_nid'] != $_GET['ticket_nid']) {
+      $_SESSION['stormtimetracking_list_filter']['ticket_nid'] = $_GET['ticket_nid'];
+    }
+
+    $ti = node_load($_GET['ticket_nid']);
+    $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $ti->organization_nid;
+    $_SESSION['stormtimetracking_list_filter']['project_nid'] = $ti->project_nid;
+    $_SESSION['stormtimetracking_list_filter']['task_nid'] = $ti->task_nid;
+  }
 
   $o = drupal_get_form('stormtimetracking_list_filter');
+
+  $i = new stdClass();
+  $i->type = 'stormtimetracking';
 
   $report_attrs = array(
     'onclick' => "storm_popup(this, 'timetracking_list_form_report', 'Timetrackings', 300, 150, 'stormtimetracking_list_form_report', 'l'); return false;",

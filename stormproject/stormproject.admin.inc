@@ -6,17 +6,16 @@
  */
 
 function stormproject_list() {
-  if (array_key_exists('organization_nid', $_GET) &&
-    ($_SESSION['stormproject_list_filter']['organization_nid'] != $_GET['organization_nid'])) {
-    $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];
-    unset($_SESSION['stormproject_list_filter']['project_nid']);
-    unset($_SESSION['stormproject_list_filter']['task_nid']);
+  if (array_key_exists('organization_nid', $_GET)) {
+    if ($_SESSION['stormproject_list_filter']['organization_nid'] != $_GET['organization_nid']) {
+      $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    }
   }
+
+  $o = drupal_get_form('stormproject_list_filter');
 
   $i = new stdClass();
   $i->type = 'stormproject';
-
-  $o = drupal_get_form('stormproject_list_filter');
 
   $header = array(
     array(

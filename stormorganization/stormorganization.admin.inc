@@ -6,9 +6,16 @@
  */
 
 function stormorganization_list() {
+  if (array_key_exists('name', $_GET)) {
+    if ($_SESSION['stormorganization_list_filter']['name'] != $_GET['name']) {
+      $_SESSION['stormorganization_list_filter']['name'] = $_GET['name'];
+    }
+  }
+
+  $o = drupal_get_form('stormorganization_list_filter');
+
   $i = new stdClass();
   $i->type = 'stormorganization';
-  $o = drupal_get_form('stormorganization_list_filter');
 
   $header = array(
     array(
@@ -33,7 +40,7 @@ function stormorganization_list() {
     $where[] = "sor.country='". $_SESSION['stormorganization_list_filter']['country'] ."'";
   }
   if ($_SESSION['stormorganization_list_filter']['name']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('%%". $_SESSION['stormorganization_list_filter']['name'] ."%%')";
+    $where[] = "LOWER(n.title) LIKE LOWER('". $_SESSION['stormorganization_list_filter']['name'] ."')";
   }
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
 
@@ -82,6 +89,25 @@ function stormorganization_list_filter() {
     '#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => $name,
+  );
+
+  $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
+  foreach (range(0, 9) as $n) {
+    $qs .= '<li>'. l($n, 'storm/organizations', array('query' => array('name' => $n .'%'))) .'</li>';
+  }
+  $form['filter']['name_quick_shortcuts_numbers'] = array(
+    '#type' => 'markup',
+    '#value' => $qs,
+  );
+  $qs .= '</ul></div>';
+  $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
+  foreach (range('A', 'Z') as $l) {
+    $qs .= '<li>'. l($l, 'storm/organizations', array('query' => array('name' => $l .'%'))) .'</li>';
+  }
+  $qs .= '</ul></div>';
+  $form['filter']['name_quick_shortcuts_letters'] = array(
+    '#type' => 'markup',
+    '#value' => $qs,
   );
 
   $form['filter']['group1'] = array(

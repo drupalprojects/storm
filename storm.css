@@ -1,6 +1,7 @@
 table.formgroup {
 width: auto;
 margin: 0;
+clear: both;
 }
 
 table.formgroup tr td {
@@ -67,4 +68,31 @@ div.storm_list_form_report {
 display:none;
 width: 0px;
 height: 0px;
+}
+
+div.storm_quick_shortcuts {
+clear: both;
+}
+
+ul.storm_quick_shortcuts {
+list-style-type: none;
+margin: 0;
+}
+
+ul.storm_quick_shortcuts li {
+background: transparent;
+background-color: #5294C1;
+display: inline;
+float: left;
+padding: 0;
+margin: 0 1pt 1pt 0;
+}
+
+ul.storm_quick_shortcuts li a {
+display: block;
+width: 20px;
+height: 20px;
+text-align: center;
+font-weight: bold;
+color: #ffffff;
 }

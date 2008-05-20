@@ -323,5 +323,26 @@ function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 3,
   );
 
+  if (module_exists('stormnote')) {
+    $node->content['notes'] = array(
+      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))) .'<br />',
+      '#weight' => 4,
+    );
+  }
+
+  if (module_exists('stormticket')) {
+    $node->content['tickets'] = array(
+      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))) .'<br />',
+      '#weight' => 5,
+    );
+  }
+
+  if (module_exists('stormtimetracking')) {
+    $node->content['timetrackings'] = array(
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('project_nid' => $node->nid))) .'<br />',
+      '#weight' => 6,
+    );
+  }
+
   return $node;
 }

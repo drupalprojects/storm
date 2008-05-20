@@ -6,10 +6,38 @@
  */
 
 function stormticket_list() {
-  $i = new stdClass();
-  $i->type = 'stormticket';
+  if (array_key_exists('organization_nid', $_GET)) {
+    if ($_SESSION['stormticket_list_filter']['organization_nid'] != $_GET['organization_nid']) {
+      $_SESSION['stormticket_list_filter']['organization_nid'] = $_GET['organization_nid'];
+    }
+    unset($_SESSION['stormticket_list_filter']['project_nid']);
+    unset($_SESSION['stormticket_list_filter']['task_nid']);
+  }
+
+  if (array_key_exists('project_nid', $_GET)) {
+    if ($_SESSION['stormticket_list_filter']['project_nid'] != $_GET['project_nid']) {
+      $_SESSION['stormticket_list_filter']['project_nid'] = $_GET['project_nid'];
+    }
+    $p = node_load($_GET['project_nid']);
+    $_SESSION['stormticket_list_filter']['organization_nid'] = $p->organization_nid;
+
+    unset($_SESSION['stormticket_list_filter']['task_nid']);
+  }
+
+  if (array_key_exists('task_nid', $_GET)) {
+    if ($_SESSION['stormticket_list_filter']['task_nid'] != $_GET['task_nid']) {
+      $_SESSION['stormticket_list_filter']['task_nid'] = $_GET['task_nid'];
+    }
+
+    $t = node_load($_GET['task_nid']);
+    $_SESSION['stormticket_list_filter']['organization_nid'] = $t->organization_nid;
+    $_SESSION['stormticket_list_filter']['project_nid'] = $t->project_nid;
+  }
 
   $o = drupal_get_form('stormticket_list_filter');
+
+  $i = new stdClass();
+  $i->type = 'stormticket';
 
   $header = array(
     array(
