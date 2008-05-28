@@ -19,6 +19,10 @@ function theme_datetime($element) {
   return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
 }
 
+function theme_dateext($element) {
+  return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
+}
+
 function theme_storm_list_report($header, $rows, $title, $footer) {
   $css_all_file = drupal_get_path('module', 'storm') .'/storm_list_report_all.css';
   $css_print_file = drupal_get_path('module', 'storm') .'/storm_list_report_print.css';

@@ -190,7 +190,7 @@ function stormnote_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -20,
+    '#weight' => -50,
   );
 
   $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
@@ -239,16 +239,15 @@ function stormnote_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -18,
+    '#weight' => -49,
   );
 
-  $form['body_filter']['#weight'] = -18;
+  $form['body_filter']['#weight'] = -48;
   $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#rows' => 20,
-      '#weight' => -17,
       '#required' => ($type->min_word_count > 0));
   $form['body_filter']['format'] = filter_form($node->format);
 

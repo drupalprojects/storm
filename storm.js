@@ -91,5 +91,12 @@ function storm_popup(sender, name, title, width, height, content_id, position) {
     $("#" + p_name).remove();
     return false;
   });
-}
+};
 
+function storm_datext_tonull(sender, date_id) {
+  if (sender.value == "-1") {
+    $("#" + date_id + '-day').val("-1");
+    $("#" + date_id + '-month').val("-1");
+    $("#" + date_id + '-year').val("-1");
+  }
+};

@@ -181,13 +181,13 @@ function stormproject_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -20,
+    '#weight' => -50,
   );
 
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -19,
+    '#weight' => -49,
   );
 
   $s = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
@@ -222,7 +222,7 @@ function stormproject_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -18,
+    '#weight' => -48,
   );
 
   $form['group2']['pricemode'] = array(
@@ -246,7 +246,7 @@ function stormproject_form(&$node) {
     '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
   );
 
-  $form['body_filter']['#weight'] = -17;
+  $form['body_filter']['#weight'] = -47;
   $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),

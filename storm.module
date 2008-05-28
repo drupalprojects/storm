@@ -30,7 +30,7 @@ function storm_menu() {
   $items = array();
 
   $items['storm'] = array(
-            'title' => t('STORM'),
+            'title' => t('Storm'),
             'description' => t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'storm_storm',
             'access arguments' => array('STORM: access'),
@@ -38,7 +38,7 @@ function storm_menu() {
             'type' => MENU_NORMAL_ITEM);
 
   $items['admin/storm'] = array(
-            'title' => t('STORM'),
+            'title' => t('Storm'),
             'description' => t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('storm_admin_settings'),
@@ -57,7 +57,7 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array('element'),
     ),
-    'extselect' => array(
+    'dateext' => array(
       'file'      => 'storm.theme.inc',
       'arguments' => array('element'),
     ),
@@ -92,6 +92,7 @@ function storm_admin_settings() {
     '#options' => $organizations,
     '#default_value' => variable_get('storm_organization_nid', 0),
     '#description' => t('The organization that owns this system'),
+    '#weight' => -30,
   );
 
   $form['storm_report_header'] = array(
@@ -99,6 +100,7 @@ function storm_admin_settings() {
     '#title' => t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
     '#description' => t('The header that will appear on the reports'),
+    '#weight' => -29,
   );
 
   return system_settings_form($form);
@@ -115,6 +117,16 @@ function storm_elements() {
       'year' => format_date(time(), 'custom', 'Y'),
       'hour' => format_date(time(), 'custom', 'H'),
       'minute' => format_date(time(), 'custom', 'i'),
+    ),
+  );
+  $type['dateext'] = array(
+    '#input' => TRUE,
+    '#process' => array('storm_dateext_expand'),
+    '#element_validate' => array('storm_dateext_validate' => array()),
+    '#default_value' => array(
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
     ),
   );
   return $type;
@@ -150,9 +162,6 @@ function storm_datetime_expand($element) {
       case 'year':
         $options = drupal_map_assoc(range(1970, 2037));
         break;
-      case 'year':
-        $options = drupal_map_assoc(range(1970, 2037));
-        break;
       case 'month':
         $options = drupal_map_assoc(range(1, 12), 'map_month');
         break;
@@ -182,6 +191,59 @@ function storm_datetime_validate($form) {
   if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
     form_error($form, t('The specified date is invalid.'));
   }
+}
+
+function storm_dateext_expand($element) {
+  if (empty($element['#value'])) {
+    $element['#value'] = array(
+                          'day' => format_date(time(), 'custom', 'j'),
+                          'month' => format_date(time(), 'custom', 'n'),
+                          'year' => format_date(time(), 'custom', 'Y'),
+    );
+  }
+
+  $element['#tree'] = TRUE;
+
+  // Determine the order of day, month, year in the site's chosen date format.
+  $format = variable_get('date_format_short', 'm/d/Y - H:i');
+  $sort = array();
+  $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
+  $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
+  $sort['year'] = strpos($format, 'Y');
+  asort($sort);
+  $order = array_keys($sort);
+
+  // Output multi-selector for date.
+  foreach ($order as $type) {
+    switch ($type) {
+      case 'year':
+        $options = drupal_map_assoc(range(1970, 2037));
+        break;
+      case 'month':
+        $options = drupal_map_assoc(range(1, 12), 'map_month');
+        break;
+      case 'day':
+        $options = drupal_map_assoc(range(1, 31));
+        break;
+    }
+    if ($element['#withnull']) {
+      $options = array('-1' => '-') + $options;
+    }
+
+    $parents = $element['#parents'];
+    $parents[] = $type;
+    $element[$type] = array(
+      '#type' => 'select',
+      '#value' => $element['#value'][$type],
+      '#attributes' => $element['#attributes'],
+      '#options' => $options,
+      '#attributes' => array('onchange' => "storm_datext_tonull(this, '". $element['#id'] ."')"),
+    );
+  }
+  return $element;
+}
+
+function storm_dateext_validate($form) {
 }
 
 function storm_dependent_select_process($form, $edit, $form_state, $complete_form) {
@@ -274,8 +336,13 @@ function _storm_timestamp_to_gm($timestamp, $timezone=NULL) {
 }
 
 function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
-  $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
-  return _storm_timestamp_to_gm($gmttimestamp, $timezone);
+  if ($date['month'] == -1 || $date['year'] == -1 || $date['day'] == -1) {
+    return NULL;
+  }
+  else {
+    $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
+    return _storm_timestamp_to_gm($gmttimestamp, $timezone);
+  }
 }
 
 function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
@@ -296,11 +363,21 @@ function _storm_gmtimestamp_to_datetime($timestamp, $timezone=NULL) {
 }
 
 function _storm_gmtimestamp_to_date($timestamp, $timezone=NULL) {
-  $date = array(
-    'day' => format_date($timestamp, 'custom', 'j', $timezone),
-    'month' => format_date($timestamp, 'custom', 'n', $timezone),
-    'year' => format_date($timestamp, 'custom', 'Y', $timezone),
-  );
+  if ($timestamp) {
+    $date = array(
+      'day' => format_date($timestamp, 'custom', 'j', $timezone),
+      'month' => format_date($timestamp, 'custom', 'n', $timezone),
+      'year' => format_date($timestamp, 'custom', 'Y', $timezone),
+    );
+  }
+  else {
+    $date = array(
+      'day' => -1,
+      'month' => -1,
+      'year' => -1,
+    );
+  }
+
   return $date;
 }
 
