@@ -1,0 +1,126 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ */
+
+function stormknowledgebase_help($path, $arg) {
+  $o = '';
+
+  switch ($path) {
+    case "admin/help#stormknowledgebase":
+      $o = '<p>'. t("Provides knowledgebase support for STORM") .'</p>';
+      break;
+  }
+
+  return $o;
+}
+
+function stormknowledgebase_perm() {
+  return array(
+                'STORM knowledgebase: access',
+                'STORM knowledgebase: add',
+                'STORM knowledgebase: delete all',
+                'STORM knowledgebase: delete own',
+                'STORM knowledgebase: edit all',
+                'STORM knowledgebase: edit own',
+                'STORM knowledgebase: view all',
+                'STORM knowledgebase: view own',
+  );
+}
+
+function stormknowledgebase_access($op, $node, $account) {
+  if ($op == 'create') {
+    return user_access('STORM knowledgebase: add');
+  }
+
+  if (is_numeric($node)) $node = node_load($node);
+
+  if ($op == 'delete') {
+    if (user_access('STORM knowledgebase: delete all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM knowledgebase: delete own') && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+
+  if ($op == 'update') {
+    if (user_access('STORM knowledgebase: edit all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM knowledgebase: edit own') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+
+  if ($op == 'view') {
+    if (user_access('STORM knowledgebase: view all')) {
+      return TRUE;
+    }
+    else if (user_access('STORM knowledgebase: view own') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+function stormknowledgebase_menu() {
+  $items = array();
+
+  $items['storm/knowledgebase'] = array(
+            'title' => t('Knowledge base'),
+            'description' => t('STORM Knowledge base'),
+            'page callback' => 'stormknowledgebase_list',
+            'access arguments' => array('STORM knowledgebase: access'),
+            'type' => MENU_NORMAL_ITEM,
+            'file' => 'stormknowledgebase.admin.inc',
+  );
+
+  return $items;
+}
+
+function stormknowledgebase_theme() {
+  return array(
+    'stormknowledgebase_list' => array(
+      'file'      => 'stormknowledgebase.theme.inc',
+      'arguments' => array('header', 'knowledgebase'),
+    ),
+  );
+}
+
+function stormknowledgebase_node_info() {
+  return array(
+    'stormknowledgebase' => array(
+      'name' => t('Knowledge base'),
+      'module' => 'stormknowledgebase',
+      'description' => t("A knowledge base for STORM."),
+      'has_body' => true,
+    )
+  );
+}
+
+function stormknowledgebase_form(&$node) {
+  $type = node_get_types('type', $node);
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -49,
+  );
+
+  $form['body_filter']['#weight'] = -48;
+  $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#rows' => 20,
+      '#required' => ($type->min_word_count > 0));
+  $form['body_filter']['format'] = filter_form($node->format);
+
+  return $form;
+}
+

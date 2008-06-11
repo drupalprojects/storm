@@ -79,7 +79,6 @@ function stormnote_list() {
     $where[] = 'sno.task_nid='. $_SESSION['stormnote_list_filter']['task_nid'];
   }
   $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
-  if (!$itemsperpage) $itemsperpage = 10;
 
   $tablesort = tablesort_sql($header);
   $sql = stormnote_access_sql($s, $where) . $tablesort;

@@ -1,6 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ */
+
 function stormattribute_help($path, $arg) {
   $output = '';
 

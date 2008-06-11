@@ -5,94 +5,94 @@
  * @file
  */
 
-function stormtimetracking_help($path, $arg) {
+function stormexpense_help($path, $arg) {
   $o = '';
 
   switch ($path) {
-    case "admin/help#stormtimetracking":
-      $o = '<p>'. t("Provides timetracking support for STORM") .'</p>';
+    case "admin/help#stormexpense":
+      $o = '<p>'. t("Provides expense support for STORM") .'</p>';
       break;
   }
 
   return $o;
 }
 
-function stormtimetracking_perm() {
+function stormexpense_perm() {
   return array(
-                'STORM timetracking: access',
-                'STORM timetracking: add',
-                'STORM timetracking: delete all',
-                'STORM timetracking: delete own',
-                'STORM timetracking: delete of user organization',
-                'STORM timetracking: edit all',
-                'STORM timetracking: edit own',
-                'STORM timetracking: edit of user organization',
-                'STORM timetracking: view all',
-                'STORM timetracking: view own',
-                'STORM timetracking: view of user organization',
+                'STORM expense: access',
+                'STORM expense: add',
+                'STORM expense: delete all',
+                'STORM expense: delete own',
+                'STORM expense: delete of user organization',
+                'STORM expense: edit all',
+                'STORM expense: edit own',
+                'STORM expense: edit of user organization',
+                'STORM expense: view all',
+                'STORM expense: view own',
+                'STORM expense: view of user organization',
   );
 }
 
-function stormtimetracking_access($op, $node, $account) {
+function stormexpense_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM timetracking: add');
+    return user_access('STORM expense: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM timetracking: delete all')) {
+    if (user_access('STORM expense: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('STORM expense: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('STORM expense: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM timetracking: edit all')) {
+    if (user_access('STORM expense: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('STORM expense: edit own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('STORM expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM timetracking: view all')) {
+    if (user_access('STORM expense: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('STORM expense: view own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('STORM expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
   return FALSE;
 }
 
-function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
+function stormexpense_access_sql($sql, $where = array(), $join = array()) {
 
-  if (user_access('STORM timetracking: view all')) {
+  if (user_access('STORM expense: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM timetracking: view own')) {
+  if (user_access('STORM expense: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM timetracking: view of user organization')) {
+  if (user_access('STORM expense: view of user organization')) {
     if ($cond) $cond .= ' OR ';
-    $cond .= 'stt.organization_nid='. $user->organization_nid;
+    $cond .= 'sex.organization_nid='. $user->organization_nid;
   }
   if (!$cond) {
     $cond = '0=1';
@@ -102,92 +102,102 @@ function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormtimetracking_menu() {
+function stormexpense_menu() {
   $items = array();
 
-  $items['storm/timetrackings'] = array(
-            'title' => t('Timetrackings'),
-            'description' => t('STORM Timetrackings'),
-            'page callback' => 'stormtimetracking_list',
-            'access arguments' => array('STORM timetracking: access'),
-            'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormtimetracking.admin.inc',
+  $items['storm/expenses'] = array(
+    'title' => t('Expenses'),
+    'description' => t('STORM expenses'),
+    'page callback' => 'stormexpense_list',
+    'access arguments' => array('STORM expense: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'stormexpense.admin.inc',
   );
 
-  $items['storm/timetrackings/report/%/%'] = array(
-            'title' => t('Timetrackings'),
-            'page arguments' => array(3, 4),
-            'description' => t('STORM Timetrackings'),
-            'page callback' => 'stormtimetracking_list_report',
-            'access arguments' => array('STORM timetracking: access'),
-            'type' => MENU_CALLBACK,
-            'file' => 'stormtimetracking.admin.inc',
+  $items['storm/expenses/report/%/%'] = array(
+    'title' => t('Expenses'),
+    'page arguments' => array(3, 4),
+    'description' => t('STORM expenses'),
+    'page callback' => 'stormexpense_list_report',
+    'access arguments' => array('STORM expense: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'stormexpense.admin.inc',
+  );
+
+  $items['storm/expenses/provider_autocomplete'] = array(
+    'title' => 'Provider autocomplete',
+    'page callback' => 'stormexpense_autocomplete',
+    'access arguments' => array('STORM expense: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'stormexpense.admin.inc',
   );
 
   return $items;
 }
 
-function stormtimetracking_theme() {
+function stormexpense_theme() {
   return array(
-    'stormtimetracking_list' => array(
-      'file'      => 'stormtimetracking.theme.inc',
+    'stormexpense_list' => array(
+      'file'      => 'stormexpense.theme.inc',
       'arguments' => array('header', 'tasks', 'duration'),
     ),
-    'stormtimetracking_view' => array(
-      'file'      => 'stormtimetracking.theme.inc',
+    'stormexpense_view' => array(
+      'file'      => 'stormexpense.theme.inc',
       'arguments' => array('node', 'teaser', 'page'),
     ),
-    'stormtimetracking_list_form_report_reports' => array(
-      'file'      => 'stormtimetracking.theme.inc',
+    'stormexpense_list_form_report_reports' => array(
+      'file'      => 'stormexpense.theme.inc',
     ),
-    'stormtimetracking_list_report' => array(
-      'file'      => 'stormtimetracking.theme.inc',
+    'stormexpense_list_report' => array(
+      'file'      => 'stormexpense.theme.inc',
       'arguments' => array('report', 'language', 'timetrackings'),
     ),
   );
 }
 
-function stormtimetracking_node_info() {
+function stormexpense_node_info() {
   return array(
-    'stormtimetracking' => array(
-      'name' => t('Timetracking'),
-      'module' => 'stormtimetracking',
-      'description' => t("A timetracking for STORM."),
+    'stormexpense' => array(
+      'name' => t('Expense'),
+      'module' => 'stormexpense',
+      'description' => t("An expense for STORM."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
     )
   );
 }
 
-function stormtimetracking_storm_indexpage() {
+function stormexpense_storm_indexpage() {
   $o = array();
-  $o['stormtimetracking']['title'] =  l(t('Timetrackings'), 'storm/timetrackings');
+  $o['stormexpense']['title'] =  l(t('Expenses'), 'storm/expenses');
   return $o;
 }
 
-function stormtimetracking_stormorganization_change($organization_nid, $organization_title) {
-  $s = "UPDATE {stormtimetracking} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
+function stormexpense_stormorganization_change($organization_nid, $organization_title) {
+  $s = "UPDATE {stormexpense} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
 }
 
-function stormtimetracking_stormproject_change($project_nid, $project_title) {
-  $s = "UPDATE {stormtimetracking} SET project_title='%s' WHERE project_nid=%d AND project_title <> '%s'";
+function stormexpense_stormproject_change($project_nid, $project_title) {
+  $s = "UPDATE {stormexpense} SET project_title='%s' WHERE project_nid=%d AND project_title <> '%s'";
   db_query($s, $project_title, $project_nid, $project_title);
 }
 
-function stormtimetracking_stormtask_change($task_nid, $task_title, $task_stepno) {
-  $s = "UPDATE {stormtimetracking} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
+function stormexpense_stormtask_change($task_nid, $task_title, $task_stepno) {
+  $s = "UPDATE {stormexpense} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
       (task_title<>'%s' OR task_stepno<>'%s')";
   db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
 }
 
-function stormtimetracking_stormticket_change($ticket_nid, $ticket_title) {
-  $s = "UPDATE {stormtimetracking} SET ticket_title='%s' WHERE ticket_nid=%d AND ticket_title <> '%s'";
+function stormexpense_stormticket_change($ticket_nid, $ticket_title) {
+  $s = "UPDATE {stormexpense} SET ticket_title='%s' WHERE ticket_nid=%d AND ticket_title <> '%s'";
   db_query($s, $ticket_title, $ticket_nid, $ticket_title);
 }
 
-function stormtimetracking_form(&$node) {
+function stormexpense_form(&$node) {
   if (arg(1)=='add') {
+    $node->organization_nid = variable_get('storm_organization_nid', 0);
+
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
     }
@@ -210,37 +220,24 @@ function stormtimetracking_form(&$node) {
       $node->task_nid = $t->task_nid;
     }
 
-    if ($_SESSION['stormtimetracking_list_filter']['organization_nid'] && !$node->organization_nid) {
-      $node->organization_nid = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+    if ($_SESSION['stormexpense_list_filter']['organization_nid'] && !$node->organization_nid) {
+      $node->organization_nid = $_SESSION['stormexpense_list_filter']['organization_nid'];
     }
-    if ($_SESSION['stormtimetracking_list_filter']['project_nid'] && !$node->project_nid) {
-      $node->project_nid = $_SESSION['stormtimetracking_list_filter']['project_nid'];
+    if ($_SESSION['stormexpense_list_filter']['project_nid'] && !$node->project_nid) {
+      $node->project_nid = $_SESSION['stormexpense_list_filter']['project_nid'];
     }
-    if ($_SESSION['stormtimetracking_list_filter']['task_nid'] && !$node->task_nid) {
-      $node->task_nid = $_SESSION['stormtimetracking_list_filter']['task_nid'];
+    if ($_SESSION['stormexpense_list_filter']['task_nid'] && !$node->task_nid) {
+      $node->task_nid = $_SESSION['stormexpense_list_filter']['task_nid'];
     }
-    if ($_SESSION['stormtimetracking_list_filter']['ticket_nid'] && !$node->ticket_nid) {
-      $node->ticket_nid = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+    if ($_SESSION['stormexpense_list_filter']['ticket_nid'] && !$node->ticket_nid) {
+      $node->ticket_nid = $_SESSION['stormexpense_list_filter']['ticket_nid'];
     }
     if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
     if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
     if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
     if (array_key_exists('ticket_nid', $_GET)) $node->ticket_nid = $_GET['ticket_nid'];
 
-    $node->trackingdate = time();
-
-    $today = _storm_gmtimestamp_without_time(time());
-    $s = 'SELECT MAX(stt.timeend) FROM {node} n LEFT JOIN {stormtimetracking} stt ON n.nid=stt.nid
-    WHERE stt.trackingdate>=%d AND stt.trackingdate<=%d AND n.uid=%d';
-    $timebegin = db_result(db_query($s, $today, $today, $node->uid));
-    $node->timebegin = $timebegin;
-    $node->timeend = format_date(time(), 'custom', 'H:i');
-
-    $timebegin = _storm_strtotime($node->timebegin);
-    $timeend = _storm_strtotime($node->timeend);
-    if ($timeend['hour'] && $timebegin['hour']) {
-      $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
-    }
+    $node->expensedate = time();
   }
 
   $type = node_get_types('type', $node);
@@ -248,7 +245,7 @@ function stormtimetracking_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -20,
+    '#weight' => -50,
   );
 
   $form['group1']['title'] = array(
@@ -261,7 +258,7 @@ function stormtimetracking_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -19,
+    '#weight' => -49,
   );
 
   $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
@@ -325,37 +322,48 @@ function stormtimetracking_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -18,
+    '#weight' => -48,
   );
 
-  $form['group3']['trackingdate'] = array(
+  $form['group3']['expensedate'] = array(
     '#type' => 'date',
     '#title' => t('Date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->trackingdate),
+    '#default_value' => _storm_gmtimestamp_to_date($node->expensedate),
   );
 
-  $form['group3']['timebegin'] = array(
+  $form['group3']['provider_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Time begin'),
-    '#size' => 5,
-    '#maxlength' => 5,
-    '#default_value' => $node->timebegin,
+    '#title' => t('Provider'),
+    '#size' => 50,
+    '#default_value' => $node->provider_title,
+    '#autocomplete_path' => 'storm/expenses/provider_autocomplete',
   );
 
-  $form['group3']['timeend'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Time end'),
-    '#size' => 5,
-    '#maxlength' => 5,
-    '#default_value' => $node->timeend,
+  $form['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -47,
   );
 
-  $form['group3']['duration'] = array(
+  $form['group4']['amount'] = array(
     '#type' => 'textfield',
-    '#title' => t('Duration (hours)'),
-    '#default_value' => $node->duration,
-    '#size' => 10,
-    '#maxlength' => 5,
+    '#title' => t('Amount'),
+    '#size' => 15,
+    '#default_value' => $node->amount,
+  );
+
+  $form['group4']['vat'] = array(
+    '#type' => 'textfield',
+    '#title' => t('VAT'),
+    '#size' => 15,
+    '#default_value' => $node->vat,
+  );
+
+  $form['group4']['total'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total'),
+    '#size' => 15,
+    '#default_value' => $node->total,
   );
 
   $form['body'] = array(
@@ -363,66 +371,62 @@ function stormtimetracking_form(&$node) {
     '#title' => check_plain($type->body_label),
     '#default_value' => $node->body,
     '#required' => FALSE,
-    '#weight' => -17,
+    '#weight' => -46,
   );
 
   return $form;
 }
 
-function stormtimetracking_insert($node) {
-  _stormtimetracking_beforesave($node);
+function stormexpense_insert($node) {
+  _stormexpense_beforesave($node);
 
-  db_query("INSERT INTO {stormtimetracking}
+  db_query("INSERT INTO {stormexpense}
             (vid, nid,
             organization_nid, organization_title,
             project_nid, project_title,
             task_nid, task_title, task_stepno,
             ticket_nid, ticket_title,
-            trackingdate, timebegin, timeend, duration) VALUES
+            provider_nid, provider_title,
+            expensedate, amount, vat, total) VALUES
             (%d, %d,
             %d, '%s',
             %d, '%s',
             %d, '%s', '%s',
             %d, '%s',
-            %d, '%s', '%s', %f)",
+            %d, '%s',
+            %d, %f, %f, %f)",
             $node->vid, $node->nid,
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration);
+            $node->provider_nid, $node->provider_title,
+            $node->expensedate, $node->amount, $node->vat, $node->total);
 }
 
-function stormtimetracking_update($node) {
-  _stormtimetracking_beforesave($node);
+function stormexpense_update($node) {
+  _stormexpense_beforesave($node);
 
-  db_query("UPDATE {stormtimetracking} SET
+  db_query("UPDATE {stormexpense} SET
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
             task_nid=%d, task_title='%s', task_stepno='%s',
             ticket_nid=%d, ticket_title='%s',
-            trackingdate=%d, timebegin='%s', timeend='%s', duration=%f WHERE vid = %d",
+            provider_nid=%d, provider_title='%s',
+            expensedate=%d, amount=%f, vat=%f, total=%f WHERE vid = %d",
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->vid);
+            $node->provider_nid, $node->provider_title,
+            $node->expensedate, $node->amount, $node->vat, $node->total, $node->vid);
 }
 
-function _stormtimetracking_beforesave(&$node) {
-  $trackingdate = $node->trackingdate;
-  $timebegin = _storm_strtotime($node->timebegin);
-  $timeend = _storm_strtotime($node->timeend);
+function _stormexpense_beforesave(&$node) {
+  $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
-  $trackingdate = $trackingdate + $timebegin;
-
-  $node->trackingdate = _storm_datetime_to_gmtimestamp($trackingdate);
-
-  $node->timebegin = _storm_timetostr($timebegin);
-  $node->timeend = _storm_timetostr($timeend);
-
-  if (!$node->duration) {
-    $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
+  if (!$node->total) {
+    $node->total = $node->amount + $node->vat;
   }
 
   $s = "SELECT n.title
@@ -451,19 +455,19 @@ function _stormtimetracking_beforesave(&$node) {
   $node->ticket_title = $ti->title;
 }
 
-function stormtimetracking_delete($node) {
-  db_query('DELETE FROM {stormtimetracking} WHERE nid = %d', $node->nid);
+function stormexpense_delete($node) {
+  db_query('DELETE FROM {stormexpense} WHERE nid = %d', $node->nid);
 }
 
-function stormtimetracking_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormtimetracking} WHERE vid = %d', $node->vid));
+function stormexpense_load($node) {
+  $additions = db_fetch_object(db_query('SELECT * FROM {stormexpense} WHERE vid = %d', $node->vid));
   return $additions;
 }
 
-function stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
+function stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-  $node->content['stormtimetracking'] = array(
-    '#value' => theme('stormtimetracking_view', $node, $teaser = FALSE, $page = FALSE),
+  $node->content['stormexpense'] = array(
+    '#value' => theme('stormexpense_view', $node, $teaser = FALSE, $page = FALSE),
     '#weight' => 1,
   );
 

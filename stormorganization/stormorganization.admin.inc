@@ -89,6 +89,7 @@ function stormorganization_list_filter() {
     '#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => $name,
+    '#autocomplete_path' => 'storm/organizations/autocomplete',
   );
 
   $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
@@ -147,5 +148,17 @@ function stormorganization_list_filter_filter($form, &$form_state) {
 
 function stormorganization_list_filter_reset($form, &$form_state) {
   unset($_SESSION['stormorganization_list_filter']);
+}
+
+function stormorganization_autocomplete($string = '') {
+  $matches = array();
+  if ($string) {
+    $result = db_query_range("SELECT title FROM {node} n WHERE n.type='stormorganization' AND LOWER(title) LIKE LOWER('%s%%')", $string, 0, 10);
+    while ($org = db_fetch_object($result)) {
+      $matches[$org->title] = check_plain($org->title);
+    }
+  }
+
+  drupal_json($matches);
 }
 

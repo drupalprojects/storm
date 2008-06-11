@@ -65,6 +65,10 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array('header', 'rows', 'title', 'footer'),
     ),
+    'storm_report' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('header', 'content', 'title', 'footer'),
+    ),
   );
 }
 
@@ -297,9 +301,33 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
   if (array_key_exists('q', $params)) {
     $destination = $params['q'];
     unset($params['q']);
+    $c = 0;
     if (array_key_exists('page', $params)) {
       $destination .= '?page='. $params['page'];
       unset($params['page']);
+      $c++;
+    }
+    if (array_key_exists('sort', $params)) {
+      if ($c) {
+        $destination .= '&';
+      }
+      else {
+        $destination .= '?';
+      }
+      $destination .= 'sort='. $params['sort'];
+      unset($params['sort']);
+      $c++;
+    }
+    if (array_key_exists('order', $params)) {
+      if ($c) {
+        $destination .= '&';
+      }
+      else {
+        $destination .= '?';
+      }
+      $destination .= 'order='. $params['order'];
+      unset($params['order']);
+      $c++;
     }
     $query .= 'destination='. urlencode($destination);
   }

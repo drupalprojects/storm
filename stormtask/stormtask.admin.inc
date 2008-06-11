@@ -17,7 +17,7 @@ function stormtask_tasks($project) {
 
   $header = array(
     array(
-      'data' => t('Title'),
+      'data' => t('Description'),
     ),
     array(
       'data' => t('Status'),
