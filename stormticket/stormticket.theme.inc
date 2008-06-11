@@ -22,7 +22,7 @@ function theme_stormticket_list($header, $tickets) {
       l($ticket->title, 'node/'. $ticket->nid) . theme('mark', node_mark($ticket->nid, $ticket->changed)),
       format_date($ticket->created, 'small'),
       storm_icon('status_'. $ticket->ticketstatus, $ticket->ticketstatus),
-      storm_icon('priority_'. $ticket->ticketpriority, $ticket->ticketstatus),
+      storm_icon('priority_'. $ticket->ticketpriority, $ticket->ticketpriority),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
