@@ -303,7 +303,7 @@ function stormorganization_insert($node) {
            provstate, zip, city, address, vatid, orglanguage
            ) VALUES
            (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s',
-           '%s', '%s', '%s', '%s', '%s'
+           '%s', '%s', '%s', '%s', '%s', '%s'
            )",
             $node->vid, $node->nid, $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->currency,
             $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, $node->orglanguage
