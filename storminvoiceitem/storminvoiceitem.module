@@ -316,7 +316,7 @@ function storminvoiceitem_view($node, $teaser = FALSE, $page = FALSE) {
 
 function _storminvoiceitem_invoiceitems_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'storminvoice' && user_access('STORM invoice item: create')) return TRUE;
+  if ($node->type == 'storminvoice' && user_access('STORM invoice item: access')) return TRUE;
   return FALSE;
 }
 
