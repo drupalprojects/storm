@@ -398,9 +398,9 @@ function storminvoice_update($node) {
 }
 
 function _storminvoice_beforesave(&$node) {
-  $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
-  $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
-  $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
+  if(is_array($node->requestdate)) $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
+  if(is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
+  if(is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
 
   $s = "SELECT n.title
         FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
