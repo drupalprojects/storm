@@ -4,4 +4,3 @@ description = "SpeedTech Organizer and Resource Manager - Attributes"
 dependencies[] = storm
 package = STORM
 core = 6.x
-version = 6.x-0.0

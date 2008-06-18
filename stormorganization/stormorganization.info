@@ -5,4 +5,3 @@ dependencies[] = storm
 dependencies[] = stormattribute
 package = STORM
 core = 6.x
-version = 6.x-0.0
