@@ -41,7 +41,19 @@ function stormorganization_perm() {
                 'STORM organization: view own',
                 'STORM organization: view belonged',
                 'STORM organization: associate user'
-              );}
+              );
+}
+
+function stormorganization_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'view':
+      global $user;      
+      if (!stormorganization_access('view', $node, $user)) {
+        $node = NULL;
+      }
+      break;
+  }
+}
 
 function stormorganization_access($op, $node, $account) {
   if (is_numeric($node)) $node = node_load($node);
@@ -280,14 +292,16 @@ function stormorganization_form(&$node) {
     '#default_value' => $node->email,
   );
 
-  $form['body_filter']['#weight'] = -44;
-  $form['body_filter']['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#default_value' => $node->body,
-    '#required' => FALSE
-  );
-  $form['body_filter']['format'] = filter_form($node->format);
+  if ($type->has_body) {
+    $form['body_filter']['#weight'] = -44;
+    $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#required' => FALSE
+    );
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
 
   $form['title_old'] = array(
     '#type' => 'hidden',

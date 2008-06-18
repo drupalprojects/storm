@@ -295,15 +295,17 @@ function stormticket_form(&$node) {
     '#weight' => -18,
   );
 
-  $form['body_filter']['#weight'] = -18;
-  $form['body_filter']['body'] = array(
+  if ($type->has_body) {
+    $form['body_filter']['#weight'] = -18;
+    $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#rows' => 20,
       '#weight' => -17,
       '#required' => ($type->min_word_count > 0));
-  $form['body_filter']['format'] = filter_form($node->format);
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
 
   $form['title_old'] = array(
     '#type' => 'hidden',

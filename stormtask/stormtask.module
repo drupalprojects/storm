@@ -287,15 +287,17 @@ function stormtask_form(&$node) {
     '#options' => stormattribute_attributes_bydomain('Task status'),
   );
 
-  $form['body_filter']['#weight'] = -48;
-  $form['body_filter']['body'] = array(
+  if ($type->has_body) {
+    $form['body_filter']['#weight'] = -48;
+    $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#rows' => 20,
       '#required' => ($type->min_word_count > 0),
-  );
-  $form['body_filter']['format'] = filter_form($node->format);
+    );
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
 
   $form['stepno_old'] = array(
     '#type' => 'hidden',

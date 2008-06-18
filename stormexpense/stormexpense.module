@@ -366,14 +366,16 @@ function stormexpense_form(&$node) {
     '#default_value' => $node->total,
   );
 
-  $form['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#default_value' => $node->body,
-    '#required' => FALSE,
-    '#weight' => -46,
-  );
-
+  if ($type->has_body) {
+    $form['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#required' => FALSE,
+      '#weight' => -46,
+    );
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
   return $form;
 }
 

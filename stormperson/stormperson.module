@@ -253,14 +253,16 @@ function stormperson_form(&$node) {
     '#default_value' => $node->im,
   );
 
-  $form['body_filter']['#weight'] = -46;
-  $form['body_filter']['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#default_value' => $node->body,
-    '#required' => FALSE
-  );
-  $form['body_filter']['format'] = filter_form($node->format);
+  if ($type->has_body) {
+    $form['body_filter']['#weight'] = -46;
+    $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#required' => FALSE
+    );
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
 
   $form['title_old'] = array(
     '#type' => 'hidden',

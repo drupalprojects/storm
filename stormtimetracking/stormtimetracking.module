@@ -358,13 +358,16 @@ function stormtimetracking_form(&$node) {
     '#maxlength' => 5,
   );
 
-  $form['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#default_value' => $node->body,
-    '#required' => FALSE,
-    '#weight' => -17,
-  );
+  if ($type->has_body) {
+    $form['body'] = array(
+      '#type' => 'textarea',
+      '#title' => check_plain($type->body_label),
+      '#default_value' => $node->body,
+      '#required' => FALSE,
+      '#weight' => -17,
+    );
+    $form['body_filter']['format'] = filter_form($node->format);
+  }
 
   return $form;
 }
