@@ -34,12 +34,6 @@ function storminvoiceitem_perm() {
 }
 
 function storminvoiceitem_init() {
-  $settings = array(
-                    'storm' => array(
-                      'project_tasks_url' => url('storm/project_tasks_js/')
-                    ),
-              );
-  drupal_add_js($settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
 }
 
