@@ -10,7 +10,7 @@ function stormtask_help($path, $arg) {
 
   switch ($section) {
     case "admin/help#stormtask":
-      $o = '<p>'. t("Provides task support for STORM") .'</p>';
+      $o = '<p>'. t("Provides task support for Storm") .'</p>';
       break;
   }
 
@@ -19,17 +19,17 @@ function stormtask_help($path, $arg) {
 
 function stormtask_perm() {
   return array(
-    'STORM task: access',
-    'STORM task: add',
-    'STORM task: delete all',
-    'STORM task: delete own',
-    'STORM task: delete of user organization',
-    'STORM task: edit all',
-    'STORM task: edit own',
-    'STORM task: edit of user organization',
-    'STORM task: view all',
-    'STORM task: view own',
-    'STORM task: view of user organization',
+    'Storm task: access',
+    'Storm task: add',
+    'Storm task: delete all',
+    'Storm task: delete own',
+    'Storm task: delete of user organization',
+    'Storm task: edit all',
+    'Storm task: edit own',
+    'Storm task: edit of user organization',
+    'Storm task: view all',
+    'Storm task: view own',
+    'Storm task: view of user organization',
   );
 }
 
@@ -47,41 +47,41 @@ function stormtask_access($op, $node, $account) {
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
-    return user_access('STORM task: add');
+    return user_access('Storm task: add');
   }
 
   if ($op == 'delete') {
-    if (user_access('STORM task: delete all')) {
+    if (user_access('Storm task: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM task: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm task: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM task: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm task: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM task: edit all')) {
+    if (user_access('Storm task: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM task: edit own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm task: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM task: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm task: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM task: view all')) {
+    if (user_access('Storm task: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM task: view own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm task: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM task: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm task: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -89,17 +89,17 @@ function stormtask_access($op, $node, $account) {
 }
 
 function stormtask_access_sql($sql, $where = array(), $join = array()) {
-  if (user_access('STORM task: view all')) {
+  if (user_access('Storm task: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM task: view own')) {
+  if (user_access('Storm task: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM task: view of user organization')) {
+  if (user_access('Storm task: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'sta.organization_nid='. $user->stormorganization_nid;
   }
@@ -126,15 +126,15 @@ function stormtask_menu() {
     'title' => t('Tasks'),
     'page callback' => '_stormtask_project_tasks_js',
     'page arguments' => array(2),
-    'access arguments' => array('STORM task: access'),
+    'access arguments' => array('Storm task: access'),
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['storm/tasks'] = array(
     'title' => t('Tasks'),
-    'description' => t('STORM Tasks'),
+    'description' => t('Storm Tasks'),
     'page callback' => 'stormtask_list',
-    'access arguments' => array('STORM task: access'),
+    'access arguments' => array('Storm task: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormtask.admin.inc',
   );
@@ -159,7 +159,7 @@ function stormtask_node_info() {
     'stormtask' => array(
       'name' => t('Task'),
       'module' => 'stormtask',
-      'description' => t("A task for STORM."),
+      'description' => t("A task for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
     )
@@ -394,7 +394,7 @@ function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
 
 function _stormtask_tasks_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'stormproject' && user_access('STORM task: create')) return TRUE;
+  if ($node->type == 'stormproject' && user_access('Storm task: create')) return TRUE;
   return FALSE;
 }
 

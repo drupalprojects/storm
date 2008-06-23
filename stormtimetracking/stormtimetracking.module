@@ -10,7 +10,7 @@ function stormtimetracking_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormtimetracking":
-      $o = '<p>'. t("Provides timetracking support for STORM") .'</p>';
+      $o = '<p>'. t("Provides timetracking support for Storm") .'</p>';
       break;
   }
 
@@ -19,59 +19,59 @@ function stormtimetracking_help($path, $arg) {
 
 function stormtimetracking_perm() {
   return array(
-                'STORM timetracking: access',
-                'STORM timetracking: add',
-                'STORM timetracking: delete all',
-                'STORM timetracking: delete own',
-                'STORM timetracking: delete of user organization',
-                'STORM timetracking: edit all',
-                'STORM timetracking: edit own',
-                'STORM timetracking: edit of user organization',
-                'STORM timetracking: view all',
-                'STORM timetracking: view own',
-                'STORM timetracking: view of user organization',
+                'Storm timetracking: access',
+                'Storm timetracking: add',
+                'Storm timetracking: delete all',
+                'Storm timetracking: delete own',
+                'Storm timetracking: delete of user organization',
+                'Storm timetracking: edit all',
+                'Storm timetracking: edit own',
+                'Storm timetracking: edit of user organization',
+                'Storm timetracking: view all',
+                'Storm timetracking: view own',
+                'Storm timetracking: view of user organization',
   );
 }
 
 function stormtimetracking_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM timetracking: add');
+    return user_access('Storm timetracking: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM timetracking: delete all')) {
+    if (user_access('Storm timetracking: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm timetracking: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm timetracking: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM timetracking: edit all')) {
+    if (user_access('Storm timetracking: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm timetracking: edit own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM timetracking: view all')) {
+    if (user_access('Storm timetracking: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm timetracking: view own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -80,17 +80,17 @@ function stormtimetracking_access($op, $node, $account) {
 
 function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
 
-  if (user_access('STORM timetracking: view all')) {
+  if (user_access('Storm timetracking: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM timetracking: view own')) {
+  if (user_access('Storm timetracking: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM timetracking: view of user organization')) {
+  if (user_access('Storm timetracking: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'stt.organization_nid='. $user->organization_nid;
   }
@@ -107,9 +107,9 @@ function stormtimetracking_menu() {
 
   $items['storm/timetrackings'] = array(
             'title' => t('Timetrackings'),
-            'description' => t('STORM Timetrackings'),
+            'description' => t('Storm Timetrackings'),
             'page callback' => 'stormtimetracking_list',
-            'access arguments' => array('STORM timetracking: access'),
+            'access arguments' => array('Storm timetracking: access'),
             'type' => MENU_NORMAL_ITEM,
             'file' => 'stormtimetracking.admin.inc',
   );
@@ -117,9 +117,9 @@ function stormtimetracking_menu() {
   $items['storm/timetrackings/report/%/%'] = array(
             'title' => t('Timetrackings'),
             'page arguments' => array(3, 4),
-            'description' => t('STORM Timetrackings'),
+            'description' => t('Storm Timetrackings'),
             'page callback' => 'stormtimetracking_list_report',
-            'access arguments' => array('STORM timetracking: access'),
+            'access arguments' => array('Storm timetracking: access'),
             'type' => MENU_CALLBACK,
             'file' => 'stormtimetracking.admin.inc',
   );
@@ -152,7 +152,7 @@ function stormtimetracking_node_info() {
     'stormtimetracking' => array(
       'name' => t('Timetracking'),
       'module' => 'stormtimetracking',
-      'description' => t("A timetracking for STORM."),
+      'description' => t("A timetracking for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
     )

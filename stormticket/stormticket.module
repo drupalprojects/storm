@@ -10,7 +10,7 @@ function stormticket_help($path, $arg) {
 
   switch ($section) {
     case "admin/help#stormticket":
-      $o = '<p>'. t("Provides ticket support for STORM") .'</p>';
+      $o = '<p>'. t("Provides ticket support for Storm") .'</p>';
       break;
   }
 
@@ -19,17 +19,17 @@ function stormticket_help($path, $arg) {
 
 function stormticket_perm() {
   return array(
-                'STORM ticket: access',
-                'STORM ticket: add',
-                'STORM ticket: delete all',
-                'STORM ticket: delete own',
-                'STORM ticket: delete of user organization',
-                'STORM ticket: edit all',
-                'STORM ticket: edit own',
-                'STORM ticket: edit of user organization',
-                'STORM ticket: view all',
-                'STORM ticket: view own',
-                'STORM ticket: view of user organization',
+                'Storm ticket: access',
+                'Storm ticket: add',
+                'Storm ticket: delete all',
+                'Storm ticket: delete own',
+                'Storm ticket: delete of user organization',
+                'Storm ticket: edit all',
+                'Storm ticket: edit own',
+                'Storm ticket: edit of user organization',
+                'Storm ticket: view all',
+                'Storm ticket: view own',
+                'Storm ticket: view of user organization',
   );
 }
 
@@ -46,43 +46,43 @@ function stormticket_init() {
 
 function stormticket_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM ticket: add');
+    return user_access('Storm ticket: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM ticket: delete all')) {
+    if (user_access('Storm ticket: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm ticket: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm ticket: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM ticket: edit all')) {
+    if (user_access('Storm ticket: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: edit own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm ticket: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm ticket: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM ticket: view all')) {
+    if (user_access('Storm ticket: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: view own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm ticket: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM ticket: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm ticket: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -90,17 +90,17 @@ function stormticket_access($op, $node, $account) {
 }
 
 function stormticket_access_sql($sql, $where = array(), $join = array()) {
-  if (user_access('STORM ticket: view all')) {
+  if (user_access('Storm ticket: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM ticket: view own')) {
+  if (user_access('Storm ticket: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM ticket: view of user organization')) {
+  if (user_access('Storm ticket: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'sti.organization_nid='. $user->stormorganization_nid;
   }
@@ -117,9 +117,9 @@ function stormticket_menu() {
 
   $items['storm/tickets'] = array(
             'title' => t('Tickets'),
-            'description' => t('STORM Tickets'),
+            'description' => t('Storm Tickets'),
             'page callback' => 'stormticket_list',
-            'access arguments' => array('STORM ticket: access'),
+            'access arguments' => array('Storm ticket: access'),
             'type' => MENU_NORMAL_ITEM,
             'file' => 'stormticket.admin.inc',
   );
@@ -128,7 +128,7 @@ function stormticket_menu() {
     'title' => t('Tickets'),
     'page callback' => '_stormticket_task_tickets_js',
     'page arguments' => array(2, 3, 4),
-    'access arguments' => array('STORM ticket: access'),
+    'access arguments' => array('Storm ticket: access'),
     'file' => 'stormticket.admin.inc',
     'type' => MENU_CALLBACK,
   );
@@ -149,7 +149,7 @@ function stormticket_node_info() {
     'stormticket' => array(
       'name' => t('Ticket'),
       'module' => 'stormticket',
-      'description' => t("A ticket for STORM."),
+      'description' => t("A ticket for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
     )
@@ -413,7 +413,7 @@ function stormticket_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 function stormticket_listblock($output=FALSE) {
-  if (!user_access('STORM ticket: access')) return;
+  if (!user_access('Storm ticket: access')) return;
 
   drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
   $status_list = stormattribute_attributes_bydomain('ticket status search');

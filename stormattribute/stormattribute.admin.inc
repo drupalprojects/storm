@@ -190,7 +190,7 @@ function stormattribute_delete($form_state, $aid) {
 function stormattribute_delete_submit($form, &$form_state) {
   if ($form_state['values']['aid']) {
     db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_state['values']['aid']);
-    drupal_set_message('STORM attribute deleted');
+    drupal_set_message('Storm attribute deleted');
     if ($_REQUEST['destination']) {
       $destination = urldecode($_REQUEST['destination']);
     }

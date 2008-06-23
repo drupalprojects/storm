@@ -1,8 +1,8 @@
 ; $Id$
-name = STORM Project
+name = Storm Project
 description = "SpeedTech Organizer and Resource Manager - Project"
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization
-package = STORM
+package = Storm
 core = 6.x

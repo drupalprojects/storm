@@ -10,7 +10,7 @@ function stormexpense_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormexpense":
-      $o = '<p>'. t("Provides expense support for STORM") .'</p>';
+      $o = '<p>'. t("Provides expense support for Storm") .'</p>';
       break;
   }
 
@@ -19,59 +19,59 @@ function stormexpense_help($path, $arg) {
 
 function stormexpense_perm() {
   return array(
-                'STORM expense: access',
-                'STORM expense: add',
-                'STORM expense: delete all',
-                'STORM expense: delete own',
-                'STORM expense: delete of user organization',
-                'STORM expense: edit all',
-                'STORM expense: edit own',
-                'STORM expense: edit of user organization',
-                'STORM expense: view all',
-                'STORM expense: view own',
-                'STORM expense: view of user organization',
+                'Storm expense: access',
+                'Storm expense: add',
+                'Storm expense: delete all',
+                'Storm expense: delete own',
+                'Storm expense: delete of user organization',
+                'Storm expense: edit all',
+                'Storm expense: edit own',
+                'Storm expense: edit of user organization',
+                'Storm expense: view all',
+                'Storm expense: view own',
+                'Storm expense: view of user organization',
   );
 }
 
 function stormexpense_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM expense: add');
+    return user_access('Storm expense: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM expense: delete all')) {
+    if (user_access('Storm expense: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM expense: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm expense: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM expense: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm expense: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM expense: edit all')) {
+    if (user_access('Storm expense: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM expense: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm expense: edit own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM expense: view all')) {
+    if (user_access('Storm expense: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM expense: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm expense: view own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -80,17 +80,17 @@ function stormexpense_access($op, $node, $account) {
 
 function stormexpense_access_sql($sql, $where = array(), $join = array()) {
 
-  if (user_access('STORM expense: view all')) {
+  if (user_access('Storm expense: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM expense: view own')) {
+  if (user_access('Storm expense: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM expense: view of user organization')) {
+  if (user_access('Storm expense: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'sex.organization_nid='. $user->organization_nid;
   }
@@ -107,9 +107,9 @@ function stormexpense_menu() {
 
   $items['storm/expenses'] = array(
     'title' => t('Expenses'),
-    'description' => t('STORM expenses'),
+    'description' => t('Storm expenses'),
     'page callback' => 'stormexpense_list',
-    'access arguments' => array('STORM expense: access'),
+    'access arguments' => array('Storm expense: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormexpense.admin.inc',
   );
@@ -117,9 +117,9 @@ function stormexpense_menu() {
   $items['storm/expenses/report/%/%'] = array(
     'title' => t('Expenses'),
     'page arguments' => array(3, 4),
-    'description' => t('STORM expenses'),
+    'description' => t('Storm expenses'),
     'page callback' => 'stormexpense_list_report',
-    'access arguments' => array('STORM expense: access'),
+    'access arguments' => array('Storm expense: access'),
     'type' => MENU_CALLBACK,
     'file' => 'stormexpense.admin.inc',
   );
@@ -127,7 +127,7 @@ function stormexpense_menu() {
   $items['storm/expenses/provider_autocomplete'] = array(
     'title' => 'Provider autocomplete',
     'page callback' => 'stormexpense_autocomplete',
-    'access arguments' => array('STORM expense: access'),
+    'access arguments' => array('Storm expense: access'),
     'type' => MENU_CALLBACK,
     'file' => 'stormexpense.admin.inc',
   );
@@ -160,7 +160,7 @@ function stormexpense_node_info() {
     'stormexpense' => array(
       'name' => t('Expense'),
       'module' => 'stormexpense',
-      'description' => t("An expense for STORM."),
+      'description' => t("An expense for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
     )

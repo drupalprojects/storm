@@ -10,7 +10,7 @@ function storminvoice_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#storminvoice":
-      $o = '<p>'. t("Provides invoice support for STORM") .'</p>';
+      $o = '<p>'. t("Provides invoice support for Storm") .'</p>';
       break;
   }
 
@@ -19,17 +19,17 @@ function storminvoice_help($path, $arg) {
 
 function storminvoice_perm() {
   return array(
-                'STORM invoice: access',
-                'STORM invoice: add',
-                'STORM invoice: delete all',
-                'STORM invoice: delete own',
-                'STORM invoice: delete of user organization',
-                'STORM invoice: edit all',
-                'STORM invoice: edit own',
-                'STORM invoice: edit of user organization',
-                'STORM invoice: view all',
-                'STORM invoice: view own',
-                'STORM invoice: view of user organization',
+                'Storm invoice: access',
+                'Storm invoice: add',
+                'Storm invoice: delete all',
+                'Storm invoice: delete own',
+                'Storm invoice: delete of user organization',
+                'Storm invoice: edit all',
+                'Storm invoice: edit own',
+                'Storm invoice: edit of user organization',
+                'Storm invoice: view all',
+                'Storm invoice: view own',
+                'Storm invoice: view of user organization',
   );
 }
 
@@ -45,43 +45,43 @@ function storminvoice_init() {
 
 function storminvoice_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM invoice: add');
+    return user_access('Storm invoice: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM invoice: delete all')) {
+    if (user_access('Storm invoice: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm invoice: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm invoice: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM invoice: edit all')) {
+    if (user_access('Storm invoice: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm invoice: edit own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm invoice: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM invoice: view all')) {
+    if (user_access('Storm invoice: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm invoice: view own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM invoice: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm invoice: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -90,17 +90,17 @@ function storminvoice_access($op, $node, $account) {
 
 function storminvoice_access_sql($sql, $where = array(), $join = array()) {
 
-  if (user_access('STORM invoice: view all')) {
+  if (user_access('Storm invoice: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM invoice: view own')) {
+  if (user_access('Storm invoice: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM invoice: view of user organization')) {
+  if (user_access('Storm invoice: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'sin.organization_nid='. $user->organization_nid;
   }
@@ -119,16 +119,16 @@ function storminvoice_menu() {
     'title' => t('Tasks'),
     'page callback' => '_storminvoice_project_invoices_js',
     'page arguments' => array(2, 3),
-    'access arguments' => array('STORM invoice: access'),
+    'access arguments' => array('Storm invoice: access'),
     'file' => 'storminvoice.admin.inc',
     'type' => MENU_CALLBACK,
   );
 
   $items['storm/invoices'] = array(
     'title' => t('Invoices'),
-    'description' => t('STORM invoices'),
+    'description' => t('Storm invoices'),
     'page callback' => 'storminvoice_list',
-    'access arguments' => array('STORM invoice: access'),
+    'access arguments' => array('Storm invoice: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'storminvoice.admin.inc',
   );
@@ -136,9 +136,9 @@ function storminvoice_menu() {
   $items['storm/invoice/report/%node/%/%'] = array(
             'title' => t('Invoice'),
             'page arguments' => array(3, 4, 5),
-            'description' => t('STORM Invoice'),
+            'description' => t('Storm Invoice'),
             'page callback' => 'storminvoice_report',
-            'access arguments' => array('STORM invoice: access'),
+            'access arguments' => array('Storm invoice: access'),
             'type' => MENU_CALLBACK,
             'file' => 'storminvoice.admin.inc',
   );
@@ -168,7 +168,7 @@ function storminvoice_node_info() {
     'storminvoice' => array(
       'name' => t('Invoice'),
       'module' => 'storminvoice',
-      'description' => t("An invoice for STORM."),
+      'description' => t("An invoice for Storm."),
       'title_label' => t("Description"),
       'has_body' => false,
     )

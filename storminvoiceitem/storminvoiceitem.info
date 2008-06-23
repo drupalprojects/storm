@@ -1,10 +1,10 @@
 ; $Id$
-name = STORM Invoice item
+name = Storm Invoice item
 description = "SpeedTech Organizer and Resource Manager - Invoice item"
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = storminvoice
-package = STORM
+package = Storm
 core = 6.x

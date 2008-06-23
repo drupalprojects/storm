@@ -1,6 +1,6 @@
 ; $Id$
-name = STORM Knowledge base
+name = Storm Knowledge base
 description = "SpeedTech Organizer and Resource Manager - Knowledge base"
 dependencies[] = storm
-package = STORM
+package = Storm
 core = 6.x

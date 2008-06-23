@@ -10,37 +10,26 @@ function stormorganization_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormorganization":
-      $output = '<p>'. t("Provides organization support for STORM") .'</p>';
+      $output = '<p>'. t("Provides organization support for Storm") .'</p>';
       break;
   }
 
   return $output;
 }
 
-function stormorganization_init() {
-  global $user;
-  if (!$user->stormorganization_nid) {
-    $r = db_query("SELECT organization_nid FROM {stormorganization_user} WHERE uid=%d", $user->uid);
-    if ($r) {
-      $a = db_fetch_object($r);
-      $user->stormorganization_nid = $a->organization_nid;
-    }
-  }
-}
-
 function stormorganization_perm() {
   return array(
-                'STORM organization: access',
-                'STORM organization: add',
-                'STORM organization: delete all',
-                'STORM organization: delete own',
-                'STORM organization: edit all',
-                'STORM organization: edit own',
-                'STORM organization: edit belonged',
-                'STORM organization: view all',
-                'STORM organization: view own',
-                'STORM organization: view belonged',
-                'STORM organization: associate user'
+                'Storm organization: access',
+                'Storm organization: add',
+                'Storm organization: delete all',
+                'Storm organization: delete own',
+                'Storm organization: edit all',
+                'Storm organization: edit own',
+                'Storm organization: edit belonged',
+                'Storm organization: view all',
+                'Storm organization: view own',
+                'Storm organization: view belonged',
+                'Storm organization: associate user'
               );
 }
 
@@ -59,38 +48,38 @@ function stormorganization_access($op, $node, $account) {
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
-    return user_access('STORM organization: add');
+    return user_access('Storm organization: add');
   }
 
   if ($op == 'delete') {
-    if (user_access('STORM organization: delete all')) {
+    if (user_access('Storm organization: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM organization: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm organization: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM organization: edit all')) {
+    if (user_access('Storm organization: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM organization: edit own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm organization: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM organization: edit belonged') && ($account->stormorganization_nid == $node->nid)) {
+    else if (user_access('Storm organization: edit belonged') && ($account->stormorganization_nid == $node->nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM organization: view all')) {
+    if (user_access('Storm organization: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM organization: view own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm organization: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM organization: view belonged') && ($account->stormorganization_nid == $node->nid)) {
+    else if (user_access('Storm organization: view belonged') && ($account->stormorganization_nid == $node->nid)) {
       return TRUE;
     }
   }
@@ -100,15 +89,15 @@ function stormorganization_access($op, $node, $account) {
 function stormorganization_access_sql($sql, $where = array(), $join = array()) {
   global $user;
 
-  if (user_access('STORM organization: view all')) {
+  if (user_access('Storm organization: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   $cond = '';
-  if (user_access('STORM organization: view own')) {
+  if (user_access('Storm organization: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM organization: view belonged')) {
+  if (user_access('Storm organization: view belonged')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'n.nid='. $user->stormorganization_nid;
   }
@@ -125,9 +114,9 @@ function stormorganization_menu() {
   $items = array();
   $items['storm/organizations'] = array(
     'title' => t('Organizations'),
-    'description' => t('STORM Organizations'),
+    'description' => t('Storm Organizations'),
     'page callback' => 'stormorganization_list',
-    'access arguments' => array('STORM organization: access'),
+    'access arguments' => array('Storm organization: access'),
     'file' => 'stormorganization.admin.inc',
     'type' => MENU_NORMAL_ITEM
   );
@@ -135,7 +124,7 @@ function stormorganization_menu() {
   $items['storm/organizations/autocomplete'] = array(
     'title' => 'Organization autocomplete',
     'page callback' => 'stormorganization_autocomplete',
-    'access arguments' => array('STORM organization: access'),
+    'access arguments' => array('Storm organization: access'),
     'type' => MENU_CALLBACK,
     'file' => 'stormorganization.admin.inc',
   );
@@ -156,7 +145,7 @@ function stormorganization_node_info() {
     'stormorganization' => array(
       'name' => t('Organization'),
       'module' => 'stormorganization',
-      'description' => t("An organization for STORM."),
+      'description' => t("An organization for Storm."),
       'title_label' => t("Name"),
       'body_label' => t("Note"),
     )
@@ -403,70 +392,22 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-function stormorganization_user($type, &$edit, &$account, $category = NULL) {
-  switch ($type) {
-    case 'load':
-      return stormorganization_user_load($account);
-    case 'register':
-      return stormorganization_user_form($edit, $account, $category);
-    case 'update':
-      return stormorganization_user_save($edit, $account, $category);
-    case 'insert':
-      return stormorganization_user_save($edit, $account, $category);
-    case 'form':
-      return stormorganization_user_form($edit, $account, $category);
-    case 'delete':
-      db_query("DELETE FROM {stormorganization_user} WHERE uid=%d", $account->uid);
-  }
-}
-
-function stormorganization_user_form(&$edit, &$account, $category = NULL) {
-  if (user_access('STORM organization: associate user')) {
-    $s = "SELECT n.nid, n.title FROM {node} n WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-    $r = db_query(stormorganization_access_sql($s), $account->uid);
-    $os = array();
-    while ($o = db_fetch_object($r)) {
-      $os[$o->nid] = $o->title;
+function stormorganization_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'storm_admin_settings') {
+    $s = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+    $r = db_query(stormorganization_access_sql($s));
+    $organizations = array();
+    while ($organization = db_fetch_object($r)) {
+      $organizations[$organization->nid] = $organization->title;
     }
-
-    $form['stormorganization_nid'] = array(
+    $form['storm_organization_nid'] = array(
       '#type' => 'select',
-      '#weight' => 20,
       '#title' => t('Organization'),
-      '#default_value' => $account->stormorganization_nid,
-      '#options' => array(-1 => t('None')) + $os,
+      '#options' => $organizations,
+      '#default_value' => variable_get('storm_organization_nid', 0),
+      '#description' => t('The organization that owns this system'),
+      '#weight' => -30,
     );
-  }
-
-  return $form;
-}
-
-function stormorganization_user_save(&$edit, &$account, $category = NULL) {
-  if (array_key_exists('stormorganization_nid', $edit) && $edit['stormorganization_nid']>0) {
-    db_query("DELETE FROM {stormorganization_user} WHERE uid=%d", $account->uid);
-    db_query("INSERT INTO {stormorganization_user} (uid, organization_nid) VALUES(%d, %d)", $account->uid, $edit['stormorganization_nid']);
-    $account->stormorganization_nid = $edit['organization_nid'];
-    $edit['stormorganization_nid']=NULL;
-    $r = db_query("SELECT organization_nid FROM {stormorganization_user} WHERE uid=%d", $account->uid);
-    if ($r) {
-      $a = db_fetch_object($r);
-      $account->stormorganization_nid = $a->organization_nid;
-    }
-    else {
-      unset($account->stormorganization_nid);
-    }
-    global $user;
-    if ($user->uid == $account->uid) {
-      $user->stormorganization_nid = $account->stormorganization_nid;
-    }
-  }
-}
-
-function stormorganization_user_load(&$account) {
-  $r = db_query("SELECT organization_nid FROM {stormorganization_user} WHERE uid=%d", $account->uid);
-  if ($r) {
-    $a = db_fetch_object($r);
-    $account->stormorganization_nid = $a->organization_nid;
   }
 }
 

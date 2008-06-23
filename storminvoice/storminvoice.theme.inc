@@ -174,6 +174,14 @@ function theme_storminvoice_report($node, $report, $language) {
     $language1 = $languages[1];
   }
 
+  $status = 'open';
+  if ($node->paymentdate) {
+    $status = 'paid';
+  }
+  else if ($node->duedate < time()) {
+    $status = 'overdue';
+  }
+
   $countries = stormattribute_attributes_bydomain('Country');
   $currencies = stormattribute_attributes_bydomain('Currency');
   $myorg = node_load(variable_get('storm_organization_nid', 0));
@@ -364,6 +372,13 @@ function theme_storminvoice_report($node, $report, $language) {
   $o .= t(variable_get('storminvoice_payment_modes', ''), array(), $language);
   $o .= '</td></tr>';
   $o .= '</table></div>';
+
+  if ($status=='paid') {
+    $o .= '<div id="paid">';
+    $o .= '<h2>'. t('Paid in full', array(), $language) .'</h2>';
+    if ($language1) $o .= '<h2>'. t('Paid in full', array(), $language1) .'</h2>';
+    $o .= '</div>';
+  }
 
   print theme('storm_report', $header, $o, $title, $footer);
 }

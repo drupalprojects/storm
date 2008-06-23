@@ -1,7 +1,7 @@
 ; $Id$
-name = STORM Organization
+name = Storm Organization
 description = "SpeedTech Organizer and Resource Manager - Organization"
 dependencies[] = storm
 dependencies[] = stormattribute
-package = STORM
+package = Storm
 core = 6.x

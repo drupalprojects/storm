@@ -10,7 +10,7 @@ function stormnote_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormnote":
-      $o = '<p>'. t("Provides note support for STORM") .'</p>';
+      $o = '<p>'. t("Provides note support for Storm") .'</p>';
       break;
   }
 
@@ -19,59 +19,59 @@ function stormnote_help($path, $arg) {
 
 function stormnote_perm() {
   return array(
-                'STORM note: access',
-                'STORM note: add',
-                'STORM note: delete all',
-                'STORM note: delete own',
-                'STORM note: delete of user organization',
-                'STORM note: edit all',
-                'STORM note: edit own',
-                'STORM note: edit of user organization',
-                'STORM note: view all',
-                'STORM note: view own',
-                'STORM note: view of user organization',
+                'Storm note: access',
+                'Storm note: add',
+                'Storm note: delete all',
+                'Storm note: delete own',
+                'Storm note: delete of user organization',
+                'Storm note: edit all',
+                'Storm note: edit own',
+                'Storm note: edit of user organization',
+                'Storm note: view all',
+                'Storm note: view own',
+                'Storm note: view of user organization',
   );
 }
 
 function stormnote_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('STORM note: add');
+    return user_access('Storm note: add');
   }
 
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'delete') {
-    if (user_access('STORM note: delete all')) {
+    if (user_access('Storm note: delete all')) {
       return TRUE;
     }
-    else if (user_access('STORM note: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm note: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('STORM note: edit all')) {
+    if (user_access('Storm note: edit all')) {
       return TRUE;
     }
-    else if (user_access('STORM note: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm note: edit own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('STORM note: view all')) {
+    if (user_access('Storm note: view all')) {
       return TRUE;
     }
-    else if (user_access('STORM note: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm note: view own') && ($user->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('STORM note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    else if (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -80,17 +80,17 @@ function stormnote_access($op, $node, $account) {
 
 function stormnote_access_sql($sql, $where = array(), $join = array()) {
 
-  if (user_access('STORM note: view all')) {
+  if (user_access('Storm note: view all')) {
     return storm_rewrite_sql($sql, $where);
   }
 
   global $user;
 
   $cond = '';
-  if (user_access('STORM note: view own')) {
+  if (user_access('Storm note: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('STORM note: view of user organization')) {
+  if (user_access('Storm note: view of user organization')) {
     if ($cond) $cond .= ' OR ';
     $cond .= 'sno.organization_nid='. $user->organization_nid;
   }
@@ -107,9 +107,9 @@ function stormnote_menu() {
 
   $items['storm/notes'] = array(
             'title' => t('Notes'),
-            'description' => t('STORM notes'),
+            'description' => t('Storm notes'),
             'page callback' => 'stormnote_list',
-            'access arguments' => array('STORM note: access'),
+            'access arguments' => array('Storm note: access'),
             'type' => MENU_NORMAL_ITEM,
             'file' => 'stormnote.admin.inc',
   );
@@ -135,7 +135,7 @@ function stormnote_node_info() {
     'stormnote' => array(
       'name' => t('Note'),
       'module' => 'stormnote',
-      'description' => t("A note for STORM."),
+      'description' => t("A note for Storm."),
       'has_body' => true,
     )
   );
