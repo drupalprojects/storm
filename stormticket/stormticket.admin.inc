@@ -265,7 +265,7 @@ function _stormticket_task_tickets_js($organization_nid=0, $project_nid=0, $task
   AND sti.task_nid=%d ORDER BY n.title";
   $s = db_rewrite_sql($s);
 
-  $r = db_query(stormticket_access_sql($r), $organization_nid, $project_nid, $task_nid);
+  $r = db_query(stormticket_access_sql($s), $organization_nid, $project_nid, $task_nid);
   while ($item = db_fetch_object($r)) {
     $nid = $item->nid;
     $tickets[$nid] = $item->title;
