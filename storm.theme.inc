@@ -7,12 +7,14 @@
 
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-  $o = '<table class="formgroup"><tr>';
+
+  $row = array();
   foreach (element_children($form) as $key) {
-    $o .= '<td>'. drupal_render($form[$key]) .'</td>';
+    array_push($row, drupal_render($form[$key]));
   }
-  $o .= '</tr></table>';
-  return $o;
+  $rows[] = array('data' => $row, 'class' => 'formgroup');
+  $output .= theme('table', array(), $rows, array('class' => 'formgroup'));
+  return $output;
 }
 
 function theme_datetime($element) {

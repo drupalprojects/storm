@@ -315,8 +315,11 @@ function _storminvoiceitem_invoiceitems_access($node=NULL) {
 }
 
 function storminvoiceitem_getitems($invoice_nid) {
-  $r = db_query("SELECT n.*, sit.* FROM {node} n INNER JOIN {storminvoiceitem} sit ON n.nid=sit.nid WHERE
-  n.status=1 AND n.type='storminvoiceitem' AND sit.invoice_nid = %d", $invoice_nid);
+  $s = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} AS sit ON n.vid=sit.vid WHERE
+  n.status=1 AND n.type='storminvoiceitem' AND sit.invoice_nid = %d";
+  $s = db_rewrite_sql($s);
+  $r = db_query($s, $invoice_nid);
+  
   $items = array();
   while ($i = db_fetch_object($r)) {
     $items[] = $i;

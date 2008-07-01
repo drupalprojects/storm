@@ -209,7 +209,8 @@ function stormtask_form(&$node) {
     '#weight' => -50,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -225,8 +226,9 @@ function stormtask_form(&$node) {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormproject_access_sql($s), $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
@@ -313,12 +315,7 @@ function stormtask_form(&$node) {
 }
 
 function stormtask_insert($node) {
-  $s = "SELECT n.title, p.organization_title
-      FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-      WHERE type='stormproject' AND n.nid=%d";
-  $r = db_query($s, $node->project_nid);
-  $p = db_fetch_object($r);
-
+  _stormtask_beforesave($node);
   db_query("INSERT INTO {stormtask}
           (vid, nid, stepno, taskstatus,
           organization_nid, organization_title,
@@ -328,7 +325,7 @@ function stormtask_insert($node) {
           %d, '%s',
           %d, '%s', %d, %d)",
           $node->vid, $node->nid, $node->stepno, $node->taskstatus,
-          $node->organization_nid, $p->organization_title, $node->project_nid, $p->title,
+          $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
           $node->parent_nid, $node->weight);
 }
 
@@ -338,26 +335,37 @@ function stormtask_update($node) {
     stormtask_insert($node);
   }
   else {
-    $s = "SELECT n.title, p.organization_title
-      FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-      WHERE n.type='stormproject' AND n.nid=%d";
-    $r = db_query($s, $node->project_nid);
-    $p = db_fetch_object($r);
-
+    _stormtask_beforesave($node);
     db_query("UPDATE {stormtask} SET
       stepno='%s', taskstatus='%s',
       organization_nid=%d, organization_title='%s',
       project_nid=%d, project_title='%s',
       parent_nid=%d, weight=%d WHERE vid = %d",
       $node->stepno, $node->taskstatus,
-      $node->organization_nid, $p->organization_title,
-      $node->project_nid, $p->title,
+      $node->organization_nid, $node->organization_title,
+      $node->project_nid, $node->project_title,
       $node->parent_nid,
       $node->weight, $node->vid);
     if (($node->title != $node->title_old) || ($node->stepno != $node->stepno_old)) {
       module_invoke_all('stormtask_change', $node->nid, $node->stepno, $node->title);
     }
   }
+}
+
+function _stormtask_beforesave(&$node) {
+  $s = "SELECT n.title
+        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+        WHERE type='stormorganization' AND n.nid=%d";
+  $r = db_query($s, $node->organization_nid);
+  $o = db_fetch_object($r);
+  $node->organization_title = $o->title;
+
+  $s = "SELECT n.title, p.organization_title
+        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+        WHERE type='stormproject' AND n.nid=%d";
+  $r = db_query($s, $node->project_nid);
+  $p = db_fetch_object($r);
+  $node->project_title = $p->title;
 }
 
 function stormtask_delete($node) {
@@ -407,9 +415,10 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
   if (!isset($children[$project_nid])) {
     $children[$project_nid] = array();
 
-    $s = "SELECT n.nid, n.title, sta.stepno, sta.parent_nid FROM {stormtask} sta
-    INNER JOIN {node} n ON n.nid=sta.nid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
+    $s = "SELECT n.nid, n.title, sta.stepno, sta.parent_nid FROM {node} AS n INNER JOIN {stormtask} AS sta
+    ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
     ORDER BY sta.weight";
+    $s = db_rewrite_sql($s);
     $r = db_query(stormtask_access_sql($s, $where), $project_nid);
     while ($task = db_fetch_object($r)) {
       $children[$project_nid][$task->parent_nid][] = $task->nid;

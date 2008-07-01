@@ -261,7 +261,9 @@ function stormexpense_form(&$node) {
     '#weight' => -49,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor  
+  ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -277,7 +279,9 @@ function stormexpense_form(&$node) {
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid 
+  WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormproject_access_sql($s), $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
@@ -306,8 +310,9 @@ function stormexpense_form(&$node) {
   );
 
   $tickets = array();
-  $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} stt INNER JOIN {node} n ON stt.nid=n.nid WHERE n.status=1 AND n.type='stormticket' AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title"),
-  $node->organization_nid, $node->project_nid, $node->task_nid);
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS stt ON stt.vid=n.vid WHERE n.status=1 AND n.type='stormticket' 
+  AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title";
+  $r = db_query(stormticket_access_sql($s), $node->organization_nid, $node->project_nid, $node->task_nid);
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
@@ -432,7 +437,7 @@ function _stormexpense_beforesave(&$node) {
   }
 
   $s = "SELECT n.title
-        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+        FROM {node} AS n INNER JOIN {stormorganization} AS o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
@@ -445,13 +450,13 @@ function _stormexpense_beforesave(&$node) {
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
 
-  $s = "SELECT title, stepno FROM {node} n INNER JOIN {stormtask} t ON n.nid=t.nid WHERE n.type='stormtask' AND n.nid=%d";
+  $s = "SELECT title, stepno FROM {node} AS n INNER JOIN {stormtask} AS t ON n.vid=t.vid WHERE n.type='stormtask' AND n.nid=%d";
   $r = db_query($s, $node->task_nid);
   $ta = db_fetch_object($r);
   $node->task_title = $ta->title;
   $node->task_stepno = $ta->stepno;
 
-  $s = "SELECT title FROM {node} n INNER JOIN {stormticket} t ON n.nid=t.nid WHERE n.type='stormticket' AND n.nid=%d";
+  $s = "SELECT title FROM {node} AS n INNER JOIN {stormticket} AS t ON n.vid=t.vid WHERE n.type='stormticket' AND n.nid=%d";
   $r = db_query($s, $node->ticket_nid);
   $ti = db_fetch_object($r);
   $node->ticket_title = $ti->title;

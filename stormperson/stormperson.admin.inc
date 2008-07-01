@@ -41,7 +41,7 @@ function stormperson_list() {
   );
 
   $where = array();
-  $s  = "SELECT n.*, spe.* FROM {stormperson} spe INNER JOIN {node} n ON n.nid=spe.nid WHERE n.status=1 AND n.type='stormperson' ";
+  $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.nid=spe.nid WHERE n.status=1 AND n.type='stormperson' ";
   if ($_SESSION['stormperson_list_filter']['organization_nid']) {
     $where[] = 'spe.organization_nid='. $_SESSION['stormperson_list_filter']['organization_nid'];
   }
@@ -51,7 +51,7 @@ function stormperson_list() {
   $itemsperpage = $_SESSION['stormperson_list_filter']['itemsperpage'];
 
   $s = stormperson_access_sql($s, $where);
-  $s = db_rewrite_sql($s, 'stormperson', 'nid');
+  $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
@@ -91,7 +91,7 @@ function stormperson_list_filter() {
     '#weight' => -20,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = db_rewrite_sql("SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title");
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {

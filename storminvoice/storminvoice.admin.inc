@@ -61,7 +61,7 @@ function storminvoice_list() {
     ),
   );
 
-  $s  = "SELECT n.title, sin.* FROM {storminvoice} sin INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' ";
+  $s  = "SELECT n.title, sin.* FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' ";
 
   $s_totals_topay = "SELECT SUM(amount) amount, SUM(vat) vat, SUM(total) total FROM {storminvoice} sin
   INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate=0";
@@ -114,8 +114,9 @@ function storminvoice_list() {
     $tablesort = ' ORDER BY LPAD(sin.number, 10, "0") DESC';
   }
 
-  $sql = storminvoice_access_sql($s, $where);
-  $r = pager_query($sql . $tablesort, $itemsperpage, 0, NULL);
+  $s = db_rewrite_sql($s);
+  $s = storminvoice_access_sql($s, $where);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
   $invoices = array();
   while ($invoice = db_fetch_object($r)) {
     $invoices[] = $invoice;
@@ -182,7 +183,8 @@ function storminvoice_list_filter() {
     '#weight' => -20,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -197,8 +199,9 @@ function storminvoice_list_filter() {
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormproject_access_sql($s), $organization_nid);
   $projects = array();
   while ($project = db_fetch_array($r)) {
@@ -283,9 +286,12 @@ function storminvoice_list_filter_reset($form, &$form_state) {
 function _storminvoice_project_invoices_js($organization_nid, $project_nid) {
   $invoices = array();
 
-  $r = db_query(storminvoice_access_sql("SELECT n.nid, n.title FROM {storminvoice} sin INNER JOIN {node} n
-  ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.organization_nid=%d AND sin.project_nid=%d
-  ORDER BY n.title"), $organization_nid, $project_nid);
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {storminvoice} AS sin
+  ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice' AND sin.organization_nid=%d AND sin.project_nid=%d
+  ORDER BY n.title";
+  $s = db_rewrite_sql($s);
+
+  $r = db_query(storminvoice_access_sql($s), $organization_nid, $project_nid);
   while ($item = db_fetch_object($r)) {
     $nid = $item->nid;
     $invoices[$nid] = $item->title;

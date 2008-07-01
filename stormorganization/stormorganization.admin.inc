@@ -34,7 +34,7 @@ function stormorganization_list() {
     ),
   );
 
-  $s = "SELECT n.*, sor.* FROM {stormorganization} sor INNER JOIN {node} n ON n.nid=sor.nid WHERE n.status=1 AND n.type='stormorganization'";
+  $s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.nid=sor.nid WHERE n.status=1 AND n.type='stormorganization'";
   $where = array();
   if ($_SESSION['stormorganization_list_filter']['country']) {
     $where[] = "sor.country='". $_SESSION['stormorganization_list_filter']['country'] ."'";
@@ -44,7 +44,7 @@ function stormorganization_list() {
   }
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
 
-  $s = db_rewrite_sql($s, 'stormorganization', 'nid');
+  $s = db_rewrite_sql($s);
   $s = stormorganization_access_sql($s, $where);
 
   $tablesort = tablesort_sql($header);
@@ -153,7 +153,11 @@ function stormorganization_list_filter_reset($form, &$form_state) {
 function stormorganization_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT title FROM {node} n WHERE n.type='stormorganization' AND LOWER(title) LIKE LOWER('%s%%')", $string, 0, 10);
+    $s = "SELECT title FROM {node} AS n WHERE n.type='stormorganization' AND LOWER(title) LIKE LOWER('%s%%')";
+    $s = stormorganization_access_sql($s);
+    $s = db_rewrite_sql($s);
+
+    $result = db_query_range($s, $string, 0, 10);
     while ($org = db_fetch_object($result)) {
       $matches[$org->title] = check_plain($org->title);
     }

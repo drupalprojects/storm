@@ -39,12 +39,20 @@ function stormattribute_list() {
     $where[] = "domain='". $_SESSION['stormattribute_list_filter']['domain'] ."'";
   }
 
+  if ($_SESSION['stormattribute_list_filter']['akey']) {
+    $where[] = "LOWER(akey) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['akey'] ."')";
+  }
+
+  if ($_SESSION['stormattribute_list_filter']['avalue']) {
+    $where[] = "LOWER(avalue) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['avalue'] ."')";
+  }
+
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
 
   $s = db_rewrite_sql($s, 'stormattribute', 'aid');
-  $s = stormtimetracking_access_sql($s, $where) . $tablesort;
+  $s = storm_rewrite_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL);
 
   $attributes = array();
@@ -69,6 +77,9 @@ function stormattribute_list_filter() {
     $domain = 0;
     $_SESSION['stormattribute_list_filter']['domain'] = $domain;
   }
+  $akey = $_SESSION['stormattribute_list_filter']['akey'];
+  $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
+
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = 10;
@@ -82,31 +93,50 @@ function stormattribute_list_filter() {
     '#collapsed' => TRUE,
   );
 
-  $form['filter']['domain'] = array(
+  $form['filter']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group1']['domain'] = array(
     '#type' => 'select',
     '#title' => t('Domain'),
     '#default_value' => $domain,
     '#options' => array('0' => t('All')) + _stormattibute_domain_options(),
   );
 
-  $form['filter']['group1'] = array(
+  $form['filter']['group1']['akey'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Key'),
+    '#default_value' => $akey,
+    '#size' => 20,
+  );
+
+  $form['filter']['group1']['avalue'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Value'),
+    '#default_value' => $avalue,
+    '#size' => 20,
+  );
+
+  $form['filter']['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group1']['submit'] = array(
+  $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
     '#submit' => array('stormattribute_list_filter_filter'),
   );
 
-  $form['filter']['group1']['reset'] = array(
+  $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
     '#submit' => array('stormattribute_list_filter_reset'),
   );
 
-  $form['filter']['group1']['itemsperpage'] = array(
+  $form['filter']['group2']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Items'),
     '#size' => 10,
@@ -120,6 +150,8 @@ function stormattribute_list_filter() {
 
 function stormattribute_list_filter_filter($form, &$form_state) {
   $_SESSION['stormattribute_list_filter']['domain'] = $form_state['values']['domain'];
+  $_SESSION['stormattribute_list_filter']['akey'] = $form_state['values']['akey'];
+  $_SESSION['stormattribute_list_filter']['avalue'] = $form_state['values']['avalue'];
   $_SESSION['stormattribute_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

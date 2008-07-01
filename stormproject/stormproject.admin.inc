@@ -40,7 +40,7 @@ function stormproject_list() {
     ),
   );
 
-  $s  = "SELECT n.*, spr.* FROM {stormproject} spr INNER JOIN {node} n ON n.nid=spr.nid WHERE n.status=1 AND n.type='stormproject'";
+  $s  = "SELECT n.*, spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject'";
 
   $where = array();
   if ($_SESSION['stormproject_list_filter']['organization_nid']) {
@@ -58,7 +58,7 @@ function stormproject_list() {
 
   $tablesort = tablesort_sql($header);
 
-  $s = db_rewrite_sql($s, 'stormproject', 'nid');
+  $s = db_rewrite_sql($s);
   $s = stormproject_access_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL);
 
@@ -98,7 +98,8 @@ function stormproject_list_filter() {
         '#theme' => 'stormproject_list_filter',
   );
 
-  $s = "SELECT nid, title FROM {node} n WHERE status=1 AND type='stormorganization' ORDER BY title ";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title ";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormorganization_access_sql($s));
 
   $organizations = array();
@@ -175,7 +176,9 @@ function _stormproject_organization_projects_js($organization_nid=0) {
   $projects = array();
 
   if ($organization_nid) {
-    $r = db_query(stormproject_access_sql("SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON n.nid=spr.nid WHERE n.status=1 AND n.type='stormproject' AND spr.organization_nid=%d ORDER BY n.title"), $organization_nid);
+    $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject' AND spr.organization_nid=%d ORDER BY n.title";
+    $s = db_rewrite_sql($s);
+    $r = db_query(stormproject_access_sql($s), $organization_nid);
 
     while ($item = db_fetch_object($r)) {
       $nid = $item->nid;

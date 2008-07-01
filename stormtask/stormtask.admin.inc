@@ -151,7 +151,7 @@ function stormtask_list() {
   );
 
   $where = array();
-  $s  = "SELECT n.*, sta.* FROM {stormtask} sta INNER JOIN {node} n ON n.nid=sta.nid WHERE n.status=1 AND n.type='stormtask' ";
+  $s  = "SELECT n.*, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' ";
   if ($_SESSION['stormtask_list_filter']['organization_nid']) {
     $where[] = 'sta.organization_nid='. $_SESSION['stormtask_list_filter']['organization_nid'];
   }
@@ -165,6 +165,7 @@ function stormtask_list() {
   }
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
 
+  $s = db_rewrite_sql($s);
   $s = stormtask_access_sql($s, $where);
   $s = db_rewrite_sql($s, 'stormtask', 'nid');
 
@@ -215,7 +216,7 @@ function stormtask_list_filter() {
     '#weight' => -20,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -230,7 +231,7 @@ function stormtask_list_filter() {
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
   $r = db_query(stormproject_access_sql($s), $organization_nid);
   $projects = array();

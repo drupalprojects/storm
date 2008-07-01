@@ -413,13 +413,12 @@ function stormtimetracking_update($node) {
 }
 
 function _stormtimetracking_beforesave(&$node) {
-  $trackingdate = $node->trackingdate;
   $timebegin = _storm_strtotime($node->timebegin);
   $timeend = _storm_strtotime($node->timeend);
 
-  $trackingdate = $trackingdate + $timebegin;
-
-  $node->trackingdate = _storm_datetime_to_gmtimestamp($trackingdate);
+  if(is_array($node->trackingdate)) {
+    $node->trackingdate = _storm_datetime_to_gmtimestamp($node->trackingdate + $timebegin);
+  }
 
   $node->timebegin = _storm_timetostr($timebegin);
   $node->timeend = _storm_timetostr($timeend);

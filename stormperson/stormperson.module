@@ -180,7 +180,8 @@ function stormperson_form(&$node) {
     '#weight' => -50,
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = db_rewrite_sql($s);
   $r = db_query(stormorganization_access_sql($s));
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -305,7 +306,7 @@ function stormperson_insert($node) {
           '%s', '%s', %d
           )",
           $node->vid, $node->nid, $node->organization_nid, $node->organization_title,
-          $node->prefix, $node->fullname, $node->email, $node->www, 
+          $node->prefix, $node->fullname, $node->email, $node->www,
           $node->phone, $node->im, $node->user_uid);
 }
 
@@ -324,7 +325,7 @@ function stormperson_update($node) {
       WHERE vid = %d",
       $node->organization_nid, $node->organization_title,
       $node->prefix, $node->fullname, $node->email, $node->www,
-      $node->phone, $node->im, $node->user_uid, 
+      $node->phone, $node->im, $node->user_uid,
       $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormperson_change', $node->nid, $node->stepno, $node->title);
@@ -340,7 +341,7 @@ function _stormperson_beforesave(&$node) {
   }  
 
   $s = "SELECT n.title
-      FROM {node} n INNER JOIN {stormorganization} p ON n.nid=p.nid
+      FROM {node} AS n INNER JOIN {stormorganization} AS p ON n.nid=p.nid
       WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
