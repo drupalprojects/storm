@@ -124,7 +124,6 @@ function stormtimetracking_list() {
 
   $s = db_rewrite_sql($s);
   $s = stormtimetracking_access_sql($s, $where);
-  $s = db_rewrite_sql($s, 'stormtimetracking', 'nid');
 
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
