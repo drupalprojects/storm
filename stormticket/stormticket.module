@@ -235,7 +235,7 @@ function stormticket_form(&$node) {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n ON INNER JOIN {stormproject} AS spr spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
   $s = db_rewrite_sql($s);
   $r = db_query(stormproject_access_sql($s), $node->organization_nid);
   $projects = array();
