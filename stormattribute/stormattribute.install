@@ -6,7 +6,30 @@
  */
 
 function stormattribute_install() {
-  drupal_install_schema('stormattribute');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {stormattribute} (
+        aid INT(10) UNSIGNED AUTO_INCREMENT,
+        domain VARCHAR(100) NOT NULL,
+        akey VARCHAR(100) NOT NULL,
+        avalue VARCHAR(100) NOT NULL,
+        weight INT(10) UNSIGNED NOT NULL,
+        PRIMARY KEY (aid)
+      ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {stormattribute} (
+        tid int4 NOT NULL ,
+        domain VARCHAR(100) NOT NULL,
+        akey VARCHAR(100) NOT NULL,
+        avalue VARCHAR(100) NOT NULL,
+        weight INT(10) UNSIGNED NOT NULL,
+        PRIMARY KEY (aid)
+      );");
+      db_query("CREATE SEQUENCE stormattribute_aid_seq");
+    break;
+  }
 
   $attributes = array();
 
@@ -102,21 +125,7 @@ function stormattribute_install() {
 }
 
 function stormattribute_uninstall() {
-  drupal_uninstall_schema('stormattribute');
+  db_query("DROP TABLE IF EXISTS {stormattribute}");
 }
 
-function stormattribute_schema() {
-  $schema['stormattribute'] = array(
-    'fields'    => array(
-      'aid'     => array('type' => 'serial', 'not null' => TRUE),
-      'domain'  => array('type' => 'varchar', 'length' => 100),
-      'akey'    => array('type' => 'varchar', 'length' => 100),
-      'avalue'  => array('type' => 'varchar', 'length' => 100),
-      'weight'  => array('type' => 'int', 'not null' => FALSE, 'default' => 0, 'size' => 'tiny')
-    ),
-    'primary key' => array('aid'),
-  );
-
-  return $schema;
-}
 

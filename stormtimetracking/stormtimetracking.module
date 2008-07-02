@@ -56,7 +56,7 @@ function stormtimetracking_access($op, $node, $account) {
     if (user_access('Storm timetracking: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm timetracking: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
@@ -68,7 +68,7 @@ function stormtimetracking_access($op, $node, $account) {
     if (user_access('Storm timetracking: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm timetracking: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {

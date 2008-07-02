@@ -1,5 +1,4 @@
 ; $Id$
 name = Storm
 description = "SpeedTech Organizer and Resource Manager"
-core = 6.x
 package = Storm

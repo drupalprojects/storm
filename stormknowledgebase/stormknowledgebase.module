@@ -50,7 +50,7 @@ function stormknowledgebase_access($op, $node, $account) {
     if (user_access('Storm knowledgebase: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm knowledgebase: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm knowledgebase: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
@@ -59,7 +59,7 @@ function stormknowledgebase_access($op, $node, $account) {
     if (user_access('Storm knowledgebase: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm knowledgebase: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm knowledgebase: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }

@@ -1,11 +1,6 @@
 ; $Id$
 name = Storm Expense
 description = "SpeedTech Organizer and Resource Manager - Expense"
-dependencies[] = storm 
-dependencies[] = stormattribute
-dependencies[] = stormorganization
-dependencies[] = stormproject
-dependencies[] = stormtask
-dependencies[] = stormticket
+dependencies = storm stormattribute stormorganization stormproject stormtask stormticket
 package = Storm
-core = 6.x
+

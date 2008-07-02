@@ -148,14 +148,23 @@ function stormattribute_list_filter() {
   return $form;
 }
 
-function stormattribute_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormattribute_list_filter']['domain'] = $form_state['values']['domain'];
-  $_SESSION['stormattribute_list_filter']['akey'] = $form_state['values']['akey'];
-  $_SESSION['stormattribute_list_filter']['avalue'] = $form_state['values']['avalue'];
-  $_SESSION['stormattribute_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormattribute_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormattribute_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormattribute_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormattribute_list_filter_reset($form, &$form_state) {
+function stormattribute_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormattribute_list_filter']['domain'] = $form_values['domain'];
+  $_SESSION['stormattribute_list_filter']['akey'] = $form_values['akey'];
+  $_SESSION['stormattribute_list_filter']['avalue'] = $form_values['avalue'];
+  $_SESSION['stormattribute_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function stormattribute_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormattribute_list_filter']);
 }
 

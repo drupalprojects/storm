@@ -56,7 +56,7 @@ function stormexpense_access($op, $node, $account) {
     if (user_access('Storm expense: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm expense: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm expense: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
@@ -68,7 +68,7 @@ function stormexpense_access($op, $node, $account) {
     if (user_access('Storm expense: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm expense: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm expense: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {

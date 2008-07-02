@@ -1,11 +1,12 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'storm') .'/storm.theme.inc');
 
 /**
  * @file
  */
 
-function storm_help($path, $arg) {
+function storm_help($path) {
   $output = '';
 
   switch ($path) {
@@ -26,50 +27,29 @@ function storm_init() {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 }
 
-function storm_menu() {
+function storm_menu($may_cache) {
+  storm_init();
+
   $items = array();
 
-  $items['storm'] = array(
+  $items[] = array(
             'title' => t('Storm'),
             'description' => t('SpeedTech Organizer and Resource Manager'),
-            'page callback' => 'storm_storm',
-            'access arguments' => array('Storm: access'),
-            'parent' => '',
+            'callback' => 'storm_storm',
+            'access' => user_access('Storm: access'),
+            'path' => 'storm',
             'type' => MENU_NORMAL_ITEM);
 
-  $items['admin/storm'] = array(
+  $items[] = array(
             'title' => t('Storm'),
             'description' => t('SpeedTech Organizer and Resource Manager'),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('storm_admin_settings'),
-            'access arguments' => array('access administration pages'),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('storm_admin_settings'),
+            'access' => user_access('access administration pages'),
+            'path' => 'admin/storm',
             'type' => MENU_NORMAL_ITEM);
+
   return $items;
-}
-
-function storm_theme() {
-  return array(
-    'storm_form_group' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array('header', 'form'),
-    ),
-    'datetime' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array('element'),
-    ),
-    'dateext' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array('element'),
-    ),
-    'storm_list_report' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array('header', 'rows', 'title', 'footer'),
-    ),
-    'storm_report' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array('header', 'content', 'title', 'footer'),
-    ),
-  );
 }
 
 function storm_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
@@ -348,7 +328,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
     $query .= $key .'='. urlencode($value);
   }
 
-  $o = l($icon, $path, array('attributes' => $attributes, 'query' => $query, 'html' => TRUE));
+  $o = l($icon, $path, $attributes, $query, NULL, NULL, TRUE);
   return $o;
 }
 
