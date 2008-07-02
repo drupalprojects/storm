@@ -66,7 +66,7 @@ function storminvoice_access($op, $node, $account) {
     if (user_access('Storm invoice: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm invoice: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm invoice: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm invoice: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
@@ -78,7 +78,7 @@ function storminvoice_access($op, $node, $account) {
     if (user_access('Storm invoice: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm invoice: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm invoice: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm invoice: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {

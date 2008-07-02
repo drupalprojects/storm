@@ -56,7 +56,7 @@ function stormnote_access($op, $node, $account) {
     if (user_access('Storm note: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: edit own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm note: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
@@ -68,7 +68,7 @@ function stormnote_access($op, $node, $account) {
     if (user_access('Storm note: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: view own') && ($user->uid == $node->uid)) {
+    else if (user_access('Storm note: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
     else if (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
