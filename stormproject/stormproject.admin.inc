@@ -161,14 +161,23 @@ function stormproject_list_filter() {
   return $form;
 }
 
-function stormproject_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormproject_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormproject_list_filter']['projectcategory'] = $form_state['values']['projectcategory'];
-  $_SESSION['stormproject_list_filter']['projectstatus'] = $form_state['values']['projectstatus'];
-  $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormproject_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormproject_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormproject_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormproject_list_filter_reset($form, &$form_state) {
+function stormproject_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormproject_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormproject_list_filter']['projectcategory'] = $form_values['projectcategory'];
+  $_SESSION['stormproject_list_filter']['projectstatus'] = $form_values['projectstatus'];
+  $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function stormproject_list_filter_reset($form_id, $form_valuese) {
   unset($_SESSION['stormproject_list_filter']);
 }
 

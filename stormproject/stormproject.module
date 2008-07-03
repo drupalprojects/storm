@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormproject') .'/stormproject.theme.inc');
+require_once(drupal_get_path('module', 'stormproject') .'/stormproject.admin.inc');
 
 /**
  * @file
  */
 
-function stormproject_help($path, $arg) {
+function stormproject_help($path) {
   $o = '';
 
   switch ($path) {
@@ -42,7 +44,9 @@ function stormproject_init() {
   drupal_add_js(drupal_get_path('module', 'stormproject') .'/stormproject.js', 'module', 'header', FALSE);
 }
 
-function stormproject_access($op, $node, $account) {
+function stormproject_access($op, $node) {
+  global $user; $account = $user;
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -102,41 +106,30 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormproject_menu() {
+function stormproject_menu($may_cache) {
   $items = array();
 
-  $items['storm/projects'] = array(
-    'title' => t('Projects'),
-    'description' => t('Storm Projects'),
-    'page callback' => 'stormproject_list',
-    'access arguments' => array('Storm project: access'),
-    'file' => 'stormproject.admin.inc',
-    'type' => MENU_NORMAL_ITEM
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/projects',
+      'title' => t('Projects'),
+      'description' => t('Storm Projects'),
+      'callback' => 'stormproject_list',
+      'access' => user_access('Storm project: access'),
+      'type' => MENU_NORMAL_ITEM
+    );
 
-  $items['storm/organization_projects_js/%'] = array(
-    'title' => t('Projects'),
-    'page callback' => '_stormproject_organization_projects_js',
-    'page arguments' => array(2),
-    'access arguments' => array('Storm project: access'),
-    'file' => 'stormproject.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
+    $items[] = array(
+      'path' => 'storm/organization_projects_js/',
+      'title' => t('Projects'),
+      'callback' => '_stormproject_organization_projects_js',
+      'callback arguments' => array(arg(2)),
+      'access' => user_access('Storm project: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
 
   return $items;
-}
-
-function stormproject_theme() {
-  return array(
-    'stormproject_list' => array(
-      'file'      => 'stormproject.theme.inc',
-      'arguments' => array('header', 'projects'),
-    ),
-    'stormproject_list_find' => array(
-      'file'      => 'stormproject.theme.inc',
-      'arguments' => array('form'),
-    ),
-  );
 }
 
 function stormproject_node_info() {

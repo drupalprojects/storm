@@ -6,28 +6,45 @@
  */
 
 function stormproject_install() {
-  drupal_install_schema('stormproject');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("
+        CREATE TABLE {stormproject} (
+          vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          organization_nid INT(10),
+          organization_title VARCHAR(150),
+          projectstatus VARCHAR(20),
+          projectcategory VARCHAR(20),
+          pricemode VARCHAR(20),
+          price FLOAT,
+          currency VARCHAR(20),
+          PRIMARY KEY (vid, nid),
+          KEY {stormperson}_nid (nid)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;
+    ");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {stormproject} (
+          vid INT NOT NULL DEFAULT '0',
+          nid INT NOT NULL DEFAULT '0',
+          organization_nid INT,
+          organization_title VARCHAR(150),
+          projectstatus VARCHAR(20),
+          projectcategory VARCHAR(20),
+          pricemode VARCHAR(20),
+          price FLOAT,
+          currency VARCHAR(20),
+          PRIMARY KEY (vid, nid),
+          PRIMARY KEY (vid, nid)
+      );");
+      db_query("CREATE INDEX {stormproject}_nid_idx ON {stormproject} (nid)");
+    break;
+  }
 }
 
 function stormproject_uninstall() {
-  drupal_uninstall_schema('stormproject');
+  db_query("DROP TABLE IF EXISTS {stormproject}");
 }
 
-function stormproject_schema() {
-  $schema['stormproject'] = array(
-    'fields'        => array(
-      'vid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'organization_nid'    => array('type' => 'int'),
-      'organization_title'  => array('type' => 'varchar', 'length' => 100),
-      'projectstatus'      => array('type' => 'varchar', 'length' => 20),
-      'projectcategory'    => array('type' => 'varchar', 'length' => 20),
-      'pricemode'           => array('type' => 'varchar', 'length' => 20),
-      'price'               => array('type' => 'float'),
-      'currency'            => array('type' => 'varchar', 'length' => 20),
-    ),
-    'primary key' => array('vid', 'nid'),
-  );
-
-  return $schema;
-}
