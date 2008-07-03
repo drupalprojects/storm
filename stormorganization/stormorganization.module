@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.theme.inc');
+require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.admin.inc');
 
 /**
  * @file
  */
 
-function stormorganization_help($path, $arg) {
+function stormorganization_help($path) {
   $output = '';
 
   switch ($path) {
@@ -33,7 +35,9 @@ function stormorganization_perm() {
               );
 }
 
-function stormorganization_access($op, $node, $account) {
+function stormorganization_access($op, $node) {
+  global $user; $account = $user;
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -99,34 +103,27 @@ function stormorganization_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormorganization_menu() {
+function stormorganization_menu($may_cache) {
   $items = array();
-  $items['storm/organizations'] = array(
-    'title' => t('Organizations'),
-    'description' => t('Storm Organizations'),
-    'page callback' => 'stormorganization_list',
-    'access arguments' => array('Storm organization: access'),
-    'file' => 'stormorganization.admin.inc',
-    'type' => MENU_NORMAL_ITEM
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/organizations',
+      'title' => t('Organizations'),
+      'description' => t('Storm Organizations'),
+      'callback' => 'stormorganization_list',
+      'access' => user_access('Storm organization: access'),
+      'type' => MENU_NORMAL_ITEM
+    );
 
-  $items['storm/organizations/autocomplete'] = array(
-    'title' => 'Organization autocomplete',
-    'page callback' => 'stormorganization_autocomplete',
-    'access arguments' => array('Storm organization: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'stormorganization.admin.inc',
-  );
+    $items['storm/organizations/autocomplete'] = array(
+      'path' => 'storm/organizations/autocomplete',
+      'title' => 'Organization autocomplete',
+      'callback' => 'stormorganization_autocomplete',
+      'access' => user_access('Storm organization: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
   return $items;
-}
-
-function stormorganization_theme() {
-  return array(
-    'stormorganization_list' => array(
-      'file'      => 'stormorganization.theme.inc',
-      'arguments' => array('header', 'organizations'),
-    ),
-  );
 }
 
 function stormorganization_node_info() {
@@ -381,7 +378,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-function stormorganization_form_alter(&$form, $form_state, $form_id) {
+function stormorganization_form_alter($form_id, &$form) {
   if ($form_id == 'storm_admin_settings') {
     $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
     $s = db_rewrite_sql($s);

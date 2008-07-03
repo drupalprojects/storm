@@ -32,22 +32,24 @@ function storm_menu($may_cache) {
 
   $items = array();
 
-  $items[] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
-            'callback' => 'storm_storm',
-            'access' => user_access('Storm: access'),
-            'path' => 'storm',
-            'type' => MENU_NORMAL_ITEM);
+  if ($may_cache) {
+    $items[] = array(
+              'title' => t('Storm'),
+              'description' => t('SpeedTech Organizer and Resource Manager'),
+              'callback' => 'storm_storm',
+              'access' => user_access('Storm: access'),
+              'path' => 'storm',
+              'type' => MENU_NORMAL_ITEM);
 
-  $items[] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('storm_admin_settings'),
-            'access' => user_access('access administration pages'),
-            'path' => 'admin/storm',
-            'type' => MENU_NORMAL_ITEM);
+    $items[] = array(
+              'title' => t('Storm'),
+              'description' => t('SpeedTech Organizer and Resource Manager'),
+              'callback' => 'drupal_get_form',
+              'callback arguments' => array('storm_admin_settings'),
+              'access' => user_access('access administration pages'),
+              'path' => 'admin/storm',
+              'type' => MENU_NORMAL_ITEM);
+  }
 
   return $items;
 }
@@ -463,3 +465,18 @@ function storm_rewrite_sql($sql, $where=array(), $join=array()) {
 
   return $sql;
 }
+
+function language_list() {
+  static $languages;
+  if(!isset($languages)) {
+    if (function_exists('locale')) {
+      $languages = locale_supported_languages();
+      $languages = $languages['name'];
+    }
+    else {
+      $languages = array('en' => 'English');
+    }
+  }
+  return $languages;
+}
+

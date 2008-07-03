@@ -127,13 +127,11 @@ function stormattribute_list_filter() {
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormattribute_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormattribute_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
@@ -178,8 +176,10 @@ function stormattribute_add() {
   return stormattribute_form($attribute);
 }
 
-function stormattribute_add_submit($form, &$form_state) {
-  db_query("INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)", $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['weight']);
+function stormattribute_add_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Save')) {
+    db_query("INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)", $form_values['domain'], $form_values['akey'], $form_values['avalue'], $form_values['weight']);
+  }
 
   if ($_REQUEST['destination']) {
     $destination = urldecode($_REQUEST['destination']);
@@ -190,7 +190,20 @@ function stormattribute_add_submit($form, &$form_state) {
   drupal_goto($destination);
 }
 
-function stormattribute_edit($form_state, $aid) {
+function stormattribute_add_validate($form_id, $form_values) {
+  if ($form_values['op'] == t('Cancel')) {
+    unset($_SESSION['messages']);
+    if ($_REQUEST['destination']) {
+      $destination = urldecode($_REQUEST['destination']);
+    }
+    else {
+      $destination = 'storm/attributes';
+    }
+    drupal_goto($destination);
+  }
+}
+
+function stormattribute_edit($aid) {
   $attribute = array();
   if ($aid) {
     $r = db_query("SELECT * FROM {stormattribute} WHERE aid=%d", $aid);
@@ -199,23 +212,32 @@ function stormattribute_edit($form_state, $aid) {
   return stormattribute_form($attribute);
 }
 
-function stormattribute_edit_submit($form, &$form_state) {
-  db_query("UPDATE {stormattribute} SET domain='%s', akey='%s', avalue='%s', weight=%d WHERE aid=%d", $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['weight'], $form_state['values']['aid']);
-
+function stormattribute_edit_submit($form_id, $form_values) {
   if ($_REQUEST['destination']) {
     $destination = urldecode($_REQUEST['destination']);
   }
   else {
     $destination = 'storm/attributes';
   }
-  drupal_goto($destination);
+
+  if ($form_values['op'] == t('Save')) {
+    db_query("UPDATE {stormattribute} SET domain='%s', akey='%s', avalue='%s', weight=%d WHERE aid=%d", $form_values['domain'], $form_values['akey'], $form_values['avalue'], $form_values['weight'], $form_values['aid']);
+    drupal_goto($destination);
+  }
+  else if ($form_values['op'] == t('Delete')) {
+    unset($_REQUEST['destination']);
+    drupal_goto('storm/attributes/delete/'. $form_values['aid'], 'destination='. $destination);
+  }
+  else {
+    drupal_goto($destination);
+  }
 }
 
-function stormattribute_form_delete($form, &$form_state) {
-  drupal_goto('storm/attributes/delete/'. $form_state['values']['aid']);
+function stormattribute_form_delete($form_id, $form_values) {
+  drupal_goto('storm/attributes/delete/'. $form_values['aid']);
 }
 
-function stormattribute_delete($form_state, $aid) {
+function stormattribute_delete($aid) {
   $form['aid'] = array('#type' => 'value', '#value' => $aid);
   $r = db_query("SELECT * FROM {stormattribute} WHERE aid=%d", $aid);
   $a = db_fetch_object($r);
@@ -228,9 +250,9 @@ function stormattribute_delete($form_state, $aid) {
   t('Delete'), t('Cancel'));
 }
 
-function stormattribute_delete_submit($form, &$form_state) {
-  if ($form_state['values']['aid']) {
-    db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_state['values']['aid']);
+function stormattribute_delete_submit($form_id, $form_values) {
+  if ($form_values['aid']) {
+    db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_values['aid']);
     drupal_set_message('Storm attribute deleted');
     if ($_REQUEST['destination']) {
       $destination = urldecode($_REQUEST['destination']);
@@ -292,13 +314,11 @@ function stormattribute_form($attribute = NULL) {
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
-      '#submit' => array('stormattribute_form_delete'),
     );
   }
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
-    '#submit' => array('stormattribute_cancel_submit'),
   );
 
   return $form;

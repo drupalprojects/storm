@@ -28,45 +28,49 @@ function stormattribute_perm() {
               );
 }
 
-function stormattribute_menu() {
-  $items[] = array(
-            'path' => 'storm/attributes',
-            'title' => t('Attributes'),
-            'description' => t('Storm Attributes'),
-            'callback' => 'stormattribute_list',
-            'access' => user_access('Storm attribute: access'),
-            'type' => MENU_NORMAL_ITEM);
-  $items['storm/attributes/add'] = array(
-            'path' => 'storm/attributes/add',
-            'title' => t('Add a new attribute'),
-            'description' => t('Storm Attributes'),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('stormattribute_add'),
-            'access' => user_access('Storm attribute: add'),
-            'type' => MENU_CALLBACK);
-  $items[] = array(
-            'path' => 'storm/attributes/edit',
-            'title' => t('Edit an attribute'),
-            'description' => t('Storm Attributes'),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('stormattribute_edit', 3),
-            'access' => user_access('Storm attribute: edit'),
-            'type' => MENU_CALLBACK);
-  $items[] = array(
-            'path' => 'storm/attributes/delete',
-            'title' => t('Delete an attribute'),
-            'description' => t('Storm Attributes'),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('stormattribute_delete', 3),
-            'access' => user_access('Storm attribute: delete'),
-            'type' => MENU_CALLBACK);
-  $items[] = array(
-            'path' => 'storm/attributes/domain/autocomplete',
-            'title' => t('List of attributes'),
-            'description' => t('Storm Attributes'),
-            'callback' => 'stormattribute_domain_autocomplete',
-            'access' => user_access('Storm attribute: access'),
-            'type' => MENU_CALLBACK);
+function stormattribute_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+              'path' => 'storm/attributes',
+              'title' => t('Attributes'),
+              'description' => t('Storm Attributes'),
+              'callback' => 'stormattribute_list',
+              'access' => user_access('Storm attribute: access'),
+              'type' => MENU_NORMAL_ITEM);
+    $items[] = array(
+              'path' => 'storm/attributes/add',
+              'title' => t('Add a new attribute'),
+              'description' => t('Storm Attributes'),
+              'callback' => 'drupal_get_form',
+              'callback arguments' => array('stormattribute_add'),
+              'access' => user_access('Storm attribute: add'),
+              'type' => MENU_CALLBACK);
+    $items[] = array(
+              'path' => 'storm/attributes/edit',
+              'title' => t('Edit an attribute'),
+              'description' => t('Storm Attributes'),
+              'callback' => 'drupal_get_form',
+              'callback arguments' => array('stormattribute_edit', arg(3)),
+              'access' => user_access('Storm attribute: edit'),
+              'type' => MENU_CALLBACK);
+    $items[] = array(
+              'path' => 'storm/attributes/delete',
+              'title' => t('Delete an attribute'),
+              'description' => t('Storm Attributes'),
+              'callback' => 'drupal_get_form',
+              'callback arguments' => array('stormattribute_delete', arg(3)),
+              'access' => user_access('Storm attribute: delete'),
+              'type' => MENU_CALLBACK);
+    $items[] = array(
+              'path' => 'storm/attributes/domain/autocomplete',
+              'title' => t('List of attributes'),
+              'description' => t('Storm Attributes'),
+              'callback' => 'stormattribute_domain_autocomplete',
+              'access' => user_access('Storm attribute: access'),
+              'type' => MENU_CALLBACK);
+  }
   return $items;
 }
 

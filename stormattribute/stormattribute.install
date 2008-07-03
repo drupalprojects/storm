@@ -14,7 +14,7 @@ function stormattribute_install() {
         domain VARCHAR(100) NOT NULL,
         akey VARCHAR(100) NOT NULL,
         avalue VARCHAR(100) NOT NULL,
-        weight INT(10) UNSIGNED NOT NULL,
+        weight INT(10) NOT NULL,
         PRIMARY KEY (aid)
       ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
     break;
@@ -24,7 +24,7 @@ function stormattribute_install() {
         domain VARCHAR(100) NOT NULL,
         akey VARCHAR(100) NOT NULL,
         avalue VARCHAR(100) NOT NULL,
-        weight INT(10) UNSIGNED NOT NULL,
+        weight INT(10) NOT NULL,
         PRIMARY KEY (aid)
       );");
       db_query("CREATE SEQUENCE stormattribute_aid_seq");

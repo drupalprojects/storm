@@ -94,7 +94,7 @@ function stormorganization_list_filter() {
 
   $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
   foreach (range(0, 9) as $n) {
-    $qs .= '<li>'. l($n, 'storm/organizations', array('query' => array('name' => $n .'%'))) .'</li>';
+    $qs .= '<li>'. l($n, 'storm/organizations', array(), 'name='. $n .'%') .'</li>';
   }
   $form['filter']['name_quick_shortcuts_numbers'] = array(
     '#type' => 'markup',
@@ -103,7 +103,7 @@ function stormorganization_list_filter() {
   $qs .= '</ul></div>';
   $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
   foreach (range('A', 'Z') as $l) {
-    $qs .= '<li>'. l($l, 'storm/organizations', array('query' => array('name' => $l .'%'))) .'</li>';
+    $qs .= '<li>'. l($l, 'storm/organizations', array(), 'name='. $l .'%') .'</li>';
   }
   $qs .= '</ul></div>';
   $form['filter']['name_quick_shortcuts_letters'] = array(
@@ -119,13 +119,11 @@ function stormorganization_list_filter() {
   $form['filter']['group1']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormorganization_list_filter_filter'),
   );
 
   $form['filter']['group1']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormorganization_list_filter_reset'),
   );
 
   $form['filter']['group1']['itemsperpage'] = array(
@@ -140,13 +138,22 @@ function stormorganization_list_filter() {
   return $form;
 }
 
-function stormorganization_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormorganization_list_filter']['country'] = $form_state['values']['country'];
-  $_SESSION['stormorganization_list_filter']['name'] = $form_state['values']['name'];
-  $_SESSION['stormorganization_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormorganization_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormorganization_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormorganization_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormorganization_list_filter_reset($form, &$form_state) {
+function stormorganization_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormorganization_list_filter']['country'] = $form_values['country'];
+  $_SESSION['stormorganization_list_filter']['name'] = $form_values['name'];
+  $_SESSION['stormorganization_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function stormorganization_list_filter_reset($form_id, &$form_values) {
   unset($_SESSION['stormorganization_list_filter']);
 }
 
