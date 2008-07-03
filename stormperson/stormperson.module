@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormperson') .'/stormperson.theme.inc');
+require_once(drupal_get_path('module', 'stormperson') .'/stormperson.admin.inc');
 
 /**
  * @file
  */
 
-function stormperson_help($path, $arg) {
+function stormperson_help($path) {
   $o = '';
 
   switch ($section) {
@@ -45,7 +47,9 @@ function stormperson_perm() {
   );
 }
 
-function stormperson_access($op, $node, $account) {
+function stormperson_access($op, $node) {
+  global $user; $account= $user;
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -113,29 +117,21 @@ function stormperson_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormperson_menu() {
-  $items['storm/people'] = array(
-    'title' => t('People'),
-    'description' => t('Storm people'),
-    'page callback' => 'stormperson_list',
-    'access arguments' => array('Storm person: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormperson.admin.inc',
-  );
-  return $items;
-}
+function stormperson_menu($may_cache) {
+  $items = array();
 
-function stormperson_theme() {
-  return array(
-    'stormperson_list' => array(
-      'file'      => 'stormperson.theme.inc',
-      'arguments' => array('header', 'people'),
-    ),
-    'stormperson_people' => array(
-      'file'      => 'stormperson.theme.inc',
-      'arguments' => array('header', 'people'),
-    ),
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/people',
+      'title' => t('People'),
+      'description' => t('Storm people'),
+      'callback' => 'stormperson_list',
+      'access' => user_access('Storm person: access'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+
+  return $items;
 }
 
 function stormperson_node_info() {

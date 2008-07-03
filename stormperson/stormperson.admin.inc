@@ -141,13 +141,22 @@ function stormperson_list_filter() {
   return $form;
 }
 
-function stormperson_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormperson_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormperson_list_filter']['name'] = $form_state['values']['name'];
-  $_SESSION['stormperson_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormperson_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormperson_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormperson_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormperson_list_filter_reset($form, &$form_state) {
+function stormperson_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormperson_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormperson_list_filter']['name'] = $form_values['name'];
+  $_SESSION['stormperson_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function stormperson_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormperson_list_filter']);
 }
 

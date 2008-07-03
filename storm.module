@@ -28,8 +28,6 @@ function storm_init() {
 }
 
 function storm_menu($may_cache) {
-  storm_init();
-
   $items = array();
 
   if ($may_cache) {
