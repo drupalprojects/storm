@@ -24,7 +24,7 @@ function stormticket_install() {
           ticketstatus VARCHAR(20),
           ticketpriority VARCHAR(20),
           PRIMARY KEY (vid, nid),
-          KEY {stormperson}_nid (nid)
+          KEY {stormticket}_nid (nid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */;
     ");
     break;

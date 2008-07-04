@@ -21,7 +21,7 @@ function stormnote_install() {
           task_stepno VARCHAR(50),
           task_title VARCHAR(128),
           PRIMARY KEY (vid, nid),
-          KEY {stormperson}_nid (nid)
+          KEY {stormnote}_nid (nid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */;
     ");
     break;
@@ -38,7 +38,7 @@ function stormnote_install() {
           task_title VARCHAR(128),
           PRIMARY KEY (vid, nid)
       );");
-      db_query("CREATE INDEX {stormproject}_nid_idx ON {stormproject} (nid)");
+      db_query("CREATE INDEX {stormnote}_nid_idx ON {stormnote} (nid)");
     break;
   }
 }

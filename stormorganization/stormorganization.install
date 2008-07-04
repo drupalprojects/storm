@@ -32,7 +32,7 @@ function stormorganization_install() {
     ");
     break;
     case 'pgsql':
-      db_query("CREATE TABLE {stormattribute} (
+      db_query("CREATE TABLE {stormorganization} (
           vid INT NOT NULL DEFAULT '0',
           nid INT NOT NULL DEFAULT '0',
           prefix VARCHAR(100),
