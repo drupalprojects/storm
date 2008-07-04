@@ -66,13 +66,11 @@ function stormknowledgebase_list_filter() {
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormknowledgebase_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormknowledgebase_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
@@ -85,15 +83,23 @@ function stormknowledgebase_list_filter() {
   );
 
   return $form;
-
 }
 
-function stormknowledgebase_list_filter_reset($form, &$form_state) {
+function stormknowledgebase_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormknowledgebase_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormknowledgebase_list_filter_reset($form_id, $form_values);
+  }
+}
+
+function stormknowledgebase_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormknowledgebase_list_filter']);
 }
 
-function stormknowledgebase_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormknowledgebase_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
 }
 
 

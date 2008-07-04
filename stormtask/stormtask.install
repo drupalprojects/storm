@@ -6,11 +6,53 @@
  */
 
 function stormtask_install() {
-  drupal_install_schema('stormtask');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("
+        CREATE TABLE {stormtask} (
+          vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          stepno VARCHAR(50),          
+          organization_nid INT(10),
+          organization_title VARCHAR(128),
+          project_nid INT(10),
+          project_title VARCHAR(128),
+          parent_nid INT(10),
+          weight INT(10),
+          taskstatus VARCHAR(20),
+          pricemode VARCHAR(20),
+          price FLOAT,          
+          currency VARCHAR(20),
+          PRIMARY KEY (vid, nid),
+          KEY {stormtask}_nid (nid)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;
+    ");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {stormtask} (
+          vid INT NOT NULL DEFAULT '0',
+          nid INT NOT NULL DEFAULT '0',
+          stepno VARCHAR(50),          
+          organization_nid INT,
+          organization_title VARCHAR(128),
+          project_nid INT,
+          project_title VARCHAR(128),
+          parent_nid INT,
+          weight INT,
+          taskstatus VARCHAR(20),
+          pricemode VARCHAR(20),
+          price FLOAT,          
+          currency VARCHAR(20),
+          PRIMARY KEY (vid, nid)
+      );");
+      db_query("CREATE INDEX {stormtask}_nid_idx ON {stormtask} (nid)");
+    break;
+  }
 }
 
 function stormtask_uninstall() {
-  drupal_uninstall_schema('stormtask');
+  db_query("DROP TABLE IF EXISTS {stormtask}");
 }
 
 function stormtask_schema() {

@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormtask') .'/stormtask.theme.inc');
+require_once(drupal_get_path('module', 'stormtask') .'/stormtask.admin.inc');
 
 /**
  * @file
  */
 
-function stormtask_help($path, $arg) {
+function stormtask_help($path) {
   $o = '';
 
   switch ($section) {
@@ -43,7 +45,9 @@ function stormtask_init() {
   drupal_add_js(drupal_get_path('module', 'stormtask') .'/stormtask.js', 'module', 'header', FALSE);
 }
 
-function stormtask_access($op, $node, $account) {
+function stormtask_access($op, $node) {
+  global $user; $account = $user;
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -111,47 +115,39 @@ function stormtask_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormtask_menu() {
-  $items['node/%node/tasks'] = array(
-    'title' => t('Tasks'),
-    'page callback' => 'stormtask_tasks',
-    'page arguments' => array(1),
-    'access callback' => '_stormtask_tasks_access',
-    'access arguments' => array(1),
-    'file' => 'stormtask.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3
-  );
-  $items['storm/project_tasks_js/%'] = array(
-    'title' => t('Tasks'),
-    'page callback' => '_stormtask_project_tasks_js',
-    'page arguments' => array(2),
-    'access arguments' => array('Storm task: access'),
-    'file' => 'stormtask.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
-  $items['storm/tasks'] = array(
-    'title' => t('Tasks'),
-    'description' => t('Storm Tasks'),
-    'page callback' => 'stormtask_list',
-    'access arguments' => array('Storm task: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormtask.admin.inc',
-  );
-  return $items;
-}
+function stormtask_menu($may_cache) {
+  $items = array();
 
-function stormtask_theme() {
-  return array(
-    'stormtask_list' => array(
-      'file'      => 'stormtask.theme.inc',
-      'arguments' => array('header', 'tasks'),
-    ),
-    'stormtask_tasks' => array(
-      'file'      => 'stormtask.theme.inc',
-      'arguments' => array('header', 'tasks'),
-    ),
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/tasks',
+      'title' => t('Tasks'),
+      'description' => t('Storm Tasks'),
+      'callback' => 'stormtask_list',
+      'access' => user_access('Storm task: access'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+  else {
+    $items[] = array(
+      'path' => 'storm/project_tasks_js',
+      'title' => t('Tasks'),
+      'callback' => '_stormtask_project_tasks_js',
+      'callback arguments' => array(arg(2)),
+      'access' => user_access('Storm task: access'),
+      'type' => MENU_CALLBACK,
+    );
+    $items[] = array(
+      'path' => 'node/'. arg(1) .'/tasks',
+      'title' => t('Tasks'),
+      'callback' => 'stormtask_tasks',
+      'callback arguments' => array(arg(1)),
+      'access' => _stormtask_tasks_access(arg(1)),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 3
+    );
+  }
+  return $items;
 }
 
 function stormtask_node_info() {
@@ -400,7 +396,10 @@ function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-function _stormtask_tasks_access($node=NULL) {
+function _stormtask_tasks_access($nid=0) {
+  $node = NULL;
+  if ($nid && is_numeric($nid)) $node = node_load($nid);
+
   if ($node == NULL) return FALSE;
   if ($node->type == 'stormproject' && user_access('Storm task: create')) return TRUE;
   return FALSE;

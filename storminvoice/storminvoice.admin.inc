@@ -249,13 +249,11 @@ function storminvoice_list_filter() {
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('storminvoice_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('storminvoice_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
@@ -270,16 +268,25 @@ function storminvoice_list_filter() {
   return $form;
 }
 
-function storminvoice_list_filter_filter($form, &$form_state) {
-  $_SESSION['storminvoice_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['storminvoice_list_filter']['project_nid'] = $form_state['values']['project_nid'];
-  $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $form_state['values']['reqdatefrom'];
-  $_SESSION['storminvoice_list_filter']['reqdateto'] = $form_state['values']['reqdateto'];
-  $_SESSION['storminvoice_list_filter']['status'] = $form_state['values']['status'];
-  $_SESSION['storminvoice_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function storminvoice_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    storminvoice_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    storminvoice_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function storminvoice_list_filter_reset($form, &$form_state) {
+function storminvoice_list_filter_filter($form_id, $form_values) {
+  $_SESSION['storminvoice_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['storminvoice_list_filter']['project_nid'] = $form_values['project_nid'];
+  $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $form_values['reqdatefrom'];
+  $_SESSION['storminvoice_list_filter']['reqdateto'] = $form_values['reqdateto'];
+  $_SESSION['storminvoice_list_filter']['status'] = $form_values['status'];
+  $_SESSION['storminvoice_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function storminvoice_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['storminvoice_list_filter']);
 }
 

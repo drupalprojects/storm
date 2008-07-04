@@ -192,13 +192,11 @@ function stormnote_list_filter() {
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormnote_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormnote_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
@@ -211,19 +209,27 @@ function stormnote_list_filter() {
   );
 
   return $form;
-
 }
 
-function stormnote_list_filter_reset($form, &$form_state) {
+function stormnote_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormnote_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormnote_list_filter_reset($form_id, $form_values);
+  }
+}
+
+function stormnote_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormnote_list_filter']);
 }
 
-function stormnote_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormnote_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormnote_list_filter']['project_nid'] = $form_state['values']['project_nid'];
-  $_SESSION['stormnote_list_filter']['task_nid'] = $form_state['values']['task_nid'];
-  $_SESSION['stormnote_list_filter']['title'] = $form_state['values']['title'];
-  $_SESSION['stormnote_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormnote_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormnote_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormnote_list_filter']['project_nid'] = $form_values['project_nid'];
+  $_SESSION['stormnote_list_filter']['task_nid'] = $form_values['task_nid'];
+  $_SESSION['stormnote_list_filter']['title'] = $form_values['title'];
+  $_SESSION['stormnote_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
 }
 
 

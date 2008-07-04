@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.theme.inc');
+require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.admin.inc');
 
 /**
  * @file
  */
 
-function storminvoiceitem_help($path, $arg) {
+function storminvoiceitem_help($path) {
   $o = '';
 
   switch ($section) {
@@ -37,7 +39,9 @@ function storminvoiceitem_init() {
   drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
 }
 
-function storminvoiceitem_access($op, $node, $account) {
+function storminvoiceitem_access($op, $node) {
+  global $user; $account= $user;
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -105,27 +109,23 @@ function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function storminvoiceitem_menu() {
-  $items['node/%node/invoiceitems'] = array(
-    'title' => t('Invoice items'),
-    'page callback' => 'storminvoiceitem_invoiceitems',
-    'page arguments' => array(1),
-    'access callback' => '_storminvoiceitem_invoiceitems_access',
-    'access arguments' => array(1),
-    'file' => 'storminvoiceitem.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3
-  );
-  return $items;
-}
+function storminvoiceitem_menu($may_cache) {
+  $items = array();
 
-function storminvoiceitem_theme() {
-  return array(
-    'storminvoiceitem_invoiceitems' => array(
-      'file'      => 'storminvoiceitem.theme.inc',
-      'arguments' => array('header', 'invoiceitems'),
-    ),
-  );
+  if ($may_cache) {
+  }
+  else {
+    $items[] = array(
+      'path' => 'node/'. arg(1) .'/invoiceitems',
+      'title' => t('Invoice items'),
+      'callback' => 'storminvoiceitem_invoiceitems',
+      'callback arguments' => array(arg(1)),
+      'access' => _storminvoiceitem_invoiceitems_access(arg(1)),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 3
+    );
+  }
+  return $items;
 }
 
 function storminvoiceitem_node_info() {
@@ -308,7 +308,9 @@ function storminvoiceitem_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-function _storminvoiceitem_invoiceitems_access($node=NULL) {
+function _storminvoiceitem_invoiceitems_access($nid) {
+  $node = NULL;
+  if ($nid && is_numeric($nid)) $node = node_load($nid);
   if ($node == NULL) return FALSE;
   if ($node->type == 'storminvoice' && user_access('Storm invoice item: access')) return TRUE;
   return FALSE;

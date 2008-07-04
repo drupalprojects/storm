@@ -5,7 +5,8 @@
  * @file
  */
 
-function stormtask_tasks($project) {
+function stormtask_tasks($project_nid) {
+  $project = node_load($project_nid);
   $i = new stdClass();
   $i->type = 'stormtask';
 
@@ -78,23 +79,30 @@ function stormtask_tasks_filter() {
   $form['filter']['group1']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormtask_tasks_filter_filter'),
   );
 
   $form['filter']['group1']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormtask_tasks_filter_reset'),
   );
 
   return $form;
 }
 
-function stormtask_tasks_filter_filter($form, &$form_state) {
-  $_SESSION['stormtask_tasks_filter']['taskstatus'] = $form_state['values']['taskstatus'];
+function stormtask_tasks_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormtask_tasks_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormtask_tasks_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormtask_tasks_filter_reset($form, &$form_state) {
+function stormtask_tasks_filter_filter($form_id, $form_values) {
+  $_SESSION['stormtask_tasks_filter']['taskstatus'] = $form_values['taskstatus'];
+}
+
+function stormtask_tasks_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormtask_tasks_filter']);
 }
 
@@ -262,13 +270,11 @@ function stormtask_list_filter() {
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormtask_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormtask_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
@@ -283,14 +289,23 @@ function stormtask_list_filter() {
   return $form;
 }
 
-function stormtask_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormtask_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormtask_list_filter']['project_nid'] = $form_state['values']['project_nid'];
-  $_SESSION['stormtask_list_filter']['taskstatus'] = $form_state['values']['taskstatus'];
-  $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
+function stormtask_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormtask_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormtask_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormtask_list_filter_reset($form, &$form_state) {
+function stormtask_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormtask_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormtask_list_filter']['project_nid'] = $form_values['project_nid'];
+  $_SESSION['stormtask_list_filter']['taskstatus'] = $form_values['taskstatus'];
+  $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+}
+
+function stormtask_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormtask_list_filter']);
 }
 

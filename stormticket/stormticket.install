@@ -6,31 +6,50 @@
  */
 
 function stormticket_install() {
-  drupal_install_schema('stormticket');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("
+        CREATE TABLE {stormticket} (
+          vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          organization_nid INT(10),
+          organization_title VARCHAR(128),
+          project_nid INT(10),
+          project_title VARCHAR(128),
+          task_nid INT(10),
+          task_stepno_title VARCHAR(128),
+          task_title VARCHAR(128),
+          ticketcategory VARCHAR(20),
+          ticketstatus VARCHAR(20),
+          ticketpriority VARCHAR(20),
+          PRIMARY KEY (vid, nid),
+          KEY {stormperson}_nid (nid)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;
+    ");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {stormticket} (
+          vid INT NOT NULL DEFAULT '0',
+          nid INT NOT NULL DEFAULT '0',
+          organization_nid INT,
+          organization_title VARCHAR(150),
+          project_nid INT,
+          project_title VARCHAR(128),
+          task_nid INT,
+          task_stepno_title VARCHAR(128),
+          task_title VARCHAR(128),
+          ticketcategory VARCHAR(20),
+          ticketstatus VARCHAR(20),
+          ticketpriority VARCHAR(20),
+          PRIMARY KEY (vid, nid)
+      );");
+      db_query("CREATE INDEX {stormticket}_nid_idx ON {stormticket} (nid)");
+    break;
+  }
 }
 
 function stormticket_uninstall() {
-  drupal_uninstall_schema('stormticket');
+  db_query("DROP TABLE IF EXISTS {stormticket}");
 }
 
-function stormticket_schema() {
-  $schema['stormticket'] = array(
-    'fields'        => array(
-      'vid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'organization_nid'    => array('type' => 'int'),
-      'organization_title'  => array('type' => 'varchar', 'length' => 128),
-      'project_nid'         => array('type' => 'int'),
-      'project_title'       => array('type' => 'varchar', 'length' => 128),
-      'task_nid'            => array('type' => 'int'),
-      'task_stepno'         => array('type' => 'varchar', 'length' => 128),
-      'task_title'          => array('type' => 'varchar', 'length' => 128),
-      'ticketcategory'      => array('type' => 'varchar', 'length' => 20),
-      'ticketstatus'        => array('type' => 'varchar', 'length' => 20),
-      'ticketpriority'      => array('type' => 'varchar', 'length' => 20),
-    ),
-    'primary key' => array('vid', 'nid'),
-  );
-
-  return $schema;
-}

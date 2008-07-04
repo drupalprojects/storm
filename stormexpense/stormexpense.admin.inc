@@ -308,13 +308,11 @@ function stormexpense_list_filter() {
   $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormexpense_list_filter_filter'),
   );
 
   $form['filter']['group4']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormexpense_list_filter_reset'),
   );
 
   $form['filter']['group4']['itemsperpage'] = array(
@@ -329,19 +327,28 @@ function stormexpense_list_filter() {
   return $form;
 }
 
-function stormexpense_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormexpense_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormexpense_list_filter']['project_nid'] = $form_state['values']['project_nid'];
-  $_SESSION['stormexpense_list_filter']['task_nid'] = $form_state['values']['task_nid'];
-  $_SESSION['stormexpense_list_filter']['ticket_nid'] = $form_state['values']['ticket_nid'];
-  $_SESSION['stormexpense_list_filter']['datefrom'] = $form_state['values']['datefrom'];
-  $_SESSION['stormexpense_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
-  $_SESSION['stormexpense_list_filter']['user'] = $form_state['values']['user'];
-  $_SESSION['stormexpense_list_filter']['title'] = $form_state['values']['title'];
-  $_SESSION['stormexpense_list_filter']['provider_title'] = $form_state['values']['provider_title'];
+function stormexpense_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormexpense_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormexpense_list_filter_reset($form_id, $form_values);
+  }
 }
 
-function stormexpense_list_filter_reset($form, &$form_state) {
+function stormexpense_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormexpense_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormexpense_list_filter']['project_nid'] = $form_values['project_nid'];
+  $_SESSION['stormexpense_list_filter']['task_nid'] = $form_values['task_nid'];
+  $_SESSION['stormexpense_list_filter']['ticket_nid'] = $form_values['ticket_nid'];
+  $_SESSION['stormexpense_list_filter']['datefrom'] = $form_values['datefrom'];
+  $_SESSION['stormexpense_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+  $_SESSION['stormexpense_list_filter']['user'] = $form_values['user'];
+  $_SESSION['stormexpense_list_filter']['title'] = $form_values['title'];
+  $_SESSION['stormexpense_list_filter']['provider_title'] = $form_values['provider_title'];
+}
+
+function stormexpense_list_filter_reset($form_id, $form_values) {
   unset($_SESSION['stormexpense_list_filter']);
 }
 
@@ -380,9 +387,9 @@ function stormexpense_list_form_report() {
   return $form;
 }
 
-function stormexpense_list_form_report_submit($form, &$form_state) {
-  $report = $form_state['values']['report'];
-  $language = $form_state['values']['language'];
+function stormexpense_list_form_report_submit($form_id, $form_values) {
+  $report = $form_values['report'];
+  $language = $form_values['language'];
   drupal_goto('storm/expenses/report/'. $report .'/'. $language);
 }
 
@@ -407,7 +414,7 @@ function stormexpense_autocomplete($string = '') {
       $matches[$pro->provider_title] = check_plain($pro->provider_title);
     }
   }
-
-  drupal_json($matches);
+  print drupal_to_js($matches);
+  exit();
 }
 

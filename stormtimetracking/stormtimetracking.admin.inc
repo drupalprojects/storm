@@ -293,13 +293,11 @@ function stormtimetracking_list_filter() {
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
-    '#submit' => array('stormtimetracking_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
-    '#submit' => array('stormtimetracking_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
@@ -314,15 +312,24 @@ function stormtimetracking_list_filter() {
   return $form;
 }
 
-function stormtimetracking_list_filter_filter($form, &$form_state) {
-  $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
-  $_SESSION['stormtimetracking_list_filter']['project_nid'] = $form_state['values']['project_nid'];
-  $_SESSION['stormtimetracking_list_filter']['task_nid'] = $form_state['values']['task_nid'];
-  $_SESSION['stormtimetracking_list_filter']['ticket_nid'] = $form_state['values']['ticket_nid'];
-  $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_state['values']['datefrom'];
-  $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_state['values']['dateto'];
-  $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
-  $_SESSION['stormtimetracking_list_filter']['user'] = $form_state['values']['user'];
+function stormtimetracking_list_filter_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter')) {
+    stormtimetracking_list_filter_filter($form_id, $form_values);
+  }
+  else if ($form_values['op'] == t('Reset')) {
+    stormtimetracking_list_filter_reset($form_id, $form_values);
+  }
+}
+
+function stormtimetracking_list_filter_filter($form_id, $form_values) {
+  $_SESSION['stormtimetracking_list_filter']['organization_nid'] = $form_values['organization_nid'];
+  $_SESSION['stormtimetracking_list_filter']['project_nid'] = $form_values['project_nid'];
+  $_SESSION['stormtimetracking_list_filter']['task_nid'] = $form_values['task_nid'];
+  $_SESSION['stormtimetracking_list_filter']['ticket_nid'] = $form_values['ticket_nid'];
+  $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_values['datefrom'];
+  $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_values['dateto'];
+  $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
+  $_SESSION['stormtimetracking_list_filter']['user'] = $form_values['user'];
 }
 
 function stormtimetracking_list_filter_reset($form, &$form_state) {
@@ -364,9 +371,9 @@ function stormtimetracking_list_form_report() {
   return $form;
 }
 
-function stormtimetracking_list_form_report_submit($form, &$form_state) {
-  $report = $form_state['values']['report'];
-  $language = $form_state['values']['language'];
+function stormtimetracking_list_form_report_submit($form_id, $form_values) {
+  $report = $form_values['report'];
+  $language = $form_values['language'];
   drupal_goto('storm/timetrackings/report/'. $report .'/'. $language);
 }
 

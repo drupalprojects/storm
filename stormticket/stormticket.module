@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormticket') .'/stormticket.theme.inc');
+require_once(drupal_get_path('module', 'stormticket') .'/stormticket.admin.inc');
 
 /**
  * @file
  */
 
-function stormticket_help($path, $arg) {
+function stormticket_help($path) {
   $o = '';
 
   switch ($section) {
@@ -44,7 +46,9 @@ function stormticket_init() {
   drupal_add_js($settings, 'setting');
 }
 
-function stormticket_access($op, $node, $account) {
+function stormticket_access($op, $node) {
+  global $user; $account = $user;
+
   if ($op == 'create') {
     return user_access('Storm ticket: add');
   }
@@ -112,36 +116,30 @@ function stormticket_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormticket_menu() {
+function stormticket_menu($may_cache) {
   $items = array();
 
-  $items['storm/tickets'] = array(
-            'title' => t('Tickets'),
-            'description' => t('Storm Tickets'),
-            'page callback' => 'stormticket_list',
-            'access arguments' => array('Storm ticket: access'),
-            'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormticket.admin.inc',
-  );
-
-  $items['storm/task_tickets_js/%/%'] = array(
-    'title' => t('Tickets'),
-    'page callback' => '_stormticket_task_tickets_js',
-    'page arguments' => array(2, 3, 4),
-    'access arguments' => array('Storm ticket: access'),
-    'file' => 'stormticket.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
+  if ($may_cache) {
+    $items[] = array(
+              'path' => 'storm/tickets',
+              'title' => t('Tickets'),
+              'description' => t('Storm Tickets'),
+              'callback' => 'stormticket_list',
+              'access' => user_access('Storm ticket: access'),
+              'type' => MENU_NORMAL_ITEM,
+    );
+  }
+  else {
+    $items[] = array(
+      'path' => 'storm/task_tickets_js',
+      'title' => t('Tickets'),
+      'callback' => '_stormticket_task_tickets_js',
+      'callback arguments' => array(arg(2), arg(3), arg(4)),
+      'access' => user_access('Storm ticket: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
   return $items;
-}
-
-function stormticket_theme() {
-  return array(
-    'stormticket_list' => array(
-      'file'      => 'stormticket.theme.inc',
-      'arguments' => array('header', 'tickets'),
-    ),
-  );
 }
 
 function stormticket_node_info() {

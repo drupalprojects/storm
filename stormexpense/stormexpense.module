@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.theme.inc');
+require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.admin.inc');
 
 /**
  * @file
  */
 
-function stormexpense_help($path, $arg) {
+function stormexpense_help($path) {
   $o = '';
 
   switch ($path) {
@@ -33,7 +35,9 @@ function stormexpense_perm() {
   );
 }
 
-function stormexpense_access($op, $node, $account) {
+function stormexpense_access($op, $node) {
+  global $user; $account = $user;
+
   if ($op == 'create') {
     return user_access('Storm expense: add');
   }
@@ -102,57 +106,39 @@ function stormexpense_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormexpense_menu() {
+function stormexpense_menu($may_cache) {
   $items = array();
 
-  $items['storm/expenses'] = array(
-    'title' => t('Expenses'),
-    'description' => t('Storm expenses'),
-    'page callback' => 'stormexpense_list',
-    'access arguments' => array('Storm expense: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormexpense.admin.inc',
-  );
-
-  $items['storm/expenses/report/%/%'] = array(
-    'title' => t('Expenses'),
-    'page arguments' => array(3, 4),
-    'description' => t('Storm expenses'),
-    'page callback' => 'stormexpense_list_report',
-    'access arguments' => array('Storm expense: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'stormexpense.admin.inc',
-  );
-
-  $items['storm/expenses/provider_autocomplete'] = array(
-    'title' => 'Provider autocomplete',
-    'page callback' => 'stormexpense_autocomplete',
-    'access arguments' => array('Storm expense: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'stormexpense.admin.inc',
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/expenses',      
+      'title' => t('Expenses'),
+      'description' => t('Storm expenses'),
+      'callback' => 'stormexpense_list',
+      'access' => user_access('Storm expense: access'),
+      'type' => MENU_NORMAL_ITEM,
+    );
+    $items[] = array(
+      'path' => 'storm/expenses/provider_autocomplete',
+      'title' => 'Provider autocomplete',
+      'callback' => 'stormexpense_autocomplete',
+      'access' => user_access('Storm expense: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
+  else {
+    $items[] = array(
+      'path' => 'storm/expenses/report',
+      'title' => t('Expenses'),
+      'description' => t('Storm expenses'),
+      'callback' => 'stormexpense_list_report',
+      'callback arguments' => array(arg(3), arg(4)),
+      'access arguments' => array('Storm expense: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
 
   return $items;
-}
-
-function stormexpense_theme() {
-  return array(
-    'stormexpense_list' => array(
-      'file'      => 'stormexpense.theme.inc',
-      'arguments' => array('header', 'tasks', 'duration'),
-    ),
-    'stormexpense_view' => array(
-      'file'      => 'stormexpense.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-    'stormexpense_list_form_report_reports' => array(
-      'file'      => 'stormexpense.theme.inc',
-    ),
-    'stormexpense_list_report' => array(
-      'file'      => 'stormexpense.theme.inc',
-      'arguments' => array('report', 'language', 'timetrackings'),
-    ),
-  );
 }
 
 function stormexpense_node_info() {

@@ -119,8 +119,10 @@ function stormproject_menu($may_cache) {
       'type' => MENU_NORMAL_ITEM
     );
 
+  }
+  else {
     $items[] = array(
-      'path' => 'storm/organization_projects_js/',
+      'path' => 'storm/organization_projects_js',
       'title' => t('Projects'),
       'callback' => '_stormproject_organization_projects_js',
       'callback arguments' => array(arg(2)),

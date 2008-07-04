@@ -6,37 +6,58 @@
  */
 
 function storminvoice_install() {
-  drupal_install_schema('storminvoice');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("
+        CREATE TABLE {storminvoice} (
+          vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          number VARCHAR(50),
+          reference VARCHAR(150),
+          organization_nid INT(10),
+          organization_title VARCHAR(128),
+          project_nid INT(10),
+          project_title VARCHAR(128),
+          requestdate INT(10),
+          duedate INT(10),
+          paymentdate INT(10),
+          amount FLOAT,
+          vat FLOAT,
+          total FLOAT,
+          totalcustomercurr FLOAT,
+          vatexempt INT(1),
+          PRIMARY KEY (vid, nid),
+          KEY {storminvoice}_nid (nid)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;
+    ");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {storminvoice} (
+          vid INT NOT NULL DEFAULT '0',
+          nid INT NOT NULL DEFAULT '0',
+          number VARCHAR(50),
+          reference VARCHAR(150),
+          organization_nid INT,
+          organization_title VARCHAR(128),
+          project_nid INT,
+          project_title VARCHAR(128),
+          requestdate INT,
+          duedate INT,
+          paymentdate INT,
+          amount FLOAT,
+          vat FLOAT,
+          total FLOAT,
+          totalcustomercurr FLOAT,
+          vatexempt INT,
+          PRIMARY KEY (vid, nid)
+      );");
+      db_query("CREATE INDEX {storminvoice}_nid_idx ON {storminvoice} (nid)");
+    break;
+  }
 }
 
 function storminvoice_uninstall() {
-  drupal_uninstall_schema('storminvoice');
+  db_query("DROP TABLE IF EXISTS {storminvoice}");
 }
-
-function storminvoice_schema() {
-  $schema['storminvoice'] = array(
-    'fields'                => array(
-      'vid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'number'              => array('type' => 'varchar', 'length' => 50),
-      'reference'           => array('type' => 'varchar', 'length' => 150),
-      'organization_nid'    => array('type' => 'int'),
-      'organization_title'  => array('type' => 'varchar', 'length' => 128),
-      'project_nid'         => array('type' => 'int'),
-      'project_title'       => array('type' => 'varchar', 'length' => 128),
-      'requestdate'         => array('type' => 'int'),
-      'duedate'             => array('type' => 'int'),
-      'paymentdate'         => array('type' => 'int'),
-      'amount'              => array('type' => 'float'),
-      'vat'                 => array('type' => 'float'),
-      'total'               => array('type' => 'float'),
-      'totalcustomercurr'   => array('type' => 'float'),
-      'vatexempt'           => array('type' => 'int', 'length' => 1),
-    ),
-    'primary key' => array('vid', 'nid'),
-  );
-
-  return $schema;
-}
-
 

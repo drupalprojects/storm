@@ -14,14 +14,14 @@ function stormproject_install() {
           vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
           nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
           organization_nid INT(10),
-          organization_title VARCHAR(150),
+          organization_title VARCHAR(128),
           projectstatus VARCHAR(20),
           projectcategory VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,
           currency VARCHAR(20),
           PRIMARY KEY (vid, nid),
-          KEY {stormperson}_nid (nid)
+          KEY {stormproject}_nid (nid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */;
     ");
     break;
@@ -30,13 +30,12 @@ function stormproject_install() {
           vid INT NOT NULL DEFAULT '0',
           nid INT NOT NULL DEFAULT '0',
           organization_nid INT,
-          organization_title VARCHAR(150),
+          organization_title VARCHAR(128),
           projectstatus VARCHAR(20),
           projectcategory VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,
           currency VARCHAR(20),
-          PRIMARY KEY (vid, nid),
           PRIMARY KEY (vid, nid)
       );");
       db_query("CREATE INDEX {stormproject}_nid_idx ON {stormproject} (nid)");

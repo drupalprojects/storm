@@ -6,37 +6,58 @@
  */
 
 function stormexpense_install() {
-  drupal_install_schema('stormexpense');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("
+        CREATE TABLE {stormexpense} (
+          vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
+          organization_nid INT(10),
+          organization_title VARCHAR(128),
+          project_nid INT(10),
+          project_title VARCHAR(128),
+          task_nid INT(10),
+          task_title VARCHAR(128),
+          ticket_nid INT(10),
+          ticket_title VARCHAR(128),
+          provider_nid INT(10),
+          provider_title VARCHAR(128),
+          expensedate INT,
+          amount FLOAT,
+          vat FLOAT,
+          total FLOAT,
+          PRIMARY KEY (vid, nid),
+          KEY {stormexpense}_nid (nid)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;
+    ");
+    break;
+    case 'pgsql':
+      db_query("CREATE TABLE {stormexpense} (
+          vid INT NOT NULL DEFAULT '0',
+          nid INT NOT NULL DEFAULT '0',
+          organization_nid INT,
+          organization_title VARCHAR(128),
+          project_nid INT,
+          project_title VARCHAR(128),
+          task_nid INT,
+          task_title VARCHAR(128),
+          ticket_nid INT,
+          ticket_title VARCHAR(128),
+          provider_nid INT,
+          provider_title VARCHAR(128),
+          expensedate INT,
+          amount FLOAT,
+          vat FLOAT,
+          total FLOAT,
+          PRIMARY KEY (vid, nid)
+      );");
+      db_query("CREATE INDEX {stormexpense}_nid_idx ON {stormexpense} (nid)");
+    break;
+  }
 }
 
 function stormexpense_uninstall() {
-  drupal_uninstall_schema('stormexpense');
-}
-
-function stormexpense_schema() {
-  $schema['stormexpense'] = array(
-    'fields'                => array(
-      'vid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'organization_nid'    => array('type' => 'int'),
-      'organization_title'  => array('type' => 'varchar', 'length' => 128),
-      'project_nid'         => array('type' => 'int'),
-      'project_title'       => array('type' => 'varchar', 'length' => 128),
-      'task_nid'            => array('type' => 'int'),
-      'task_stepno'         => array('type' => 'varchar', 'length' => 128),
-      'task_title'          => array('type' => 'varchar', 'length' => 128),
-      'ticket_nid'          => array('type' => 'int'),
-      'ticket_title'        => array('type' => 'varchar', 'length' => 128),
-      'provider_nid'        => array('type' => 'int'),
-      'provider_title'      => array('type' => 'varchar', 'length' => 128),
-      'expensedate'         => array('type' => 'int'),
-      'amount'              => array('type' => 'float'),
-      'vat'                 => array('type' => 'float'),
-      'total'               => array('type' => 'float'),
-    ),
-    'primary key' => array('vid', 'nid'),
-  );
-
-  return $schema;
+  db_query("DROP TABLE IF EXISTS {stormexpense}");
 }
 

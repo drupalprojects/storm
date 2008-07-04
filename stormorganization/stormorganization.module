@@ -342,35 +342,35 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
   if (module_exists('stormperson')) {
     $node->content['people'] = array(
-      '#value' => l(t('People'), 'storm/people/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#value' => l(t('People'), 'storm/people/', array(), 'organization_nid='. $node->nid) .'<br />',
       '#weight' => 2,
     );
   }
 
   if (module_exists('stormproject')) {
     $node->content['projects'] = array(
-      '#value' => l(t('Projects'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#value' => l(t('Projects'), 'storm/projects/', array(), 'organization_nid='. $node->nid) .'<br />',
       '#weight' => 3,
     );
   }
 
   if (module_exists('stormnote')) {
     $node->content['notes'] = array(
-      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#value' => l(t('Notes'), 'storm/notes/', array(), 'organization_nid='. $node->nid) .'<br />',
       '#weight' => 4,
     );
   }
 
   if (module_exists('stormticket')) {
     $node->content['tickets'] = array(
-      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#value' => l(t('Tickets'), 'storm/tickets/', array(), 'organization_nid'. $node->nid) .'<br />',
       '#weight' => 5,
     );
   }
 
   if (module_exists('stormtimetracking')) {
     $node->content['timetrackings'] = array(
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array(), 'organization_nid'. $node->nid) .'<br />',
       '#weight' => 6,
     );
   }

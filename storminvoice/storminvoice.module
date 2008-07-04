@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.theme.inc');
+require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
 
 /**
  * @file
  */
 
-function storminvoice_help($path, $arg) {
+function storminvoice_help($path) {
   $o = '';
 
   switch ($path) {
@@ -112,55 +114,40 @@ function storminvoice_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function storminvoice_menu() {
+function storminvoice_menu($may_cache) {
   $items = array();
 
-  $items['storm/project_invoices_js/%/%'] = array(
-    'title' => t('Tasks'),
-    'page callback' => '_storminvoice_project_invoices_js',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('Storm invoice: access'),
-    'file' => 'storminvoice.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'storm/invoices',
+      'title' => t('Invoices'),
+      'description' => t('Storm invoices'),
+      'callback' => 'storminvoice_list',
+      'access' => user_access('Storm invoice: access'),
+      'type' => MENU_NORMAL_ITEM,
+    );
+  }
+  else {
+    $items[] = array(
+      'path' => 'storm/project_invoices_js',
+      'title' => t('Tasks'),
+      'callback' => '_storminvoice_project_invoices_js',
+      'callback arguments' => array(arg(2), arg(3)),
+      'access' => user_access('Storm invoice: access'),
+      'type' => MENU_CALLBACK,
+    );
 
-  $items['storm/invoices'] = array(
-    'title' => t('Invoices'),
-    'description' => t('Storm invoices'),
-    'page callback' => 'storminvoice_list',
-    'access arguments' => array('Storm invoice: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'storminvoice.admin.inc',
-  );
-
-  $items['storm/invoice/report/%node/%/%'] = array(
-            'title' => t('Invoice'),
-            'page arguments' => array(3, 4, 5),
-            'description' => t('Storm Invoice'),
-            'page callback' => 'storminvoice_report',
-            'access arguments' => array('Storm invoice: access'),
-            'type' => MENU_CALLBACK,
-            'file' => 'storminvoice.admin.inc',
-  );
-
+    $items[] = array(
+      'path' => 'storm/invoice/report',
+      'title' => t('Invoice'),
+      'description' => t('Storm Invoice'),
+      'callback' => 'storminvoice_report',
+      'callback arguments' => array(arg(3), arg(4), arg(5)),
+      'access arguments' => array('Storm invoice: access'),
+      'type' => MENU_CALLBACK,
+    );
+  }
   return $items;
-}
-
-function storminvoice_theme() {
-  return array(
-    'storminvoice_list' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('header', 'invoices', 'itemsperpage', 'totals_topay', 'totals_paid', 'totals'),
-    ),
-    'storminvoice_view' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-    'storminvoice_report' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'report', 'language'),
-    ),
-  );
 }
 
 function storminvoice_node_info() {
@@ -443,7 +430,7 @@ function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-function storminvoice_form_alter(&$form, $form_state, $form_id) {
+function storminvoice_form_alter($form_id, &$form) {
   if ($form_id == 'storm_admin_settings') {
     $form['storminvoice'] = array(
       '#type' => 'fieldset',

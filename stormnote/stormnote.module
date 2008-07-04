@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormnote') .'/stormnote.theme.inc');
+require_once(drupal_get_path('module', 'stormnote') .'/stormnote.admin.inc');
 
 /**
  * @file
  */
 
-function stormnote_help($path, $arg) {
+function stormnote_help($path) {
   $o = '';
 
   switch ($path) {
@@ -33,7 +35,9 @@ function stormnote_perm() {
   );
 }
 
-function stormnote_access($op, $node, $account) {
+function stormnote_access($op, $node) {
+  global $user; $account = $user;
+
   if ($op == 'create') {
     return user_access('Storm note: add');
   }
@@ -102,32 +106,21 @@ function stormnote_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormnote_menu() {
+function stormnote_menu($may_cache) {
   $items = array();
 
-  $items['storm/notes'] = array(
+  if ($may_cache) {
+    $items[] = array(
+            'path' => 'storm/notes',
             'title' => t('Notes'),
             'description' => t('Storm notes'),
-            'page callback' => 'stormnote_list',
-            'access arguments' => array('Storm note: access'),
+            'callback' => 'stormnote_list',
+            'access' => user_access('Storm note: access'),
             'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormnote.admin.inc',
-  );
+    );
+  }
 
   return $items;
-}
-
-function stormnote_theme() {
-  return array(
-    'stormnote_list' => array(
-      'file'      => 'stormnote.theme.inc',
-      'arguments' => array('header', 'notes'),
-    ),
-    'stormnote_view' => array(
-      'file'      => 'stormnote.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-  );
 }
 
 function stormnote_node_info() {

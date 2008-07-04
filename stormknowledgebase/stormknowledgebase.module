@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.theme.inc');
+require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.admin.inc');
 
 /**
  * @file
  */
 
-function stormknowledgebase_help($path, $arg) {
+function stormknowledgebase_help($path) {
   $o = '';
 
   switch ($path) {
@@ -30,7 +32,9 @@ function stormknowledgebase_perm() {
   );
 }
 
-function stormknowledgebase_access($op, $node, $account) {
+function stormknowledgebase_access($op, $node) {
+  global $user; $account = $user;
+
   if ($op == 'create') {
     return user_access('Storm knowledgebase: add');
   }
@@ -66,28 +70,21 @@ function stormknowledgebase_access($op, $node, $account) {
   return FALSE;
 }
 
-function stormknowledgebase_menu() {
+function stormknowledgebase_menu($may_cache) {
   $items = array();
 
-  $items['storm/knowledgebase'] = array(
-            'title' => t('Knowledge base'),
-            'description' => t('Storm Knowledge base'),
-            'page callback' => 'stormknowledgebase_list',
-            'access arguments' => array('Storm knowledgebase: access'),
-            'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormknowledgebase.admin.inc',
-  );
+  if ($may_cache) {
+    $items[] = array(
+              'path' => 'storm/knowledgebase',
+              'title' => t('Knowledge base'),
+              'description' => t('Storm Knowledge base'),
+              'callback' => 'stormknowledgebase_list',
+              'access' => user_access('Storm knowledgebase: access'),
+              'type' => MENU_NORMAL_ITEM
+    );
+  }
 
   return $items;
-}
-
-function stormknowledgebase_theme() {
-  return array(
-    'stormknowledgebase_list' => array(
-      'file'      => 'stormknowledgebase.theme.inc',
-      'arguments' => array('header', 'knowledgebase'),
-    ),
-  );
 }
 
 function stormknowledgebase_node_info() {

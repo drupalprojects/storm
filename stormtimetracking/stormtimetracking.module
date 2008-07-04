@@ -1,11 +1,13 @@
 <?php
 // $Id$
+require_once(drupal_get_path('module', 'stormtimetracking') .'/stormtimetracking.theme.inc');
+require_once(drupal_get_path('module', 'stormtimetracking') .'/stormtimetracking.admin.inc');
 
 /**
  * @file
  */
 
-function stormtimetracking_help($path, $arg) {
+function stormtimetracking_help($path) {
   $o = '';
 
   switch ($path) {
@@ -33,7 +35,9 @@ function stormtimetracking_perm() {
   );
 }
 
-function stormtimetracking_access($op, $node, $account) {
+function stormtimetracking_access($op, $node) {
+  global $user; $account=$user;  
+
   if ($op == 'create') {
     return user_access('Storm timetracking: add');
   }
@@ -102,49 +106,31 @@ function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormtimetracking_menu() {
+function stormtimetracking_menu($may_cache) {
   $items = array();
 
-  $items['storm/timetrackings'] = array(
+  if ($may_cache) {
+    $items[] = array(
+            'path' => 'storm/timetrackings',
             'title' => t('Timetrackings'),
             'description' => t('Storm Timetrackings'),
-            'page callback' => 'stormtimetracking_list',
-            'access arguments' => array('Storm timetracking: access'),
+            'callback' => 'stormtimetracking_list',
+            'access' => user_access('Storm timetracking: access'),
             'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormtimetracking.admin.inc',
-  );
-
-  $items['storm/timetrackings/report/%/%'] = array(
+    );
+  }
+  else {
+    $items[] = array(
+            'path' => 'storm/timetrackings/report/%/%',
             'title' => t('Timetrackings'),
-            'page arguments' => array(3, 4),
             'description' => t('Storm Timetrackings'),
-            'page callback' => 'stormtimetracking_list_report',
-            'access arguments' => array('Storm timetracking: access'),
+            'callback' => 'stormtimetracking_list_report',
+            'callback arguments' => array(arg(3), arg(4)),
+            'access' => user_access('Storm timetracking: access'),
             'type' => MENU_CALLBACK,
-            'file' => 'stormtimetracking.admin.inc',
-  );
-
+    );
+  }
   return $items;
-}
-
-function stormtimetracking_theme() {
-  return array(
-    'stormtimetracking_list' => array(
-      'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('header', 'tasks', 'duration'),
-    ),
-    'stormtimetracking_view' => array(
-      'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-    'stormtimetracking_list_form_report_reports' => array(
-      'file'      => 'stormtimetracking.theme.inc',
-    ),
-    'stormtimetracking_list_report' => array(
-      'file'      => 'stormtimetracking.theme.inc',
-      'arguments' => array('report', 'language', 'timetrackings'),
-    ),
-  );
 }
 
 function stormtimetracking_node_info() {

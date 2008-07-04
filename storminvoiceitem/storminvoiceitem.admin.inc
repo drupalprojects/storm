@@ -5,7 +5,9 @@
  * @file
  */
 
-function storminvoiceitem_invoiceitems($invoice) {
+function storminvoiceitem_invoiceitems($invoice_nid) {
+  $invoice = node_load($invoice_nid);
+
   $i = new stdClass();
   $i->type = 'storminvoiceitem';
 
