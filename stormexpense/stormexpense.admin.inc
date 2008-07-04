@@ -54,7 +54,8 @@ function stormexpense_list() {
   $i->type = 'stormexpense';
 
   $report_attrs = array(
-    'onclick' => "storm_popup(this, 'expense_list_form_report', 'Expenses', 300, 150, 'stormexpense_list_form_report', 'l'); return false;",
+    'id' => 'expense_list_form_report',
+    'onclick' => "storm_popup('#expense_list_form_report', 'expense_list_form_report', 'Expenses', 300, 150, 'stormexpense_list_form_report', 'l'); return false;",
   );
 
   $header = array(

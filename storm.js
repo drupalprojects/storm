@@ -41,9 +41,9 @@ function storm_popup(sender, name, title, width, height, content_id, position) {
   var p_name = "storm" + name + '_popup';
   var p_close = "storm" + name + "_popup_close";
 
-  var a = $(sender);
-  var top = a.offset().top;
-  var left = a.offset().left;
+  var a = $(sender).get(0);
+  var top = a.top;
+  var left = a.left;
 
   switch (position) {
     case 'l':
