@@ -124,7 +124,7 @@ function stormticket_menu() {
             'file' => 'stormticket.admin.inc',
   );
 
-  $items['storm/task_tickets_js/%/%'] = array(
+  $items['storm/task_tickets_js/%/%/%'] = array(
     'title' => t('Tickets'),
     'page callback' => '_stormticket_task_tickets_js',
     'page arguments' => array(2, 3, 4),

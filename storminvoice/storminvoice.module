@@ -424,6 +424,7 @@ function _storminvoice_beforesave(&$node) {
 }
 
 function storminvoice_delete($node) {
+  db_query('DELETE FROM {storminvoiceitem} WHERE invoice_nid = %d', $node->nid);
   db_query('DELETE FROM {storminvoice} WHERE nid = %d', $node->nid);
 }
 
