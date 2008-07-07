@@ -219,7 +219,7 @@ function stormtask_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', false, '')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
@@ -236,7 +236,7 @@ function stormtask_form(&$node) {
     '#title' => t('Project'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#required' => true,
     '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-parent-nid', true, '-')"),
   );
@@ -248,7 +248,7 @@ function stormtask_form(&$node) {
     '#title' => t('Parent task'),
     '#default_value' => $node->parent_nid,
     '#options' => array(0 => '-') + $parent_tasks,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
   );
 
   $form['group1']['weight'] = array(

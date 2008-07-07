@@ -169,7 +169,7 @@ function stormexpense_stormproject_change($project_nid, $project_title) {
   db_query($s, $project_title, $project_nid, $project_title);
 }
 
-function stormexpense_stormtask_change($task_nid, $task_title, $task_stepno) {
+function stormexpense_stormtask_change($task_nid, $task_stepno, $task_title) {
   $s = "UPDATE {stormexpense} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
       (task_title<>'%s' OR task_stepno<>'%s')";
   db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
@@ -279,7 +279,7 @@ function stormexpense_form(&$node) {
     '#title' => t('Project'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#attributes' => array('onchange' => "stormticket_project_task_tickets(this, 'edit-organization-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
   );
 
@@ -291,7 +291,7 @@ function stormexpense_form(&$node) {
     '#title' => t('Task'),
     '#default_value' => $node->task_nid,
     '#options' => $tasks,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#attributes' => array('onchange' => "stormticket_task_tickets(this, 'edit-organization-nid', 'edit-project-nid', 'edit-ticket-nid', true, '-')"),
   );
 
@@ -307,7 +307,7 @@ function stormexpense_form(&$node) {
     '#title' => t('Ticket'),
     '#default_value' => $node->ticket_nid,
     '#options' => array(0 => '-') + $tickets,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
   );
 
   $form['group3'] = array(

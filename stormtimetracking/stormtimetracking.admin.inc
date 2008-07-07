@@ -227,7 +227,7 @@ function stormtimetracking_list_filter() {
     '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#attributes' => array('onchange' => "stormticket_project_task_tickets(this, 'edit-organization-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
   );
 
@@ -239,7 +239,7 @@ function stormtimetracking_list_filter() {
     '#title' => t('Task'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#attributes' => array('onchange' => "stormticket_task_tickets(this, 'edit-organization-nid', 'edit-project-nid', 'edit-ticket-nid', true, 'All')"),
   );
 
@@ -255,7 +255,7 @@ function stormtimetracking_list_filter() {
     '#type' => 'select',
     '#title' => t('Ticket'),
     '#default_value' => $ticket_nid,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
     '#options' => $tickets,
   );
 

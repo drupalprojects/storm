@@ -241,7 +241,7 @@ function storm_dateext_expand($element) {
 function storm_dateext_validate($form) {
 }
 
-function storm_dependent_select_process($form, $edit, $form_state, $complete_form) {
+function storm_dependent_select_process($form) {
   unset($form['#needs_validation']);
   return $form;
 }

@@ -252,7 +252,7 @@ function stormtask_list_filter() {
     '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+    '#process' => array('storm_dependent_select_process' => array()),
   );
 
   $form['filter']['taskstatus'] = array(
