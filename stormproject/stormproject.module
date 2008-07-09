@@ -312,6 +312,8 @@ function stormproject_load($node) {
 
 function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
+  unset($node->content['body']);
+
   $node->content['organization'] = array(
     '#value' => t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid) .'<br />',
     '#weight' => 1,
