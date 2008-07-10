@@ -357,6 +357,56 @@ function stormperson_load($node) {
   return $additions;
 }
 
+function stormperson_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+
+  unset($node->content['body']);
+
+  $node->content['stormperson_organization'] = array(
+    '#prefix' => '<div id="stormperson_organization">',
+    '#suffix' => '</div>',
+    '#value' => t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid),
+    '#weight' => -3,
+  );
+
+  $node->content['stormperson_fullname'] = array(
+    '#prefix' => '<div id="stormperson_fullname">',
+    '#suffix' => '</div>',
+    '#value' => t('Fullname') .' : '. $node->fullname,
+    '#weight' => -2,
+  );
+
+  $node->content['stormperson_email'] = array(
+    '#prefix' => '<div id="stormperson_email">',
+    '#suffix' => '</div>',
+    '#value' => t('Email') .' : '. l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)),
+    '#weight' => -1,
+  );
+
+  $node->content['stormperson_www'] = array(
+    '#prefix' => '<div id="stormperson_www">',
+    '#suffix' => '</div>',
+    '#value' => t('WWW') .' : '. l($node->www, 'mailto:'. $node->www, array('absolute' => TRUE)),
+    '#weight' => 0,
+  );
+
+  $node->content['stormperson_phone'] = array(
+    '#prefix' => '<div id="stormperson_phone">',
+    '#suffix' => '</div>',
+    '#value' => t('Phone') .' : '. $node->phone,
+    '#weight' => 1,
+  );
+
+  $node->content['stormperson_im'] = array(
+    '#prefix' => '<div id="stormperson_im">',
+    '#suffix' => '</div>',
+    '#value' => t('IM') .' : '. $node->im,
+    '#weight' => 2,
+  );
+
+  return $node;
+}
+
 function _stormperson_people_access($node=NULL) {
   if ($node == NULL) return FALSE;
   if ($node->type == 'stormorganization') return TRUE;

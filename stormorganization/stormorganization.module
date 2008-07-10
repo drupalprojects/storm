@@ -331,47 +331,148 @@ function stormorganization_load($node) {
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-  $node->content['country'] = array(
-    '#value' => t('Country') .' : '. $node->country .'<br />',
+
+  unset($node->content['body']);
+
+  $node->content['stormorganization_fullname'] = array(
+    '#prefix' => '<div id="stormorganization_fullname">',
+    '#suffix' => '</div>',
+    '#value' => t('Fullname') .' : '. $node->fullname,
+    '#weight' => -2,
+  );
+
+  $country_options = stormattribute_attributes_bydomain('Country');
+  $node->content['stormorganization_country'] = array(
+    '#prefix' => '<div id="stormorganization_country">',
+    '#suffix' => '</div>',
+    '#value' => t('Country') .' : '. $country_options[$node->country],
+    '#weight' => -1,
+  );
+
+  $node->content['stormorganization_provstate'] = array(
+    '#prefix' => '<div id="stormorganization_provstate">',
+    '#suffix' => '</div>',
+    '#value' => t('Province / State') .' : '. $node->provstate,
     '#weight' => 0,
   );
-  $node->content['www'] = array(
-    '#value' => l($node->www, 'http://'. $node->www, array('absolute' => TRUE)) .'<br />',
+
+  $node->content['stormorganization_city'] = array(
+    '#prefix' => '<div id="stormorganization_city">',
+    '#suffix' => '</div>',
+    '#value' => t('City') .' : '. $node->city,
     '#weight' => 1,
   );
 
+  $node->content['stormorganization_zio'] = array(
+    '#prefix' => '<div id="stormorganization_zip">',
+    '#suffix' => '</div>',
+    '#value' => t('Zip') .' : '. $node->zip,
+    '#weight' => 1,
+  );
+
+  $node->content['stormorganization_address'] = array(
+    '#prefix' => '<div id="stormorganization_address">',
+    '#suffix' => '</div>',
+    '#value' => t('Address') .' : '. $node->address,
+    '#weight' => 2,
+  );
+
+  $node->content['stormorganization_www'] = array(
+    '#prefix' => '<div id="stormorganization_www">',
+    '#suffix' => '</div>',
+    '#value' => t('WWW') .' : '. l($node->www, 'http://'. $node->www, array('absolute' => TRUE)),
+    '#weight' => 3,
+  );
+
+  $node->content['stormorganization_email'] = array(
+    '#prefix' => '<div id="stormorganization_email">',
+    '#suffix' => '</div>',
+    '#value' => t('Email') .' : '. l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)),
+    '#weight' => 4,
+  );
+
+  $node->content['stormorganization_currency'] = array(
+    '#prefix' => '<div id="stormorganization_currency">',
+    '#suffix' => '</div>',
+    '#value' => t('Currency') .' : '. $node->currency,
+    '#weight' => 5,
+  );
+
+  $languages = language_list('language', TRUE);
+  $languages_options = array();
+  foreach ($languages as $language_code => $language) {
+    $languages_options[$language_code] = $language->name;
+  }
+
+  $node->content['stormorganization_language'] = array(
+    '#prefix' => '<div id="stormorganization_language">',
+    '#suffix' => '</div>',
+    '#value' => t('Language') .' : '. $languages_options[$node->orglanguage],
+    '#weight' => 6,
+  );
+
+  $node->content['stormorganization_vatid'] = array(
+    '#prefix' => '<div id="stormorganization_vatid">',
+    '#suffix' => '</div>',
+    '#value' => t('VAT id') .' : '. $node->vatid,
+    '#weight' => 7,
+  );
+
+  $node->content['stormorganization_note'] = array(
+    '#prefix' => '<div id="stormorganization_note">',
+    '#suffix' => '</div>',
+    '#value' => t('Note') .' : '. $node->body,
+    '#weight' => 8,
+  );
+
+  $node->content['stormorganization_links'] = array(
+    '#prefix' => '<div id="stormorganization_links">',
+    '#suffix' => '</div>',
+    '#weight' => 9,
+  );
+
   if (module_exists('stormperson')) {
-    $node->content['people'] = array(
-      '#value' => l(t('People'), 'storm/people/', array(), 'organization_nid='. $node->nid) .'<br />',
-      '#weight' => 2,
+    $node->content['stormorganization_links']['people'] = array(
+      '#prefix' => '<div id="stormorganization_people">',
+      '#suffix' => '</div>',
+      '#value' => l(t('People'), 'storm/people/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#weight' => 0,
     );
   }
 
   if (module_exists('stormproject')) {
-    $node->content['projects'] = array(
-      '#value' => l(t('Projects'), 'storm/projects/', array(), 'organization_nid='. $node->nid) .'<br />',
-      '#weight' => 3,
+    $node->content['stormorganization_links']['projects'] = array(
+      '#prefix' => '<div id="stormorganization_projects">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Projects'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#weight' => 1,
     );
   }
 
   if (module_exists('stormnote')) {
-    $node->content['notes'] = array(
-      '#value' => l(t('Notes'), 'storm/notes/', array(), 'organization_nid='. $node->nid) .'<br />',
-      '#weight' => 4,
+    $node->content['stormorganization_links']['notes'] = array(
+      '#prefix' => '<div id="stormorganization_notes">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#weight' => 2,
     );
   }
 
   if (module_exists('stormticket')) {
-    $node->content['tickets'] = array(
-      '#value' => l(t('Tickets'), 'storm/tickets/', array(), 'organization_nid'. $node->nid) .'<br />',
-      '#weight' => 5,
+    $node->content['stormorganization_links']['tickets'] = array(
+      '#prefix' => '<div id="stormorganization_tickets">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#weight' => 3,
     );
   }
 
   if (module_exists('stormtimetracking')) {
-    $node->content['timetrackings'] = array(
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array(), 'organization_nid'. $node->nid) .'<br />',
-      '#weight' => 6,
+    $node->content['stormorganization_links']['timetrackings'] = array(
+      '#prefix' => '<div id="stormorganization_timetrackings">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid))) .'<br />',
+      '#weight' => 4,
     );
   }
 
