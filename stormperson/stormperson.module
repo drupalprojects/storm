@@ -379,14 +379,14 @@ function stormperson_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) 
   $node->content['stormperson_email'] = array(
     '#prefix' => '<div id="stormperson_email">',
     '#suffix' => '</div>',
-    '#value' => t('Email') .' : '. l($node->email, 'mailto:'. $node->email, NULL, NULL, TRUE),
+    '#value' => t('Email') .' : '. l($node->email, 'mailto:'. $node->email, array(), NULL, NULL, TRUE),
     '#weight' => -1,
   );
 
   $node->content['stormperson_www'] = array(
     '#prefix' => '<div id="stormperson_www">',
     '#suffix' => '</div>',
-    '#value' => t('WWW') .' : '. l($node->www, 'mailto:'. $node->www, NULL, NULL, TRUE),
+    '#value' => t('WWW') .' : '. l($node->www, 'mailto:'. $node->www, array(), NULL, NULL, TRUE),
     '#weight' => 0,
   );
 

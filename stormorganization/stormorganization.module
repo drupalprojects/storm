@@ -435,7 +435,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     $node->content['stormorganization_links']['people'] = array(
       '#prefix' => '<div id="stormorganization_people">',
       '#suffix' => '</div>',
-      '#value' => l(t('People'), 'storm/people/', 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
+      '#value' => l(t('People'), 'storm/people', array(), 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
       '#weight' => 0,
     );
   }
@@ -444,7 +444,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     $node->content['stormorganization_links']['projects'] = array(
       '#prefix' => '<div id="stormorganization_projects">',
       '#suffix' => '</div>',
-      '#value' => l(t('Projects'), 'storm/projects/', 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
+      '#value' => l(t('Projects'), 'storm/projects', array(), 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
       '#weight' => 1,
     );
   }
@@ -453,7 +453,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     $node->content['stormorganization_links']['notes'] = array(
       '#prefix' => '<div id="stormorganization_notes">',
       '#suffix' => '</div>',
-      '#value' => l(t('Notes'), 'storm/notes/', 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
+      '#value' => l(t('Notes'), 'storm/notes', array(), 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
       '#weight' => 2,
     );
   }
@@ -462,7 +462,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     $node->content['stormorganization_links']['tickets'] = array(
       '#prefix' => '<div id="stormorganization_tickets">',
       '#suffix' => '</div>',
-      '#value' => l(t('Tickets'), 'storm/tickets/', 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
+      '#value' => l(t('Tickets'), 'storm/tickets', array(), 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
       '#weight' => 3,
     );
   }
@@ -471,7 +471,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     $node->content['stormorganization_links']['timetrackings'] = array(
       '#prefix' => '<div id="stormorganization_timetrackings">',
       '#suffix' => '</div>',
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings', array(), 'organization_nid='. $node->nid, NULL, TRUE) .'<br />',
       '#weight' => 4,
     );
   }
