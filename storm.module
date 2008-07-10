@@ -480,6 +480,6 @@ function storm_rewrite_sql($sql, $where=array(), $join=array()) {
       $sql = str_replace($replace, $insert . $replace, $sql);
     }
   }
-
+  
   return $sql;
 }
