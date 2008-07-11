@@ -47,6 +47,8 @@ function stormattribute_menu($may_cache) {
               'callback arguments' => array('stormattribute_add'),
               'access' => user_access('Storm attribute: add'),
               'type' => MENU_CALLBACK);
+  }
+  else {
     $items[] = array(
               'path' => 'storm/attributes/edit',
               'title' => t('Edit an attribute'),
