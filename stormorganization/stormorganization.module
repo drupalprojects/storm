@@ -334,7 +334,6 @@ function stormorganization_load($node) {
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-
   unset($node->content['body']);
 
   $node->content['stormorganization_fullname'] = array(

@@ -363,7 +363,6 @@ function stormperson_load($node) {
 
 function stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-
   unset($node->content['body']);
 
   $node->content['stormperson_organization'] = array(
