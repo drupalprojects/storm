@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormtask') .'/stormtask.theme.inc');
-require_once(drupal_get_path('module', 'stormtask') .'/stormtask.admin.inc');
 
 /**
  * @file
@@ -118,7 +116,11 @@ function stormtask_access_sql($sql, $where = array(), $join = array()) {
 function stormtask_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='tasks') {
+      require_once(drupal_get_path('module', 'stormtask') .'/stormtask.admin.inc');
+      require_once(drupal_get_path('module', 'stormtask') .'/stormtask.theme.inc');
+    }
     $items[] = array(
       'path' => 'storm/tasks',
       'title' => t('Tasks'),
@@ -127,8 +129,6 @@ function stormtask_menu($may_cache) {
       'access' => user_access('Storm task: access'),
       'type' => MENU_NORMAL_ITEM
     );
-  }
-  else {
     $items[] = array(
       'path' => 'storm/project_tasks_js',
       'title' => t('Tasks'),

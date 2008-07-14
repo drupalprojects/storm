@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.theme.inc');
-require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.admin.inc');
 
 /**
  * @file
@@ -73,7 +71,11 @@ function stormknowledgebase_access($op, $node) {
 function stormknowledgebase_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='knowledgebase') {
+      require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.admin.inc');
+      require_once(drupal_get_path('module', 'stormknowledgebase') .'/stormknowledgebase.theme.inc');
+    }
     $items[] = array(
               'path' => 'storm/knowledgebase',
               'title' => t('Knowledge base'),

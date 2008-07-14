@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormattribute') .'/stormattribute.theme.inc');
-require_once(drupal_get_path('module', 'stormattribute') .'/stormattribute.admin.inc');
 
 /**
  * @file
@@ -31,7 +29,11 @@ function stormattribute_perm() {
 function stormattribute_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='attributes') {
+      require_once(drupal_get_path('module', 'stormattribute') .'/stormattribute.admin.inc');
+      require_once(drupal_get_path('module', 'stormattribute') .'/stormattribute.theme.inc');
+    }
     $items[] = array(
               'path' => 'storm/attributes',
               'title' => t('Attributes'),
@@ -47,8 +49,6 @@ function stormattribute_menu($may_cache) {
               'callback arguments' => array('stormattribute_add'),
               'access' => user_access('Storm attribute: add'),
               'type' => MENU_CALLBACK);
-  }
-  else {
     $items[] = array(
               'path' => 'storm/attributes/edit',
               'title' => t('Edit an attribute'),

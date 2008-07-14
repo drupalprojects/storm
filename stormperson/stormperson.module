@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormperson') .'/stormperson.theme.inc');
-require_once(drupal_get_path('module', 'stormperson') .'/stormperson.admin.inc');
 
 /**
  * @file
@@ -120,7 +118,11 @@ function stormperson_access_sql($sql, $where = array(), $join = array()) {
 function stormperson_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='people') {
+      require_once(drupal_get_path('module', 'stormperson') .'/stormperson.admin.inc');
+      require_once(drupal_get_path('module', 'stormperson') .'/stormperson.theme.inc');
+    }
     $items[] = array(
       'path' => 'storm/people',
       'title' => t('People'),

@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormnote') .'/stormnote.theme.inc');
-require_once(drupal_get_path('module', 'stormnote') .'/stormnote.admin.inc');
 
 /**
  * @file
@@ -109,7 +107,11 @@ function stormnote_access_sql($sql, $where = array(), $join = array()) {
 function stormnote_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='notes') {
+      require_once(drupal_get_path('module', 'stormnote') .'/stormnote.theme.inc');
+      require_once(drupal_get_path('module', 'stormnote') .'/stormnote.admin.inc');
+    }
     $items[] = array(
             'path' => 'storm/notes',
             'title' => t('Notes'),

@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.theme.inc');
-require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
 
 /**
  * @file
@@ -119,7 +117,11 @@ function storminvoice_access_sql($sql, $where = array(), $join = array()) {
 function storminvoice_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='invoices') {
+      require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
+      require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.theme.inc');
+    }
     $items[] = array(
       'path' => 'storm/invoices',
       'title' => t('Invoices'),
@@ -128,8 +130,6 @@ function storminvoice_menu($may_cache) {
       'access' => user_access('Storm invoice: access'),
       'type' => MENU_NORMAL_ITEM,
     );
-  }
-  else {
     $items[] = array(
       'path' => 'storm/project_invoices_js',
       'title' => t('Tasks'),

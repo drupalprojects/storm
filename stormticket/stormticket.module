@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormticket') .'/stormticket.theme.inc');
-require_once(drupal_get_path('module', 'stormticket') .'/stormticket.admin.inc');
 
 /**
  * @file
@@ -119,7 +117,12 @@ function stormticket_access_sql($sql, $where = array(), $join = array()) {
 function stormticket_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='tickets') {
+      require_once(drupal_get_path('module', 'stormticket') .'/stormticket.admin.inc');
+      require_once(drupal_get_path('module', 'stormticket') .'/stormticket.theme.inc');
+    }
+
     $items[] = array(
               'path' => 'storm/tickets',
               'title' => t('Tickets'),
@@ -128,8 +131,6 @@ function stormticket_menu($may_cache) {
               'access' => user_access('Storm ticket: access'),
               'type' => MENU_NORMAL_ITEM,
     );
-  }
-  else {
     $items[] = array(
       'path' => 'storm/task_tickets_js',
       'title' => t('Tickets'),

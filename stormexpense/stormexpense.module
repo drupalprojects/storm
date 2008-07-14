@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.theme.inc');
-require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.admin.inc');
 
 /**
  * @file
@@ -109,7 +107,11 @@ function stormexpense_access_sql($sql, $where = array(), $join = array()) {
 function stormexpense_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='expenses') {
+      require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.admin.inc');
+      require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.theme.inc');
+    }
     $items[] = array(
       'path' => 'storm/expenses',      
       'title' => t('Expenses'),
@@ -125,8 +127,6 @@ function stormexpense_menu($may_cache) {
       'access' => user_access('Storm expense: access'),
       'type' => MENU_CALLBACK,
     );
-  }
-  else {
     $items[] = array(
       'path' => 'storm/expenses/report',
       'title' => t('Expenses'),

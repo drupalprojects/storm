@@ -1,7 +1,5 @@
 <?php
 // $Id$
-require_once(drupal_get_path('module', 'stormproject') .'/stormproject.theme.inc');
-require_once(drupal_get_path('module', 'stormproject') .'/stormproject.admin.inc');
 
 /**
  * @file
@@ -19,6 +17,20 @@ function stormproject_help($path) {
   return $o;
 }
 
+function stormproject_init() {
+  // ensure we are not serving a cached page
+  if (function_exists('drupal_set_content')) {
+      $settings = array(
+                    'storm' => array(
+                      'organization_projects_url' => url('storm/organization_projects_js/')
+                    ),
+              );
+      drupal_add_js($settings, 'setting');
+      drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
+      drupal_add_js(drupal_get_path('module', 'stormproject') .'/stormproject.js', 'module', 'header', FALSE);
+  }
+}
+
 function stormproject_perm() {
   return array(
                 'Storm project: access',
@@ -30,18 +42,6 @@ function stormproject_perm() {
                 'Storm project: view all',
                 'Storm project: view own',
               );
-}
-
-function stormproject_init() {
-  $settings = array(
-                    'storm' => array(
-                      'organization_projects_url' => url('storm/organization_projects_js/')
-                    ),
-              );
-  drupal_add_js($settings, 'setting');
-
-  drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
-  drupal_add_js(drupal_get_path('module', 'stormproject') .'/stormproject.js', 'module', 'header', FALSE);
 }
 
 function stormproject_access($op, $node) {
@@ -109,7 +109,12 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
 function stormproject_menu($may_cache) {
   $items = array();
 
-  if ($may_cache) {
+  if (!$may_cache) {
+    if (arg(0)=='storm' && arg(1)=='projects') {
+      require_once(drupal_get_path('module', 'stormproject') .'/stormproject.admin.inc');
+      require_once(drupal_get_path('module', 'stormproject') .'/stormproject.theme.inc');
+    }
+
     $items[] = array(
       'path' => 'storm/projects',
       'title' => t('Projects'),
@@ -118,9 +123,6 @@ function stormproject_menu($may_cache) {
       'access' => user_access('Storm project: access'),
       'type' => MENU_NORMAL_ITEM
     );
-
-  }
-  else {
     $items[] = array(
       'path' => 'storm/organization_projects_js',
       'title' => t('Projects'),
