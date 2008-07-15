@@ -20,6 +20,7 @@ function stormtimetracking_install() {
           task_nid INT(10),
           task_stepno VARCHAR(128),
           task_title VARCHAR(128),
+          ticket_nid INT(10),
           trackingdate INT(10),
           timebegin VARCHAR(5),
           timeend VARCHAR(5),
@@ -40,6 +41,7 @@ function stormtimetracking_install() {
           task_nid INT,
           task_stepno VARCHAR(128),
           task_title VARCHAR(128),
+          ticket_nid INT,
           trackingdate INT,
           timebegin VARCHAR(5),
           timeend VARCHAR(5),
@@ -53,5 +55,21 @@ function stormtimetracking_install() {
 
 function stormtimetracking_uninstall() {
   db_query("DROP TABLE IF EXISTS {stormtimetracking}");
+}
+
+function stormtimetracking_update_1() {
+  $items = array();
+  switch ($GLOBALS['db_type']) {
+  case 'mysql':
+  case 'mysqli':
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN ticket_nid INT(10)");
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN ticket_title VARCHAR(128)");
+  break;
+  case 'pgsql':
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN ticket_nid INT");
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN ticket_title VARCHAR(128)");
+  break;
+  }
+  return $items;
 }
 
