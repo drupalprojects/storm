@@ -472,4 +472,3 @@ function stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   return $node;
 }
 
-
