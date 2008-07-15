@@ -243,7 +243,7 @@ function stormorganization_form(&$node) {
   $languages = language_list('language', TRUE);
   $languages_options = array();
   foreach ($languages as $language_code => $language) {
-    $languages_options[$language_code] = $language->name;
+    $languages_options[$language_code] = $language;
   }
   $form['group4']['orglanguage'] = array(
     '#type' => 'select',
@@ -352,11 +352,10 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     '#weight' => -2,
   );
 
-  $country_options = stormattribute_attributes_bydomain('Country');
   $node->content['stormorganization_country'] = array(
     '#prefix' => '<div id="stormorganization_country">',
     '#suffix' => '</div>',
-    '#value' => t('Country') .' : '. $country_options[$node->country],
+    '#value' => t('Country') .' : '. stormattribute_value('country', $node->country),
     '#weight' => -1,
   );
 
