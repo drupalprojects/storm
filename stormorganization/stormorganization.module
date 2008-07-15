@@ -343,11 +343,10 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => -2,
   );
 
-  $country_options = stormattribute_attributes_bydomain('Country');
   $node->content['stormorganization_country'] = array(
     '#prefix' => '<div id="stormorganization_country">',
     '#suffix' => '</div>',
-    '#value' => t('Country') .' : '. $country_options[$node->country],
+    '#value' => t('Country') .' : '. stormattribute_value('country', $node->country),
     '#weight' => -1,
   );
 
