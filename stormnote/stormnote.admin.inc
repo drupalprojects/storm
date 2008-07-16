@@ -158,7 +158,7 @@ function stormnote_list_filter() {
     '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta ON sta.nid=n.nid WHERE status=1 AND type='stormtask' AND sta.project_nid=%d ORDER BY title ";
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta ON sta.nid=n.nid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d ORDER BY title ";
   $s = db_rewrite_sql($s);
   $r = db_query(stormtask_access_sql($s), $project_nid);
   $tasks = array();
