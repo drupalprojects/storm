@@ -34,14 +34,16 @@ function stormticket_perm() {
 }
 
 function stormticket_init() {
-  drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
+  if (function_exists('drupal_set_content')) {
+    drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
 
-  $settings = array(
+    $settings = array(
                     'storm' => array(
                       'task_tickets_url' => url('storm/task_tickets_js/')
                     ),
               );
-  drupal_add_js($settings, 'setting');
+    drupal_add_js($settings, 'setting');
+  }
 }
 
 function stormticket_access($op, $node) {

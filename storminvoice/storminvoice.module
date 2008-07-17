@@ -34,13 +34,15 @@ function storminvoice_perm() {
 }
 
 function storminvoice_init() {
-  $settings = array(
+  if (function_exists('drupal_set_content')) {
+    $settings = array(
                     'storm' => array(
                       'project_invoices_url' => url('storm/project_invoices_js/')
                     ),
               );
-  drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'storminvoice') .'/storminvoice.js', 'module', 'header', FALSE);
+    drupal_add_js($settings, 'setting');
+    drupal_add_js(drupal_get_path('module', 'storminvoice') .'/storminvoice.js', 'module', 'header', FALSE);
+  }
 }
 
 function storminvoice_access($op, $node) {

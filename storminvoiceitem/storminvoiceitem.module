@@ -34,7 +34,9 @@ function storminvoiceitem_perm() {
 }
 
 function storminvoiceitem_init() {
-  drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
+  if (function_exists('drupal_set_content')) {
+    drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
+  }
 }
 
 function storminvoiceitem_access($op, $node) {

@@ -26,6 +26,10 @@ function stormorganization_views_tables() {
         'name' => t('Storm Organization : Country'),
         'sortable' => true,
       ),
+      'provstate' => array(
+        'name' => t('Storm Organization : Province/State'),
+        'sortable' => true,
+      ),
     ),
     'sorts' => array(
       'prefix' => array('name' => t('Storm Organization : Prefix')),
@@ -40,6 +44,18 @@ function stormorganization_views_tables() {
       ),
       'fullname' => array(
         'name' => t('Storm Organization : Fullname'),
+        'operator' => 'views_handler_operator_like',
+        'handler' => 'views_handler_filter_like',
+      ),
+      'country' => array(
+        'name' => t('Storm Organization : Country'),
+        'operator' => 'views_handler_operator_or',
+        'list' => stormattribute_attributes_bydomain('country'),
+        'list-type' => 'list',
+        'value-type' => 'array',
+      ),
+      'provstate' => array(
+        'name' => t('Storm Organization : Province/State'),
         'operator' => 'views_handler_operator_like',
         'handler' => 'views_handler_filter_like',
       ),
