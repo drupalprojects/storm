@@ -21,6 +21,8 @@ function stormtask_install() {
           parent_nid INT(10),
           weight INT(10),
           taskstatus VARCHAR(20),
+          taskcategory VARCHAR(20),
+          taskpriority VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,          
           currency VARCHAR(20),
@@ -41,6 +43,8 @@ function stormtask_install() {
           parent_nid INT,
           weight INT,
           taskstatus VARCHAR(20),
+          taskcategory VARCHAR(20),
+          taskpriority VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,          
           currency VARCHAR(20),
@@ -53,5 +57,21 @@ function stormtask_install() {
 
 function stormtask_uninstall() {
   db_query("DROP TABLE IF EXISTS {stormtask}");
+}
+
+function stormtask_update_1() {
+  $items = array();
+  switch ($GLOBALS['db_type']) {
+  case 'mysql':
+  case 'mysqli':
+    $items[] = update_sql("ALTER TABLE {stormtask} ADD COLUMN taskcategory VARCHAR(20)");
+    $items[] = update_sql("ALTER TABLE {stormtask} ADD COLUMN taskpriority VARCHAR(20)");
+  break;
+  case 'pgsql':
+    $items[] = update_sql("ALTER TABLE {stormtask} ADD COLUMN taskcategory VARCHAR(20)");
+    $items[] = update_sql("ALTER TABLE {stormtask} ADD COLUMN taskpriority VARCHAR(20)");
+  break;
+  }
+  return $items;
 }
 

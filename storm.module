@@ -57,17 +57,6 @@ function storm_menu($may_cache) {
   return $items;
 }
 
-function storm_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  switch ($op) {
-    case 'view':
-      global $user;
-      if (!node_access('view', $node, $user)) {
-        $node=NULL;
-      }
-      break;
-  }
-}
-
 function storm_storm() {
   $o = '<dl>';
   foreach (module_invoke_all('storm_indexpage') as $key => $content) {

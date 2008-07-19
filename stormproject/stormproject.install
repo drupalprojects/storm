@@ -17,6 +17,7 @@ function stormproject_install() {
           organization_title VARCHAR(128),
           projectstatus VARCHAR(20),
           projectcategory VARCHAR(20),
+          projectpriority VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,
           currency VARCHAR(20),
@@ -33,6 +34,7 @@ function stormproject_install() {
           organization_title VARCHAR(128),
           projectstatus VARCHAR(20),
           projectcategory VARCHAR(20),
+          projectpriority VARCHAR(20),
           pricemode VARCHAR(20),
           price FLOAT,
           currency VARCHAR(20),
@@ -45,5 +47,19 @@ function stormproject_install() {
 
 function stormproject_uninstall() {
   db_query("DROP TABLE IF EXISTS {stormproject}");
+}
+
+function stormproject_update_1() {
+  $items = array();
+  switch ($GLOBALS['db_type']) {
+  case 'mysql':
+  case 'mysqli':
+    $items[] = update_sql("ALTER TABLE {stormproject} ADD COLUMN projectpriority VARCHAR(20)");
+  break;
+  case 'pgsql':
+    $items[] = update_sql("ALTER TABLE {stormproject} ADD COLUMN projectpriority VARCHAR(20)");
+  break;
+  }
+  return $items;
 }
 

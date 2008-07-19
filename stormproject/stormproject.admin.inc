@@ -35,6 +35,10 @@ function stormproject_list() {
       'field' => 'spr.projectstatus',
     ),
     array(
+      'data' => t('Priority'),
+      'field' => 'spr.projectpriority',
+    ),
+    array(
       'data' => storm_icon_add_node($i, $_GET),
       'class' => 'storm_list_operations',
     ),
@@ -53,6 +57,9 @@ function stormproject_list() {
     $v = $_SESSION['stormproject_list_filter']['projectstatus'];
     $v = str_replace(',', "','", $v);
     $where[] = "spr.projectstatus IN ('". $v ."')";
+  }
+  if ($_SESSION['stormproject_list_filter']['projectpriority'] && $_SESSION['stormproject_list_filter']['projectpriority'] != '-') {
+    $where[] = "spr.projectpriority='". $_SESSION['stormproject_list_filter']['projectpriority'] ."'";
   }
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
 
@@ -73,14 +80,21 @@ function stormproject_list() {
 }
 
 function stormproject_list_filter() {
-  $status_list = stormattribute_attributes_bydomain('project status search');
   $organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
   $projectcategory = $_SESSION['stormproject_list_filter']['projectcategory'];
+  $status_list = stormattribute_attributes_bydomain('project status search');
   $projectstatus = $_SESSION['stormproject_list_filter']['projectstatus'];
   if (!$projectstatus) {
     $rstatus_list = array_flip($status_list);
     $projectstatus = $rstatus_list['open'];
     $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
+  }
+  $priority_list = stormattribute_attributes_bydomain('project priority search');
+  $projectpriority = $_SESSION['stormproject_list_filter']['projectpriority'];
+  if (!$projectpriority) {
+    $rpriority_list = array_flip($priority_list);
+    $projectpriority = $rpriority_list['-'];
+    $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
   }
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -132,6 +146,13 @@ function stormproject_list_filter() {
     '#options' => array('-' => t('all')) + $status_list,
   );
 
+  $form['filter']['group1']['projectpriority'] = array(
+    '#type' => 'select',
+    '#title' => t('Priority'),
+    '#default_value' => $projectpriority,
+    '#options' => array('-' => t('all')) + $priority_list,
+  );
+
   $form['filter']['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -174,6 +195,7 @@ function stormproject_list_filter_filter($form_id, $form_values) {
   $_SESSION['stormproject_list_filter']['organization_nid'] = $form_values['organization_nid'];
   $_SESSION['stormproject_list_filter']['projectcategory'] = $form_values['projectcategory'];
   $_SESSION['stormproject_list_filter']['projectstatus'] = $form_values['projectstatus'];
+  $_SESSION['stormproject_list_filter']['projectpriority'] = $form_values['projectpriority'];
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
 }
 
