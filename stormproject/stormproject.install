@@ -20,8 +20,9 @@ function stormproject_schema() {
       'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'organization_nid'    => array('type' => 'int'),
       'organization_title'  => array('type' => 'varchar', 'length' => 100),
-      'projectstatus'      => array('type' => 'varchar', 'length' => 20),
-      'projectcategory'    => array('type' => 'varchar', 'length' => 20),
+      'projectstatus'       => array('type' => 'varchar', 'length' => 20),
+      'projectcategory'     => array('type' => 'varchar', 'length' => 20),
+      'projectpriority'     => array('type' => 'varchar', 'length' => 20),
       'pricemode'           => array('type' => 'varchar', 'length' => 20),
       'price'               => array('type' => 'float'),
       'currency'            => array('type' => 'varchar', 'length' => 20),
@@ -30,4 +31,10 @@ function stormproject_schema() {
   );
 
   return $schema;
+}
+
+function stormproject_update_1() {
+  $ret = array();
+  db_add_field($ret, 'stormproject', 'projectpriority', array('type' => 'varchar', 'length' => 20));
+  return $ret;
 }

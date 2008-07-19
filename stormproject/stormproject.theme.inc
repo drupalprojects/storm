@@ -21,6 +21,7 @@ function theme_stormproject_list($header, $projects) {
       l($project->organization_title, 'node/'. $project->organization_nid),
       l($project->title, 'node/'. $project->nid) . theme('mark', node_mark($project->nid, $project->changed)),
       storm_icon('status_'. $project->projectstatus, $project->projectstatus),
+      storm_icon('priority_'. $project->projectpriority, $project->projectpriority),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',

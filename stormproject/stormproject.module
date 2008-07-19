@@ -176,14 +176,6 @@ function stormproject_form(&$node) {
 
   $type = node_get_types('type', $node);
 
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#required' => TRUE,
-    '#default_value' => $node->title,
-    '#weight' => -50,
-  );
-
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -205,18 +197,11 @@ function stormproject_form(&$node) {
     '#process' => array('storm_dependent_select_process'),
   );
 
-  $form['group1']['projectcategory'] = array(
-    '#type' => 'select',
-    '#title' => t('Category'),
-    '#default_value' => $node->projectcategory,
-    '#options' => stormattribute_attributes_bydomain('Project category'),
-  );
-
-  $form['group1']['projectstatus'] = array(
-    '#type' => 'select',
-    '#title' => t('Status'),
-    '#default_value' => $node->projectstatus,
-    '#options' => stormattribute_attributes_bydomain('Project status'),
+  $form['group1']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
   );
 
   $form['group2'] = array(
@@ -225,21 +210,48 @@ function stormproject_form(&$node) {
     '#weight' => -48,
   );
 
-  $form['group2']['pricemode'] = array(
+  $form['group2']['projectcategory'] = array(
+    '#type' => 'select',
+    '#title' => t('Category'),
+    '#default_value' => $node->projectcategory,
+    '#options' => stormattribute_attributes_bydomain('Project category'),
+  );
+
+  $form['group2']['projectstatus'] = array(
+    '#type' => 'select',
+    '#title' => t('Status'),
+    '#default_value' => $node->projectstatus,
+    '#options' => stormattribute_attributes_bydomain('Project status'),
+  );
+
+  $form['group2']['projectpriority'] = array(
+    '#type' => 'select',
+    '#title' => t('Priority'),
+    '#default_value' => $node->projectpriority,
+    '#options' => stormattribute_attributes_bydomain('Project priority'),
+  );
+
+  $form['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -47,
+  );
+
+  $form['group3']['pricemode'] = array(
     '#type' => 'select',
     '#title' => t('Price mode'),
     '#default_value' => $node->pricemode,
     '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
   );
 
-  $form['group2']['price'] = array(
+  $form['group3']['price'] = array(
     '#title' => 'Price',
     '#type' => 'textfield',
     '#size' => 15,
     '#default_value' => $node->price,
   );
 
-  $form['group2']['currency'] = array(
+  $form['group3']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Price currency'),
     '#default_value' => $node->currency,
@@ -271,11 +283,11 @@ function stormproject_insert($node) {
   $o = db_fetch_object($r);
 
   db_query("INSERT INTO {stormproject}
-          (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, pricemode, price, currency)
+          (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, projectpriority, pricemode, price, currency)
           VALUES
           (%d, %d, %d, '%s', '%s', '%s', '%s', %f, '%s')",
           $node->vid, $node->nid, $node->organization_nid, $o->title, $node->projectcategory,
-          $node->projectstatus, $node->pricemode, $node->price, $node->currency);
+          $node->projectstatus, $node->projectpriority, $node->pricemode, $node->price, $node->currency);
 }
 
 function stormproject_update($node) {
@@ -290,8 +302,8 @@ function stormproject_update($node) {
 
     db_query("UPDATE {stormproject} SET
         organization_nid=%d, organization_title='%s',
-        projectcategory='%s', projectstatus='%s', pricemode='%s', price=%f, currency='%s' WHERE vid = %d",
-        $node->organization_nid, $o->title, $node->projectcategory, $node->projectstatus,
+        projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s', price=%f, currency='%s' WHERE vid = %d",
+        $node->organization_nid, $o->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
         $node->pricemode, $node->price, $node->currency, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);
