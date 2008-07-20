@@ -26,6 +26,8 @@ function stormtask_schema() {
       'parent_nid'          => array('type' => 'int'),
       'weight'              => array('type' => 'int'),
       'taskstatus'          => array('type' => 'varchar', 'length' => 20),
+      'taskcategory'        => array('type' => 'varchar', 'length' => 20),
+      'taskpriority'        => array('type' => 'varchar', 'length' => 20),
       'pricemode'           => array('type' => 'varchar', 'length' => 20),
       'price'               => array('type' => 'float'),
       'currency'            => array('type' => 'varchar', 'length' => 20),
@@ -34,4 +36,11 @@ function stormtask_schema() {
   );
 
   return $schema;
+}
+
+function stormtask_update_1() {
+  $ret = array();
+  db_add_field($ret, 'stormtask', 'taskcategory', array('type' => 'varchar', 'length' => 20));
+  db_add_field($ret, 'stormtask', 'taskpriority', array('type' => 'varchar', 'length' => 20));
+  return $ret;
 }

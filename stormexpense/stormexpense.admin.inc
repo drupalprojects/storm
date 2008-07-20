@@ -132,7 +132,6 @@ function stormexpense_list() {
 
   $s = db_rewrite_sql($s);
   $s = stormexpense_access_sql($s, $where);
-
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 

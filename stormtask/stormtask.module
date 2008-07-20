@@ -282,11 +282,31 @@ function stormtask_form(&$node) {
     '#default_value' => $node->title,
   );
 
-  $form['group2']['taskstatus'] = array(
+  $form['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -48,
+  );
+
+  $form['group3']['taskcategory'] = array(
+    '#type' => 'select',
+    '#title' => t('Category'),
+    '#default_value' => $node->taskcategory,
+    '#options' => stormattribute_attributes_bydomain('Task category'),
+  );
+
+  $form['group3']['taskstatus'] = array(
     '#type' => 'select',
     '#title' => t('Status'),
     '#default_value' => $node->taskstatus,
     '#options' => stormattribute_attributes_bydomain('Task status'),
+  );
+
+  $form['group3']['taskpriority'] = array(
+    '#type' => 'select',
+    '#title' => t('Priority'),
+    '#default_value' => $node->taskpriority,
+    '#options' => stormattribute_attributes_bydomain('Task priority'),
   );
 
   if ($type->has_body) {
@@ -317,14 +337,14 @@ function stormtask_form(&$node) {
 function stormtask_insert($node) {
   _stormtask_beforesave($node);
   db_query("INSERT INTO {stormtask}
-          (vid, nid, stepno, taskstatus,
+          (vid, nid, stepno, taskcategory, taskstatus, taskpriority, 
           organization_nid, organization_title,
           project_nid, project_title, parent_nid, weight)
           VALUES
           (%d, %d, '%s', '%s',
           %d, '%s',
           %d, '%s', %d, %d)",
-          $node->vid, $node->nid, $node->stepno, $node->taskstatus,
+          $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
           $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
           $node->parent_nid, $node->weight);
 }
@@ -335,13 +355,13 @@ function stormtask_update($node) {
     stormtask_insert($node);
   }
   else {
-    _stormtask_beforesave($node);
+    stormtask_beforesave($node);
     db_query("UPDATE {stormtask} SET
-      stepno='%s', taskstatus='%s',
+      stepno='%s', taskcategory='%s', taskstatus='%s', taskpriority='%s',
       organization_nid=%d, organization_title='%s',
       project_nid=%d, project_title='%s',
       parent_nid=%d, weight=%d WHERE vid = %d",
-      $node->stepno, $node->taskstatus,
+      $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
       $node->organization_nid, $node->organization_title,
       $node->project_nid, $node->project_title,
       $node->parent_nid,
