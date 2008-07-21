@@ -25,6 +25,7 @@ function stormtimetracking_install() {
           timebegin VARCHAR(5),
           timeend VARCHAR(5),
           duration FLOAT,
+          billable INT(1),
           PRIMARY KEY (vid, nid),
           KEY {stormtimetracking}_nid (nid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */;
@@ -46,6 +47,7 @@ function stormtimetracking_install() {
           timebegin VARCHAR(5),
           timeend VARCHAR(5),
           duration FLOAT,
+          billable INT,
           PRIMARY KEY (vid, nid)
       );");
       db_query("CREATE INDEX {stormtimetracking}_nid_idx ON {stormtimetracking} (nid)");
@@ -73,3 +75,16 @@ function stormtimetracking_update_1() {
   return $items;
 }
 
+function stormtimetracking_update_2() {
+  $items = array();
+  switch ($GLOBALS['db_type']) {
+  case 'mysql':
+  case 'mysqli':
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN billable INT(1)");
+  break;
+  case 'pgsql':
+    $items[] = update_sql("ALTER TABLE {stormtimetracking} ADD COLUMN billable INT");
+  break;
+  }
+  return $items;
+}

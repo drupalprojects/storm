@@ -68,7 +68,7 @@ function stormtask_tasks($project_nid) {
 }
 
 function stormtask_tasks_filter() {
-  $category_list = stormattribute_attributes_bydomain('Task category search');
+  $category_list = stormattribute_attributes_bydomain('Task category');
   $status_list = stormattribute_attributes_bydomain('Task status search');
   $priority_list = stormattribute_attributes_bydomain('Task priority search');
 

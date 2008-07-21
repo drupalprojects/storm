@@ -114,6 +114,10 @@ function stormtimetracking_list() {
     $dateto['minute'] = 59;
     $where[] = 'stt.trackingdate<='. _storm_datetime_to_gmtimestamp($dateto);
   }
+  if ($_SESSION['stormtimetracking_list_filter']['billable']!='-' && $_SESSION['stormtimetracking_list_filter']['billable']!= NULL) {
+    $where[] = 'stt.billable='. $_SESSION['stormtimetracking_list_filter']['billable'];
+  }
+
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
 
   if ($_SESSION['stormtimetracking_list_filter']['user']) {
@@ -285,6 +289,13 @@ function stormtimetracking_list_filter() {
     '#autocomplete_path' => 'user/autocomplete',
   );
 
+  $form['filter']['billable'] = array(
+    '#type' => 'select',
+    '#title' => 'Billable',
+    '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
+    '#default_value' => $_SESSION['stormtimetracking_list_filter']['billable'],
+  );
+
   $form['filter']['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -328,6 +339,7 @@ function stormtimetracking_list_filter_filter($form_id, $form_values) {
   $_SESSION['stormtimetracking_list_filter']['ticket_nid'] = $form_values['ticket_nid'];
   $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_values['datefrom'];
   $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_values['dateto'];
+  $_SESSION['stormtimetracking_list_filter']['billable'] = $form_values['billable'];
   $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_values['itemsperpage'];
   $_SESSION['stormtimetracking_list_filter']['user'] = $form_values['user'];
 }
