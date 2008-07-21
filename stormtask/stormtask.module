@@ -339,7 +339,7 @@ function stormtask_insert($node) {
           organization_nid, organization_title,
           project_nid, project_title, parent_nid, weight)
           VALUES
-          (%d, %d, '%s', '%s',
+          (%d, %d, '%s', '%s', '%s', '%s',
           %d, '%s',
           %d, '%s', %d, %d)",
           $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
