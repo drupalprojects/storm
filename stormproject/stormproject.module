@@ -291,7 +291,7 @@ function stormproject_insert($node) {
   db_query("INSERT INTO {stormproject}
           (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, projectpriority, pricemode, price, currency)
           VALUES
-          (%d, %d, %d, '%s', '%s', '%s', '%s', %f, '%s')",
+          (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s')",
           $node->vid, $node->nid, $node->organization_nid, $o->title, $node->projectcategory,
           $node->projectstatus, $node->projectpriority, $node->pricemode, $node->price, $node->currency);
 }
