@@ -19,15 +19,18 @@ function stormproject_help($path, $arg) {
 
 function stormproject_perm() {
   return array(
-                'Storm project: access',
-                'Storm project: add',
-                'Storm project: delete all',
-                'Storm project: delete own',
-                'Storm project: edit all',
-                'Storm project: edit own',
-                'Storm project: view all',
-                'Storm project: view own',
-              );
+    'Storm project: access',
+    'Storm project: add',
+    'Storm project: delete all',
+    'Storm project: delete own',
+    'Storm project: delete of user organization',
+    'Storm project: edit all',
+    'Storm project: edit own',
+    'Storm project: edit of user organization',
+    'Storm project: view all',
+    'Storm project: view own',
+    'Storm project: view of user organization',
+  );
 }
 
 function stormproject_init() {
@@ -54,6 +57,9 @@ function stormproject_access($op, $node, $account) {
       return TRUE;
     }
     else if (user_access('Storm project: delete own') && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+    else if (user_access('Storm project: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }

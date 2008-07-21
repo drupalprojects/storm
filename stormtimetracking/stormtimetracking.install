@@ -27,10 +27,11 @@ function stormtimetracking_schema() {
       'task_title'          => array('type' => 'varchar', 'length' => 128),
       'ticket_nid'          => array('type' => 'int'),
       'ticket_title'        => array('type' => 'varchar', 'length' => 128),
-      'trackingdate'       => array('type' => 'int'),
+      'trackingdate'        => array('type' => 'int'),
       'timebegin'           => array('type' => 'varchar', 'length' => 5),
       'timeend'             => array('type' => 'varchar', 'length' => 5),
       'duration'            => array('type' => 'float'),
+      'billable'            => array('type' => 'int'),
     ),
     'primary key' => array('vid', 'nid'),
   );
@@ -38,3 +39,8 @@ function stormtimetracking_schema() {
   return $schema;
 }
 
+function stormtimetracking_update_1() {
+  $ret = array();
+  db_add_field($ret, 'stormtimetracking', 'billable', array('type' => 'int'));
+  return $ret;
+}

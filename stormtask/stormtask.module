@@ -355,7 +355,7 @@ function stormtask_update($node) {
     stormtask_insert($node);
   }
   else {
-    stormtask_beforesave($node);
+    _stormtask_beforesave($node);
     db_query("UPDATE {stormtask} SET
       stepno='%s', taskcategory='%s', taskstatus='%s', taskpriority='%s',
       organization_nid=%d, organization_title='%s',

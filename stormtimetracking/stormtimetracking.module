@@ -358,13 +358,20 @@ function stormtimetracking_form(&$node) {
     '#maxlength' => 5,
   );
 
+  $form['billable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Billable'),
+    '#default_value' => $node->billable,
+    '#weight' => -17,
+  );
+
   if ($type->has_body) {
     $form['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#required' => FALSE,
-      '#weight' => -17,
+      '#weight' => -16,
     );
     $form['body_filter']['format'] = filter_form($node->format);
   }
@@ -387,13 +394,13 @@ function stormtimetracking_insert($node) {
             %d, '%s',
             %d, '%s', '%s',
             %d, '%s',
-            %d, '%s', '%s', %f)",
+            %d, '%s', '%s', %f, %d)",
             $node->vid, $node->nid,
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration);
+            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable);
 }
 
 function stormtimetracking_update($node) {
@@ -404,12 +411,12 @@ function stormtimetracking_update($node) {
             project_nid=%d, project_title='%s',
             task_nid=%d, task_title='%s', task_stepno='%s',
             ticket_nid=%d, ticket_title='%s',
-            trackingdate=%d, timebegin='%s', timeend='%s', duration=%f WHERE vid = %d",
+            trackingdate=%d, timebegin='%s', timeend='%s', duration=%f, billable=%d WHERE vid = %d",
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->vid);
+            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable, $node->vid);
 }
 
 function _stormtimetracking_beforesave(&$node) {
