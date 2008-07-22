@@ -66,6 +66,64 @@ function stormknowledgebase_access($op, $node, $account) {
   return FALSE;
 }
 
+function stormknowledgebase_access_sql($sql, $where = array(), $join = array()) {
+
+  if (user_access('Storm knowledgebase: view all')) {
+    return storm_rewrite_sql($sql, $where);
+  }
+
+  global $user;
+
+  $cond = '';
+  if (user_access('Storm knowledgebase: view own')) {
+    $cond .= 'n.uid='. $user->uid;
+  }
+  if (!$cond) {
+    $cond = '0=1';
+  }
+
+  if ($cond) $cond .= ' AND ';
+  $cond .= " 'sko_access'='sko_access' ";
+
+  return storm_rewrite_sql($sql, $where);
+}
+
+function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+  static $conds = array();
+
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  if ($conds[$account->uid]) {
+    return $conds[$account->uid];
+  }
+
+  if (preg_match("/'sko_access'='sko_access'/", $query)) {
+    $cond = '';
+  }
+  else {
+    if (user_access('Storm knowledgebase: view all', $account)) {
+      return '';
+    }
+
+    $cond = '';
+    if (user_access('Storm knowledgebase: view own', $account)) {
+      $cond .= "${primary_table}.uid=". $account->uid;
+    }
+    if ($cond) {
+      $cond = "WHEN 'stormknowledgebase' THEN IF($cond,1,0) ";  
+    }
+    else {
+      $cond = "WHEN 'stormknowledgebase' THEN 0 ";  
+    }
+  }
+
+  $conds[$account->uid] = $cond;
+  return $cond;
+}
+
 function stormknowledgebase_menu() {
   $items = array();
 
