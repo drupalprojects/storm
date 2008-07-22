@@ -416,7 +416,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
     '#weight' => 1,
   );
 
-  $node->content['stormorganization_zio'] = array(
+  $node->content['stormorganization_zip'] = array(
     '#prefix' => '<div id="stormorganization_zip">',
     '#suffix' => '</div>',
     '#value' => t('Zip') .' : '. $node->zip,
