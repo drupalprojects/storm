@@ -154,7 +154,7 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table ='n', $accou
       $cond .= 'spe1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} sti1 WHERE spe1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";  
     }
     else {
       $cond = "WHEN 'stormperson' THEN 0 ";  
