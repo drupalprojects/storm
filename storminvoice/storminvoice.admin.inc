@@ -114,21 +114,27 @@ function storminvoice_list() {
     $tablesort = ' ORDER BY LPAD(sin.number, 10, "0") DESC';
   }
 
-  $s = db_rewrite_sql($s);
   $s = storminvoice_access_sql($s, $where);
+  $s = db_rewrite_sql($s);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
   $invoices = array();
   while ($invoice = db_fetch_object($r)) {
     $invoices[] = $invoice;
   }
 
-  $r = db_query(storminvoice_access_sql($s_totals_topay, $where));
+  $s_totals_topay = storminvoice_access_sql($s_totals_topay, $where);
+  $s_totals_topay = db_rewrite_sql($s_totals_topay);
+  $r = db_query($s_totals_topay);
   if ($r) $totals_topay = db_fetch_object($r);
 
-  $r = db_query(storminvoice_access_sql($s_totals_paid, $where));
+  $s_totals_paid = storminvoice_access_sql($s_totals_paid, $where);
+  $s_totals_paid = db_rewrite_sql($s_totals_paid);
+  $r = db_query($s_totals_paid);
   if ($r) $totals_paid = db_fetch_object($r);
 
-  $r = db_query(storminvoice_access_sql($s_totals, $where));
+  $s_totals = storminvoice_access_sql($s_totals, $where);
+  $s_totals = db_rewrite_sql($s_totals);
+  $r = db_query($s_totals);
   if ($r) $totals = db_fetch_object($r);
 
   $o .= theme('storminvoice_list', $header, $invoices, $itemsperpage, $totals_topay, $totals_paid, $totals);
@@ -289,9 +295,10 @@ function _storminvoice_project_invoices_js($organization_nid, $project_nid) {
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {storminvoice} AS sin
   ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice' AND sin.organization_nid=%d AND sin.project_nid=%d
   ORDER BY n.title";
-  $s = db_rewrite_sql($s);
 
-  $r = db_query(storminvoice_access_sql($s), $organization_nid, $project_nid);
+  $s = storminvoice_access_sql($s);
+  $s = db_rewrite_sql($s);
+  $r = db_query($s, $organization_nid, $project_nid);
   while ($item = db_fetch_object($r)) {
     $nid = $item->nid;
     $invoices[$nid] = $item->title;

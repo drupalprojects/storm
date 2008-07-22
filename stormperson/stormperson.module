@@ -116,9 +116,51 @@ function stormperson_access_sql($sql, $where = array(), $join = array()) {
   if (!$cond) {
     $cond = '0=1';
   }
-  $where[] = $cond;
+
+  if ($cond) $cond .= ' AND ';
+  $cond .= " 'spe_access'='spe_access' ";
 
   return storm_rewrite_sql($sql, $where);
+}
+
+function stormperson_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+  static $conds = array();
+
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  if ($conds[$account->uid]) {
+    return $conds[$account->uid];
+  }
+
+  if (preg_match("/'spe_access'='spe_access'/", $query)) {
+    $cond = '';
+  }
+  else {
+    if (user_access('Storm person: view all', $account)) {
+      return '';
+    }
+
+    $cond = '';
+    if (user_access('Storm person: view own', $account)) {
+      $cond .= "${primary_table}.uid=". $account->uid;
+    }
+    if (user_access('Storm person: view of user organization', $account)) {
+      if ($cond) $cond .= ' OR ';
+      $cond .= 'spe1.organization_nid='. $account->stormorganization_nid;
+    }
+    if ($cond) {
+      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} sti1 WHERE spe1.vid=${primary_table}.vid) ";  
+    }
+    else {
+      $cond = "WHEN 'stormperson' THEN 0 ";  
+    }
+  }
+
+  $conds[$account->uid] = $cond;
+  return $cond;
 }
 
 function stormperson_menu() {

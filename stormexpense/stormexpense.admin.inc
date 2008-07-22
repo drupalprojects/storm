@@ -130,8 +130,8 @@ function stormexpense_list() {
     $where[] = 'n.uid='. $expenseuser->uid;
   }
 
-  $s = db_rewrite_sql($s);
   $s = stormexpense_access_sql($s, $where);
+  $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 
@@ -142,8 +142,9 @@ function stormexpense_list() {
     $expenses[] = $item;
   }
 
+  $s_totals = stormexpense_access_sql($s_totals, $where);
   $s_totals = db_rewrite_sql($s_totals);
-  $r = db_query(stormexpense_access_sql($s_totals, $where));
+  $r = db_query($s_totals);
   $totals = db_fetch_object($r);
 
   $o .= theme('stormexpense_list', $header, $expenses, $totals);
@@ -401,7 +402,10 @@ function stormexpense_list_report($report, $language) {
 function stormexpense_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT provider_title FROM {stormexpense} sex WHERE LOWER(provider_title) LIKE LOWER('%s%%')", $string, 0, 10);
+    $s = "SELECT provider_title FROM {stormexpense} sex WHERE LOWER(provider_title) LIKE LOWER('%s%%')";
+    $s = stormexpense_access_sql($s);
+    $s = db_rewrite_sql($s);
+    $result = db_query_range($s, $string, 0, 10);
     while ($pro = db_fetch_object($result)) {
       $matches[$pro->provider_title] = check_plain($pro->provider_title);
     }

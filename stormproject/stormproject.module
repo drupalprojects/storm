@@ -103,9 +103,53 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
   if (!$cond) {
     $cond = '0=1';
   }
-  $where[] = $cond;
+
+  if ($cond) $cond .= ' AND ';
+  $cond .= " 'spr_access'='spr_access' ";
+
+  if ($cond) $where[] = $cond;
 
   return storm_rewrite_sql($sql, $where);
+}
+
+function stormproject_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+  static $conds = array();
+
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  if ($conds[$account->uid]) {
+    return $conds[$account->uid];
+  }
+
+  if (preg_match("/'spr_access'='spr_access'/", $query)) {
+    $cond = '';
+  }
+  else {
+    if (user_access('Storm organization: view all', $account)) {
+      return '';
+    }
+
+    $cond = '';
+    if (user_access('Storm project: view own', $account)) {
+      $cond .= "${primary_table}.uid=". $account->uid;
+    }
+    if (user_access('Storm project: view of user organization', $account)) {
+      if ($cond) $cond .= ' OR ';
+      $cond .= 'spr1.organization_nid='. $account->stormorganization_nid;
+    }
+    if ($cond) {
+      $cond = "WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";  
+    }
+    else {
+      $cond = "WHEN 'stormproject' THEN 0 ";  
+    }
+  }
+
+  $conds[$account->uid] = $cond;
+  return $cond;
 }
 
 function stormproject_menu() {

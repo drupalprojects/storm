@@ -83,10 +83,11 @@ function stormnote_list() {
   }
   $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
 
-  $tablesort = tablesort_sql($header);
+  $s = stormnote_access_sql($s, $where);
   $s = db_rewrite_sql($s);
-  $s = stormnote_access_sql($s, $where) . $tablesort;
-  $r = pager_query($s, $itemsperpage, 0, NULL);
+  $tablesort = tablesort_sql($header);
+
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 
   $notes = array();
   while ($item = db_fetch_object($r)) {
