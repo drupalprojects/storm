@@ -25,12 +25,12 @@ function stormknowledgebase_list() {
   );
 
   $s  = "SELECT n.nid, n.title FROM {node} AS n WHERE n.status=1 AND n.type='stormknowledgebase' ";
+  $s = stormknowledgebase_access_sql($s);  
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
-  $sql = $s . $tablesort;
 
   $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
-  $r = pager_query($sql, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
 
   $notes = array();
   while ($item = db_fetch_object($r)) {
