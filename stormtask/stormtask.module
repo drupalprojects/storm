@@ -110,9 +110,51 @@ function stormtask_access_sql($sql, $where = array(), $join = array()) {
   if (!$cond) {
     $cond = '0=1';
   }
-  $where[] = $cond;
+
+  if ($cond) $cond .= ' AND ';
+  $cond .= " 'sta_access'='sta_access' ";
 
   return storm_rewrite_sql($sql, $where);
+}
+
+function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+  static $conds = array();
+
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  if ($conds[$account->uid]) {
+    return $conds[$account->uid];
+  }
+
+  if (preg_match("/'sta_access'='sta_access'/", $query)) {
+    $cond = '';
+  }
+  else {
+    if (user_access('Storm task: view all', $account)) {
+      return '';
+    }
+
+    $cond = '';
+    if (user_access('Storm task: view own', $account)) {
+      $cond .= "${primary_table}.uid=". $account->uid;
+    }
+    if (user_access('Storm task: view of user organization', $account)) {
+      if ($cond) $cond .= ' OR ';
+      $cond .= 'sta1.organization_nid='. $account->stormorganization_nid;
+    }
+    if ($cond) {
+      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";  
+    }
+    else {
+      $cond = "WHEN 'stormtask' THEN 0 ";  
+    }
+  }
+
+  $conds[$account->uid] = $cond;
+  return $cond;
 }
 
 function stormtask_menu($may_cache) {
@@ -267,7 +309,7 @@ function stormtask_form(&$node) {
 
   $form['group2']['stepno'] = array(
     '#type' => 'textfield',
-    '#title' => t('Step. no'),
+    '#title' => t('Step no.'),
     '#size' => 15,
     '#required' => FALSE,
     '#default_value' => $node->stepno,
@@ -439,8 +481,9 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
     $s = "SELECT n.nid, n.title, sta.stepno, sta.parent_nid FROM {node} AS n INNER JOIN {stormtask} AS sta
     ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
     ORDER BY sta.weight";
+    $s = stormtask_access_sql($s, $where);
     $s = db_rewrite_sql($s);
-    $r = db_query(stormtask_access_sql($s, $where), $project_nid);
+    $r = db_query($s, $project_nid);
     while ($task = db_fetch_object($r)) {
       $children[$project_nid][$task->parent_nid][] = $task->nid;
       $parents[$project_nid][$task->nid][] = $task->parent_nid;

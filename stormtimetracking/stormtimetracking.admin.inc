@@ -126,12 +126,14 @@ function stormtimetracking_list() {
     $where[] = 'n.uid='. $trackinguser->uid;
   }
 
-  $s = db_rewrite_sql($s);
   $s = stormtimetracking_access_sql($s, $where);
-
+  $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
-  $duration = db_result(db_query(stormtimetracking_access_sql($s_duration, $where)));
+  
+  $s_duration = stormtimetracking_access_sql($s_duration, $where);
+  $s_duration = db_rewrite_sql($s_duration);
+  $duration = db_result(db_query($s_duration));
 
   $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
 

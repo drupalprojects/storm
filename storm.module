@@ -472,3 +472,41 @@ function language_list() {
   return $languages;
 }
 
+function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
+  if (($primary_table == 'n' || $primary_table == 'node') && $primary_field == 'nid') {
+
+    static $return = array();
+    if ($return) {
+      return $return;
+    }
+
+    global $user;
+    $conditions = array();
+    foreach (module_invoke_all('storm_rewrite_where_sql', $query, $primary_table, $user) as $condition) {
+      if ($condition) {
+        $conditions[] = $condition;
+      }
+    }
+
+    $return = array();
+    $where = '';
+    if ($conditions) {
+      switch ($GLOBALS['db_type']) {
+        case 'mysql':
+        case 'mysqli':
+          $where  = '(';
+          $where .= "case ${primary_table}.type ";
+          foreach ($conditions as $condition) {
+            $where .= $condition .' ';
+          }
+          $where .= 'else 1 end';
+          $where .= ')=1';
+          $return['where'] = $where;
+        break;
+        case 'pgsql':
+        break;
+      }
+    }
+    return $return;
+  }
+}

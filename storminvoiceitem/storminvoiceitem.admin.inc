@@ -42,9 +42,8 @@ function storminvoiceitem_invoiceitems($invoice_nid) {
   $s  = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} sit ON n.vid=sit.vid WHERE n.status=1 AND n.type='storminvoiceitem' ORDER BY sit.weight";
   $where[] = 'sit.invoice_nid='. $invoice->nid;
 
-  $s = db_rewrite_sql($s);
   $s = storminvoiceitem_access_sql($s, $where);
-  $s = db_rewrite_sql($s, 'storminvoiceitem', 'nid');
+  $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
   $r = db_query($s . $tablesort);
 
