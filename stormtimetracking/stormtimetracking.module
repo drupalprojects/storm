@@ -433,7 +433,7 @@ function stormtimetracking_insert($node) {
             project_nid, project_title,
             task_nid, task_title, task_stepno,
             ticket_nid, ticket_title,
-            trackingdate, timebegin, timeend, duration) VALUES
+            trackingdate, timebegin, timeend, duration, billable) VALUES
             (%d, %d,
             %d, '%s',
             %d, '%s',
