@@ -109,7 +109,7 @@ function stormticket_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'sti_access'='sti_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   return storm_rewrite_sql($sql, $where);
 }
@@ -126,7 +126,7 @@ function stormticket_storm_rewrite_where_sql($query, $primary_table = 'n', $acco
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'sti_access'='sti_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {
@@ -261,8 +261,9 @@ function stormticket_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = stormorganization_access_sql($s);  
   $s = db_rewrite_sql($s);
-  $r = db_query(stormorganization_access_sql($s));
+  $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
@@ -278,8 +279,9 @@ function stormticket_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $s = stormproject_access_sql($s);  
   $s = db_rewrite_sql($s);
-  $r = db_query(stormproject_access_sql($s), $node->organization_nid);
+  $r = db_query($s, $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
@@ -468,8 +470,9 @@ function stormticket_listblock($output=FALSE) {
   {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket'";
   $v = str_replace(',', "','", $ticketstatus);
   $where[] = "sti.ticketstatus IN ('". $v ."')";
+  $s = stormticket_access_sql($s, $where);  
   $s = db_rewrite_sql($s);
-  $r = pager_query(stormticket_access_sql($s, $where) .' ORDER BY n.changed', 10, 0, NULL);
+  $r = pager_query($s .' ORDER BY n.changed', 10, 0, NULL);
 
   $header = array(
     array(

@@ -95,7 +95,7 @@ function stormorganization_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'sor_access'='sor_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   if ($cond) $where[] = $cond;
 
@@ -114,7 +114,7 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table ='n', 
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'sor_access'='sor_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {
@@ -407,7 +407,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 1,
   );
 
-  $node->content['stormorganization_zio'] = array(
+  $node->content['stormorganization_zip'] = array(
     '#prefix' => '<div id="stormorganization_zip">',
     '#suffix' => '</div>',
     '#value' => t('Zip') .' : '. $node->zip,
@@ -526,8 +526,9 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 function stormorganization_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'storm_admin_settings') {
     $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+    $s = stormorganization_access_sql($s);    
     $s = db_rewrite_sql($s);
-    $r = db_query(stormorganization_access_sql($s));
+    $r = db_query($s);
     $organizations = array();
     while ($organization = db_fetch_object($r)) {
       $organizations[$organization->nid] = $organization->title;

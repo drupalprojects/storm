@@ -113,8 +113,9 @@ function stormproject_list_filter() {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title ";
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
-  $r = db_query(stormorganization_access_sql($s));
+  $r = db_query($s);
 
   $organizations = array();
   while ($organization = db_fetch_object($r)) {

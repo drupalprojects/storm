@@ -99,7 +99,7 @@ function stormexpense_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'sex_access'='sex_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   return storm_rewrite_sql($sql, $where);
 }
@@ -116,7 +116,7 @@ function stormexpense_storm_rewrite_where_sql($query, $primary_table ='n', $acco
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'sex_access'='sex_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {
@@ -133,7 +133,7 @@ function stormexpense_storm_rewrite_where_sql($query, $primary_table ='n', $acco
       $cond .= 'sex1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormexpense' THEN (SELECT IF($cond,1,0) FROM {stormexpense} sti1 WHERE sex1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormexpense' THEN (SELECT IF($cond,1,0) FROM {stormexpense} sex1 WHERE sex1.vid=${primary_table}.vid) ";  
     }
     else {
       $cond = "WHEN 'stormexpense' THEN 0 ";  
