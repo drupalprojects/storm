@@ -112,7 +112,7 @@ function stormtask_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'sta_access'='sta_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   return storm_rewrite_sql($sql, $where);
 }
@@ -129,7 +129,7 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'sta_access'='sta_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {

@@ -115,7 +115,7 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'spr_access'='spr_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   if ($cond) $where[] = $cond;
 
@@ -134,7 +134,7 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table ='n', $acco
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'spr_access'='spr_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {
@@ -238,8 +238,8 @@ function stormproject_form(&$node) {
   $s = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
-
   $r = db_query($s);
+
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;

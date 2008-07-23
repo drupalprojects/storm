@@ -475,6 +475,10 @@ function language_list() {
 function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
   if (($primary_table == 'n' || $primary_table == 'node') && $primary_field == 'nid') {
 
+    if (preg_match("/'storm_access'='storm_access'/", $query)) {
+      return array();
+    }
+
     static $return = array();
     if ($return) {
       return $return;

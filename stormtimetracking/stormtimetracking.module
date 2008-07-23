@@ -101,7 +101,7 @@ function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
   }
 
   if ($cond) $cond .= ' AND ';
-  $cond .= " 'stt_access'='stt_access' ";
+  $cond .= " 'storm_access'='storm_access' ";
 
   return storm_rewrite_sql($sql, $where);
 }
@@ -118,7 +118,7 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table ='n', 
     return $conds[$account->uid];
   }
 
-  if (preg_match("/'stt_access'='stt_access'/", $query)) {
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
     $cond = '';
   }
   else {
@@ -293,7 +293,9 @@ function stormtimetracking_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $r = db_query(stormorganization_access_sql($s));
+  $s = stormorganization_access_sql($s);
+  $s = db_rewrite_sql($s);  
+  $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
@@ -309,7 +311,9 @@ function stormtimetracking_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
-  $r = db_query(stormproject_access_sql($s), $node->organization_nid);
+  $s = stormproject_access_sql($s);
+  $s = db_rewrite($s);  
+  $r = db_query($s, $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
@@ -337,8 +341,10 @@ function stormtimetracking_form(&$node) {
   );
 
   $tickets = array();
-  $r = db_query(stormticket_access_sql("SELECT n.nid, n.title FROM {stormticket} stt INNER JOIN {node} n ON stt.nid=n.nid WHERE n.status=1 AND n.type='stormticket' AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title"),
-  $node->organization_nid, $node->project_nid, $node->task_nid);
+  $s = "SELECT n.nid, n.title FROM {stormticket} stt INNER JOIN {node} n ON stt.nid=n.nid WHERE n.status=1 AND n.type='stormticket' AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title";
+  $s = stormticket_access_sql($s);
+  $s = db_rewrite_sql($s);
+  $r = db_query($s, $node->organization_nid, $node->project_nid, $node->task_nid);
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }

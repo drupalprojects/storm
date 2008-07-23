@@ -92,7 +92,8 @@ function stormperson_list_filter() {
   );
 
   $s = db_rewrite_sql("SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title");
-  $r = db_query(stormorganization_access_sql($s));
+  $s = stormorganization_access_sql($s);  
+  $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;

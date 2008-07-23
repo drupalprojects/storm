@@ -204,8 +204,9 @@ function stormtimetracking_list_filter() {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid
   WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
-  $r = db_query(stormorganization_access_sql($s));
+  $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
@@ -221,8 +222,9 @@ function stormtimetracking_list_filter() {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
+  $s = stormproject_access_sql($s);
   $s = db_rewrite_sql($s);
-  $r = db_query(stormproject_access_sql($s), $organization_nid);
+  $r = db_query($s, $organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
@@ -251,7 +253,9 @@ function stormtimetracking_list_filter() {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS sti
   ON sti.vid=n.vid WHERE n.status=1 AND n.type='stormticket' AND sti.organization_nid=%d AND sti.project_nid=%d AND sti.task_nid=%d ORDER BY title ";
-  $r = db_query(stormticket_access_sql($s), $organization_nid, $project_nid, $task_nid);
+  $s = stormticket_access_sql($s);
+  $s = db_rewrite_sql($s);  
+  $r = db_query($s, $organization_nid, $project_nid, $task_nid);
   $tickets = array();
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
