@@ -81,3 +81,7 @@ function theme_storm_report($header, $content, $title, $footer) {
   return $o;
 }
 
+function theme_storm_view_item($label, $value) {
+  $o = '<span class="label">'. t($label) .' : </span>'. $value;
+  return $o;
+}

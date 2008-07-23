@@ -53,7 +53,12 @@ function stormperson_perm() {
   );
 }
 
-function stormperson_access($op, $node, $account) {
+function stormperson_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {

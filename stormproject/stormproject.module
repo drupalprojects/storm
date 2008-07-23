@@ -45,7 +45,12 @@ function stormproject_init() {
   drupal_add_js(drupal_get_path('module', 'stormproject') .'/stormproject.js', 'module', 'header', FALSE);
 }
 
-function stormproject_access($op, $node, $account) {
+function stormproject_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {

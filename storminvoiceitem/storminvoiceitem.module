@@ -34,7 +34,12 @@ function storminvoiceitem_init() {
   drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
 }
 
-function storminvoiceitem_access($op, $node, $account) {
+function storminvoiceitem_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {

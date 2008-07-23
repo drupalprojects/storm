@@ -33,7 +33,12 @@ function stormnote_perm() {
   );
 }
 
-function stormnote_access($op, $node, $account) {
+function stormnote_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if ($op == 'create') {
     return user_access('Storm note: add');
   }

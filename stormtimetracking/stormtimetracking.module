@@ -33,7 +33,12 @@ function stormtimetracking_perm() {
   );
 }
 
-function stormtimetracking_access($op, $node, $account) {
+function stormtimetracking_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if ($op == 'create') {
     return user_access('Storm timetracking: add');
   }

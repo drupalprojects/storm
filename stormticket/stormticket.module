@@ -44,7 +44,12 @@ function stormticket_init() {
   drupal_add_js($settings, 'setting');
 }
 
-function stormticket_access($op, $node, $account) {
+function stormticket_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if ($op == 'create') {
     return user_access('Storm ticket: add');
   }

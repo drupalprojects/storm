@@ -79,8 +79,10 @@ function stormattribute_theme() {
 
 
 function stormattribute_access($op, $item=NULL, $account=NULL) {
-  global $user;
-  if (!$account) $account = $user;
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
 
   if ($op == 'create') {
     return user_access('Storm attribute: add');

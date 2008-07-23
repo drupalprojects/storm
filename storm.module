@@ -69,6 +69,10 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array('header', 'content', 'title', 'footer'),
     ),
+    'storm_view_item' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('label', 'value'),
+    ),
   );
 }
 

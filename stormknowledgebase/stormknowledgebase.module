@@ -30,7 +30,12 @@ function stormknowledgebase_perm() {
   );
 }
 
-function stormknowledgebase_access($op, $node, $account) {
+function stormknowledgebase_access($op, $node, $account=NULL) {
+  if(empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
   if ($op == 'create') {
     return user_access('Storm knowledgebase: add');
   }
