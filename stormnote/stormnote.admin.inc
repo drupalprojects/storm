@@ -126,7 +126,7 @@ function stormnote_list_filter() {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);  
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s);
   $organizations = array();
@@ -144,7 +144,7 @@ function stormnote_list_filter() {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);  
+  $s = stormproject_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $organization_nid);
   $projects = array();
@@ -162,7 +162,7 @@ function stormnote_list_filter() {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta ON sta.nid=n.nid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d ORDER BY title ";
-  $s = stormtask_access_sql($s);  
+  $s = stormtask_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $project_nid);
   $tasks = array();

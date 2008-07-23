@@ -44,7 +44,7 @@ function stormtask_init() {
 }
 
 function stormtask_access($op, $node, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -147,10 +147,10 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account
       $cond .= 'sta1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormtask' THEN 0 ";  
+      $cond = "WHEN 'stormtask' THEN 0 ";
     }
   }
 
@@ -276,7 +276,7 @@ function stormtask_form(&$node) {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);  
+  $s = stormproject_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $node->organization_nid);
   $projects = array();
@@ -386,7 +386,7 @@ function stormtask_form(&$node) {
 function stormtask_insert($node) {
   _stormtask_beforesave($node);
   db_query("INSERT INTO {stormtask}
-          (vid, nid, stepno, taskcategory, taskstatus, taskpriority, 
+          (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
           organization_nid, organization_title,
           project_nid, project_title, parent_nid, weight)
           VALUES

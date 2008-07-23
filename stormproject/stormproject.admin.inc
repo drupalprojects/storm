@@ -204,7 +204,7 @@ function _stormproject_organization_projects_js($organization_nid=0) {
     $s = stormproject_access_sql($s);
     $s = db_rewrite_sql($s);
     $r = db_query($s, $organization_nid);
- 
+
     while ($item = db_fetch_object($r)) {
       $nid = $item->nid;
       $projects[$nid] = $item->title;

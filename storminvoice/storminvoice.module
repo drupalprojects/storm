@@ -44,7 +44,7 @@ function storminvoice_init() {
 }
 
 function storminvoice_access($op, $node, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -148,10 +148,10 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table ='n', $acco
       $cond .= 'sin1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'storminvoice' THEN 0 ";  
+      $cond = "WHEN 'storminvoice' THEN 0 ";
     }
   }
 
@@ -449,9 +449,9 @@ function storminvoice_update($node) {
 }
 
 function _storminvoice_beforesave(&$node) {
-  if(is_array($node->requestdate)) $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
-  if(is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
-  if(is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
+  if (is_array($node->requestdate)) $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
+  if (is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
+  if (is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
 
   $s = "SELECT n.title
         FROM {node} AS n INNER JOIN {stormorganization} AS o ON n.vid=o.vid
@@ -500,7 +500,7 @@ function storminvoice_form_alter(&$form, $form_state, $form_id) {
       '#collapsed' => false,
       '#collapsible' => true,
       '#weight' => -9,
-    );    
+    );
     $form['storminvoice']['storminvoice_payment_days'] = array(
       '#type' => 'textfield',
       '#title' => t('Number of days for invoice payment'),

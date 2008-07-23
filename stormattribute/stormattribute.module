@@ -79,7 +79,7 @@ function stormattribute_theme() {
 
 
 function stormattribute_access($op, $item=NULL, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -122,6 +122,8 @@ function stormattribute_attributes_bydomain($domain) {
 
 function stormattribute_value($domain, $key) {
   $attributes = stormattribute_attributes_bydomain($domain);
-  if (array_key_exists($key, $attributes)) return $attributes[$key];
-  return $key;  
+  if (array_key_exists($key, $attributes)) {
+    return $attributes[$key];
+  }
+  return $key;
 }

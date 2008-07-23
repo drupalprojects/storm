@@ -54,7 +54,7 @@ function stormperson_perm() {
 }
 
 function stormperson_access($op, $node, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -157,10 +157,10 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table ='n', $accou
       $cond .= 'spe1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormperson' THEN 0 ";  
+      $cond = "WHEN 'stormperson' THEN 0 ";
     }
   }
 
@@ -236,7 +236,7 @@ function stormperson_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);  
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s);
   $organizations = array();
@@ -396,9 +396,9 @@ function stormperson_update($node) {
 function _stormperson_beforesave(&$node) {
   $ass_user = user_load(array('name' => $node->user_name));
   $node->user_uid = $ass_user->uid;
-  if(!$node->email) {
+  if (!$node->email) {
     $node->email = $ass_user->mail;
-  }  
+  }
 
   $s = "SELECT n.title
       FROM {node} AS n INNER JOIN {stormorganization} AS p ON n.nid=p.nid

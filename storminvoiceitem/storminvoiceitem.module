@@ -35,7 +35,7 @@ function storminvoiceitem_init() {
 }
 
 function storminvoiceitem_access($op, $node, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -121,10 +121,10 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table ='n', $
       $cond .= "${primary_table}.uid=". $account->uid;
     }
     if ($cond) {
-      $cond = "WHEN 'storminvoiceitem' THEN (SELECT IF($cond,1,0) FROM {storminvoiceitem} sit1 WHERE sit1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'storminvoiceitem' THEN (SELECT IF($cond,1,0) FROM {storminvoiceitem} sit1 WHERE sit1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'storminvoiceitem' THEN 0 ";  
+      $cond = "WHEN 'storminvoiceitem' THEN 0 ";
     }
   }
 
@@ -345,7 +345,7 @@ function storminvoiceitem_getitems($invoice_nid) {
   n.status=1 AND n.type='storminvoiceitem' AND sit.invoice_nid = %d";
   $s = db_rewrite_sql($s);
   $r = db_query($s, $invoice_nid);
-  
+
   $items = array();
   while ($i = db_fetch_object($r)) {
     $items[] = $i;

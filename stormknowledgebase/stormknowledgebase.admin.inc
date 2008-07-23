@@ -25,7 +25,7 @@ function stormknowledgebase_list() {
   );
 
   $s  = "SELECT n.nid, n.title FROM {node} AS n WHERE n.status=1 AND n.type='stormknowledgebase' ";
-  $s = stormknowledgebase_access_sql($s);  
+  $s = stormknowledgebase_access_sql($s);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
 

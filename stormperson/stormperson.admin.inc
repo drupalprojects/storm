@@ -91,9 +91,9 @@ function stormperson_list_filter() {
     '#weight' => -20,
   );
 
-  $s = db_rewrite_sql("SELECT n.nid, n.title FROM {node} n INNER JOIN {stormorganization} sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title");
+  $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormorganization} sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);  
+  $s = db_rewrite_sql($s);
   $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {

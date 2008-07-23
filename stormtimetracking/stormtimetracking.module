@@ -34,7 +34,7 @@ function stormtimetracking_perm() {
 }
 
 function stormtimetracking_access($op, $node, $account=NULL) {
-  if(empty($account)) {
+  if (empty($account)) {
     global $user;
     $account = $user;
   }
@@ -135,10 +135,10 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table ='n', 
       $cond .= 'stt1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormtimetracking' THEN (SELECT IF($cond,1,0) FROM {stormtimetracking} stt1 WHERE stt1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormtimetracking' THEN (SELECT IF($cond,1,0) FROM {stormtimetracking} stt1 WHERE stt1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormtimetracking' THEN 0 ";  
+      $cond = "WHEN 'stormtimetracking' THEN 0 ";
     }
   }
 
@@ -310,7 +310,7 @@ function stormtimetracking_form(&$node) {
 
   $s = "SELECT n.nid, n.title FROM {stormorganization} sor INNER JOIN {node} n ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);  
+  $s = db_rewrite_sql($s);
   $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
@@ -328,7 +328,7 @@ function stormtimetracking_form(&$node) {
 
   $s = "SELECT n.nid, n.title FROM {stormproject} spr INNER JOIN {node} n ON spr.nid=n.nid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
   $s = stormproject_access_sql($s);
-  $s = db_rewrite_sql($s);  
+  $s = db_rewrite_sql($s);
   $r = db_query($s, $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
@@ -473,7 +473,7 @@ function _stormtimetracking_beforesave(&$node) {
   $timebegin = _storm_strtotime($node->timebegin);
   $timeend = _storm_strtotime($node->timeend);
 
-  if(is_array($node->trackingdate)) {
+  if (is_array($node->trackingdate)) {
     $node->trackingdate = _storm_datetime_to_gmtimestamp($node->trackingdate + $timebegin);
   }
 

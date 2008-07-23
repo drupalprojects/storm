@@ -34,7 +34,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   unset($node->content['body']);
 
   $w = 0;
-  $node->content['stormorganization'] = array (
+  $node->content['stormorganization'] = array(
     '#prefix' => '<div id="stormorganization">',
     '#suffix' => '</div>',
     '#weight' => $w++,
