@@ -484,11 +484,6 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
       return array();
     }
 
-    static $return = array();
-    if ($return) {
-      return $return;
-    }
-
     global $user;
     $conditions = array();
     foreach (module_invoke_all('storm_rewrite_where_sql', $query, $primary_table, $user) as $condition) {
