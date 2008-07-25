@@ -193,9 +193,9 @@ function stormproject_theme() {
       'file'      => 'stormproject.theme.inc',
       'arguments' => array('header', 'projects'),
     ),
-    'stormproject_list_find' => array(
+    'stormproject_view' => array(
       'file'      => 'stormproject.theme.inc',
-      'arguments' => array('form'),
+      'arguments' => array('node', 'teaser', 'page'),
     ),
   );
 }
@@ -387,42 +387,5 @@ function stormproject_load($node) {
 }
 
 function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  unset($node->content['body']);
-
-  $node->content['organization'] = array(
-    '#value' => t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid) .'<br />',
-    '#weight' => 1,
-  );
-  $node->content['category'] = array(
-    '#value' => t('Category') .' : '. $node->projectcategory .'<br />',
-    '#weight' => 2,
-  );
-  $node->content['status'] = array(
-    '#value' => t('Status') .' : '. $node->projectstatus .'<br />',
-    '#weight' => 3,
-  );
-
-  if (module_exists('stormnote')) {
-    $node->content['notes'] = array(
-      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))) .'<br />',
-      '#weight' => 4,
-    );
-  }
-
-  if (module_exists('stormticket')) {
-    $node->content['tickets'] = array(
-      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))) .'<br />',
-      '#weight' => 5,
-    );
-  }
-
-  if (module_exists('stormtimetracking')) {
-    $node->content['timetrackings'] = array(
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('project_nid' => $node->nid))) .'<br />',
-      '#weight' => 6,
-    );
-  }
-
-  return $node;
+  return theme('stormproject_view', $node, $teaser, $page);
 }

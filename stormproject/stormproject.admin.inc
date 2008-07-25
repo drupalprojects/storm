@@ -109,7 +109,6 @@ function stormproject_list_filter() {
         '#title' => t('Filter'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
-        '#theme' => 'stormproject_list_filter',
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title ";

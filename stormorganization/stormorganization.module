@@ -385,7 +385,7 @@ function stormorganization_load($node) {
 }
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
-  return theme('stormorganization_view', $node, $teaser, $value);
+  return theme('stormorganization_view', $node, $teaser, $page);
 }
 
 function stormorganization_form_alter(&$form, $form_state, $form_id) {

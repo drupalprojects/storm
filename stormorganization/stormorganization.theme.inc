@@ -40,6 +40,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  $w = 0;
   $node->content['stormorganization']['fullname'] = array(
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',
