@@ -34,12 +34,13 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE, $li
   unset($node->content['body']);
 
   $w = 0;
-  $node->content['stormorganization'] = array (
+  $node->content['stormorganization'] = array(
     '#prefix' => '<div id="stormorganization">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
+  $w = 0;
   $node->content['stormorganization']['fullname'] = array(
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',

@@ -119,5 +119,5 @@ function stormattribute_attributes_bydomain($domain) {
 function stormattribute_value($domain, $key) {
   $attributes = stormattribute_attributes_bydomain($domain);
   if (array_key_exists($key, $attributes)) return $attributes[$key];
-  return $key;  
+  return $key;
 }

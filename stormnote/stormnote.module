@@ -135,10 +135,10 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table='n', $account 
       $cond .= 'sno1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormnote' THEN (SELECT IF($cond,1,0) FROM {stormnote} sno1 WHERE sno1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormnote' THEN (SELECT IF($cond,1,0) FROM {stormnote} sno1 WHERE sno1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormnote' THEN 0 ";  
+      $cond = "WHEN 'stormnote' THEN 0 ";
     }
   }
 
@@ -231,7 +231,7 @@ function stormnote_form(&$node) {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormorganization} sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);  
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s);
   $organizations = array();

@@ -13,7 +13,7 @@ function stormtask_install() {
         CREATE TABLE {stormtask} (
           vid INT(10) UNSIGNED NOT NULL DEFAULT '0',
           nid INT(10) UNSIGNED NOT NULL DEFAULT '0',
-          stepno VARCHAR(50),          
+          stepno VARCHAR(50),
           organization_nid INT(10),
           organization_title VARCHAR(128),
           project_nid INT(10),
@@ -24,7 +24,7 @@ function stormtask_install() {
           taskcategory VARCHAR(20),
           taskpriority VARCHAR(20),
           pricemode VARCHAR(20),
-          price FLOAT,          
+          price FLOAT,
           currency VARCHAR(20),
           PRIMARY KEY (vid, nid),
           KEY {stormtask}_nid (nid)
@@ -35,7 +35,7 @@ function stormtask_install() {
       db_query("CREATE TABLE {stormtask} (
           vid INT NOT NULL DEFAULT '0',
           nid INT NOT NULL DEFAULT '0',
-          stepno VARCHAR(50),          
+          stepno VARCHAR(50),
           organization_nid INT,
           organization_title VARCHAR(128),
           project_nid INT,
@@ -46,7 +46,7 @@ function stormtask_install() {
           taskcategory VARCHAR(20),
           taskpriority VARCHAR(20),
           pricemode VARCHAR(20),
-          price FLOAT,          
+          price FLOAT,
           currency VARCHAR(20),
           PRIMARY KEY (vid, nid)
       );");

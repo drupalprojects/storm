@@ -147,10 +147,10 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table ='n', $acco
       $cond .= 'sin1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'storminvoice' THEN 0 ";  
+      $cond = "WHEN 'storminvoice' THEN 0 ";
     }
   }
 
@@ -484,7 +484,7 @@ function storminvoice_form_alter($form_id, &$form) {
       '#collapsed' => false,
       '#collapsible' => true,
       '#weight' => -9,
-    );    
+    );
     $form['storminvoice']['storminvoice_payment_days'] = array(
       '#type' => 'textfield',
       '#title' => t('Number of days for invoice payment'),

@@ -154,10 +154,10 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table ='n', $accou
       $cond .= 'spe1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormperson' THEN 0 ";  
+      $cond = "WHEN 'stormperson' THEN 0 ";
     }
   }
 
@@ -391,7 +391,7 @@ function _stormperson_beforesave(&$node) {
   $node->user_uid = $ass_user->uid;
   if (!$node->email) {
     $node->email = $ass_user->mail;
-  }  
+  }
 
   $s = "SELECT n.title
       FROM {node} AS n INNER JOIN {stormorganization} AS p ON n.nid=p.nid

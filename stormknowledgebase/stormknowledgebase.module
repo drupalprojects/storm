@@ -115,10 +115,10 @@ function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table ='n',
       $cond .= "${primary_table}.uid=". $account->uid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormknowledgebase' THEN IF($cond,1,0) ";  
+      $cond = "WHEN 'stormknowledgebase' THEN IF($cond,1,0) ";
     }
     else {
-      $cond = "WHEN 'stormknowledgebase' THEN 0 ";  
+      $cond = "WHEN 'stormknowledgebase' THEN 0 ";
     }
   }
 

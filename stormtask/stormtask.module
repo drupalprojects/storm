@@ -146,10 +146,10 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account
       $cond .= 'sta1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormtask' THEN 0 ";  
+      $cond = "WHEN 'stormtask' THEN 0 ";
     }
   }
 
@@ -379,7 +379,7 @@ function stormtask_form(&$node) {
 function stormtask_insert($node) {
   _stormtask_beforesave($node);
   db_query("INSERT INTO {stormtask}
-          (vid, nid, stepno, taskcategory, taskstatus, taskpriority, 
+          (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
           organization_nid, organization_title,
           project_nid, project_title, parent_nid, weight)
           VALUES

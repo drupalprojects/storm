@@ -135,10 +135,10 @@ function stormexpense_storm_rewrite_where_sql($query, $primary_table ='n', $acco
       $cond .= 'sex1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormexpense' THEN (SELECT IF($cond,1,0) FROM {stormexpense} sex1 WHERE sex1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormexpense' THEN (SELECT IF($cond,1,0) FROM {stormexpense} sex1 WHERE sex1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormexpense' THEN 0 ";  
+      $cond = "WHEN 'stormexpense' THEN 0 ";
     }
   }
 
@@ -155,7 +155,7 @@ function stormexpense_menu($may_cache) {
       require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.theme.inc');
     }
     $items[] = array(
-      'path' => 'storm/expenses',      
+      'path' => 'storm/expenses',
       'title' => t('Expenses'),
       'description' => t('Storm expenses'),
       'callback' => 'stormexpense_list',
@@ -289,7 +289,7 @@ function stormexpense_form(&$node) {
     '#weight' => -49,
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor  
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor
   ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
@@ -308,7 +308,7 @@ function stormexpense_form(&$node) {
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid 
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
   $s = stormproject_access_sql($s);
   $s = db_rewrite_sql($s);
@@ -340,7 +340,7 @@ function stormexpense_form(&$node) {
   );
 
   $tickets = array();
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS stt ON stt.vid=n.vid WHERE n.status=1 AND n.type='stormticket' 
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS stt ON stt.vid=n.vid WHERE n.status=1 AND n.type='stormticket'
   AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title";
   $s = stormticket_access_sql($s);
   $s = db_reqrite_sql($s);

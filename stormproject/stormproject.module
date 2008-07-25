@@ -151,10 +151,10 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table ='n', $acco
       $cond .= 'spr1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormproject' THEN 0 ";  
+      $cond = "WHEN 'stormproject' THEN 0 ";
     }
   }
 
@@ -169,6 +169,12 @@ function stormproject_menu($may_cache) {
     if (arg(0)=='storm' && arg(1)=='projects') {
       require_once(drupal_get_path('module', 'stormproject') .'/stormproject.admin.inc');
       require_once(drupal_get_path('module', 'stormproject') .'/stormproject.theme.inc');
+    }
+    else if (arg(0)=='node' && is_numeric(arg(1))) {
+      $node = node_load(arg(1));
+      if ($node->type=='stormproject') {
+        require_once(drupal_get_path('module', 'stormproject') .'/stormproject.theme.inc');
+      }
     }
 
     $items[] = array(
@@ -378,47 +384,6 @@ function stormproject_load($node) {
   return $additions;
 }
 
-function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $node->content['organization'] = array(
-    '#value' => t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid) .'<br />',
-    '#weight' => 1,
-  );
-  $node->content['category'] = array(
-    '#value' => t('Category') .' : '. stormattribute_value('Project category', $node->projectcategory) .'<br />',
-    '#weight' => 2,
-  );
-
-  $node->content['status'] = array(
-    '#value' => t('Status') .' : '. stormattribute_value('Project status', $node->projectstatus) .'<br />',
-    '#weight' => 3,
-  );
-
-  $node->content['priority'] = array(
-    '#value' => t('Priority') .' : '. stormattribute_value('Project priority', $node->projectpriority) .'<br />',
-    '#weight' => 4,
-  );
-
-  if (module_exists('stormnote')) {
-    $node->content['notes'] = array(
-      '#value' => l(t('Notes'), 'storm/notes/', array(), 'project_nid='. $node->nid) .'<br />',
-      '#weight' => 5,
-    );
-  }
-
-  if (module_exists('stormticket')) {
-    $node->content['tickets'] = array(
-      '#value' => l(t('Tickets'), 'storm/tickets/', array(), 'project_nid='. $node->nid) .'<br />',
-      '#weight' => 6,
-    );
-  }
-
-  if (module_exists('stormtimetracking')) {
-    $node->content['timetrackings'] = array(
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array(), 'project_nid='. $node->nid) .'<br />',
-      '#weight' => 7,
-    );
-  }
-
-  return $node;
+function stormproject_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  return theme('stormproject_view', $node, $teaser, $page, $links);
 }

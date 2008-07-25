@@ -142,10 +142,10 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table ='n', 
       $cond .= 'sor1.nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormorganization' THEN (SELECT IF($cond,1,0) FROM {stormorganization} sor1 WHERE sor1.vid=${primary_table}.vid) ";  
+      $cond = "WHEN 'stormorganization' THEN (SELECT IF($cond,1,0) FROM {stormorganization} sor1 WHERE sor1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormorganization' THEN 0 ";  
+      $cond = "WHEN 'stormorganization' THEN 0 ";
     }
   }
 
@@ -397,7 +397,7 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = 
 function stormorganization_form_alter($form_id, &$form) {
   if ($form_id == 'storm_admin_settings') {
     $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-    $s = stormorganization_access_sql($s);    
+    $s = stormorganization_access_sql($s);
     $s = db_rewrite_sql($s);
     $r = db_query($s);
     $organizations = array();
