@@ -483,13 +483,7 @@ function storminvoice_load($node) {
 }
 
 function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $node->content['storminvoice'] = array(
-    '#value' => theme('storminvoice_view', $node, $teaser = FALSE, $page = FALSE),
-    '#weight' => 1,
-  );
-
-  return $node;
+  return theme('storminvoice_view', $node, $teaser = FALSE, $page = FALSE);
 }
 
 function storminvoice_form_alter(&$form, $form_state, $form_id) {
