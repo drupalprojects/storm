@@ -466,14 +466,9 @@ function storminvoice_load($node) {
   return $additions;
 }
 
-function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $node->content['storminvoice'] = array(
-    '#value' => theme('storminvoice_view', $node, $teaser = FALSE, $page = FALSE),
-    '#weight' => 1,
-  );
-
-  return $node;
+function storminvoice_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.theme.inc');
+  return theme('storminvoice_view', $node, $teaser, $page, $links);
 }
 
 function storminvoice_form_alter($form_id, &$form) {

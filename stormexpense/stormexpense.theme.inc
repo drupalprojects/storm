@@ -66,17 +66,81 @@ function theme_stormexpense_list($header, $expenses, $totals) {
   return $o;
 }
 
-function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
-  $o  = '<div class="stormexpense">';
-  $o .= '<dl>';
-  $o .= '<dt>'. t('Title') .' : '.  check_plain($node->title) .'</dt>';
-  $o .= '<dt>'.  t('Organization') .' : '.  l($node->organization_title, 'node/'. $node->organization_nid) .'</dt>';
-  $o .= '<dt>'.  t('Project') .' : '.  l($node->project_title, 'node/'. $node->project_nid) .'</dt>';
-  $o .= '<dt>'.  t('Task') .' : '.  l($node->task_title, 'node/'. $node->task_nid) .'</dt>';
-  $o .= '<dt>'.  t('Ticket') .' : '.  l($node->ticket_title, 'node/'. $node->ticket_nid) .'</dt>';
-  $o .= '</dl>';
-  $o .= '</div>';
-  return $o;
+function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+  $node->content['stormexpense'] = array(
+    '#prefix' => '<div id="stormexpense">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
+  $node->content['stormexpense']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Organization', l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Project', l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['task'] = array(
+    '#prefix' => '<div class="task">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Task', l($node->task_title, 'node/'. $node->task_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['ticket'] = array(
+    '#prefix' => '<div class="ticket">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Ticket', l($node->ticket_title, 'node/'. $node->ticket_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['provider'] = array(
+    '#prefix' => '<div class="provider">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Provider', $node->provider_title),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['expensedate'] = array(
+    '#prefix' => '<div class="expensedate">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Date', format_date($node->expensedate, 'custom', 'Y-m-d')),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['amount'] = array(
+    '#prefix' => '<div class="amount">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Amount', sprintf('%.2f', $node->amount)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['vat'] = array(
+    '#prefix' => '<div class="vat">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'VAT', sprintf('%.2f', $node->vat)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormexpense']['total'] = array(
+    '#prefix' => '<div class="total">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', 'Total', sprintf('%.2f', $node->total)),
+    '#weight' => $w++,
+  );
+
+  return $node;
 }
 
 function theme_stormexpense_list_form_report_reports() {

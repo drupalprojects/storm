@@ -343,7 +343,7 @@ function stormexpense_form(&$node) {
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS stt ON stt.vid=n.vid WHERE n.status=1 AND n.type='stormticket'
   AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title";
   $s = stormticket_access_sql($s);
-  $s = db_reqrite_sql($s);
+  $s = db_rewrite_sql($s);
   $r = db_query($s, $node->organization_nid, $node->project_nid, $node->task_nid);
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
@@ -503,14 +503,9 @@ function stormexpense_load($node) {
   return $additions;
 }
 
-function stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $node->content['stormexpense'] = array(
-    '#value' => theme('stormexpense_view', $node, $teaser = FALSE, $page = FALSE),
-    '#weight' => 1,
-  );
-
-  return $node;
+function stormexpense_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  require_once(drupal_get_path('module', 'stormexpense') .'/stormexpense.theme.inc');
+  return theme('stormexpense_view', $node, $teaser, $page, $links);
 }
 
 

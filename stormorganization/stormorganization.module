@@ -160,12 +160,6 @@ function stormorganization_menu($may_cache) {
       require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.admin.inc');
       require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.theme.inc');
     }
-    else if (arg(0)=='node' && is_numeric(arg(1))) {
-      $node = node_load(arg(1));
-      if ($node->type=='stormorganization') {
-        require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.theme.inc');
-      }
-    }
 
     $items[] = array(
       'path' => 'storm/organizations',
@@ -391,6 +385,7 @@ function stormorganization_load($node) {
 }
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  require_once(drupal_get_path('module', 'stormorganization') .'/stormorganization.theme.inc');
   return theme('stormorganization_view', $node, $teaser, $page, $links);
 }
 

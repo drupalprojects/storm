@@ -124,25 +124,94 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   return $o;
 }
 
-function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
-  $o  = '<div class="storminvoice">';
-  $o .= '<dl>';
-  $o .= '<dt>'. t('Number') .' : '. check_plain($node->number) .'</dt>';
-  $o .= '<dt>'. t('Description') .' : '. check_plain($node->title) .'</dt>';
-  $o .= '<dt>'.  t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid) .'</dt>';
-  $o .= '<dt>'.  t('Project') .' : '. l($node->project_title, 'node/'. $node->project_nid) .'</dt>';
-  $o .= '<dt>'. t('Reference') .' : '. check_plain($node->reference) .'</dt>';
-  $o .= '<dt>'. t('Amount') .' : '. sprintf('%.2f', $node->amount) .'</dt>';
-  $o .= '<dt>'. t('VAT') .' : '. sprintf('%.2f', $node->vat) .'</dt>';
-  $o .= '<dt>'. t('Total') .' : '. sprintf('%.2f', $node->total) .'</dt>';
-  $o .= '<dt>'. t('Req. date') .' : '. format_date($node->requestdate, 'custom', 'Y-m-d') .'</dt>';
-  $o .= '<dt>'. t('Due date') .' : '. format_date($node->duedate, 'custom', 'Y-m-d') .'</dt>';
-  if ($node->paymentdate) {
-    $o .= '<dt>'. t('Payment date') .' : '. format_date($node->paymentdate, 'custom', 'Y-m-d') .'</dt>';
-  }
-  else {
-    $o .= '<dt>'. t('Payment date') .' : -</dt>';
-  }
+function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+  $node->content['storminvoice'] = array(
+    '#prefix' => '<div id="storminvoice">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
+  $node->content['storminvoice']['number'] = array(
+    '#prefix' => '<div class="number">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Number'), $node->number),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['description'] = array(
+    '#prefix' => '<div class="invoicedescription">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Description'), $node->title),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['reference'] = array(
+    '#prefix' => '<div class="reference">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Reference'), $node->reference),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['amount'] = array(
+    '#prefix' => '<div class="amount">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['vat'] = array(
+    '#prefix' => '<div class="vat">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('VAT'), sprintf('%.2f', $node->vat)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['total'] = array(
+    '#prefix' => '<div class="total">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['requestdate'] = array(
+    '#prefix' => '<div class="requestdate">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Request date'), format_date($node->requestdate, 'custom', 'Y-m-d')),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['duedate'] = array(
+    '#prefix' => '<div class="duedate">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Due date'), format_date($node->duedate, 'custom', 'Y-m-d')),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['paymentdate'] = array(
+    '#prefix' => '<div class="paymentdate">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Payment date'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
+    '#weight' => $w++,
+  );
+
   $status = 'open';
   if ($node->paymentdate) {
     $status = 'paid';
@@ -150,6 +219,12 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   else if ($node->duedate < time()) {
     $status = 'overdue';
   }
+  $node->content['storminvoice']['status'] = array(
+    '#prefix' => '<div class="invoicestatus">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Status'), $status),
+    '#weight' => $w++,
+  );
 
   $organization = node_load($node->organization_nid);
   $myorg = node_load(variable_get('storm_organization_nid', 0));
@@ -159,11 +234,22 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   else {
     $language = $myorg->orglanguage;
   }
-  $o .= '<dt>'. t('Status') .' : '. t($status) .'</dt>';
-  $o .= '<dt>'. l(t('Print'), 'storm/invoice/report/'. $node->nid .'/std/'. $language) .'</dt>';
-  $o .= '</dl>';
-  $o .= '</div>';
-  return $o;
+
+  $node->content['storminvoice']['links'] = array(
+    '#prefix' => '<div id="links">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
+  $node->content['storminvoice']['links']['print'] = array(
+    '#prefix' => '<div class="print">',
+    '#suffix' => '</div>',
+    '#value' => l(t('Print'), 'storm/invoice/report/'. $node->nid .'/std/'. $language),
+    '#weight' => $w++,
+  );
+
+  return $node;
 }
 
 function theme_storminvoice_report($node, $report, $language) {
