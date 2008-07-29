@@ -43,6 +43,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       ),
     );
   }
+
   $o = theme('table', $header, $rows);
   $o .= theme('pager', NULL, $itemsperpage, 0);
 
