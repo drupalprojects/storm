@@ -106,13 +106,8 @@ function stormtimetracking_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormtimetracking_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -132,13 +127,13 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table ='n', 
     }
     if (user_access('Storm timetracking: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'stt1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' stt1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormtimetracking' THEN (SELECT IF($cond,1,0) FROM {stormtimetracking} stt1 WHERE stt1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormtimetracking' THEN (SELECT IF($cond,1,0) FROM {stormtimetracking} stt1 WHERE stt1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormtimetracking' THEN 0 ";
+      $cond = " WHEN 'stormtimetracking' THEN 0 ";
     }
   }
 
@@ -274,7 +269,7 @@ function stormtimetracking_form(&$node) {
     $node->trackingdate = time();
 
     $today = _storm_gmtimestamp_without_time(time());
-    $s = 'SELECT MAX(stt.timeend) FROM {node} n LEFT JOIN {stormtimetracking} stt ON n.nid=stt.nid
+    $s = 'SELECT MAX(stt.timeend) FROM {node} n LEFT JOIN {stormtimetracking} stt ON n.nid=stt.nid 
     WHERE stt.trackingdate>=%d AND stt.trackingdate<=%d AND n.uid=%d';
     $timebegin = db_result(db_query($s, $today, $today, $node->uid));
     $node->timebegin = $timebegin;
@@ -484,15 +479,13 @@ function _stormtimetracking_beforesave(&$node) {
     $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
   }
 
-  $s = "SELECT n.title
-        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title
-        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);

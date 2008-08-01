@@ -96,13 +96,8 @@ function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -118,13 +113,13 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table ='n', $
 
     $cond = '';
     if (user_access('Storm invoice item: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
+      $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if ($cond) {
-      $cond = "WHEN 'storminvoiceitem' THEN (SELECT IF($cond,1,0) FROM {storminvoiceitem} sit1 WHERE sit1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'storminvoiceitem' THEN (SELECT IF($cond,1,0) FROM {storminvoiceitem} sit1 WHERE sit1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'storminvoiceitem' THEN 0 ";
+      $cond = " WHEN 'storminvoiceitem' THEN 0 ";
     }
   }
 

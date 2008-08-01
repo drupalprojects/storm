@@ -118,13 +118,8 @@ function stormtask_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function stormtask_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -140,17 +135,17 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table ='n', $account
 
     $cond = '';
     if (user_access('Storm task: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
+      $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm task: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sta1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' sta1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormtask' THEN (SELECT IF($cond,1,0) FROM {stormtask} sta1 WHERE sta1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormtask' THEN 0 ";
+      $cond = " WHEN 'stormtask' THEN 0 ";
     }
   }
 
@@ -422,15 +417,13 @@ function stormtask_update($node) {
 }
 
 function _stormtask_beforesave(&$node) {
-  $s = "SELECT n.title
-        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title
-        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);

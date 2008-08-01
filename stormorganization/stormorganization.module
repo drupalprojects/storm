@@ -107,7 +107,7 @@ function stormorganization_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormorganization_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function stormorganization_storm_rewrite_where_sql($query, $primary_table, $account = NULL) {
   static $conds = array();
 
   if (!$account) {
@@ -133,13 +133,13 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table ='n', 
     }
     if (user_access('Storm organization: view belonged', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sor1.nid='. $account->stormorganization_nid;
+      $cond .= ' sor1.nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormorganization' THEN (SELECT IF($cond,1,0) FROM {stormorganization} sor1 WHERE sor1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormorganization' THEN (SELECT IF($cond,1,0) FROM {stormorganization} sor1 WHERE sor1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormorganization' THEN 0 ";
+      $cond = " WHEN 'stormorganization' THEN 0 ";
     }
   }
 

@@ -119,13 +119,8 @@ function storminvoice_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function storminvoice_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function storminvoice_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -145,13 +140,13 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table ='n', $acco
     }
     if (user_access('Storm invoice: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sin1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' sin1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'storminvoice' THEN (SELECT IF($cond,1,0) FROM {storminvoice} sin1 WHERE sin1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'storminvoice' THEN 0 ";
+      $cond = " WHEN 'storminvoice' THEN 0 ";
     }
   }
 
@@ -453,15 +448,15 @@ function _storminvoice_beforesave(&$node) {
   if (is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
   if (is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
 
-  $s = "SELECT n.title
-        FROM {node} AS n INNER JOIN {stormorganization} AS o ON n.vid=o.vid
+  $s = "SELECT n.title FROM {node} AS n 
+        INNER JOIN {stormorganization} AS o ON n.vid=o.vid
         WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title
-        FROM {node} AS n INNER JOIN {stormproject} AS p ON n.vid=p.vid
+  $s = "SELECT n.title FROM {node} AS n 
+        INNER JOIN {stormproject} AS p ON n.vid=p.vid
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);

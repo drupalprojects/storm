@@ -119,13 +119,8 @@ function stormticket_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormticket_storm_rewrite_where_sql($query, $primary_table = 'n', $account = NULL) {
+function stormticket_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -141,17 +136,17 @@ function stormticket_storm_rewrite_where_sql($query, $primary_table = 'n', $acco
 
     $cond = '';
     if (user_access('Storm ticket: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
+      $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm ticket: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sti1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' sti1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormticket' THEN (SELECT IF($cond,1,0) FROM {stormticket} sti1 WHERE sti1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormticket' THEN (SELECT IF($cond,1,0) FROM {stormticket} sti1 WHERE sti1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormticket' THEN 0 ";
+      $cond = " WHEN 'stormticket' THEN 0 ";
     }
   }
 
@@ -410,15 +405,13 @@ function stormticket_update($node) {
 }
 
 function _stormticket_beforesave(&$node) {
-  $s = "SELECT n.title
-        FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
+  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title
-        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
@@ -471,8 +464,9 @@ function stormticket_listblock($output=FALSE) {
   $rstatus_list = array_flip($status_list);
   $ticketstatus = $rstatus_list['open'];
 
-  $s  = "SELECT n.nid, n.title, n.uid, n.changed, sti.project_title, sti.project_nid, sti.task_title, sti.task_nid, sti.ticketcategory, sti.ticketstatus FROM
-  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket'";
+  $s  = "SELECT n.nid, n.title, n.uid, n.changed, sti.project_title, sti.project_nid, sti.task_title, 
+  sti.task_nid, sti.ticketcategory, sti.ticketstatus FROM {node} AS n INNER JOIN {stormticket} AS sti 
+  ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket'";
   $v = str_replace(',', "','", $ticketstatus);
   $where[] = "sti.ticketstatus IN ('". $v ."')";
   $s = stormticket_access_sql($s, $where);
