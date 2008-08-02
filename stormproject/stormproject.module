@@ -123,7 +123,7 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormproject_storm_rewrite_where_sql($query, $primary_table) {
+function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
   if ($conds[$account->uid]) {

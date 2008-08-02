@@ -107,13 +107,8 @@ function stormorganization_access_sql($sql, $where = array(), $join = array()) {
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormorganization_storm_rewrite_where_sql($query, $primary_table, $account = NULL) {
+function stormorganization_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
