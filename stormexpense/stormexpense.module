@@ -83,9 +83,11 @@ function stormexpense_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormexpense_access_sql($sql, $where = array(), $join = array()) {
+function stormexpense_access_sql($sql) {
+  $where = array();
 
   if (user_access('Storm expense: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -96,16 +98,13 @@ function stormexpense_access_sql($sql, $where = array(), $join = array()) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (user_access('Storm expense: view of user organization')) {
-    if ($cond) $cond .= ' OR ';
-    $cond .= 'sex.organization_nid='. $user->organization_nid;
+    if (!empty($cond)) $cond .= ' OR ';
+    $cond .= 'sex.organization_nid='. $user->stormorganization_nid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
@@ -238,8 +237,6 @@ function stormexpense_stormticket_change($ticket_nid, $ticket_title) {
 
 function stormexpense_form(&$node) {
   if (arg(1)=='add') {
-    $node->organization_nid = variable_get('storm_organization_nid', 0);
-
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
     }
@@ -305,8 +302,9 @@ function stormexpense_form(&$node) {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor
   ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
-  $r = db_query(stormorganization_access_sql($s));
+  $r = db_query($s);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
@@ -323,8 +321,9 @@ function stormexpense_form(&$node) {
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
+  $s = stormproject_access_sql($s);
   $s = db_rewrite_sql($s);
-  $r = db_query(stormproject_access_sql($s), $node->organization_nid);
+  $r = db_query($s, $node->organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
@@ -352,9 +351,11 @@ function stormexpense_form(&$node) {
   );
 
   $tickets = array();
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS stt ON stt.vid=n.vid WHERE n.status=1 AND n.type='stormticket'
-  AND stt.organization_nid=%d AND stt.project_nid=%d AND stt.task_nid=%d ORDER BY n.title";
-  $r = db_query(stormticket_access_sql($s), $node->organization_nid, $node->project_nid, $node->task_nid);
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormticket} AS sti ON sti.vid=n.vid WHERE n.status=1 AND n.type='stormticket'
+  AND sti.organization_nid=%d AND sti.project_nid=%d AND sti.task_nid=%d ORDER BY n.title";
+  $s = stormticket_access_sql($s);
+  $s = db_rewrite_sql($s);
+  $r = db_query($s, $node->organization_nid, $node->project_nid, $node->task_nid);
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }

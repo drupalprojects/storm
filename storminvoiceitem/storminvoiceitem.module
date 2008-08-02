@@ -75,8 +75,11 @@ function storminvoiceitem_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
+function storminvoiceitem_access_sql($sql) {
+  $where = array();
+
   if (user_access('Storm invoice item: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -86,13 +89,10 @@ function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
   if (user_access('Storm invoice item: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 

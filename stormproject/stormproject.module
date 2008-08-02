@@ -95,9 +95,11 @@ function stormproject_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormproject_access_sql($sql, $where = array(), $join = array()) {
+function stormproject_access_sql($sql) {
+  $where = array();
 
   if (user_access('Storm project: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -108,18 +110,13 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (user_access('Storm project: view of user organization')) {
-    if ($cond) $cond .= ' OR ';
+    if (!empty($cond)) $cond .= ' OR ';
     $cond .= 'spr.organization_nid='. $user->stormorganization_nid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
-  if ($cond) $where[] = $cond;
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
