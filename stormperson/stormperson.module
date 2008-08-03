@@ -103,9 +103,7 @@ function stormperson_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormperson_access_sql($sql) {
-  $where = array();
-
+function stormperson_access_sql($sql, $where = array()) {
   if (user_access('Storm person: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

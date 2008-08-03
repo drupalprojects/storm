@@ -71,9 +71,7 @@ function stormknowledgebase_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormknowledgebase_access_sql($sql) {
-  $where = array();
-
+function stormknowledgebase_access_sql($sql, $where = array()) {
   if (user_access('Storm knowledgebase: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

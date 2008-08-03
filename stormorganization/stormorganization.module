@@ -80,9 +80,7 @@ function stormorganization_access($op, $node, $account = NULL) {
   return FALSE;
 }
 
-function stormorganization_access_sql($sql) {
-  $where = array();
-
+function stormorganization_access_sql($sql, $where = array()) {
   if (user_access('Storm organization: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

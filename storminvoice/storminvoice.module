@@ -93,9 +93,7 @@ function storminvoice_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function storminvoice_access_sql($sql) {
-  $where = array();
-
+function storminvoice_access_sql($sql, $where = array()) {
   if (user_access('Storm invoice: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

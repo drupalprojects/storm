@@ -93,9 +93,7 @@ function stormtask_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormtask_access_sql($sql) {
-  $where = array();
-
+function stormtask_access_sql($sql, $where = array()) {
   if (user_access('Storm task: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
@@ -464,7 +462,7 @@ function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
 
 function _stormtask_tasks_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'stormproject' && user_access('Storm task: create')) return TRUE;
+  if ($node->type == 'stormproject' && user_access('Storm task: add')) return TRUE;
   return FALSE;
 }
 

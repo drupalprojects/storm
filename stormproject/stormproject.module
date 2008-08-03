@@ -95,9 +95,7 @@ function stormproject_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormproject_access_sql($sql) {
-  $where = array();
-
+function stormproject_access_sql($sql, $where = array()) {
   if (user_access('Storm project: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

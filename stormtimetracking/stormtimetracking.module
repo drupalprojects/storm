@@ -83,8 +83,7 @@ function stormtimetracking_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormtimetracking_access_sql($sql) {
-  $where = array();
+function stormtimetracking_access_sql($sql, $where = array()) {
 
   if (user_access('Storm timetracking: view all')) {
     $where[] = "'storm_access'='storm_access'";

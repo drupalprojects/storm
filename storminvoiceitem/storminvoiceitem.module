@@ -75,9 +75,7 @@ function storminvoiceitem_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function storminvoiceitem_access_sql($sql) {
-  $where = array();
-
+function storminvoiceitem_access_sql($sql, $where = array()) {
   if (user_access('Storm invoice item: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

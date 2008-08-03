@@ -83,9 +83,7 @@ function stormnote_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormnote_access_sql($sql) {
-  $where = array();
-
+function stormnote_access_sql($sql, $where = array()) {
   if (user_access('Storm note: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);

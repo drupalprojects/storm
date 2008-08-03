@@ -83,9 +83,7 @@ function stormexpense_access($op, $node, $account=NULL) {
   return FALSE;
 }
 
-function stormexpense_access_sql($sql) {
-  $where = array();
-
+function stormexpense_access_sql($sql, $where = array()) {
   if (user_access('Storm expense: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
