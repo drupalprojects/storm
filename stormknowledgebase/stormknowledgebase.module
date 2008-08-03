@@ -68,9 +68,9 @@ function stormknowledgebase_access($op, $node) {
   return FALSE;
 }
 
-function stormknowledgebase_access_sql($sql, $where = array(), $join = array()) {
-
+function stormknowledgebase_access_sql($sql, $where = array()) {
   if (user_access('Storm knowledgebase: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -80,23 +80,15 @@ function stormknowledgebase_access_sql($sql, $where = array(), $join = array()) 
   if (user_access('Storm knowledgebase: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -112,13 +104,13 @@ function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table ='n',
 
     $cond = '';
     if (user_access('Storm knowledgebase: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
+      $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormknowledgebase' THEN IF($cond,1,0) ";
+      $cond = " WHEN 'stormknowledgebase' THEN IF($cond,1,0) ";
     }
     else {
-      $cond = "WHEN 'stormknowledgebase' THEN 0 ";
+      $cond = " WHEN 'stormknowledgebase' THEN 0 ";
     }
   }
 

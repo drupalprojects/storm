@@ -74,8 +74,9 @@ function storminvoiceitem_access($op, $node) {
   return FALSE;
 }
 
-function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
+function storminvoiceitem_access_sql($sql, $where = array()) {
   if (user_access('Storm invoice item: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -85,17 +86,14 @@ function storminvoiceitem_access_sql($sql, $where = array(), $join = array()) {
   if (user_access('Storm invoice item: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
-function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
   if (!$account) {
@@ -135,7 +133,7 @@ function storminvoiceitem_menu($may_cache) {
   $items = array();
 
   if (!$may_cache) {
-    if (arg(0)=='storm' && arg(2)=='invoiceitems') {
+    if (arg(0)=='node' && is_numeric(arg(1)) && arg(2) == 'invoiceitems') {
       require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.admin.inc');
       require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.theme.inc');
     }
@@ -344,6 +342,7 @@ function _storminvoiceitem_invoiceitems_access($nid) {
 function storminvoiceitem_getitems($invoice_nid) {
   $s = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} AS sit ON n.vid=sit.vid WHERE
   n.status=1 AND n.type='storminvoiceitem' AND sit.invoice_nid = %d";
+  $s = storminvoiceitem_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $invoice_nid);
   

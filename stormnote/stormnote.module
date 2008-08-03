@@ -80,9 +80,9 @@ function stormnote_access($op, $node) {
   return FALSE;
 }
 
-function stormnote_access_sql($sql, $where = array(), $join = array()) {
-
+function stormnote_access_sql($sql, $where = array()) {
   if (user_access('Storm note: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -93,26 +93,18 @@ function stormnote_access_sql($sql, $where = array(), $join = array()) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (user_access('Storm note: view of user organization')) {
-    if ($cond) $cond .= ' OR ';
-    $cond .= 'sno.organization_nid='. $user->organization_nid;
+    if (!empty($cond)) $cond .= ' OR ';
+    $cond .= 'sno.organization_nid='. $user->stormorganization_nid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormnote_storm_rewrite_where_sql($query, $primary_table='n', $account = NULL) {
+function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -132,13 +124,13 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table='n', $account 
     }
     if (user_access('Storm note: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sno1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' sno1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormnote' THEN (SELECT IF($cond,1,0) FROM {stormnote} sno1 WHERE sno1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormnote' THEN (SELECT IF($cond,1,0) FROM {stormnote} sno1 WHERE sno1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormnote' THEN 0 ";
+      $cond = " WHEN 'stormnote' THEN 0 ";
     }
   }
 

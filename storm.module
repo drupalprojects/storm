@@ -474,7 +474,6 @@ function language_list() {
 
 function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
   if (($primary_table == 'n' || $primary_table == 'node') && $primary_field == 'nid') {
-
     if (preg_match("/'storm_access'='storm_access'/", $query)) {
       return array();
     }
@@ -494,12 +493,12 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
         case 'mysql':
         case 'mysqli':
           $where  = '(';
-          $where .= "case ${primary_table}.type ";
+          $where .= " CASE ${primary_table}.type ";
           foreach ($conditions as $condition) {
             $where .= $condition .' ';
           }
-          $where .= 'else 1 end';
-          $where .= ')=1';
+          $where .= ' ELSE 1 END ';
+          $where .= ' )=1 ';
           $return['where'] = $where;
         break;
         case 'pgsql':

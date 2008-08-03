@@ -168,6 +168,7 @@ function stormticket_list_filter() {
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
   WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
   $s = stormproject_access_sql($s);
+  $s = db_rewrite_sql($s);
   $r = db_query($s, $organization_nid);
   $projects = array();
   while ($project = db_fetch_object($r)) {

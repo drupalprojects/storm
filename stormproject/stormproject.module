@@ -94,9 +94,9 @@ function stormproject_access($op, $node) {
   return FALSE;
 }
 
-function stormproject_access_sql($sql, $where = array(), $join = array()) {
-
+function stormproject_access_sql($sql, $where = array()) {
   if (user_access('Storm project: view all')) {
+    $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
@@ -107,28 +107,18 @@ function stormproject_access_sql($sql, $where = array(), $join = array()) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (user_access('Storm project: view of user organization')) {
-    if ($cond) $cond .= ' OR ';
+    if (!empty($cond)) $cond .= ' OR ';
     $cond .= 'spr.organization_nid='. $user->stormorganization_nid;
   }
-  if (!$cond) {
-    $cond = '0=1';
-  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
 
-  if ($cond) $cond .= ' AND ';
-  $cond .= " 'storm_access'='storm_access' ";
-
-  if ($cond) $where[] = $cond;
-
+  $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where);
 }
 
-function stormproject_storm_rewrite_where_sql($query, $primary_table ='n', $account = NULL) {
+function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-
-  if (!$account) {
-    global $user;
-    $account = $user;
-  }
 
   if ($conds[$account->uid]) {
     return $conds[$account->uid];
@@ -144,17 +134,17 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table ='n', $acco
 
     $cond = '';
     if (user_access('Storm project: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
+      $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm project: view of user organization', $account)) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'spr1.organization_nid='. $account->stormorganization_nid;
+      $cond .= ' spr1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
-      $cond = "WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";
     }
     else {
-      $cond = "WHEN 'stormproject' THEN 0 ";
+      $cond = " WHEN 'stormproject' THEN 0 ";
     }
   }
 
@@ -315,7 +305,7 @@ function stormproject_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -47;
+    $form['body_filter']['#weight'] = -46;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
