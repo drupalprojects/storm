@@ -319,11 +319,6 @@ function storminvoiceitem_validate(&$node) {
 
 function storminvoiceitem_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-  $project = node_load($node->project_nid);
-  $node->content['project'] = array(
-    '#value' => t('Project') .' : '. l($project->title, 'node/'. $project->nid) .'<br />',
-    '#weight' => 1,
-  );
   return $node;
 }
 
