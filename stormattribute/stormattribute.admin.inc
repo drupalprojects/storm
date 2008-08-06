@@ -327,21 +327,11 @@ function stormattribute_form($attribute = NULL) {
 function _stormattibute_domain_options() {
   static $options;
   if (!$options) {
-    $options = array(
-      'Country' => 'Country',
-      'Currency' => 'Currency',
-      'Price mode' => 'Price mode',
-      'Task status' => 'Task status',
-      'Task status search' => 'Task status search',
-      'Ticket category' => 'Ticket category',
-      'Ticket priority' => 'Ticket priority',
-      'Ticket priority search' => 'Ticket priority search',
-      'Ticket status' => 'Ticket status',
-      'Ticket status search' => 'Ticket status search',
-      'Project category' => 'Project category',
-      'Project status' => 'Project status',
-      'Project status search' => 'Project status search',
-    );
+    $r = db_query("SELECT DISTINCT(domain) AS domain_name FROM {stormattribute} ORDER BY domain");
+    $options = array();
+    while ($d = db_fetch_object($r)) {
+      $options[$d->domain_name] = $d->domain_name;
+    }
   }
   return $options;
 }
