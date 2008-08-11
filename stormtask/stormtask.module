@@ -461,7 +461,7 @@ function _stormtask_tasks_access($nid=0) {
   if ($nid && is_numeric($nid)) $node = node_load($nid);
 
   if ($node == NULL) return FALSE;
-  if ($node->type == 'stormproject' && user_access('Storm task: add')) return TRUE;
+  if ($node->type == 'stormproject' && user_access('Storm task: access')) return TRUE;
   return FALSE;
 }
 

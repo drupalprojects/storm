@@ -98,7 +98,7 @@ function storm_admin_settings() {
 function storm_elements() {
   $type['datetime'] = array(
     '#input' => TRUE,
-    '#process' => array('storm_datetime_expand'),
+    '#process' => array('storm_datetime_expand' => array()),
     '#element_validate' => array('storm_datetime_validate' => array()),
     '#default_value' => array(
       'day' => format_date(time(), 'custom', 'j'),
@@ -110,7 +110,7 @@ function storm_elements() {
   );
   $type['dateext'] = array(
     '#input' => TRUE,
-    '#process' => array('storm_dateext_expand'),
+    '#process' => array('storm_dateext_expand' => array()),
     '#element_validate' => array('storm_dateext_validate' => array()),
     '#default_value' => array(
       'day' => format_date(time(), 'custom', 'j'),

@@ -320,7 +320,6 @@ function storminvoice_form(&$node) {
 
   $form['group3']['requestdate'] = array(
     '#type' => 'date',
-    '#withnull' => 'true',
     '#title' => t('Request date'),
     '#default_value' => _storm_gmtimestamp_to_date($node->requestdate),
   );
