@@ -462,7 +462,7 @@ function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
 
 function _stormtask_tasks_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'stormproject' && user_access('Storm task: add')) return TRUE;
+  if ($node->type == 'stormproject' && user_access('Storm task: access')) return TRUE;
   return FALSE;
 }
 
