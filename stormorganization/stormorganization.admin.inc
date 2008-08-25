@@ -42,6 +42,37 @@ function stormorganization_list() {
   if ($_SESSION['stormorganization_list_filter']['name']) {
     $where[] = "LOWER(n.title) LIKE LOWER('". $_SESSION['stormorganization_list_filter']['name'] ."')";
   }
+
+  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
+  if ($iscustomer && $iscustomer!='-') {
+    if ($iscustomer=='yes') {
+      $where[] = "sor.iscustomer=1";
+    }
+    else if ($iscustomer=='no') {
+      $where[] = "sor.iscustomer=0";
+    }
+  }
+
+  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  if ($isprovider && $isprovider!='-') {
+    if ($isprovider=='yes') {
+      $where[] = "sor.isprovider=1";
+    }
+    else if ($isprovider=='no') {
+      $where[] = "sor.isprovider=0";
+    }
+  }
+
+  $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
+  if ($isactive && $isactive!='-') {
+    if ($isactive=='yes') {
+      $where[] = "sor.isactive=1";
+    }
+    else if ($isactive=='no') {
+      $where[] = "sor.isactive=0";
+    }
+  }
+
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
 
   $s = stormorganization_access_sql($s, $where);
@@ -62,6 +93,13 @@ function stormorganization_list() {
 function stormorganization_list_filter() {
   $country = $_SESSION['stormorganization_list_filter']['country'];
   $name = $_SESSION['stormorganization_list_filter']['name'];
+  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
+  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
+  if (!$isactive) {
+    $isactive = 'yes';
+    $_SESSION['stormorganization_list_filter']['isactive'] = $isactive;
+  }
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = 10;
@@ -111,6 +149,37 @@ function stormorganization_list_filter() {
     '#value' => $qs,
   );
 
+  $form['filter']['group0'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $options = array (
+    '-' => t('-'),
+    'no' => t('no'),
+    'yes' => t('yes')
+  );
+  $form['filter']['group0']['iscustomer'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#title' => t('Is customer'),
+    '#default_value' => $iscustomer,
+  );
+
+  $form['filter']['group0']['isprovider'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#title' => t('Is provider'),
+    '#default_value' => $isprovider,
+  );
+
+  $form['filter']['group0']['isactive'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#title' => t('Is active'),
+    '#default_value' => $isactive,
+  );
+
   $form['filter']['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -143,6 +212,9 @@ function stormorganization_list_filter() {
 function stormorganization_list_filter_filter($form, &$form_state) {
   $_SESSION['stormorganization_list_filter']['country'] = $form_state['values']['country'];
   $_SESSION['stormorganization_list_filter']['name'] = $form_state['values']['name'];
+  $_SESSION['stormorganization_list_filter']['iscustomer'] = $form_state['values']['iscustomer'];
+  $_SESSION['stormorganization_list_filter']['isprovider'] = $form_state['values']['isprovider'];
+  $_SESSION['stormorganization_list_filter']['isactive'] = $form_state['values']['isactive'];
   $_SESSION['stormorganization_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

@@ -26,6 +26,8 @@ function stormproject_schema() {
       'pricemode'           => array('type' => 'varchar', 'length' => 20),
       'price'               => array('type' => 'float'),
       'currency'            => array('type' => 'varchar', 'length' => 20),
+      'datebegin'           => array('type' => 'int'),
+      'dateend'             => array('type' => 'int'),
     ),
     'primary key' => array('vid', 'nid'),
   );
@@ -36,5 +38,12 @@ function stormproject_schema() {
 function stormproject_update_1() {
   $ret = array();
   db_add_field($ret, 'stormproject', 'projectpriority', array('type' => 'varchar', 'length' => 20));
+  return $ret;
+}
+
+function stormproject_update_2() {
+  $ret = array();
+  db_add_field($ret, 'stormproject', 'datebegin', array('type' => 'int', 'default' => 0));
+  db_add_field($ret, 'stormproject', 'dateend', array('type' => 'int', 'default' => 0));
   return $ret;
 }

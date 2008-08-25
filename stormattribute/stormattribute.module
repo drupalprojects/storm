@@ -61,7 +61,8 @@ function stormattribute_menu() {
   $items['storm/attributes/domain/autocomplete'] = array(
             'title' => t('List of attributes'),
             'description' => t('Storm Attributes'),
-            'page callback' => 'stormattribute_domain_autocomplete',
+            'page callback' => '_stormattribute_domain_autocomplete',
+            'page arguments' => array(4),
             'access arguments' => array('Storm attribute: access'),
             'file' => 'stormattribute.admin.inc',
             'type' => MENU_CALLBACK);

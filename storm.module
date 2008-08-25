@@ -202,7 +202,7 @@ function storm_datetime_validate($form) {
 }
 
 function storm_dateext_expand($element) {
-  if (empty($element['#value'])) {
+  if (empty($element['#value']) && !$element['#withnull']) {
     $element['#value'] = array(
                           'day' => format_date(time(), 'custom', 'j'),
                           'month' => format_date(time(), 'custom', 'n'),

@@ -192,7 +192,31 @@ function stormorganization_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
+    '#weight' => -51,
+  );
+
+  $form['group0'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
     '#weight' => -50,
+  );
+
+  $form['group0']['iscustomer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Customer'),
+    '#default_value' => $node->iscustomer,
+  );
+
+  $form['group0']['isprovider'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provider'),
+    '#default_value' => $node->isprovider,
+  );
+
+  $form['group0']['isactive'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Active'),
+    '#default_value' => $node->isactive,
   );
 
   $form['group1'] = array(
@@ -335,13 +359,14 @@ function stormorganization_form(&$node) {
 function stormorganization_insert($node) {
   db_query("INSERT INTO {stormorganization}
            (vid, nid, prefix, fullname, country, www, email, currency,
-           provstate, zip, city, address, vatid, orglanguage
+           provstate, zip, city, address, vatid, orglanguage, iscustomer, isprovider, isactive
            ) VALUES
            (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s',
-           '%s', '%s', '%s', '%s', '%s', '%s'
+           '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d
            )",
             $node->vid, $node->nid, $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->currency,
-            $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, $node->orglanguage
+            $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, 
+            $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive
             );
 }
 
@@ -353,11 +378,11 @@ function stormorganization_update($node) {
   else {
     db_query("UPDATE {stormorganization} SET
               prefix = '%s', fullname = '%s', country='%s', www='%s', email='%s', currency = '%s',
-              provstate = '%s', zip = '%s', city = '%s', address = '%s', vatid = '%s', orglanguage = '%s'
-              WHERE vid = %d",
+              provstate = '%s', zip = '%s', city = '%s', address = '%s', vatid = '%s', orglanguage = '%s',
+              iscustomer=%d, isprovider=%d, isactive=%d WHERE vid = %d",
               $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->currency,
               $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, $node->orglanguage,
-              $node->vid);
+              $node->iscustomer, $node->isprovider, $node->isactive, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormorganization_change', $node->nid, $node->title);
     }
