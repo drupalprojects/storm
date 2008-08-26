@@ -484,6 +484,9 @@ function _stormtimetracking_beforesave(&$node) {
   if (!$node->duration) {
     $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
   }
+  if ($node->timeend < $node->timebegin) {
+    $node->duration += 24;
+  }
 
   $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
