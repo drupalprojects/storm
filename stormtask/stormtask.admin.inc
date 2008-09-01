@@ -17,16 +17,16 @@ function stormtask_tasks($project) {
 
   $header = array(
     array(
-      'data' => t('Description'),
+      'data' => storm_t('Description', 'task'),
     ),
     array(
-      'data' => t('Category'),
+      'data' => storm_t('Category', 'task'),
     ),
     array(
-      'data' => t('Status'),
+      'data' => storm_t('Status', 'task'),
     ),
     array(
-      'data' => t('Priority'),
+      'data' => storm_t('Priority', 'task'),
     ),
     array(
       'data' => storm_icon_add_node($i, $params),
@@ -79,7 +79,7 @@ function stormtask_tasks_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Filter'),
+        '#title' => storm_t('Filter', 'task'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
   );
@@ -91,23 +91,23 @@ function stormtask_tasks_filter() {
 
   $form['filter']['group1']['taskcategory'] = array(
     '#type' => 'select',
-    '#title' => t('Category'),
+    '#title' => storm_t('Category', 'task'),
     '#default_value' => $taskcategory,
-    '#options' => array('-' => t('all')) + $category_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $category_list,
   );
 
   $form['filter']['group1']['taskstatus'] = array(
     '#type' => 'select',
-    '#title' => t('Status'),
+    '#title' => storm_t('Status', 'task'),
     '#default_value' => $taskstatus,
-    '#options' => array('-' => t('all')) + $status_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $status_list,
   );
 
   $form['filter']['group1']['taskpriority'] = array(
     '#type' => 'select',
-    '#title' => t('Priority'),
+    '#title' => storm_t('Priority', 'task'),
     '#default_value' => $taskpriority,
-    '#options' => array('-' => t('all')) + $priority_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $priority_list,
   );
 
   $form['filter']['group2'] = array(
@@ -117,13 +117,13 @@ function stormtask_tasks_filter() {
 
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter', 'task'),
     '#submit' => array('stormtask_tasks_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset', 'task'),
     '#submit' => array('stormtask_tasks_filter_reset'),
   );
 
@@ -171,27 +171,27 @@ function stormtask_list() {
 
   $header = array(
     array(
-      'data' => t('Organization'),
+      'data' => storm_t('Organization', 'task'),
       'field' => 'sta.organization_title',
     ),
     array(
-      'data' => t('Project'),
+      'data' => storm_t('Project', 'task'),
       'field' => 'sta.project_title',
     ),
     array(
-      'data' => t('Title'),
+      'data' => storm_t('Title', 'task'),
       'field' => 'n.title',
     ),
     array(
-      'data' => t('Category'),
+      'data' => storm_t('Category', 'task'),
       'field' => 'sta.taskcategory',
     ),
     array(
-      'data' => t('Status'),
+      'data' => storm_t('Status', 'task'),
       'field' => 'sta.taskstatus',
     ),
     array(
-      'data' => t('Priority'),
+      'data' => storm_t('Priority', 'task'),
       'field' => 'sta.taskpriority',
     ),
     array(
@@ -280,7 +280,7 @@ function stormtask_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => storm_t('Filter', 'task'),
     '#collapsible' => true,
     '#collapsed' => true,
   );
@@ -299,10 +299,10 @@ function stormtask_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => t('All')) + $organizations;
+  $organizations = array(0 => storm_t('All', 'task')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'task'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, 'All')"),
@@ -317,10 +317,10 @@ function stormtask_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => t('All')) + $projects;
+  $projects = array(0 => storm_t('All', 'task')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'task'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -333,23 +333,23 @@ function stormtask_list_filter() {
 
   $form['filter']['group2']['taskcategory'] = array(
     '#type' => 'select',
-    '#title' => t('Category'),
+    '#title' => storm_t('Category', 'task'),
     '#default_value' => $taskcategory,
-    '#options' => array('-' => t('all')) + $category_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $category_list,
   );
 
   $form['filter']['group2']['taskstatus'] = array(
     '#type' => 'select',
-    '#title' => t('Status'),
+    '#title' => storm_t('Status', 'task'),
     '#default_value' => $taskstatus,
-    '#options' => array('-' => t('all')) + $status_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $status_list,
   );
 
   $form['filter']['group2']['taskpriority'] = array(
     '#type' => 'select',
-    '#title' => t('Priority'),
+    '#title' => storm_t('Priority', 'task'),
     '#default_value' => $taskpriority,
-    '#options' => array('-' => t('all')) + $priority_list,
+    '#options' => array('-' => storm_t('all', 'task')) + $priority_list,
   );
 
   $form['filter']['group3'] = array(
@@ -359,19 +359,19 @@ function stormtask_list_filter() {
 
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter', 'task'),
     '#submit' => array('stormtask_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset', 'task'),
     '#submit' => array('stormtask_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items'),
+    '#title' => storm_t('Items', 'task'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

@@ -10,7 +10,7 @@ function storminvoiceitem_help($path, $arg) {
 
   switch ($section) {
     case "admin/help#storminvoiceitem":
-      $o = '<p>'. t("Provides invoice item support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides invoice item support for Storm", 'invoiceitem') .'</p>';
       break;
   }
 
@@ -126,7 +126,7 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $accou
 }
 function storminvoiceitem_menu() {
   $items['node/%node/invoiceitems'] = array(
-    'title' => t('Invoice items'),
+    'title' => storm_t('Invoice items', 'invoiceitem'),
     'page callback' => 'storminvoiceitem_invoiceitems',
     'page arguments' => array(1),
     'access callback' => '_storminvoiceitem_invoiceitems_access',
@@ -150,10 +150,10 @@ function storminvoiceitem_theme() {
 function storminvoiceitem_node_info() {
   return array(
     'storminvoiceitem' => array(
-      'name' => t('Invoice item'),
+      'name' => storm_t('Invoice item', 'invoiceitem'),
       'module' => 'storminvoiceitem',
-      'description' => t("An invoice item for Storm."),
-      'title_label' => t("Description"),
+      'description' => storm_t("An invoice item for Storm.", 'invoiceitem'),
+      'title_label' => storm_t("Description", 'invoiceitem'),
       'has_body' => false,
     )
   );
@@ -199,7 +199,7 @@ function storminvoiceitem_form(&$node) {
 
   $form['group2']['weight'] = array(
     '#type' => 'weight',
-    '#title' => t('Weight'),
+    '#title' => storm_t('Weight', 'invoiceitem'),
     '#default_value' => $node->weight,
   );
 
@@ -212,7 +212,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['amount'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('Amount'),
+    '#title' => storm_t('Amount', 'invoiceitem'),
     '#size' => 15,
     '#default_value' => $node->amount,
   );
@@ -220,7 +220,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['vatpercent'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('VAT percent'),
+    '#title' => storm_t('VAT percent', 'invoiceitem'),
     '#size' => 15,
     '#default_value' => $node->vatpercent,
   );
@@ -228,7 +228,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['vat'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('VAT'),
+    '#title' => storm_t('VAT', 'invoiceitem'),
     '#size' => 15,
     '#default_value' => $node->vat,
   );
@@ -236,7 +236,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['total'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('Total'),
+    '#title' => storm_t('Total', 'invoiceitem'),
     '#size' => 15,
     '#default_value' => $node->total,
   );
@@ -313,7 +313,7 @@ function storminvoiceitem_load($node) {
 
 function storminvoiceitem_validate(&$node) {
   if (($node->nid == $node->parent_nid) && $node->parent_nid) {
-    form_set_error('parent_nid', t('Impossible to assign itself as parent.'));
+    form_set_error('parent_nid', storm_t('Impossible to assign itself as parent.', 'invoiceitem'));
   }
 }
 

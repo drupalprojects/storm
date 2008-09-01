@@ -32,14 +32,50 @@ function theme_stormnote_list($header, $notes) {
 }
 
 function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
-  $o  = '<div class="stormnote">';
-  $o .= '<dl>';
-  $o .= '<dt>'. t('Title') .' : '.  check_plain($node->title) .'</dt>';
-  $o .= '<dt>'.  t('Organization') .' : '.  l($node->organization_title, 'node/'. $node->organization_nid) .'</dt>';
-  $o .= '<dt>'.  t('Project') .' : '.  l($node->project_title, 'node/'. $node->project_nid) .'</dt>';
-  $o .= '<dt>'.  t('Task') .' : '.  l($node->task_title, 'node/'. $node->task_nid) .'</dt>';
-  $o .= '</dl>';
-  $o .= '</div>';
-  return $o;
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+
+  $node->content['stormnote'] = array(
+    '#prefix' => '<div id="stormnote">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormnote']['title'] = array(
+    '#prefix' => '<div class="title">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Title', 'note'), $node->title),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormnote']['links'] = array(
+    '#prefix' => '<div id="links">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormnote']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Organization', 'note'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormnote']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Project', 'note'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormnote']['task'] = array(
+    '#prefix' => '<div class="task">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Task', 'note'), l($node->task_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  return $node;
 }
 

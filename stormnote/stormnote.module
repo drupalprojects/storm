@@ -10,7 +10,7 @@ function stormnote_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormnote":
-      $o = '<p>'. t("Provides note support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides note support for Storm", 'note') .'</p>';
       break;
   }
 
@@ -145,8 +145,8 @@ function stormnote_menu() {
   $items = array();
 
   $items['storm/notes'] = array(
-            'title' => t('Notes'),
-            'description' => t('Storm notes'),
+            'title' => storm_t('Notes', 'note'),
+            'description' => storm_t('Storm notes', 'note'),
             'page callback' => 'stormnote_list',
             'access arguments' => array('Storm note: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -172,9 +172,9 @@ function stormnote_theme() {
 function stormnote_node_info() {
   return array(
     'stormnote' => array(
-      'name' => t('Note'),
+      'name' => storm_t('Note', 'note'),
       'module' => 'stormnote',
-      'description' => t("A note for Storm."),
+      'description' => storm_t("A note for Storm.", 'note'),
       'has_body' => true,
     )
   );
@@ -248,7 +248,7 @@ function stormnote_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'note'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -265,7 +265,7 @@ function stormnote_form(&$node) {
   }
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'note'),
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -277,7 +277,7 @@ function stormnote_form(&$node) {
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Task'),
+    '#title' => storm_t('Task', 'note'),
     '#default_value' => $node->task_nid,
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -370,12 +370,6 @@ function stormnote_load($node) {
 }
 
 function stormnote_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $node->content['stormnote'] = array(
-    '#value' => theme('stormnote_view', $node, $teaser = FALSE, $page = FALSE),
-    '#weight' => 1,
-  );
-
-  return $node;
+  return theme('stormnote_view', $node, $teaser = FALSE, $page = FALSE);
 }
 

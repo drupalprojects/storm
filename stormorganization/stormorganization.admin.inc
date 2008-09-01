@@ -19,12 +19,12 @@ function stormorganization_list() {
 
   $header = array(
     array(
-      'data' => t('Name'),
+      'data' => storm_t('Name', 'organization'),
       'field' => 'n.title',
       'sort' => 'ASC',
     ),
     array(
-      'data' => t('Country'),
+      'data' => storm_t('Country', 'organization'),
       'field' => 'sor.country',
       'sort' => '',
     ),
@@ -110,7 +110,7 @@ function stormorganization_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Filter'),
+        '#title' => storm_t('Filter', 'organization'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#weight' => -20,
@@ -118,14 +118,14 @@ function stormorganization_list_filter() {
 
   $form['filter']['country'] = array(
     '#type' => 'select',
-    '#title' => t('Country'),
+    '#title' => storm_t('Country', 'organization'),
     '#default_value' => $country,
-    '#options' => array(0 => t('All')) + stormattribute_attributes_bydomain('Country'),
+    '#options' => array(0 => storm_t('All', 'organization')) + stormattribute_attributes_bydomain('Country'),
   );
 
   $form['filter']['name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Name'),
+    '#title' => storm_t('Name', 'organization'),
     '#default_value' => $name,
     '#autocomplete_path' => 'storm/organizations/autocomplete',
   );
@@ -155,28 +155,28 @@ function stormorganization_list_filter() {
   );
 
   $options = array (
-    '-' => t('-'),
-    'no' => t('no'),
-    'yes' => t('yes')
+    '-' => storm_t('-', 'organization'),
+    'no' => storm_t('no', 'organization'),
+    'yes' => storm_t('yes', 'organization')
   );
   $form['filter']['group0']['iscustomer'] = array(
     '#type' => 'select',
     '#options' => $options,
-    '#title' => t('Is customer'),
+    '#title' => storm_t('Is customer', 'organization'),
     '#default_value' => $iscustomer,
   );
 
   $form['filter']['group0']['isprovider'] = array(
     '#type' => 'select',
     '#options' => $options,
-    '#title' => t('Is provider'),
+    '#title' => storm_t('Is provider', 'organization'),
     '#default_value' => $isprovider,
   );
 
   $form['filter']['group0']['isactive'] = array(
     '#type' => 'select',
     '#options' => $options,
-    '#title' => t('Is active'),
+    '#title' => storm_t('Is active', 'organization'),
     '#default_value' => $isactive,
   );
 
@@ -187,19 +187,19 @@ function stormorganization_list_filter() {
 
   $form['filter']['group1']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter', 'organization'),
     '#submit' => array('stormorganization_list_filter_filter'),
   );
 
   $form['filter']['group1']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset', 'organization'),
     '#submit' => array('stormorganization_list_filter_reset'),
   );
 
   $form['filter']['group1']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items'),
+    '#title' => storm_t('Items', 'organization'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

@@ -28,3 +28,58 @@ function theme_stormperson_list($header, $people) {
   return $o;
 }
 
+function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+  unset($node->content['body']);
+
+  $w = 0;
+  $node->content['stormperson'] = array(
+    '#prefix' => '<div id="stormperson">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_organization'] = array(
+    '#prefix' => '<div id="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Organization', 'person'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_fullname'] = array(
+    '#prefix' => '<div id="fullname">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Fullname', 'person'), $node->fullname),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_email'] = array(
+    '#prefix' => '<div id="email">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Email', 'person'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_www'] = array(
+    '#prefix' => '<div id="www">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('WWW', 'person'), l($node->www, $node->www, array('absolute' => TRUE))),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_phone'] = array(
+    '#prefix' => '<div id="phone">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Phone', 'person'), $node->phone),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormperson_im'] = array(
+    '#prefix' => '<div id="im">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('IM', 'person'), $node->im),
+    '#weight' => $w++,
+  );
+
+  return $node;
+}

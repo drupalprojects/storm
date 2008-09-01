@@ -59,28 +59,28 @@ function stormexpense_list() {
 
   $header = array(
     array(
-      'data' => t('Organization'),
+      'data' => storm_t('Organization', 'expense'),
       'field' => 'sex.organization_title',
     ),
     array(
-      'data' => t('Project'),
+      'data' => storm_t('Project', 'expense'),
       'field' => 'sex.project_title',
     ),
     array(
-      'data' => t('Title'),
+      'data' => storm_t('Title', 'expense'),
       'field' => 'n.title',
     ),
     array(
-      'data' => t('Date'),
+      'data' => storm_t('Date', 'expense'),
       'field' => 'sex.expensedate',
       'sort' => 'desc',
     ),
     array(
-      'data' => t('Total'),
+      'data' => storm_t('Total', 'expense'),
       'style' => 'text-align: right;'
     ),
     array(
-      'data' => storm_icon_l('report', '', t('Reports'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
+      'data' => storm_icon_l('report', '', storm_t('Reports', 'expense'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
       'class' => 'storm_list_operations',
     ),
   );
@@ -88,7 +88,7 @@ function stormexpense_list() {
   $s  = "SELECT n.*,  sex.* FROM {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid
   WHERE n.status=1 AND n.type='stormexpense' ";
 
-  $s_totals = "SELECT SUM(amount) AS t_amount, SUM(vat) AS t_vat, SUM(total) AS t_total FROM
+  $s_totals = "SELECT SUM(amount) AS t_amount, SUM(tax) AS t_tax, SUM(total) AS t_total FROM
   {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND n.type='stormexpense' ";
 
   if ($_SESSION['stormexpense_list_filter']['organization_nid']) {
@@ -184,7 +184,7 @@ function stormexpense_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Filter'),
+        '#title' => storm_t('Filter', 'expense'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#theme' => 'stormexpense_list_filter',
@@ -205,10 +205,10 @@ function stormexpense_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => t('All')) + $organizations;
+  $organizations = array(0 => storm_t('All', 'expense')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'expense'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
@@ -223,10 +223,10 @@ function stormexpense_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => t('All')) + $projects;
+  $projects = array(0 => storm_t('All', 'expense')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'expense'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -235,10 +235,10 @@ function stormexpense_list_filter() {
 
   $tree = _stormtask_get_tree($project_nid);
   $tasks = _stormtask_plain_tree($tree);
-  $tasks = array(0 => t('All')) + $tasks;
+  $tasks = array(0 => storm_t('All', 'expense')) + $tasks;
   $form['filter']['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Task'),
+    '#title' => storm_t('Task', 'expense'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -254,10 +254,10 @@ function stormexpense_list_filter() {
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
-  $tickets = array(0 => t('All')) + $tickets;
+  $tickets = array(0 => storm_t('All', 'expense')) + $tickets;
   $form['filter']['group1']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Ticket'),
+    '#title' => storm_t('Ticket', 'expense'),
     '#default_value' => $ticket_nid,
     '#process' => array('storm_dependent_select_process'),
     '#options' => $tickets,
@@ -271,13 +271,13 @@ function stormexpense_list_filter() {
 
   $form['filter']['group2']['datefrom'] = array(
     '#type' => 'date',
-    '#title' => t('Date from'),
+    '#title' => storm_t('Date from', 'expense'),
     '#default_value' => $datefrom,
   );
 
   $form['filter']['group2']['user'] = array(
     '#type' => 'textfield',
-    '#title' => t('User'),
+    '#title' => storm_t('User', 'expense'),
     '#size' => 25,
     '#default_value' => $expenseuser,
     '#autocomplete_path' => 'user/autocomplete',
@@ -290,14 +290,14 @@ function stormexpense_list_filter() {
 
   $form['filter']['group3']['title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Title'),
+    '#title' => storm_t('Title', 'expense'),
     '#size' => 40,
     '#default_value' => $title,
   );
 
   $form['filter']['group3']['provider_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Provider'),
+    '#title' => storm_t('Provider', 'expense'),
     '#size' => 40,
     '#default_value' => $provider_title,
     '#autocomplete_path' => 'storm/expenses/provider_autocomplete',
@@ -310,19 +310,19 @@ function stormexpense_list_filter() {
 
   $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter', 'expense'),
     '#submit' => array('stormexpense_list_filter_filter'),
   );
 
   $form['filter']['group4']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset', 'expense'),
     '#submit' => array('stormexpense_list_filter_reset'),
   );
 
   $form['filter']['group4']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items'),
+    '#title' => storm_t('Items', 'expense'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
@@ -353,7 +353,7 @@ function stormexpense_list_form_report() {
   $form['#prefix'] = '<div id="stormexpense_list_form_report" class="storm_list_form_report">';
   $form['report'] = array(
     '#type' => 'select',
-    '#title' => t('Reports'),
+    '#title' => storm_t('Reports', 'expense'),
     '#options' => theme('stormexpense_list_form_report_reports'),
   );
 
@@ -365,7 +365,7 @@ function stormexpense_list_form_report() {
     }
     $form['language'] = array(
       '#type' => 'select',
-      '#title' => t('Language'),
+      '#title' => storm_t('Language', 'expense'),
       '#options' => $languages,
     );
   }
@@ -377,7 +377,7 @@ function stormexpense_list_form_report() {
   }
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Report'),
+    '#value' => storm_t('Report', 'expense'),
   );
   $form['#suffix'] = '</div>';
   return $form;

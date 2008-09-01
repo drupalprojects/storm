@@ -10,7 +10,7 @@ function stormknowledgebase_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormknowledgebase":
-      $o = '<p>'. t("Provides knowledgebase support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides knowledgebase support for Storm", 'knowledgebase') .'</p>';
       break;
   }
 
@@ -125,8 +125,8 @@ function stormknowledgebase_menu() {
   $items = array();
 
   $items['storm/knowledgebase'] = array(
-            'title' => t('Knowledge base'),
-            'description' => t('Storm Knowledge base'),
+            'title' => storm_t('Knowledge base', 'knowledgebase'),
+            'description' => storm_t('Storm Knowledge base', 'knowledgebase'),
             'page callback' => 'stormknowledgebase_list',
             'access arguments' => array('Storm knowledgebase: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -148,9 +148,9 @@ function stormknowledgebase_theme() {
 function stormknowledgebase_node_info() {
   return array(
     'stormknowledgebase' => array(
-      'name' => t('Knowledge base'),
+      'name' => storm_t('Knowledge base', 'knowledgebase'),
       'module' => 'stormknowledgebase',
-      'description' => t("A knowledge base for Storm."),
+      'description' => storm_t("A knowledge base for Storm.", 'knowledgebase'),
       'has_body' => true,
     )
   );

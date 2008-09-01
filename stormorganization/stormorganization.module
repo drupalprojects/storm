@@ -10,7 +10,7 @@ function stormorganization_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormorganization":
-      $output = '<p>'. t("Provides organization support for Storm") .'</p>';
+      $output = '<p>'. storm_t("Provides organization support for Storm", 'organization') .'</p>';
       break;
   }
 
@@ -141,8 +141,8 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table, $acco
 function stormorganization_menu() {
   $items = array();
   $items['storm/organizations'] = array(
-    'title' => t('Organizations'),
-    'description' => t('Storm Organizations'),
+    'title' => storm_t('Organizations', 'organization'),
+    'description' => storm_t('Storm Organizations', 'organization'),
     'page callback' => 'stormorganization_list',
     'access arguments' => array('Storm organization: access'),
     'file' => 'stormorganization.admin.inc',
@@ -175,11 +175,11 @@ function stormorganization_theme() {
 function stormorganization_node_info() {
   return array(
     'stormorganization' => array(
-      'name' => t('Organization'),
+      'name' => storm_t('Organization', 'organization'),
       'module' => 'stormorganization',
-      'description' => t("An organization for Storm."),
-      'title_label' => t("Name"),
-      'body_label' => t("Note"),
+      'description' => storm_t("An organization for Storm.", 'organization'),
+      'title_label' => storm_t("Name", 'organization'),
+      'body_label' => storm_t("Note", 'organization'),
     )
   );
 }
@@ -203,19 +203,19 @@ function stormorganization_form(&$node) {
 
   $form['group0']['iscustomer'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Customer'),
+    '#title' => storm_t('Customer', 'organization'),
     '#default_value' => $node->iscustomer,
   );
 
   $form['group0']['isprovider'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Provider'),
+    '#title' => storm_t('Provider', 'organization'),
     '#default_value' => $node->isprovider,
   );
 
   $form['group0']['isactive'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Active'),
+    '#title' => storm_t('Active', 'organization'),
     '#default_value' => $node->isactive,
   );
 
@@ -227,14 +227,14 @@ function stormorganization_form(&$node) {
 
   $form['group1']['prefix'] = array(
     '#type' => 'textfield',
-    '#title' => t('Prefix'),
+    '#title' => storm_t('Prefix', 'organization'),
     '#size' => 20,
     '#default_value' => $node->prefix,
   );
 
   $form['group1']['fullname'] = array(
     '#type' => 'textfield',
-    '#title' => t('Fullname'),
+    '#title' => storm_t('Fullname', 'organization'),
     '#size' => 40,
     '#default_value' => $node->fullname,
   );
@@ -247,21 +247,21 @@ function stormorganization_form(&$node) {
 
   $form['group2']['country'] = array(
     '#type' => 'select',
-    '#title' => t('Country'),
+    '#title' => storm_t('Country', 'organization'),
     '#options' => stormattribute_attributes_bydomain('Country'),
     '#default_value' => $node->country,
   );
 
   $form['group2']['provstate'] = array(
     '#type' => 'textfield',
-    '#title' => t('Province / State'),
+    '#title' => storm_t('Province / State', 'organization'),
     '#size' => 20,
     '#default_value' => $node->provstate,
   );
 
   $form['group2']['city'] = array(
     '#type' => 'textfield',
-    '#title' => t('City'),
+    '#title' => storm_t('City', 'organization'),
     '#size' => 20,
     '#default_value' => $node->city,
   );
@@ -274,14 +274,14 @@ function stormorganization_form(&$node) {
 
   $form['group3']['zip'] = array(
     '#type' => 'textfield',
-    '#title' => t('Zip'),
+    '#title' => storm_t('Zip', 'organization'),
     '#size' => 15,
     '#default_value' => $node->zip,
   );
 
   $form['group3']['address'] = array(
     '#type' => 'textfield',
-    '#title' => t('Address'),
+    '#title' => storm_t('Address', 'organization'),
     '#default_value' => $node->address,
   );
 
@@ -293,7 +293,7 @@ function stormorganization_form(&$node) {
 
   $form['group4']['currency'] = array(
     '#type' => 'select',
-    '#title' => t('Currency'),
+    '#title' => storm_t('Currency', 'organization'),
     '#options' => stormattribute_attributes_bydomain('Currency'),
     '#default_value' => $node->currency,
   );
@@ -305,16 +305,16 @@ function stormorganization_form(&$node) {
   }
   $form['group4']['orglanguage'] = array(
     '#type' => 'select',
-    '#title' => t('Language'),
+    '#title' => storm_t('Language', 'organization'),
     '#options' => $languages_options,
     '#default_value' => $node->orglanguage,
   );
 
-  $form['group4']['vatid'] = array(
+  $form['group4']['taxid'] = array(
     '#type' => 'textfield',
-    '#title' => t('VAT id'),
+    '#title' => storm_t('Tax id', 'organization'),
     '#size' => 20,
-    '#default_value' => $node->vatid,
+    '#default_value' => $node->taxid,
   );
 
   $form['group5'] = array(
@@ -325,14 +325,14 @@ function stormorganization_form(&$node) {
 
   $form['group5']['www'] = array(
     '#type' => 'textfield',
-    '#title' => t('WWW'),
+    '#title' => storm_t('WWW', 'organization'),
     '#size' => 30,
     '#default_value' => $node->www,
   );
 
   $form['group5']['email'] = array(
     '#type' => 'textfield',
-    '#title' => t('Email'),
+    '#title' => storm_t('Email', 'organization'),
     '#size' => 30,
     '#default_value' => $node->email,
   );
@@ -359,13 +359,13 @@ function stormorganization_form(&$node) {
 function stormorganization_insert($node) {
   db_query("INSERT INTO {stormorganization}
            (vid, nid, prefix, fullname, country, www, email, currency,
-           provstate, zip, city, address, vatid, orglanguage, iscustomer, isprovider, isactive
+           provstate, zip, city, address, taxid, orglanguage, iscustomer, isprovider, isactive
            ) VALUES
            (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s',
            '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d
            )",
             $node->vid, $node->nid, $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->currency,
-            $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, 
+            $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, 
             $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive
             );
 }
@@ -378,10 +378,10 @@ function stormorganization_update($node) {
   else {
     db_query("UPDATE {stormorganization} SET
               prefix = '%s', fullname = '%s', country='%s', www='%s', email='%s', currency = '%s',
-              provstate = '%s', zip = '%s', city = '%s', address = '%s', vatid = '%s', orglanguage = '%s',
+              provstate = '%s', zip = '%s', city = '%s', address = '%s', taxid = '%s', orglanguage = '%s',
               iscustomer=%d, isprovider=%d, isactive=%d WHERE vid = %d",
               $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->currency,
-              $node->provstate, $node->zip, $node->city, $node->address, $node->vatid, $node->orglanguage,
+              $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, $node->orglanguage,
               $node->iscustomer, $node->isprovider, $node->isactive, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormorganization_change', $node->nid, $node->title);
@@ -416,10 +416,10 @@ function stormorganization_form_alter(&$form, $form_state, $form_id) {
     }
     $form['storm_organization_nid'] = array(
       '#type' => 'select',
-      '#title' => t('Organization'),
+      '#title' => storm_t('Organization', 'organization'),
       '#options' => $organizations,
       '#default_value' => variable_get('storm_organization_nid', 0),
-      '#description' => t('The organization that owns this system'),
+      '#description' => storm_t('The organization that owns this system', 'organization'),
       '#weight' => -30,
     );
   }

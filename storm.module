@@ -10,7 +10,7 @@ function storm_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#storm":
-      $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
+      $output = '<p>'.  storm_t("Provides a complete project management environment") .'</p>';
       break;
   }
 
@@ -30,16 +30,16 @@ function storm_menu() {
   $items = array();
 
   $items['storm'] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
+            'title' => storm_t('Storm'),
+            'description' => storm_t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'storm_storm',
             'access arguments' => array('Storm: access'),
             'parent' => '',
             'type' => MENU_NORMAL_ITEM);
 
   $items['admin/storm'] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
+            'title' => storm_t('Storm'),
+            'description' => storm_t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('storm_admin_settings'),
             'access arguments' => array('access administration pages'),
@@ -73,6 +73,10 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array('label', 'value'),
     ),
+    'storm_texts' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array(),
+    ),
   );
 }
 
@@ -90,15 +94,15 @@ function storm_admin_settings() {
 
   $form['storm_icons_dir'] = array(
     '#type' => 'textfield',
-    '#title' => t('Icons directory'),
+    '#title' => storm_t('Icons directory'),
     '#default_value' => variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons'),
-    '#description' => t("The directory that contains the Storm's icons"),
+    '#description' => storm_t("The directory that contains the Storm's icons"),
     '#weight' => -11,
   );
 
   $form['stormreports'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Reports'),
+    '#title' => storm_t('Reports'),
     '#collapsed' => false,
     '#collapsible' => true,
     '#weight' => -10,
@@ -106,9 +110,9 @@ function storm_admin_settings() {
 
   $form['stormreports']['storm_report_header'] = array(
     '#type' => 'textarea',
-    '#title' => t('Report header'),
+    '#title' => storm_t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
-    '#description' => t('The header that will appear on the reports'),
+    '#description' => storm_t('The header that will appear on the reports'),
   );
 
   return system_settings_form($form);
@@ -197,7 +201,7 @@ function storm_datetime_expand($element) {
 
 function storm_datetime_validate($form) {
   if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
-    form_error($form, t('The specified date is invalid.'));
+    form_error($form, storm_t('The specified date is invalid.'));
   }
 }
 
@@ -276,7 +280,7 @@ function storm_icon_add($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('create', $item, $user)) return '';
-  return storm_icon_l('application_add', $path, t('Add'), '', $params);
+  return storm_icon_l('application_add', $path, storm_t('Add'), '', $params);
 }
 
 function storm_icon_edit($path, $item, $params=array()) {
@@ -284,7 +288,7 @@ function storm_icon_edit($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('update', $item, $user)) return '';
-  return storm_icon_l('application_edit', $path, t('Edit'), '', $params);
+  return storm_icon_l('application_edit', $path, storm_t('Edit'), '', $params);
 }
 
 function storm_icon_delete($path, $item, $params=array()) {
@@ -292,7 +296,7 @@ function storm_icon_delete($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('delete', $item, $user)) return '';
-  return storm_icon_l('application_delete', $path, t('Delete'), '', $params);
+  return storm_icon_l('application_delete', $path, storm_t('Delete'), '', $params);
 }
 
 function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $attributes=array()) {
@@ -514,3 +518,25 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
     return $return;
   }
 }
+
+function storm_t($text, $domain='default', $args = array(), $langcode = NULL) {
+  static $items;
+  if (!$items) {
+    $items = theme('storm_texts');
+  }
+  if (is_array($items)) {
+    if (array_key_exists($domain, $items) && array_key_exists($text, $items[$domain])) {
+      return t($items[$domain][$text], $args, $langcode);
+    }
+    else if (array_key_exists('default', $items) && array_key_exists($text, $items['default'])) {
+      return t($items['default'][$text], $args, $langcode);
+    }    
+    else {
+      return t($text, $args, $langcode);
+    }
+  }
+  else {
+    return t($text, $args, $langcode);
+  }
+}
+

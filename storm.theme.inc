@@ -85,3 +85,12 @@ function theme_storm_view_item($label, $value) {
   $o = '<span class="label">'. t($label) .' : </span>'. $value;
   return $o;
 }
+
+function theme_storm_texts() {
+  $items = array (
+    'default' => array (
+      'VAT' => 'Tax',
+    ),
+  );
+  return $items;
+}

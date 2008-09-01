@@ -16,18 +16,18 @@ function storminvoiceitem_invoiceitems($invoice) {
 
   $header = array(
     array(
-      'data' => t('Title'),
+      'data' => storm_t('Title', 'invoiceitem'),
     ),
     array(
-      'data' => t('Amount'),
+      'data' => storm_t('Amount', 'invoiceitem'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => t('VAT'),
+      'data' => storm_t('VAT', 'invoiceitem'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => t('Total'),
+      'data' => storm_t('Total', 'invoiceitem'),
       'style' => 'text-align: center;',
     ),
     array(

@@ -15,7 +15,7 @@ function stormknowledgebase_list() {
 
   $header = array(
     array(
-      'data' => t('Title'),
+      'data' => storm_t('Title', 'knowledgebase'),
       'field' => 'n.title',
     ),
     array(
@@ -53,7 +53,7 @@ function stormknowledgebase_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => storm_t('Filter', 'knowledgebase'),
     '#collapsible' => true,
     '#collapsed' => true,
   );
@@ -65,19 +65,19 @@ function stormknowledgebase_list_filter() {
 
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter', 'knowledgebase'),
     '#submit' => array('stormknowledgebase_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset', 'knowledgebase'),
     '#submit' => array('stormknowledgebase_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items'),
+    '#title' => storm_t('Items', 'knowledgebase'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

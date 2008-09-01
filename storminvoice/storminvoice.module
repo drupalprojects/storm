@@ -10,7 +10,7 @@ function storminvoice_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#storminvoice":
-      $o = '<p>'. t("Provides invoice support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides invoice support for Storm", 'invoice') .'</p>';
       break;
   }
 
@@ -155,7 +155,7 @@ function storminvoice_menu() {
   $items = array();
 
   $items['storm/project_invoices_js/%/%'] = array(
-    'title' => t('Tasks'),
+    'title' => storm_t('Tasks', 'invoice'),
     'page callback' => '_storminvoice_project_invoices_js',
     'page arguments' => array(2, 3),
     'access arguments' => array('Storm invoice: access'),
@@ -164,8 +164,8 @@ function storminvoice_menu() {
   );
 
   $items['storm/invoices'] = array(
-    'title' => t('Invoices'),
-    'description' => t('Storm invoices'),
+    'title' => storm_t('Invoices', 'invoice'),
+    'description' => storm_t('Storm invoices', 'invoices'),
     'page callback' => 'storminvoice_list',
     'access arguments' => array('Storm invoice: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -173,9 +173,9 @@ function storminvoice_menu() {
   );
 
   $items['storm/invoice/report/%node/%/%'] = array(
-            'title' => t('Invoice'),
+            'title' => storm_t('Invoice', 'invoice'),
             'page arguments' => array(3, 4, 5),
-            'description' => t('Storm Invoice'),
+            'description' => storm_t('Storm Invoice', 'invoice'),
             'page callback' => 'storminvoice_report',
             'access arguments' => array('Storm invoice: access'),
             'type' => MENU_CALLBACK,
@@ -205,10 +205,10 @@ function storminvoice_theme() {
 function storminvoice_node_info() {
   return array(
     'storminvoice' => array(
-      'name' => t('Invoice'),
+      'name' => storm_t('Invoice', 'invoice'),
       'module' => 'storminvoice',
-      'description' => t("An invoice for Storm."),
-      'title_label' => t("Description"),
+      'description' => storm_t("An invoice for Storm.", 'invoice'),
+      'title_label' => storm_t("Description", 'invoice'),
       'has_body' => false,
     )
   );
@@ -272,7 +272,7 @@ function storminvoice_form(&$node) {
 
   $form['group1']['number'] = array(
     '#type' => 'textfield',
-    '#title' => t('Number'),
+    '#title' => storm_t('Number', 'invoice'),
     '#required' => TRUE,
     '#size' => 10,
     '#default_value' => $node->number,
@@ -301,7 +301,7 @@ function storminvoice_form(&$node) {
   }
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'invoice'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, '-')"),
@@ -318,7 +318,7 @@ function storminvoice_form(&$node) {
   $projects = array(0 => '-') + $projects;
   $form['group2']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'invoice'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -326,7 +326,7 @@ function storminvoice_form(&$node) {
 
   $form['group2']['reference'] = array(
     '#type' => 'textfield',
-    '#title' => t('Reference'),
+    '#title' => storm_t('Reference', 'invoice'),
     '#default_value' => $node->reference,
     '#size' => 40,
   );
@@ -340,21 +340,21 @@ function storminvoice_form(&$node) {
   $form['group3']['requestdate'] = array(
     '#type' => 'date',
     '#withnull' => 'true',
-    '#title' => t('Request date'),
+    '#title' => storm_t('Request date', 'invoice'),
     '#default_value' => _storm_gmtimestamp_to_date($node->requestdate),
   );
 
   $form['group3']['duedate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => t('Due date'),
+    '#title' => storm_t('Due date', 'invoice'),
     '#default_value' => _storm_gmtimestamp_to_date($node->duedate),
   );
 
   $form['group3']['paymentdate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => t('Payment date'),
+    '#title' => storm_t('Payment date', 'invoice'),
     '#default_value' => _storm_gmtimestamp_to_date($node->paymentdate),
   );
 
@@ -366,23 +366,23 @@ function storminvoice_form(&$node) {
 
   $form['group4']['amount'] = array(
     '#type' => 'textfield',
-    '#title' => t('Amount'),
+    '#title' => storm_t('Amount', 'invoice'),
     '#attributes' => array('readonly' => 'readonly'),
     '#size' => 15,
     '#default_value' => $node->amount,
   );
 
-  $form['group4']['vat'] = array(
+  $form['group4']['tax'] = array(
     '#type' => 'textfield',
-    '#title' => t('VAT'),
+    '#title' => storm_t('Tax', 'invoice'),
     '#attributes' => array('readonly' => 'readonly'),
     '#size' => 15,
-    '#default_value' => $node->vat,
+    '#default_value' => $node->tax,
   );
 
   $form['group4']['total'] = array(
     '#type' => 'textfield',
-    '#title' => t('Total'),
+    '#title' => storm_t('Total', 'invoice'),
     '#attributes' => array('readonly' => 'readonly'),
     '#size' => 15,
     '#default_value' => $node->total,
@@ -390,16 +390,16 @@ function storminvoice_form(&$node) {
 
   $form['group4']['totalcustomercurr'] = array(
     '#type' => 'textfield',
-    '#title' => t('Total in customer currency'),
+    '#title' => storm_t('Total in customer currency', 'invoice'),
     '#size' => 15,
     '#default_value' => $node->totalcustomercurr,
   );
 
-  $form['vatexempt'] = array(
+  $form['taxexempt'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Vat exempt'),
+    '#title' => storm_t('Tax exempt', 'invoice'),
     '#weight' => -45,
-    '#default_value' => $node->vatexempt,
+    '#default_value' => $node->taxexempt,
   );
 
   return $form;
@@ -413,8 +413,8 @@ function storminvoice_insert($node) {
            number, reference,
            organization_nid, organization_title,
            project_nid, project_title,
-           amount, vat, total, totalcustomercurr,
-           requestdate, duedate, paymentdate, vatexempt) VALUES
+           amount, tax, total, totalcustomercurr,
+           requestdate, duedate, paymentdate, taxexempt) VALUES
            (%d, %d,
            '%s', '%s',
            %d, '%s',
@@ -425,8 +425,8 @@ function storminvoice_insert($node) {
           $node->number, $node->reference,
           $node->organization_nid, $node->organization_title,
           $node->project_nid, $node->project_title,
-          $node->amount, $node->vat, $node->total, $node->totalcustomercurr,
-          $node->requestdate, $node->duedate, $node->paymentdate, $node->vatexempt);
+          $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+          $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
 }
 
 function storminvoice_update($node) {
@@ -436,13 +436,13 @@ function storminvoice_update($node) {
             number='%s', reference='%s',
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
-            amount=%f, vat=%f, total=%f, totalcustomercurr=%f,
-            requestdate=%d, duedate=%d, paymentdate=%d, vatexempt=%d WHERE vid = %d",
+            amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
+            requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
             $node->number, $node->reference,
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
-            $node->amount, $node->vat, $node->total, $node->totalcustomercurr,
-            $node->requestdate, $node->duedate, $node->paymentdate, $node->vatexempt, $node->vid);
+            $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+            $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
 }
 
 function _storminvoice_beforesave(&$node) {
@@ -487,29 +487,29 @@ function storminvoice_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'storm_admin_settings') {
     $form['storminvoice'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Invoices'),
+      '#title' => storm_t('Invoices', 'invoice'),
       '#collapsed' => false,
       '#collapsible' => true,
       '#weight' => -9,
     );
     $form['storminvoice']['storminvoice_payment_days'] = array(
       '#type' => 'textfield',
-      '#title' => t('Number of days for invoice payment'),
+      '#title' => storm_t('Number of days for invoice payment', 'invoice'),
       '#default_value' => variable_get('storminvoice_payment_days', 30),
-      '#description' => t('Default number of days for invoice payment'),
+      '#description' => storm_t('Default number of days for invoice payment', 'invoice'),
       '#size' => 5,
     );
     $form['storminvoice']['storminvoice_payment_modes'] = array(
       '#type' => 'textarea',
-      '#title' => t('Modes for invoice payment'),
+      '#title' => storm_t('Modes for invoice payment', 'invoice'),
       '#default_value' => variable_get('storminvoice_payment_modes', ''),
-      '#description' => t('Modes for invoice payment'),
+      '#description' => storm_t('Modes for invoice payment', 'invoice'),
     );
     $form['storminvoice']['storminvoice_payment_terms'] = array(
       '#type' => 'textfield',
-      '#title' => t('Payment terms'),
-      '#default_value' => variable_get('storminvoice_payment_terms', 'Due on receipt'),
-      '#description' => t('Payment terms'),
+      '#title' => storm_t('Payment terms', 'invoice'),
+      '#default_value' => variable_get('storminvoice_payment_terms', t('Due on receipt')),
+      '#description' => storm_t('Payment terms', 'invoice'),
       '#size' => 50,
     );
   }

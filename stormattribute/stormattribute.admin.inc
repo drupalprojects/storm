@@ -13,16 +13,16 @@ function stormattribute_list() {
 
   $header = array(
     array(
-      'data' => t('Domain'),
+      'data' => storm_t('Domain'),
       'field' => 'domain',
       'sort' => 'asc',
     ),
     array(
-      'data' => t('Key'),
+      'data' => storm_t('Key'),
       'field' => 'akey',
     ),
     array(
-      'data' => t('Value'),
+      'data' => storm_t('Value'),
       'field' => 'avalue',
       'sort' => '',
     ),
@@ -78,7 +78,7 @@ function stormattribute_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => storm_t('Filter'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -90,7 +90,7 @@ function stormattribute_list_filter() {
 
   $form['filter']['group1']['domain'] = array(
     '#type' => 'textfield',
-    '#title' => t('Domain'),
+    '#title' => storm_t('Domain'),
     '#default_value' => $domain,
     '#size' => 30,
     '#autocomplete_path' => 'storm/attributes/domain/autocomplete',
@@ -98,14 +98,14 @@ function stormattribute_list_filter() {
 
   $form['filter']['group1']['akey'] = array(
     '#type' => 'textfield',
-    '#title' => t('Key'),
+    '#title' => storm_t('Key'),
     '#default_value' => $akey,
     '#size' => 20,
   );
 
   $form['filter']['group1']['avalue'] = array(
     '#type' => 'textfield',
-    '#title' => t('Value'),
+    '#title' => storm_t('Value'),
     '#default_value' => $avalue,
     '#size' => 20,
   );
@@ -117,19 +117,19 @@ function stormattribute_list_filter() {
 
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => storm_t('Filter'),
     '#submit' => array('stormattribute_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
-    '#value' => t('Reset'),
+    '#value' => storm_t('Reset'),
     '#submit' => array('stormattribute_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Items'),
+    '#title' => storm_t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
@@ -204,10 +204,10 @@ function stormattribute_delete($form_state, $aid) {
   $title = $a->domain .' : '. $a->avalue;
 
   return confirm_form($form,
-  t('Are you sure you want to delete the attribute %title?', array('%title' => $title)),
+  storm_t('Are you sure you want to delete the attribute %title?', array('%title' => $title)),
   'storm/attributes/edit/'. $aid,
-  t('This action cannot be undone.'),
-  t('Delete'), t('Cancel'));
+  storm_t('This action cannot be undone.'),
+  storm_t('Delete'), storm_t('Cancel'));
 }
 
 function stormattribute_delete_submit($form, &$form_state) {
@@ -235,7 +235,7 @@ function stormattribute_form($attribute = NULL) {
 
   $form['domain'] = array(
     '#type' => 'textfield',
-    '#title' => t('Domain'),
+    '#title' => storm_t('Domain'),
     '#required' => TRUE,
     '#default_value' => $attribute->domain,
     '#autocomplete_path' => 'storm/attributes/domain/autocomplete',
@@ -244,7 +244,7 @@ function stormattribute_form($attribute = NULL) {
 
   $form['akey'] = array(
     '#type' => 'textfield',
-    '#title' => t('Key'),
+    '#title' => storm_t('Key'),
     '#required' => TRUE,
     '#default_value' => $attribute->akey,
     '#weight' => -9
@@ -252,7 +252,7 @@ function stormattribute_form($attribute = NULL) {
 
   $form['avalue'] = array(
     '#type' => 'textfield',
-    '#title' => t('Value'),
+    '#title' => storm_t('Value'),
     '#required' => TRUE,
     '#default_value' => $attribute->avalue,
     '#weight' => -8
@@ -260,26 +260,26 @@ function stormattribute_form($attribute = NULL) {
 
   $form['weight'] = array(
     '#type' => 'weight',
-    '#title' => t('Weight'),
+    '#title' => storm_t('Weight'),
     '#default_value' => $attribute->weight,
     '#weight' => -7
   );
 
   $form['save'] = array(
     '#type' => 'submit',
-    '#value' => t('Save')
+    '#value' => storm_t('Save')
   );
 
   if ($attribute->aid) {
     $form['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'),
+      '#value' => storm_t('Delete'),
       '#submit' => array('stormattribute_form_delete'),
     );
   }
   $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => t('Cancel'),
+    '#value' => storm_t('Cancel'),
     '#submit' => array('stormattribute_cancel_submit'),
   );
 

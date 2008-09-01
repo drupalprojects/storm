@@ -44,63 +44,63 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormorganization']['fullname'] = array(
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Fullname', $node->fullname),
+    '#value' => theme('storm_view_item', storm_t('Fullname', 'organization'), $node->fullname),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['country'] = array(
     '#prefix' => '<div class="country">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Country', $node->country),
+    '#value' => theme('storm_view_item', storm_t('Country', 'organization'), $node->country),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['provstate'] = array(
     '#prefix' => '<div class="provstate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Province / State', $node->provstate),
+    '#value' => theme('storm_view_item', storm_t('Province / State', 'organization'), $node->provstate),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['city'] = array(
     '#prefix' => '<div class="city">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'City', $node->city),
+    '#value' => theme('storm_view_item', storm_t('City', 'organization'), $node->city),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['zip'] = array(
     '#prefix' => '<div class="zip">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Zip', $node->zip),
+    '#value' => theme('storm_view_item', storm_t('Zip', 'organization'), $node->zip),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['address'] = array(
     '#prefix' => '<div class="address">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Address', $node->address),
+    '#value' => theme('storm_view_item', storm_t('Address', 'organization'), $node->address),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['www'] = array(
     '#prefix' => '<div class="www">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'WWW', l($node->www, 'http://'. $node->www, array('absolute' => TRUE))),
+    '#value' => theme('storm_view_item', storm_t('WWW', 'organization'), l($node->www, 'http://'. $node->www, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['email'] = array(
     '#prefix' => '<div class="email">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Email', l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#value' => theme('storm_view_item', storm_t('Email', 'organization'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['currency'] = array(
     '#prefix' => '<div class="currency">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Currency', $node->currency),
+    '#value' => theme('storm_view_item', storm_t('Currency', 'organization'), $node->currency),
     '#weight' => $w++,
   );
 
@@ -113,21 +113,21 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormorganization']['language'] = array(
     '#prefix' => '<div class="language">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Language', $languages_options[$node->orglanguage]),
+    '#value' => theme('storm_view_item', storm_t('Language', 'organization'), $languages_options[$node->orglanguage]),
     '#weight' => $w++,
   );
 
-  $node->content['stormorganization']['vatid'] = array(
-    '#prefix' => '<div class="vatid">',
+  $node->content['stormorganization']['taxid'] = array(
+    '#prefix' => '<div class="taxid">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'VAT id', $node->vatid),
+    '#value' => theme('storm_view_item', storm_t('Tax id', 'organization'), $node->taxid),
     '#weight' => $w++,
   );
 
   $node->content['stormorganization']['note'] = array(
     '#prefix' => '<div class="note">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', 'Note', $node->body),
+    '#value' => theme('storm_view_item', storm_t('Note', 'organization'), $node->body),
     '#weight' => $w++,
   );
 
@@ -142,7 +142,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormorganization']['links']['people'] = array(
       '#prefix' => '<div class="people">',
       '#suffix' => '</div>',
-      '#value' => l(t('People'), 'storm/people/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('People', 'organization'), 'storm/people/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -151,7 +151,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormorganization']['links']['projects'] = array(
       '#prefix' => '<div class="projects">',
       '#suffix' => '</div>',
-      '#value' => l(t('Projects'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('Projects', 'organization'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -160,7 +160,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormorganization']['links']['notes'] = array(
       '#prefix' => '<div class="notes">',
       '#suffix' => '</div>',
-      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('Notes', 'organization'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -169,7 +169,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormorganization']['links']['tickets'] = array(
       '#prefix' => '<div class="tickets">',
       '#suffix' => '</div>',
-      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('Tickets', 'organization'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -178,7 +178,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormorganization']['links']['timetrackings'] = array(
       '#prefix' => '<div class="timetrackings">',
       '#suffix' => '</div>',
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('Timetrackings', 'organization'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }

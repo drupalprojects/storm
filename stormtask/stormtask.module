@@ -10,7 +10,7 @@ function stormtask_help($path, $arg) {
 
   switch ($section) {
     case "admin/help#stormtask":
-      $o = '<p>'. t("Provides task support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides task support for Storm", 'task') .'</p>';
       break;
   }
 
@@ -153,7 +153,7 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 function stormtask_menu() {
   $items['node/%node/tasks'] = array(
-    'title' => t('Tasks'),
+    'title' => storm_t('Tasks', 'task'),
     'page callback' => 'stormtask_tasks',
     'page arguments' => array(1),
     'access callback' => '_stormtask_tasks_access',
@@ -163,7 +163,7 @@ function stormtask_menu() {
     'weight' => 3
   );
   $items['storm/project_tasks_js/%'] = array(
-    'title' => t('Tasks'),
+    'title' => storm_t('Tasks', 'task'),
     'page callback' => '_stormtask_project_tasks_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm task: access'),
@@ -171,8 +171,8 @@ function stormtask_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['storm/tasks'] = array(
-    'title' => t('Tasks'),
-    'description' => t('Storm Tasks'),
+    'title' => storm_t('Tasks', 'task'),
+    'description' => storm_t('Storm Tasks', 'task'),
     'page callback' => 'stormtask_list',
     'access arguments' => array('Storm task: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -191,24 +191,28 @@ function stormtask_theme() {
       'file'      => 'stormtask.theme.inc',
       'arguments' => array('header', 'tasks'),
     ),
+    'stormtask_view' => array(
+      'file'      => 'stormtask.theme.inc',
+      'arguments' => array('node', 'teaser', 'page'),
+    ),
   );
 }
 
 function stormtask_node_info() {
   return array(
     'stormtask' => array(
-      'name' => t('Task'),
+      'name' => storm_t('Task', 'task'),
       'module' => 'stormtask',
-      'description' => t("A task for Storm."),
-      'title_label' => t("Title"),
-      'body_label' => t("Description"),
+      'description' => storm_t("A task for Storm.", 'task'),
+      'title_label' => storm_t("Title", 'task'),
+      'body_label' => storm_t("Description", 'task'),
     )
   );
 }
 
 function stormtask_storm_indexpage() {
   $o = array();
-  $o['stormtask']['title'] =  l(t('Tasks'), 'storm/tasks');
+  $o['stormtask']['title'] =  l(storm_t('Tasks', 'task'), 'storm/tasks');
   return $o;
 }
 
@@ -265,7 +269,7 @@ function stormtask_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'task'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -284,7 +288,7 @@ function stormtask_form(&$node) {
   }
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'task'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -296,7 +300,7 @@ function stormtask_form(&$node) {
   $parent_tasks = _stormtask_plain_tree($tree);
   $form['group1']['parent_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Parent task'),
+    '#title' => storm_t('Parent task', 'task'),
     '#default_value' => $node->parent_nid,
     '#options' => array(0 => '-') + $parent_tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -304,7 +308,7 @@ function stormtask_form(&$node) {
 
   $form['group1']['weight'] = array(
     '#type' => 'weight',
-    '#title' => t('Weight'),
+    '#title' => storm_t('Weight', 'task'),
     '#default_value' => $node->weight,
   );
 
@@ -316,7 +320,7 @@ function stormtask_form(&$node) {
 
   $form['group2']['stepno'] = array(
     '#type' => 'textfield',
-    '#title' => t('Step no.'),
+    '#title' => storm_t('Step no.', 'task'),
     '#size' => 15,
     '#required' => FALSE,
     '#default_value' => $node->stepno,
@@ -337,21 +341,21 @@ function stormtask_form(&$node) {
 
   $form['group3']['taskcategory'] = array(
     '#type' => 'select',
-    '#title' => t('Category'),
+    '#title' => storm_t('Category', 'task'),
     '#default_value' => $node->taskcategory,
     '#options' => stormattribute_attributes_bydomain('Task category'),
   );
 
   $form['group3']['taskstatus'] = array(
     '#type' => 'select',
-    '#title' => t('Status'),
+    '#title' => storm_t('Status', 'task'),
     '#default_value' => $node->taskstatus,
     '#options' => stormattribute_attributes_bydomain('Task status'),
   );
 
   $form['group3']['taskpriority'] = array(
     '#type' => 'select',
-    '#title' => t('Priority'),
+    '#title' => storm_t('Priority', 'task'),
     '#default_value' => $node->taskpriority,
     '#options' => stormattribute_attributes_bydomain('Task priority'),
   );
@@ -447,22 +451,12 @@ function stormtask_load($node) {
 
 function stormtask_validate(&$node) {
   if (($node->nid == $node->parent_nid) && $node->parent_nid) {
-    form_set_error('parent_nid', t('Impossible to assign itself as parent.'));
+    form_set_error('parent_nid', storm_t('Impossible to assign itself as parent.', 'task'));
   }
 }
 
 function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  $project = node_load($node->project_nid);
-  $node->content['project'] = array(
-    '#value' => t('Project') .' : '. l($project->title, 'node/'. $project->nid) .'<br />',
-    '#weight' => 1,
-  );
-  $node->content['stepno'] = array(
-    '#value' => t('Step no.') .' : '. $node->stepno .'<br />',
-    '#weight' => 2,
-  );
-  return $node;
+  return theme('stormtask_view', $node, $teaser, $page);
 }
 
 function _stormtask_tasks_access($node=NULL) {

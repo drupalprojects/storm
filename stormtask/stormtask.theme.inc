@@ -54,3 +54,36 @@ function theme_stormtask_list($header, $tasks) {
   return $o;
 }
 
+function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+  $node->content['stormtask'] = array(
+    '#prefix' => '<div id="stormtask">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtask']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Organization', 'task'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtask']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Project', 'task'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtask']['stepno'] = array(
+    '#prefix' => '<div class="stepno">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Step no.', 'task'), $node->stepno),
+    '#weight' => $w++,
+  );
+
+  return $node;
+}

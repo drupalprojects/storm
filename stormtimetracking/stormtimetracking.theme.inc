@@ -34,16 +34,37 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
 }
 
 function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
-  $o  = '<div class="stormtimetracking">';
-  $o .= '<dl>';
-  $o .= '<dt>'. t('Title') .' : '.  check_plain($node->title) .'</dt>';
-  $o .= '<dt>'.  t('Organization') .' : '.  l($node->organization_title, 'node/'. $node->organization_nid) .'</dt>';
-  $o .= '<dt>'.  t('Project') .' : '.  l($node->project_title, 'node/'. $node->project_nid) .'</dt>';
-  $o .= '<dt>'.  t('Task') .' : '.  l($node->task_title, 'node/'. $node->task_nid) .'</dt>';
-  $o .= '<dt>'.  t('Ticket') .' : '.  l($node->ticket_title, 'node/'. $node->ticket_nid) .'</dt>';
-  $o .= '</dl>';
-  $o .= '</div>';
-  return $o;
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+  $node->content['stormtimetracking'] = array(
+    '#prefix' => '<div id="stormtimetracking">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtimetracking']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Organization', 'timetracking'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtimetracking']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Project', 'timetracking'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtimetracking']['task'] = array(
+    '#prefix' => '<div class="task">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Task', 'timetracking'), l($node->task_title, 'node/'. $node->task_nid)),
+    '#weight' => $w++,
+  );
+
+  return $node;
 }
 
 function theme_stormtimetracking_list_form_report_reports() {

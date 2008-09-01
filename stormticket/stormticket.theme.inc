@@ -33,3 +33,36 @@ function theme_stormticket_list($header, $tickets) {
   return $o;
 }
 
+function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+
+  $w = 0;
+  $node->content['stormticket'] = array(
+    '#prefix' => '<div id="stormticket">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormticket']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Organization', 'ticket'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormticket']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Project', 'ticket'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormticket']['task'] = array(
+    '#prefix' => '<div class="task">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Task', 'ticket'), l($node->task_title, 'node/'. $node->task_nid)),
+    '#weight' => $w++,
+  );
+
+  return $node;
+}

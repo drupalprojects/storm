@@ -10,7 +10,7 @@ function stormperson_help($path, $arg) {
 
   switch ($section) {
     case "admin/help#stormperson":
-      $o = '<p>'. t("Provides person support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides person support for Storm", 'person') .'</p>';
       break;
   }
 
@@ -163,8 +163,8 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 function stormperson_menu() {
   $items['storm/people'] = array(
-    'title' => t('People'),
-    'description' => t('Storm people'),
+    'title' => storm_t('People', 'person'),
+    'description' => storm_t('Storm people', 'person'),
     'page callback' => 'stormperson_list',
     'access arguments' => array('Storm person: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -183,17 +183,21 @@ function stormperson_theme() {
       'file'      => 'stormperson.theme.inc',
       'arguments' => array('header', 'people'),
     ),
+    'stormperson_view' => array(
+      'file'      => 'stormperson.theme.inc',
+      'arguments' => array('node', 'teaser', 'page'),
+    ),
   );
 }
 
 function stormperson_node_info() {
   return array(
     'stormperson' => array(
-      'name' => t('Person'),
+      'name' => storm_t('Person', 'person'),
       'module' => 'stormperson',
-      'description' => t("A person for Storm."),
-      'title_label' => t("Name"),
-      'body_label' => t("Description"),
+      'description' => storm_t("A person for Storm.", 'person'),
+      'title_label' => storm_t("Name", 'person'),
+      'body_label' => storm_t("Description", 'person'),
     )
   );
 }
@@ -239,7 +243,7 @@ function stormperson_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'person'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -256,7 +260,7 @@ function stormperson_form(&$node) {
 
   $form['group1']['user_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('User'),
+    '#title' => storm_t('User', 'person'),
     '#default_value' => $node->user_name,
     '#autocomplete_path' => 'user/autocomplete',
     '#size' => 40,
@@ -270,14 +274,14 @@ function stormperson_form(&$node) {
 
   $form['group2']['prefix'] = array(
     '#type' => 'textfield',
-    '#title' => t('Prefix'),
+    '#title' => storm_t('Prefix', 'person'),
     '#size' => 20,
     '#default_value' => $node->prefix,
   );
 
   $form['group2']['fullname'] = array(
     '#type' => 'textfield',
-    '#title' => t('Fullname'),
+    '#title' => storm_t('Fullname', 'person'),
     '#size' => 40,
     '#default_value' => $node->fullname,
   );
@@ -290,14 +294,14 @@ function stormperson_form(&$node) {
 
   $form['group3']['email'] = array(
     '#type' => 'textfield',
-    '#title' => t('Email'),
+    '#title' => storm_t('Email', 'person'),
     '#size' => 30,
     '#default_value' => $node->email,
   );
 
   $form['group3']['www'] = array(
     '#type' => 'textfield',
-    '#title' => t('WWW'),
+    '#title' => storm_t('WWW', 'person'),
     '#size' => 30,
     '#default_value' => $node->www,
   );
@@ -310,14 +314,14 @@ function stormperson_form(&$node) {
 
   $form['group4']['phone'] = array(
     '#type' => 'textfield',
-    '#title' => t('Phone'),
+    '#title' => storm_t('Phone', 'person'),
     '#size' => 30,
     '#default_value' => $node->phone,
   );
 
   $form['group4']['im'] = array(
     '#type' => 'textfield',
-    '#title' => t('IM'),
+    '#title' => storm_t('IM', 'person'),
     '#size' => 30,
     '#default_value' => $node->im,
   );
@@ -427,52 +431,7 @@ function stormperson_load($node) {
 }
 
 function stormperson_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  unset($node->content['body']);
-
-  $node->content['stormperson_organization'] = array(
-    '#prefix' => '<div id="stormperson_organization">',
-    '#suffix' => '</div>',
-    '#value' => t('Organization') .' : '. l($node->organization_title, 'node/'. $node->organization_nid),
-    '#weight' => -3,
-  );
-
-  $node->content['stormperson_fullname'] = array(
-    '#prefix' => '<div id="stormperson_fullname">',
-    '#suffix' => '</div>',
-    '#value' => t('Fullname') .' : '. $node->fullname,
-    '#weight' => -2,
-  );
-
-  $node->content['stormperson_email'] = array(
-    '#prefix' => '<div id="stormperson_email">',
-    '#suffix' => '</div>',
-    '#value' => t('Email') .' : '. l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)),
-    '#weight' => -1,
-  );
-
-  $node->content['stormperson_www'] = array(
-    '#prefix' => '<div id="stormperson_www">',
-    '#suffix' => '</div>',
-    '#value' => t('WWW') .' : '. l($node->www, $node->www, array('absolute' => TRUE)),
-    '#weight' => 0,
-  );
-
-  $node->content['stormperson_phone'] = array(
-    '#prefix' => '<div id="stormperson_phone">',
-    '#suffix' => '</div>',
-    '#value' => t('Phone') .' : '. $node->phone,
-    '#weight' => 1,
-  );
-
-  $node->content['stormperson_im'] = array(
-    '#prefix' => '<div id="stormperson_im">',
-    '#suffix' => '</div>',
-    '#value' => t('IM') .' : '. $node->im,
-    '#weight' => 2,
-  );
-
-  return $node;
+  return theme('stormperson_view', $node, $teaser, $page);
 }
 
 function _stormperson_people_access($node=NULL) {

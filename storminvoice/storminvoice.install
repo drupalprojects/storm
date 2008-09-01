@@ -28,15 +28,22 @@ function storminvoice_schema() {
       'duedate'             => array('type' => 'int'),
       'paymentdate'         => array('type' => 'int'),
       'amount'              => array('type' => 'float'),
-      'vat'                 => array('type' => 'float'),
+      'tax'                 => array('type' => 'float'),
       'total'               => array('type' => 'float'),
       'totalcustomercurr'   => array('type' => 'float'),
-      'vatexempt'           => array('type' => 'int', 'length' => 1),
+      'taxexempt'           => array('type' => 'int', 'length' => 1),
     ),
     'primary key' => array('vid', 'nid'),
   );
 
   return $schema;
+}
+
+function storminvoice_update_1() {
+  $ret = array();
+  db_change_field($ret, 'storminvoice', 'vat', 'tax', array('type' => 'float'));
+  db_change_field($ret, 'storminvoice', 'vatexempt', 'taxexempt', array('type' => 'int', 'length' => 1));
+  return $ret;
 }
 
 

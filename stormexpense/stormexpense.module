@@ -10,7 +10,7 @@ function stormexpense_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormexpense":
-      $o = '<p>'. t("Provides expense support for Storm") .'</p>';
+      $o = '<p>'. storm_t("Provides expense support for Storm", 'expense') .'</p>';
       break;
   }
 
@@ -145,8 +145,8 @@ function stormexpense_menu() {
   $items = array();
 
   $items['storm/expenses'] = array(
-    'title' => t('Expenses'),
-    'description' => t('Storm expenses'),
+    'title' => storm_t('Expenses', 'expense'),
+    'description' => storm_t('Storm expenses', 'expense'),
     'page callback' => 'stormexpense_list',
     'access arguments' => array('Storm expense: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -154,9 +154,9 @@ function stormexpense_menu() {
   );
 
   $items['storm/expenses/report/%/%'] = array(
-    'title' => t('Expenses'),
+    'title' => storm_t('Expenses', 'expense'),
     'page arguments' => array(3, 4),
-    'description' => t('Storm expenses'),
+    'description' => storm_t('Storm expenses', 'expense'),
     'page callback' => 'stormexpense_list_report',
     'access arguments' => array('Storm expense: access'),
     'type' => MENU_CALLBACK,
@@ -197,18 +197,18 @@ function stormexpense_theme() {
 function stormexpense_node_info() {
   return array(
     'stormexpense' => array(
-      'name' => t('Expense'),
+      'name' => storm_t('Expense', 'expense'),
       'module' => 'stormexpense',
-      'description' => t("An expense for Storm."),
-      'title_label' => t("Title"),
-      'body_label' => t("Description"),
+      'description' => storm_t("An expense for Storm.", 'expense'),
+      'title_label' => storm_t("Title", 'expense'),
+      'body_label' => storm_t("Description", 'expense'),
     )
   );
 }
 
 function stormexpense_storm_indexpage() {
   $o = array();
-  $o['stormexpense']['title'] =  l(t('Expenses'), 'storm/expenses');
+  $o['stormexpense']['title'] =  l(storm_t('Expenses', 'expense'), 'storm/expenses');
   return $o;
 }
 
@@ -314,7 +314,7 @@ function stormexpense_form(&$node) {
   }
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'expense'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -333,7 +333,7 @@ function stormexpense_form(&$node) {
   $projects = array(0 => '-') + $projects;
   $form['group2']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Project'),
+    '#title' => storm_t('Project', 'expense'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -345,7 +345,7 @@ function stormexpense_form(&$node) {
   $tasks = array(0 => '-') + $tasks;
   $form['group2']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Task'),
+    '#title' => storm_t('Task', 'expense'),
     '#default_value' => $node->task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -363,7 +363,7 @@ function stormexpense_form(&$node) {
   }
   $form['group2']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Ticket'),
+    '#title' => storm_t('Ticket', 'expense'),
     '#default_value' => $node->ticket_nid,
     '#options' => array(0 => '-') + $tickets,
     '#process' => array('storm_dependent_select_process'),
@@ -377,13 +377,13 @@ function stormexpense_form(&$node) {
 
   $form['group3']['expensedate'] = array(
     '#type' => 'date',
-    '#title' => t('Date'),
+    '#title' => storm_t('Date', 'expense'),
     '#default_value' => _storm_gmtimestamp_to_date($node->expensedate),
   );
 
   $form['group3']['provider_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Provider'),
+    '#title' => storm_t('Provider', 'expense'),
     '#size' => 50,
     '#default_value' => $node->provider_title,
     '#autocomplete_path' => 'storm/expenses/provider_autocomplete',
@@ -397,21 +397,21 @@ function stormexpense_form(&$node) {
 
   $form['group4']['amount'] = array(
     '#type' => 'textfield',
-    '#title' => t('Amount'),
+    '#title' => storm_t('Amount', 'expense'),
     '#size' => 15,
     '#default_value' => $node->amount,
   );
 
-  $form['group4']['vat'] = array(
+  $form['group4']['tax'] = array(
     '#type' => 'textfield',
-    '#title' => t('VAT'),
+    '#title' => storm_t('Tax', 'expense'),
     '#size' => 15,
-    '#default_value' => $node->vat,
+    '#default_value' => $node->tax,
   );
 
   $form['group4']['total'] = array(
     '#type' => 'textfield',
-    '#title' => t('Total'),
+    '#title' => storm_t('Total', 'expense'),
     '#size' => 15,
     '#default_value' => $node->total,
   );
@@ -439,7 +439,7 @@ function stormexpense_insert($node) {
             task_nid, task_title, task_stepno,
             ticket_nid, ticket_title,
             provider_nid, provider_title,
-            expensedate, amount, vat, total) VALUES
+            expensedate, amount, tax, total) VALUES
             (%d, %d,
             %d, '%s',
             %d, '%s',
@@ -453,7 +453,7 @@ function stormexpense_insert($node) {
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
             $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->vat, $node->total);
+            $node->expensedate, $node->amount, $node->tax, $node->total);
 }
 
 function stormexpense_update($node) {
@@ -465,20 +465,20 @@ function stormexpense_update($node) {
             task_nid=%d, task_title='%s', task_stepno='%s',
             ticket_nid=%d, ticket_title='%s',
             provider_nid=%d, provider_title='%s',
-            expensedate=%d, amount=%f, vat=%f, total=%f WHERE vid = %d",
+            expensedate=%d, amount=%f, tax=%f, total=%f WHERE vid = %d",
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
             $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->vat, $node->total, $node->vid);
+            $node->expensedate, $node->amount, $node->tax, $node->total, $node->vid);
 }
 
 function _stormexpense_beforesave(&$node) {
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
   if (!$node->total) {
-    $node->total = $node->amount + $node->vat;
+    $node->total = $node->amount + $node->tax;
   }
 
   $s = "SELECT n.title FROM {node} AS n

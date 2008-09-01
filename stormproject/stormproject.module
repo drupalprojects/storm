@@ -10,7 +10,7 @@ function stormproject_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormproject":
-      $o = '<p>'.  t("Provides project support for Storm") .'</p>';
+      $o = '<p>'.  storm_t("Provides project support for Storm", 'project') .'</p>';
       break;
   }
 
@@ -157,8 +157,8 @@ function stormproject_menu() {
   $items = array();
 
   $items['storm/projects'] = array(
-    'title' => t('Projects'),
-    'description' => t('Storm Projects'),
+    'title' => storm_t('Projects', 'project'),
+    'description' => storm_t('Storm Projects', 'project'),
     'page callback' => 'stormproject_list',
     'access arguments' => array('Storm project: access'),
     'file' => 'stormproject.admin.inc',
@@ -166,7 +166,7 @@ function stormproject_menu() {
   );
 
   $items['storm/organization_projects_js/%'] = array(
-    'title' => t('Projects'),
+    'title' => storm_t('Projects', 'project'),
     'page callback' => '_stormproject_organization_projects_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm project: access'),
@@ -193,11 +193,11 @@ function stormproject_theme() {
 function stormproject_node_info() {
   return array(
     'stormproject' => array(
-      'name' => t('Project'),
+      'name' => storm_t('Project', 'project'),
       'module' => 'stormproject',
-      'description' => t("A project for Storm."),
-      'title_label' => t("Title"),
-      'body_label' => t("Description"),
+      'description' => storm_t("A project for Storm.", 'project'),
+      'title_label' => storm_t("Title", 'project'),
+      'body_label' => storm_t("Description", 'project'),
     )
   );
 }
@@ -249,7 +249,7 @@ function stormproject_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => t('Organization'),
+    '#title' => storm_t('Organization', 'project'),
     '#options' => $organizations,
     '#default_value' => $node->organization_nid,
     '#process' => array('storm_dependent_select_process'),
@@ -270,21 +270,21 @@ function stormproject_form(&$node) {
 
   $form['group2']['projectcategory'] = array(
     '#type' => 'select',
-    '#title' => t('Category'),
+    '#title' => storm_t('Category', 'project'),
     '#default_value' => $node->projectcategory,
     '#options' => stormattribute_attributes_bydomain('Project category'),
   );
 
   $form['group2']['projectstatus'] = array(
     '#type' => 'select',
-    '#title' => t('Status'),
+    '#title' => storm_t('Status', 'project'),
     '#default_value' => $node->projectstatus,
     '#options' => stormattribute_attributes_bydomain('Project status'),
   );
 
   $form['group2']['projectpriority'] = array(
     '#type' => 'select',
-    '#title' => t('Priority'),
+    '#title' => storm_t('Priority', 'project'),
     '#default_value' => $node->projectpriority,
     '#options' => stormattribute_attributes_bydomain('Project priority'),
   );
@@ -297,14 +297,14 @@ function stormproject_form(&$node) {
 
   $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
-    '#title' => t('Date begin'),
+    '#title' => storm_t('Date begin', 'project'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
   );
 
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
-    '#title' => t('Date end'),
+    '#title' => storm_t('Date end', 'project'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
@@ -317,7 +317,7 @@ function stormproject_form(&$node) {
 
   $form['group4']['pricemode'] = array(
     '#type' => 'select',
-    '#title' => t('Price mode'),
+    '#title' => storm_t('Price mode', 'project'),
     '#default_value' => $node->pricemode,
     '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
   );
@@ -331,7 +331,7 @@ function stormproject_form(&$node) {
 
   $form['group4']['currency'] = array(
     '#type' => 'select',
-    '#title' => t('Price currency'),
+    '#title' => storm_t('Price currency', 'project'),
     '#default_value' => $node->currency,
     '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
   );
