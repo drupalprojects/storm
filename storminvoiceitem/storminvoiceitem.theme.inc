@@ -16,7 +16,7 @@ function theme_storminvoiceitem_invoiceitems($header, $invoiceitems) {
     $rows[] = array(
       $invoiceitem->title,
       array('data' => sprintf('%.2f', $invoiceitem->amount), 'align' => 'right'),
-      array('data' => sprintf('%.2f', $invoiceitem->vat), 'align' => 'right'),
+      array('data' => sprintf('%.2f', $invoiceitem->tax), 'align' => 'right'),
       array('data' => sprintf('%.2f', $invoiceitem->total), 'align' => 'right'),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),

@@ -87,10 +87,6 @@ function theme_storm_view_item($label, $value) {
 }
 
 function theme_storm_texts() {
-  $items = array (
-    'default' => array (
-      'VAT' => 'Tax',
-    ),
-  );
+  $items = array();
   return $items;
 }

@@ -217,20 +217,20 @@ function storminvoiceitem_form(&$node) {
     '#default_value' => $node->amount,
   );
 
-  $form['group3']['vatpercent'] = array(
+  $form['group3']['taxpercent'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('VAT percent', 'invoiceitem'),
+    '#title' => storm_t('Tax percent', 'invoiceitem'),
     '#size' => 15,
-    '#default_value' => $node->vatpercent,
+    '#default_value' => $node->taxpercent,
   );
 
-  $form['group3']['vat'] = array(
+  $form['group3']['tax'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('VAT', 'invoiceitem'),
+    '#title' => storm_t('Tax', 'invoiceitem'),
     '#size' => 15,
-    '#default_value' => $node->vat,
+    '#default_value' => $node->tax,
   );
 
   $form['group3']['total'] = array(
@@ -250,7 +250,7 @@ function storminvoiceitem_insert($node) {
   db_query("INSERT INTO {storminvoiceitem}
            (vid, nid,
            invoice_nid,
-           amount, vatpercent, vat, total,
+           amount, taxpercent, tax, total,
            weight) VALUES
            (%d, %d,
            %d,
@@ -258,7 +258,7 @@ function storminvoiceitem_insert($node) {
            %d)",
           $node->vid, $node->nid,
           $node->invoice_nid,
-          $node->amount, $node->vatpercent, $node->vat, $node->total,
+          $node->amount, $node->taxpercent, $node->tax, $node->total,
           $node->weight);
   _storminvoiceitem_aftersave($node);
 }
@@ -268,32 +268,32 @@ function storminvoiceitem_update($node) {
 
   db_query("UPDATE {storminvoiceitem} SET
             invoice_nid=%d,
-            amount=%f, vatpercent=%f, vat=%f, total=%f,
+            amount=%f, taxpercent=%f, tax=%f, total=%f,
             weight=%d
             WHERE vid = %d",
             $node->invoice_nid,
-            $node->amount, $node->vatpercent, $node->vat, $node->total,
+            $node->amount, $node->taxpercent, $node->tax, $node->total,
             $node->weight, $node->vid);
   _storminvoiceitem_aftersave($node);
 }
 
 function _storminvoiceitem_beforesave(&$node) {
-  if (!$node->vat) {
-    $node->vat = $node->amount * $node->vatpercent * .01;
+  if (!$node->tax) {
+    $node->tax = $node->amount * $node->taxpercent * .01;
   }
   if (!$node->total) {
-    $node->total = $node->amount + $node->vat;
+    $node->total = $node->amount + $node->tax;
   }
 }
 
 function _storminvoiceitem_aftersave(&$node) {
-  $s = "SELECT SUM(amount) tamount, SUM(vat) tvat, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
+  $s = "SELECT SUM(amount) tamount, SUM(tax) ttax, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
   $r = db_query($s, $node->invoice_nid);
   $t = db_fetch_object($r);
 
   $invoice = node_load($node->invoice_nid);
   $invoice->amount = $t->tamount;
-  $invoice->vat = $t->tvat;
+  $invoice->tax = $t->ttax;
   $invoice->total = $t->ttotal;
   storminvoice_update($invoice);
 }

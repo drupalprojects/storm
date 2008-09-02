@@ -312,7 +312,7 @@ function stormorganization_form(&$node) {
 
   $form['group4']['taxid'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Tax id', 'organization'),
+    '#title' => storm_t('Tax ID', 'organization'),
     '#size' => 20,
     '#default_value' => $node->taxid,
   );

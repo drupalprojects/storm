@@ -120,7 +120,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormorganization']['taxid'] = array(
     '#prefix' => '<div class="taxid">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Tax id', 'organization'), $node->taxid),
+    '#value' => theme('storm_view_item', storm_t('Tax ID', 'organization'), $node->taxid),
     '#weight' => $w++,
   );
 
