@@ -134,11 +134,11 @@ function stormorganization_list_filter() {
   foreach (range(0, 9) as $n) {
     $qs .= '<li>'. l($n, 'storm/organizations', array('query' => array('name' => $n .'%'))) .'</li>';
   }
+  $qs .= '</ul></div>';
   $form['filter']['name_quick_shortcuts_numbers'] = array(
     '#type' => 'markup',
     '#value' => $qs,
   );
-  $qs .= '</ul></div>';
   $qs = '<div class="storm_quick_shortcuts"><ul class="storm_quick_shortcuts">';
   foreach (range('A', 'Z') as $l) {
     $qs .= '<li>'. l($l, 'storm/organizations', array('query' => array('name' => $l .'%'))) .'</li>';
