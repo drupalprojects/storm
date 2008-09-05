@@ -8,7 +8,7 @@
 function stormtask_help($path, $arg) {
   $o = '';
 
-  switch ($section) {
+  switch ($path) {
     case "admin/help#stormtask":
       $o = '<p>'. storm_t("Provides task support for Storm", 'task') .'</p>';
       break;

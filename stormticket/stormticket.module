@@ -8,7 +8,7 @@
 function stormticket_help($path, $arg) {
   $o = '';
 
-  switch ($section) {
+  switch ($path) {
     case "admin/help#stormticket":
       $o = '<p>'. storm_t("Provides ticket support for Storm", 'ticket') .'</p>';
       break;

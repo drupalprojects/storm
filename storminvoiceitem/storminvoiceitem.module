@@ -8,7 +8,7 @@
 function storminvoiceitem_help($path, $arg) {
   $o = '';
 
-  switch ($section) {
+  switch ($path) {
     case "admin/help#storminvoiceitem":
       $o = '<p>'. storm_t("Provides invoice item support for Storm", 'invoiceitem') .'</p>';
       break;
