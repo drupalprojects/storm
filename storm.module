@@ -319,7 +319,12 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
 
   foreach ($params as $key => $value) {
     if ($query) $query .= '&';
-    $query .= $key .'='. urlencode($value);
+    if (is_array($value)) {
+      $query .= urlencode_array($key, $value);    
+    }
+    else {
+      $query .= $key .'='. urlencode($value);
+    }
   }
 
   $o = l($icon, $path, $attributes, $query, NULL, NULL, TRUE);
@@ -508,3 +513,16 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
     return $return;
   }
 }
+
+function urlencode_array ($var, $varName, $separator = '&') {
+  $toImplode = array();
+  foreach ($var as $key => $value) {
+    if (is_array($value)) {
+      $toImplode[] = urlencode_array($value, "{$varName}[{$key}]", $separator);
+    } else {
+      $toImplode[] = "{$varName}[{$key}]=".urlencode($value);
+    }
+  }
+  return implode($separator, $toImplode);
+}
+
