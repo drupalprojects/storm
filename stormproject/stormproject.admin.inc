@@ -61,6 +61,37 @@ function stormproject_list() {
   if ($_SESSION['stormproject_list_filter']['projectpriority'] && $_SESSION['stormproject_list_filter']['projectpriority'] != '-') {
     $where[] = "spr.projectpriority='". $_SESSION['stormproject_list_filter']['projectpriority'] ."'";
   }
+
+  if ($_SESSION['stormproject_list_filter']['datebeginfrom']) {
+    $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
+    $datebeginfrom['hour'] = 0;
+    $datebeginfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
+    if ($t>=0) $where[] = 'spr.datebegin>='. $t;
+  }
+  if ($_SESSION['stormproject_list_filter']['datebeginto']) {
+    $datebeginto = $_SESSION['stormproject_list_filter']['datebeginto'];
+    $datebeginto['hour'] = 23;
+    $datebeginto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($datebeginto);
+    if ($t>=0) $where[] = 'spr.datebegin<='. $t;
+  }
+
+  if ($_SESSION['stormproject_list_filter']['dateendfrom']) {
+    $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
+    $dateendfrom['hour'] = 0;
+    $dateendfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($dateendfrom);
+    if ($t>=0) $where[] = 'spr.dateend>='. $t;
+  }
+  if ($_SESSION['stormproject_list_filter']['dateendto']) {
+    $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
+    $dateendto['hour'] = 23;
+    $dateendto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($dateendto);
+    if ($t>=0) $where[] = 'spr.dateend<='. $t;
+  }
+
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
 
   $tablesort = tablesort_sql($header);
@@ -96,6 +127,12 @@ function stormproject_list_filter() {
     $projectpriority = $rpriority_list['-'];
     $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
   }
+
+  $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
+  $datebeginto = $_SESSION['stormproject_list_filter']['datebeginto'];
+  $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
+  $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
+
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = 10;
@@ -158,19 +195,57 @@ function stormproject_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group2']['submit'] = array(
+  $form['filter']['group2']['datebeginfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin from', 'task'),
+    '#default_value' => $datebeginfrom,
+  );
+
+  $form['filter']['group2']['datebeginto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin to', 'task'),
+    '#default_value' => $datebeginto,
+  );
+
+  $form['filter']['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group3']['dateendfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end from', 'task'),
+    '#default_value' => $dateendfrom,
+  );
+
+  $form['filter']['group3']['dateendto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end to', 'task'),
+    '#default_value' => $dateendto,
+  );
+
+  $form['filter']['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Filter', 'project'),
     '#submit' => array('stormproject_list_filter_filter'),
   );
 
-  $form['filter']['group2']['reset'] = array(
+  $form['filter']['group4']['reset'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Reset', 'project'),
     '#submit' => array('stormproject_list_filter_reset'),
   );
 
-  $form['filter']['group2']['itemsperpage'] = array(
+  $form['filter']['group4']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => storm_t('Items', 'project'),
     '#size' => 10,
@@ -187,6 +262,10 @@ function stormproject_list_filter_filter($form, &$form_state) {
   $_SESSION['stormproject_list_filter']['projectcategory'] = $form_state['values']['projectcategory'];
   $_SESSION['stormproject_list_filter']['projectstatus'] = $form_state['values']['projectstatus'];
   $_SESSION['stormproject_list_filter']['projectpriority'] = $form_state['values']['projectpriority'];
+  $_SESSION['stormproject_list_filter']['datebeginfrom'] = $form_state['values']['datebeginfrom'];
+  $_SESSION['stormproject_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
+  $_SESSION['stormproject_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
+  $_SESSION['stormproject_list_filter']['dateendto'] = $form_state['values']['dateendto'];
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

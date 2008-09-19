@@ -223,6 +223,37 @@ function stormtask_list() {
     $v = str_replace(',', "','", $v);
     $where[] = "sta.taskpriority IN ('". $v ."')";
   }
+
+  if ($_SESSION['stormtask_list_filter']['datebeginfrom']) {
+    $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
+    $datebeginfrom['hour'] = 0;
+    $datebeginfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
+    if ($t>=0) $where[] = 'sta.datebegin>='. $t;
+  }
+  if ($_SESSION['stormtask_list_filter']['datebeginto']) {
+    $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
+    $datebeginto['hour'] = 23;
+    $datebeginto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($datebeginto);
+    if ($t>=0) $where[] = 'sta.datebegin<='. $t;
+  }
+
+  if ($_SESSION['stormtask_list_filter']['dateendfrom']) {
+    $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
+    $dateendfrom['hour'] = 0;
+    $dateendfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($dateendfrom);
+    if ($t>=0) $where[] = 'sta.dateend>='. $t;
+  }
+  if ($_SESSION['stormtask_list_filter']['dateendto']) {
+    $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
+    $dateendto['hour'] = 23;
+    $dateendto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($dateendto);
+    if ($t>=0) $where[] = 'sta.dateend<='. $t;
+  }
+
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
 
   $s = stormtask_access_sql($s, $where);
@@ -269,6 +300,11 @@ function stormtask_list_filter() {
     $taskpriority = $priority_list['open'];
     $_SESSION['stormtask_list_filter']['taskpriority'] = $taskpriority;
   }
+
+  $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
+  $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
+  $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
+  $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
 
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -357,19 +393,57 @@ function stormtask_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group3']['submit'] = array(
+  $form['filter']['group3']['datebeginfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin from', 'task'),
+    '#default_value' => $datebeginfrom,
+  );
+
+  $form['filter']['group3']['datebeginto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin to', 'task'),
+    '#default_value' => $datebeginto,
+  );
+
+  $form['filter']['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group4']['dateendfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end from', 'task'),
+    '#default_value' => $dateendfrom,
+  );
+
+  $form['filter']['group4']['dateendto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end to', 'task'),
+    '#default_value' => $dateendto,
+  );
+
+  $form['filter']['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group5']['submit'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Filter', 'task'),
     '#submit' => array('stormtask_list_filter_filter'),
   );
 
-  $form['filter']['group3']['reset'] = array(
+  $form['filter']['group5']['reset'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Reset', 'task'),
     '#submit' => array('stormtask_list_filter_reset'),
   );
 
-  $form['filter']['group3']['itemsperpage'] = array(
+  $form['filter']['group5']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => storm_t('Items', 'task'),
     '#size' => 10,
@@ -387,6 +461,10 @@ function stormtask_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtask_list_filter']['taskcategory'] = $form_state['values']['taskcategory'];
   $_SESSION['stormtask_list_filter']['taskstatus'] = $form_state['values']['taskstatus'];
   $_SESSION['stormtask_list_filter']['taskpriority'] = $form_state['values']['taskpriority'];
+  $_SESSION['stormtask_list_filter']['datebeginfrom'] = $form_state['values']['datebeginfrom'];
+  $_SESSION['stormtask_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
+  $_SESSION['stormtask_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
+  $_SESSION['stormtask_list_filter']['dateendto'] = $form_state['values']['dateendto'];
   $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

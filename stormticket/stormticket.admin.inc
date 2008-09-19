@@ -95,6 +95,37 @@ function stormticket_list() {
     $v = str_replace(',', "','", $v);
     $where[] = "sti.ticketpriority IN ('". $v ."')";
   }
+
+  if ($_SESSION['stormticket_list_filter']['datebeginfrom']) {
+    $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
+    $datebeginfrom['hour'] = 0;
+    $datebeginfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
+    if ($t>=0) $where[] = 'sti.datebegin>='. $t;
+  }
+  if ($_SESSION['stormticket_list_filter']['datebeginto']) {
+    $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
+    $datebeginto['hour'] = 23;
+    $datebeginto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($datebeginto);
+    if ($t>=0) $where[] = 'sti.datebegin<='. $t;
+  }
+
+  if ($_SESSION['stormticket_list_filter']['dateendfrom']) {
+    $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
+    $dateendfrom['hour'] = 0;
+    $dateendfrom['minute'] = 0;
+    $t = _storm_datetime_to_gmtimestamp($dateendfrom);
+    if ($t>=0) $where[] = 'sti.dateend>='. $t;
+  }
+  if ($_SESSION['stormticket_list_filter']['dateendto']) {
+    $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
+    $dateendto['hour'] = 23;
+    $dateendto['minute'] = 59;
+    $t = _storm_datetime_to_gmtimestamp($dateendto);
+    if ($t>=0) $where[] = 'sti.dateend<='. $t;
+  }
+
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
 
   $s = stormticket_access_sql($s, $where);
@@ -132,6 +163,11 @@ function stormticket_list_filter() {
     $itemsperpage = 10;
     $_SESSION['stormticket_list_filter']['itemsperpage'] = $itemsperpage;
   }
+
+  $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
+  $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
+  $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
+  $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
 
   $form = array();
 
@@ -225,19 +261,57 @@ function stormticket_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group3']['submit'] = array(
+  $form['filter']['group3']['datebeginfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin from', 'ticket'),
+    '#default_value' => $datebeginfrom,
+  );
+
+  $form['filter']['group3']['datebeginto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date begin to', 'ticket'),
+    '#default_value' => $datebeginto,
+  );
+
+  $form['filter']['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group4']['dateendfrom'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end from', 'ticket'),
+    '#default_value' => $dateendfrom,
+  );
+
+  $form['filter']['group4']['dateendto'] = array(
+    '#type' => 'dateext',
+    '#withnull' => 'true',
+    '#title' => storm_t('Date end to', 'ticket'),
+    '#default_value' => $dateendto,
+  );
+
+  $form['filter']['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group5']['submit'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Filter', 'ticket'),
     '#submit' => array('stormticket_list_filter_filter'),
   );
 
-  $form['filter']['group3']['reset'] = array(
+  $form['filter']['group5']['reset'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Reset', 'ticket'),
     '#submit' => array('stormticket_list_filter_reset'),
   );
 
-  $form['filter']['group3']['itemsperpage'] = array(
+  $form['filter']['group5']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => storm_t('Items', 'ticket'),
     '#size' => 10,
@@ -255,6 +329,10 @@ function stormticket_list_filter_filter($form, &$form_state) {
   $_SESSION['stormticket_list_filter']['task_nid'] = $form_state['values']['task_nid'];
   $_SESSION['stormticket_list_filter']['ticketstatus'] = $form_state['values']['ticketstatus'];
   $_SESSION['stormticket_list_filter']['ticketpriority'] = $form_state['values']['ticketpriority'];
+  $_SESSION['stormticket_list_filter']['datebeginfrom'] = $form_state['values']['datebeginfrom'];
+  $_SESSION['stormticket_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
+  $_SESSION['stormticket_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
+  $_SESSION['stormticket_list_filter']['dateendto'] = $form_state['values']['dateendto'];
   $_SESSION['stormticket_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 
