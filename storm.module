@@ -320,7 +320,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
   foreach ($params as $key => $value) {
     if ($query) $query .= '&';
     if (is_array($value)) {
-      $query .= urlencode_array($key, $value);    
+      $query .= urlencode_array($value, $key);    
     }
     else {
       $query .= $key .'='. urlencode($value);
