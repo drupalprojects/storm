@@ -160,7 +160,7 @@ function stormtask_menu() {
     'access arguments' => array(1),
     'file' => 'stormtask.admin.inc',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 3
+    'weight' => 4
   );
   $items['storm/project_tasks_js/%'] = array(
     'title' => storm_t('Tasks', 'task'),
@@ -360,8 +360,48 @@ function stormtask_form(&$node) {
     '#options' => stormattribute_attributes_bydomain('Task priority'),
   );
 
+  $form['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -47,
+  );
+
+  $form['group3']['datebegin'] = array(
+    '#type' => 'dateext',
+    '#title' => storm_t('Date begin', 'project'),
+    '#withnull' => true,
+    '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
+  );
+
+  $form['group3']['dateend'] = array(
+    '#type' => 'dateext',
+    '#title' => storm_t('Date end', 'project'),
+    '#withnull' => true,
+    '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
+  );
+
+  $form['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -46,
+  );
+
+  $form['group4']['durationunit'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Duration unit', 'project'),
+    '#default_value' => $node->durationunit,
+    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+  );
+
+  $form['group4']['duration'] = array(
+    '#type' => 'textfield',
+    '#title' => storm_t('Duration', 'project'),
+    '#size' => 20,
+    '#default_value' => $node->duration,
+  );
+
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -48;
+    $form['body_filter']['#weight'] = -45;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
@@ -390,14 +430,16 @@ function stormtask_insert($node) {
   db_query("INSERT INTO {stormtask}
           (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
           organization_nid, organization_title,
-          project_nid, project_title, parent_nid, weight)
+          project_nid, project_title, parent_nid, weight,
+          datebegin, dateend, durationunit, duration
+          )
           VALUES
           (%d, %d, '%s', '%s', '%s', '%s',
           %d, '%s',
-          %d, '%s', %d, %d)",
+          %d, '%s', %d, %d, %d, %d, '%s', %f)",
           $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
           $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
-          $node->parent_nid, $node->weight);
+          $node->parent_nid, $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration);
 }
 
 function stormtask_update($node) {
@@ -411,12 +453,12 @@ function stormtask_update($node) {
       stepno='%s', taskcategory='%s', taskstatus='%s', taskpriority='%s',
       organization_nid=%d, organization_title='%s',
       project_nid=%d, project_title='%s',
-      parent_nid=%d, weight=%d WHERE vid = %d",
+      parent_nid=%d, weight=%d, datebegin=%d, dateend=%d, durationunit='%s', duration=%f WHERE vid = %d",
       $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
       $node->organization_nid, $node->organization_title,
       $node->project_nid, $node->project_title,
       $node->parent_nid,
-      $node->weight, $node->vid);
+      $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->vid);
     if (($node->title != $node->title_old) || ($node->stepno != $node->stepno_old)) {
       module_invoke_all('stormtask_change', $node->nid, $node->stepno, $node->title);
     }
@@ -435,6 +477,9 @@ function _stormtask_beforesave(&$node) {
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
+
+  if (is_array($node->datebegin)) $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
+  if (is_array($node->dateend)) $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
 }
 
 function stormtask_delete($node) {

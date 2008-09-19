@@ -174,6 +174,17 @@ function stormproject_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['node/%node/tasks'] = array(
+    'title' => storm_t('Team', 'project'),
+    'page callback' => 'stormtask_tasks',
+    'page arguments' => array(1),
+    'access callback' => '_stormtask_tasks_access',
+    'access arguments' => array(1),
+    'file' => 'stormtask.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3
+  );
+
   return $items;
 }
 
@@ -315,21 +326,41 @@ function stormproject_form(&$node) {
     '#weight' => -46,
   );
 
-  $form['group4']['pricemode'] = array(
+  $form['group4']['durationunit'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Duration unit', 'project'),
+    '#default_value' => $node->durationunit,
+    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+  );
+
+  $form['group4']['duration'] = array(
+    '#type' => 'textfield',
+    '#title' => storm_t('Duration', 'project'),
+    '#size' => 20,
+    '#default_value' => $node->duration,
+  );
+
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -45,
+  );
+
+  $form['group5']['pricemode'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price mode', 'project'),
     '#default_value' => $node->pricemode,
     '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
   );
 
-  $form['group4']['price'] = array(
+  $form['group5']['price'] = array(
     '#title' => 'Price',
     '#type' => 'textfield',
     '#size' => 15,
     '#default_value' => $node->price,
   );
 
-  $form['group4']['currency'] = array(
+  $form['group5']['currency'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price currency', 'project'),
     '#default_value' => $node->currency,
@@ -337,7 +368,7 @@ function stormproject_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -45;
+    $form['body_filter']['#weight'] = -44;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
@@ -364,12 +395,12 @@ function stormproject_insert($node) {
 
   db_query("INSERT INTO {stormproject}
           (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
-          projectpriority, pricemode, price, currency, datebegin, dateend)
+          projectpriority, pricemode, price, currency, datebegin, dateend, durationunit, duration)
           VALUES
-          (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d)",
+          (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d, '%s', %f)",
           $node->vid, $node->nid, $node->organization_nid, $o->title, $node->projectcategory,
           $node->projectstatus, $node->projectpriority, $node->pricemode, 
-          $node->price, $node->currency, $node->datebegin, $node->dateend);
+          $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration);
 }
 
 function stormproject_update($node) {
@@ -387,9 +418,9 @@ function stormproject_update($node) {
     db_query("UPDATE {stormproject} SET
         organization_nid=%d, organization_title='%s',
         projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s', 
-        price=%f, currency='%s', datebegin=%d, dateend=%d WHERE vid = %d",
+        price=%f, currency='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f WHERE vid = %d",
         $node->organization_nid, $o->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
-        $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->vid);
+        $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);
     }
