@@ -404,7 +404,7 @@ function stormtimetracking_form(&$node) {
   $form['group3']['duration'] = array(
     '#type' => 'textfield',
     '#title' => storm_t('Duration (h)', 'timetracking'),
-    '#default_value' => $node->duration,
+    '#default_value' => sprintf("%01.2f", $node->duration),
     '#size' => 10,
     '#maxlength' => 5,
   );
