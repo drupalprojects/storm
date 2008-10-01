@@ -332,11 +332,11 @@ function theme_storminvoice_report($node, $report, $language) {
   $o .= '<tr>';
   $o .= '<td class="storminvoice_details_title" colspan="2">';
   $o .= storm_t('Due total', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Due total', array(), $language1);
+  if ($language1) $o .= '<br />'. storm_t('Due total', 'invoice', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
   $o .= storm_t('Due date', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Due date', array(), $language1);
+  if ($language1) $o .= '<br />'. storm_t('Due date', 'invoice', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
   $o .= storm_t('Terms', 'invoice', array(), $language);
