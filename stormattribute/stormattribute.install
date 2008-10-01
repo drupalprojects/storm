@@ -10,6 +10,82 @@ function stormattribute_install() {
 
   $attributes = array();
 
+  $attributes['Price mode'] = array(
+    'fixed' => 'Fixed',
+    'hourly' => 'Hourly',
+    'daily' => 'Daily',
+  );
+
+  $attributes['Project status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project status search'] = array(
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project category'] = array(
+    'development' => 'development',
+    'support' => 'support',
+  );
+
+  $attributes['Project priority'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Project priority search'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Task status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Task status search'] = array(
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Task category'] = array(
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $attributes['Task priority'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Task priority search'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
   $attributes['Ticket status'] = array(
     'inserted' => 'inserted',
     'in progress' => 'in progress',
@@ -40,82 +116,6 @@ function stormattribute_install() {
   );
 
   $attributes['Ticket priority search'] = array(
-    '1-low' => 'low',
-    '2-normal' => 'normal',
-    '3-high' => 'high',
-    '4-urgent' => 'urgent'
-  );
-
-  $attributes['Project status'] = array(
-    'inserted' => 'inserted',
-    'in progress' => 'in progress',
-    'on hold' => 'on hold',
-    'completed' => 'completed'
-  );
-
-  $attributes['Project status search'] = array(
-    'inserted,in progress,on hold' => 'open',
-    'inserted' => '-- inserted',
-    'in progress' => '-- in progress',
-    'on hold' => '-- on hold',
-    'completed' => 'completed'
-  );
-
-  $attributes['Project category'] = array(
-    'development' => 'development',
-    'support' => 'support',
-  );
-
-  $attributes['Task status'] = array(
-    'inserted' => 'inserted',
-    'in progress' => 'in progress',
-    'on hold' => 'on hold',
-    'completed' => 'completed'
-  );
-
-  $attributes['Task status search'] = array(
-    'inserted,in progress,on hold' => 'open',
-    'inserted' => '-- inserted',
-    'in progress' => '-- in progress',
-    'on hold' => '-- on hold',
-    'completed' => 'completed'
-  );
-
-  $attributes['Price mode'] = array(
-    'fixed' => 'Fixed',
-    'hourly' => 'Hourly',
-    'daily' => 'Daily',
-  );
-
-  $attributes['Project priority'] = array(
-    '1-low' => 'low',
-    '2-normal' => 'normal',
-    '3-high' => 'high',
-    '4-urgent' => 'urgent'
-  );
-
-  $attributes['Project priority search'] = array(
-    '1-low' => 'low',
-    '2-normal' => 'normal',
-    '3-high' => 'high',
-    '4-urgent' => 'urgent'
-  );
-
-  $attributes['Task category'] = array(
-    'bug' => 'bug',
-    'feature request' => 'feature request',
-    'support' => 'support',
-    'task' => 'task'
-  );
-
-  $attributes['Task priority'] = array(
-    '1-low' => 'low',
-    '2-normal' => 'normal',
-    '3-high' => 'high',
-    '4-urgent' => 'urgent'
-  );
-
-  $attributes['Task priority search'] = array(
     '1-low' => 'low',
     '2-normal' => 'normal',
     '3-high' => 'high',

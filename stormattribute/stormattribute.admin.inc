@@ -299,15 +299,50 @@ function _stormattibute_domain_options() {
 }
 
 function _stormattribute_domain_autocomplete($string = '') {
+  static $default_domains;
+  if (!$default_domains) {
+    $default_domains = array (
+      'Country'=>'Country',
+      'Currency'=>'Currency',
+      'Task status'=>'Task status',
+      'Project category'=>'Project category',
+      'Project status search'=>'Project status search',
+      'Project status'=>'Project status',
+      'Ticket priority search'=>'Ticket priority search',
+      'Ticket priority'=>'Ticket priority',
+      'Ticket category'=>'Ticket category',
+      'Ticket status search'=>'Ticket status search',
+      'Ticket status'=>'Ticket status',
+      'Task status search'=>'Task status search',
+      'Price mode'=>'Price mode',
+      'Project priority'=>'Project priority',
+      'Project priority search'=>'Project priority search',
+      'Task category'=>'Task category',
+      'Task priority'=>'Task priority',
+      'Task priority search'=>'Task priority search',
+      'Duration unit'=>'Duration unit',
+    );
+  }
+
   $matches = array();
   if ($string) {
     $s = "SELECT DISTINCT(domain) AS domain FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s%%')";
     $s = db_rewrite_sql($s);
-    $result = db_query_range($s, $string, 0, 10);
+    $result = db_query($s, $string);
     while ($a = db_fetch_object($result)) {
       $matches[$a->domain] = check_plain($a->domain);
     }
   }
+
+  foreach ($default_domains as $domain) {
+    if (strpos(strtoupper($domain), strtoupper($string))===false) {
+    }
+    else {
+      $matches[$domain] = $domain;
+    }
+  }
+
+  $matches = array_slice($matches, 0, 10);
 
   drupal_json($matches);
 }
