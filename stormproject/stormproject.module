@@ -175,7 +175,7 @@ function stormproject_menu() {
   );
 
   $items['node/%node/tasks'] = array(
-    'title' => storm_t('Team', 'project'),
+    'title' => storm_t('Tasks', 'project'),
     'page callback' => 'stormtask_tasks',
     'page arguments' => array(1),
     'access callback' => '_stormtask_tasks_access',
@@ -448,3 +448,4 @@ function stormproject_load($node) {
 function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormproject_view', $node, $teaser, $page);
 }
+

@@ -427,6 +427,8 @@ function storminvoice_insert($node) {
           $node->project_nid, $node->project_title,
           $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
           $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
+
+  $_REQUEST['destination'] = 'node/'. $node->nid .'/invoiceitems';
 }
 
 function storminvoice_update($node) {
@@ -443,6 +445,7 @@ function storminvoice_update($node) {
             $node->project_nid, $node->project_title,
             $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
             $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+
 }
 
 function _storminvoice_beforesave(&$node) {
