@@ -86,7 +86,21 @@ function theme_storm_view_item($label, $value) {
   return $o;
 }
 
+/*
 function theme_storm_texts() {
   $items = array();
   return $items;
 }
+*/
+
+function theme_storm_texts() {
+  $items = array (
+    'default' => array (
+      'Tax' => 'VAT',
+      'Tax ID' => 'VAT ID',
+      'Tax exempt art. 7' => 'VAT exempt art. 7',
+    ),
+  );
+  return $items;
+}
+

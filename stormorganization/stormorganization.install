@@ -55,3 +55,9 @@ function stormorganization_update_2() {
   return $ret;
 }
 
+function stormorganization_update_3() {
+  $ret = array();
+  db_query('UPDATE {stormorganization} SET iscustomer=1, isprovider=1, isactive=1');
+  return $ret;
+}
+
