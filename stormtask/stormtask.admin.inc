@@ -224,34 +224,36 @@ function stormtask_list() {
     $where[] = "sta.taskpriority IN ('". $v ."')";
   }
 
-  if ($_SESSION['stormtask_list_filter']['datebeginfrom']) {
-    $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
+  $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
+  if ($datebeginfrom) {
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
-    if ($t>=0) $where[] = 'sta.datebegin>='. $t;
+    if ($datebeginfrom['year']>0 && $t>=0) $where[] = 'sta.datebegin>='. $t;
   }
-  if ($_SESSION['stormtask_list_filter']['datebeginto']) {
-    $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
+
+  $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
+  if ($datebeginto) {
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
-    if ($t>=0) $where[] = 'sta.datebegin<='. $t;
+    if ($datebeginto['year']>0 && $t>=0) $where[] = 'sta.datebegin<='. $t;
   }
 
-  if ($_SESSION['stormtask_list_filter']['dateendfrom']) {
-    $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
+  $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
+  if ($dateendfrom) {
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
-    if ($t>=0) $where[] = 'sta.dateend>='. $t;
+    if ($dateendfrom['year']>0 && $t>=0) $where[] = 'sta.dateend>='. $t;
   }
-  if ($_SESSION['stormtask_list_filter']['dateendto']) {
-    $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
+
+  $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
+  if ($dateendto) {
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
-    if ($t>=0) $where[] = 'sta.dateend<='. $t;
+    if ($dateendto['year']>0 && $t>=0) $where[] = 'sta.dateend<='. $t;
   }
 
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];

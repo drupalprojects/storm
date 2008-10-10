@@ -96,34 +96,36 @@ function stormticket_list() {
     $where[] = "sti.ticketpriority IN ('". $v ."')";
   }
 
-  if ($_SESSION['stormticket_list_filter']['datebeginfrom']) {
-    $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
+  $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
+  if ($datebeginfrom) {
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
-    if ($t>=0) $where[] = 'sti.datebegin>='. $t;
+    if ($datebeginfrom['year']>0 && $t>=0) $where[] = 'sti.datebegin>='. $t;
   }
-  if ($_SESSION['stormticket_list_filter']['datebeginto']) {
-    $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
+
+  $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
+  if ($datebeginto) {
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
-    if ($t>=0) $where[] = 'sti.datebegin<='. $t;
+    if ($datebeginto['year']>0 && $t>=0) $where[] = 'sti.datebegin<='. $t;
   }
 
-  if ($_SESSION['stormticket_list_filter']['dateendfrom']) {
-    $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
+  $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
+  if ($dateendfrom) {
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
-    if ($t>=0) $where[] = 'sti.dateend>='. $t;
+    if ($dateendfrom['year']>0 && $t>=0) $where[] = 'sti.dateend>='. $t;
   }
-  if ($_SESSION['stormticket_list_filter']['dateendto']) {
-    $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
+
+  $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
+  if ($dateendto) {
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
-    if ($t>=0) $where[] = 'sti.dateend<='. $t;
+    if ($dateendto['year']>0 && $t>=0) $where[] = 'sti.dateend<='. $t;
   }
 
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
