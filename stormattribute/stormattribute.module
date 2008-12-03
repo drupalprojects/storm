@@ -69,7 +69,8 @@ function stormattribute_menu($may_cache) {
               'path' => 'storm/attributes/domain/autocomplete',
               'title' => t('List of attributes'),
               'description' => t('Storm Attributes'),
-              'callback' => 'stormattribute_domain_autocomplete',
+              'callback' => '_stormattribute_domain_autocomplete',
+              'callback arguments' => array(arg(4)),
               'access' => user_access('Storm attribute: access'),
               'type' => MENU_CALLBACK);
   }

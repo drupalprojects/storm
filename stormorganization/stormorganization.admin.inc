@@ -35,12 +35,17 @@ function stormorganization_list() {
   );
 
   $s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization'";
+
   $where = array();
+  $args = array();
+
   if ($_SESSION['stormorganization_list_filter']['country']) {
-    $where[] = "sor.country='". $_SESSION['stormorganization_list_filter']['country'] ."'";
+    $where[] = "sor.country='%s'";
+    $args[] = $_SESSION['stormorganization_list_filter']['country'];
   }
   if ($_SESSION['stormorganization_list_filter']['name']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('". $_SESSION['stormorganization_list_filter']['name'] ."')";
+    $where[] = "LOWER(n.title) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormorganization_list_filter']['name'];
   }
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
 
@@ -48,7 +53,7 @@ function stormorganization_list() {
   $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[] = $organization;
@@ -170,6 +175,7 @@ function stormorganization_autocomplete($string = '') {
     }
   }
 
-  drupal_json($matches);
+  print drupal_to_js($matches);
+  exit();
 }
 

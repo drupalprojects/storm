@@ -75,25 +75,38 @@ function stormticket_list() {
   );
 
   $where = array();
+  $args = array();
+
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
   if ($_SESSION['stormticket_list_filter']['organization_nid']) {
-    $where[] = 'sti.organization_nid='. $_SESSION['stormticket_list_filter']['organization_nid'];
+    $where[] = 'sti.organization_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['project_nid']) {
-    $where[] = 'sti.project_nid='. $_SESSION['stormticket_list_filter']['project_nid'];
+    $where[] = 'sti.project_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['project_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['task_nid']) {
-    $where[] = 'sti.task_nid='. $_SESSION['stormticket_list_filter']['task_nid'];
+    $where[] = 'sti.task_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['ticketstatus'] && $_SESSION['stormticket_list_filter']['ticketstatus'] != '-') {
-    $v = $_SESSION['stormticket_list_filter']['ticketstatus'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sti.ticketstatus IN ('". $v ."')";
+    $status = split(',', $_SESSION['stormticket_list_filter']['ticketstatus']);
+    $v = array();
+    foreach($status as $item) $v[] = '%s';
+    $where[] = "sti.ticketstatus IN ('". implode("','",$v) ."')";
+    foreach ($status as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormticket_list_filter']['ticketpriority'] && $_SESSION['stormticket_list_filter']['ticketpriority'] != '-') {
-    $v = $_SESSION['stormticket_list_filter']['ticketpriority'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sti.ticketpriority IN ('". $v ."')";
+    $priority = split(',', $_SESSION['stormticket_list_filter']['ticketpriority']);
+    $v = array();
+    foreach($priority as $item) $v[] = '%s';
+    $where[] = "sti.ticketpriority IN ('". implode("','",$v) ."')";
+    foreach ($priority as $key=>$value) {
+      $args[] = $value;
+    }
   }
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
 

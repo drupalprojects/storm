@@ -37,22 +37,34 @@ function stormtask_tasks($project_nid) {
 
   $where = array();
   if ($_SESSION['stormtask_tasks_filter']['taskcategory'] && $_SESSION['stormtask_tasks_filter']['taskcategory'] != '-') {
-    $v = $_SESSION['stormtask_tasks_filter']['taskcategory'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskcategory IN ('". $v ."')";
+    $category = split(',', $_SESSION['stormtask_tasks_filter']['taskcategory']);
+    $v = array();
+    foreach($category as $item) $v[] = '%s';
+    $where[] = "sta.taskcategory IN ('". implode("','",$v) ."')";
+    foreach ($category as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormtask_tasks_filter']['taskstatus'] && $_SESSION['stormtask_tasks_filter']['taskstatus'] != '-') {
-    $v = $_SESSION['stormtask_tasks_filter']['taskstatus'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskstatus IN ('". $v ."')";
+    $status = split(',', $_SESSION['stormtask_tasks_filter']['taskstatus']);
+    $v = array();
+    foreach($status as $item) $v[] = '%s';
+    $where[] = "sta.taskstatus IN ('". implode("','",$v) ."')";
+    foreach ($status as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormtask_tasks_filter']['taskpriority'] && $_SESSION['stormtask_tasks_filter']['taskpriority'] != '-') {
-    $v = $_SESSION['stormtask_tasks_filter']['taskpriority'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskpriority IN ('". $v ."')";
+    $priority = split(',', $_SESSION['stormtask_tasks_filter']['taskpriority']);
+    $v = array();
+    foreach($priority as $item) $v[] = '%s';
+    $where[] = "sta.taskpriority IN ('". implode("','",$v) ."')";
+    foreach ($priority as $key=>$value) {
+      $args[] = $value;
+    }
   }
 
-  $tree = _stormtask_get_tree($project->nid, 0, -1, NULL, $where);
+  $tree = _stormtask_get_tree($project->nid, 0, -1, NULL, $where, $args);
   $taskstree = _stormtask_plain_tree($tree);
 
   $tasks = array();
@@ -209,27 +221,43 @@ function stormtask_list() {
   );
 
   $where = array();
+  $args = array();
+
   $s  = "SELECT n.*, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' ";
   if ($_SESSION['stormtask_list_filter']['organization_nid']) {
-    $where[] = 'sta.organization_nid='. $_SESSION['stormtask_list_filter']['organization_nid'];
+    $where[] = 'sta.organization_nid=%d';
+    $args[] = $_SESSION['stormtask_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormtask_list_filter']['project_nid']) {
-    $where[] = 'sta.project_nid='. $_SESSION['stormtask_list_filter']['project_nid'];
+    $where[] = 'sta.project_nid=%d';
+    $args[] = $_SESSION['stormtask_list_filter']['project_nid'];
   }
   if ($_SESSION['stormtask_list_filter']['taskcategory'] && $_SESSION['stormtask_list_filter']['taskcategory'] != '-') {
-    $v = $_SESSION['stormtask_list_filter']['taskcategory'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskcategory IN ('". $v ."')";
+    $category = split(',', $_SESSION['stormtask_list_filter']['taskcategory']);
+    $v = array();
+    foreach($category as $item) $v[] = '%s';
+    $where[] = "sta.taskcategory IN ('". implode("','",$v) ."')";
+    foreach ($category as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormtask_list_filter']['taskstatus'] && $_SESSION['stormtask_list_filter']['taskstatus'] != '-') {
-    $v = $_SESSION['stormtask_list_filter']['taskstatus'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskstatus IN ('". $v ."')";
+    $status = split(',', $_SESSION['stormtask_list_filter']['taskstatus']);
+    $v = array();
+    foreach($status as $item) $v[] = '%s';
+    $where[] = "sta.taskstatus IN ('". implode("','",$v) ."')";
+    foreach ($status as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormtask_list_filter']['taskpriority'] && $_SESSION['stormtask_list_filter']['taskpriority'] != '-') {
-    $v = $_SESSION['stormtask_list_filter']['taskpriority'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sta.taskpriority IN ('". $v ."')";
+    $priority = split(',', $_SESSION['stormtask_list_filter']['taskpriority']);
+    $v = array();
+    foreach($priority as $item) $v[] = '%s';
+    $where[] = "sta.taskpriority IN ('". implode("','",$v) ."')";
+    foreach ($priority as $key=>$value) {
+      $args[] = $value;
+    }
   }
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
 
@@ -237,7 +265,7 @@ function stormtask_list() {
   $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $tasks = array();
   while ($item = db_fetch_object($r)) {

@@ -91,35 +91,46 @@ function stormexpense_list() {
   $s_totals = "SELECT SUM(amount) AS t_amount, SUM(vat) AS t_vat, SUM(total) AS t_total FROM
   {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND n.type='stormexpense' ";
 
+  $where = array();
+  $args = array();
+
   if ($_SESSION['stormexpense_list_filter']['organization_nid']) {
-    $where[] = 'sex.organization_nid='. $_SESSION['stormexpense_list_filter']['organization_nid'];
+    $where[] = 'sex.organization_nid=%d';
+    $args[] = $_SESSION['stormexpense_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormexpense_list_filter']['project_nid']) {
-    $where[] = 'sex.project_nid='. $_SESSION['stormexpense_list_filter']['project_nid'];
+    $where[] = 'sex.project_nid=%d';
+    $args[] = $_SESSION['stormexpense_list_filter']['project_nid'];
   }
   if ($_SESSION['stormexpense_list_filter']['task_nid']) {
-    $where[] = 'sex.task_nid='. $_SESSION['stormexpense_list_filter']['task_nid'];
+    $where[] = 'sex.task_nid=%d';
+    $args[] = $_SESSION['stormexpense_list_filter']['task_nid'];
   }
   if ($_SESSION['stormexpense_list_filter']['ticket_nid']) {
-    $where[] = 'sex.ticket_nid='. $_SESSION['stormexpense_list_filter']['ticket_nid'];
+    $where[] = 'sex.ticket_nid=%d';
+    $args[] = $_SESSION['stormexpense_list_filter']['ticket_nid'];
   }
   if ($_SESSION['stormexpense_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormexpense_list_filter']['datefrom'];
     $datefrom['hour'] = 0;
     $datefrom['minute'] = 0;
-    $where[] = 'sex.expensedate>='. _storm_datetime_to_gmtimestamp($datefrom);
+    $where[] = 'sex.expensedate>=%d';
+    $args[] = _storm_datetime_to_gmtimestamp($datefrom);
   }
   if ($_SESSION['stormexpense_list_filter']['dateto']) {
     $dateto = $_SESSION['stormexpense_list_filter']['dateto'];
     $dateto['hour'] = 23;
     $dateto['minute'] = 59;
-    $where[] = 'sex.expensedate<='. _storm_datetime_to_gmtimestamp($dateto);
+    $where[] = 'sex.expensedate<=%d';
+    $args[] = _storm_datetime_to_gmtimestamp($dateto);
   }
   if ($_SESSION['stormexpense_list_filter']['title']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('". $_SESSION['stormexpense_list_filter']['title'] ."')";
+    $where[] = "LOWER(n.title) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormexpense_list_filter']['title'];
   }
   if ($_SESSION['stormexpense_list_filter']['provider_title']) {
-    $where[] = "LOWER(sex.provider_title) LIKE LOWER('". $_SESSION['stormexpense_list_filter']['provider_title'] ."')";
+    $where[] = "LOWER(sex.provider_title) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormexpense_list_filter']['provider_title'];
   }
 
   $itemsperpage = $_SESSION['stormexpense_list_filter']['itemsperpage'];
@@ -127,16 +138,18 @@ function stormexpense_list() {
   if ($_SESSION['stormexpense_list_filter']['user']) {
     $expenseuser = user_load(array('name' => $_SESSION['stormexpense_list_filter']['user']));
     if (!$expenseuser->uid) $expenseuser->uid =  -1;
-    $where[] = 'n.uid='. $expenseuser->uid;
+    $where[] = 'n.uid=%d';
+    $args[] = $expenseuser->uid;
   }
 
   $s = stormexpense_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $_SESSION['stormexpense_list_filter']['sql'] = $s . $tablesort;
+  $_SESSION['stormexpense_list_filter']['args'] = $args;
 
   $expenses = array();
   while ($item = db_fetch_object($r)) {
@@ -145,7 +158,7 @@ function stormexpense_list() {
 
   $s_totals = stormexpense_access_sql($s_totals, $where);
   $s_totals = db_rewrite_sql($s_totals);
-  $r = db_query($s_totals);
+  $r = db_query($s_totals, $args);
   $totals = db_fetch_object($r);
 
   $o .= theme('stormexpense_list', $header, $expenses, $totals);
@@ -401,7 +414,8 @@ function stormexpense_list_report($report, $language) {
   $timetrackings = array();
 
   $s = $_SESSION['stormexpense_list_filter']['sql'];
-  $r = db_query($s);
+  $args = $_SESSION['stormexpense_list_filter']['args'];
+  $r = db_query($s, $args);
   while ($e = db_fetch_object($r)) {
     $expense = node_load($e->nid);
     $expenses[] = $expense;

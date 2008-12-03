@@ -47,19 +47,28 @@ function stormproject_list() {
   $s  = "SELECT n.*, spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject'";
 
   $where = array();
+  $args = array();
+
   if ($_SESSION['stormproject_list_filter']['organization_nid']) {
-    $where[] = 'spr.organization_nid='. $_SESSION['stormproject_list_filter']['organization_nid'];
+    $where[] = 'spr.organization_nid=%d';
+    $args[] = $_SESSION['stormproject_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormproject_list_filter']['projectcategory'] && $_SESSION['stormproject_list_filter']['projectcategory'] != '-') {
-    $where[] = "spr.projectcategory='". $_SESSION['stormproject_list_filter']['projectcategory'] ."'";
+    $where[] = "spr.projectcategory='%s'";
+    $args[] = $_SESSION['stormproject_list_filter']['projectcategory'];
   }
   if ($_SESSION['stormproject_list_filter']['projectstatus'] && $_SESSION['stormproject_list_filter']['projectstatus'] != '-') {
-    $v = $_SESSION['stormproject_list_filter']['projectstatus'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "spr.projectstatus IN ('". $v ."')";
+    $status = split(',', $_SESSION['stormproject_list_filter']['projectstatus']);
+    $v = array();
+    foreach($status as $item) $v[] = '%s';
+    $where[] = "spr.projectstatus IN ('". implode("','",$v) ."')";
+    foreach ($status as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormproject_list_filter']['projectpriority'] && $_SESSION['stormproject_list_filter']['projectpriority'] != '-') {
-    $where[] = "spr.projectpriority='". $_SESSION['stormproject_list_filter']['projectpriority'] ."'";
+    $where[] = "spr.projectpriority='%s'";
+    $args[] = $_SESSION['stormproject_list_filter']['projectpriority'];
   }
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
 
@@ -67,7 +76,7 @@ function stormproject_list() {
 
   $s = stormproject_access_sql($s, $where);
   $s = db_rewrite_sql($s);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $projects = array();
   while ($project = db_fetch_object($r)) {

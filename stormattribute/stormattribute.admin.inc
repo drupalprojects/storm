@@ -33,18 +33,23 @@ function stormattribute_list() {
   );
 
   $s = "SELECT * FROM {stormattribute}";
+
   $where = array();
+  $args = array();
 
   if ($_SESSION['stormattribute_list_filter']['domain']) {
-    $where[] = "domain='". $_SESSION['stormattribute_list_filter']['domain'] ."'";
+    $where[] = "domain='%s'";
+    $args[] = $_SESSION['stormattribute_list_filter']['domain'];
   }
 
   if ($_SESSION['stormattribute_list_filter']['akey']) {
-    $where[] = "LOWER(akey) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['akey'] ."')";
+    $where[] = "LOWER(akey) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormattribute_list_filter']['akey'];
   }
 
   if ($_SESSION['stormattribute_list_filter']['avalue']) {
-    $where[] = "LOWER(avalue) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['avalue'] ."')";
+    $where[] = "LOWER(avalue) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
   }
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
@@ -53,7 +58,7 @@ function stormattribute_list() {
 
   $s = db_rewrite_sql($s, 'stormattribute', 'aid');
   $s = storm_rewrite_sql($s, $where) . $tablesort;
-  $r = pager_query($s, $itemsperpage, 0, NULL);
+  $r = pager_query($s, $itemsperpage, 0, NULL, $args);
 
   $attributes = array();
   while ($attribute = db_fetch_object($r)) {
@@ -66,15 +71,8 @@ function stormattribute_list() {
 }
 
 function stormattribute_list_filter() {
-  $r = db_query("SELECT DISTINCT domain FROM {stormattribute} ORDER BY domain");
-  $domains = array(0 => t('All'));
-  while ($domain = db_fetch_object($r)) {
-    $domains[$domain->domain] = $domain->domain;
-  }
-
   $domain = $_SESSION['stormattribute_list_filter']['domain'];
   if (!$domain) {
-    $domain = 0;
     $_SESSION['stormattribute_list_filter']['domain'] = $domain;
   }
   $akey = $_SESSION['stormattribute_list_filter']['akey'];
@@ -99,10 +97,11 @@ function stormattribute_list_filter() {
   );
 
   $form['filter']['group1']['domain'] = array(
-    '#type' => 'select',
+    '#type' => 'textfield',
     '#title' => t('Domain'),
     '#default_value' => $domain,
-    '#options' => array('0' => t('All')) + _stormattibute_domain_options(),
+    '#size' => 30,
+    '#autocomplete_path' => 'storm/attributes/domain/autocomplete',
   );
 
   $form['filter']['group1']['akey'] = array(
@@ -274,11 +273,11 @@ function stormattribute_form($attribute = NULL) {
   }
 
   $form['domain'] = array(
-    '#type' => 'select',
+    '#type' => 'textfield',
     '#title' => t('Domain'),
     '#required' => TRUE,
     '#default_value' => $attribute->domain,
-    '#options' => _stormattibute_domain_options(),
+    '#autocomplete_path' => 'storm/attributes/domain/autocomplete',
     '#weight' => -10
   );
 
@@ -335,3 +334,18 @@ function _stormattibute_domain_options() {
   }
   return $options;
 }
+
+function _stormattribute_domain_autocomplete($string = '') {
+  $matches = array();
+  if ($string) {
+    $s = "SELECT DISTINCT(domain) AS domain FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s%%')";
+    $s = db_rewrite_sql($s);
+    $result = db_query_range($s, $string, 0, 10);
+    while ($a = db_fetch_object($result)) {
+      $matches[$a->domain] = check_plain($a->domain);
+    }
+  }
+  print drupal_to_js($matches);
+  exit();
+}
+

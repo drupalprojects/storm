@@ -72,19 +72,26 @@ function storminvoice_list() {
   $s_totals = "SELECT SUM(amount) amount, SUM(vat) vat, SUM(total) total FROM {storminvoice} sin
   INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice'";
 
+  $where = array();
+  $args = array();
+
   if ($_SESSION['storminvoice_list_filter']['organization_nid']) {
-    $where[] = 'sin.organization_nid='. $_SESSION['storminvoice_list_filter']['organization_nid'];
+    $where[] = 'sin.organization_nid=%d';
+    $args[] = $_SESSION['storminvoice_list_filter']['organization_nid'];
   }
   if ($_SESSION['storminvoice_list_filter']['project_nid']) {
-    $where[] = 'sin.project_nid='. $_SESSION['storminvoice_list_filter']['project_nid'];
+    $where[] = 'sin.project_nid=%d';
+    $args[] = $_SESSION['storminvoice_list_filter']['project_nid'];
   }
   if ($_SESSION['storminvoice_list_filter']['reqdatefrom']) {
     $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
-    $where[] = 'sin.requestdate>='. _storm_date_to_gmtimestamp($reqdatefrom);
+    $where[] = 'sin.requestdate>=%d';
+    $args[] = _storm_date_to_gmtimestamp($reqdatefrom);
   }
   if ($_SESSION['storminvoice_list_filter']['reqdateto']) {
     $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
-    $where[] = 'sin.requestdate<='. _storm_date_to_gmtimestamp($reqdateto);
+    $where[] = 'sin.requestdate<=%d';
+    $args[] = _storm_date_to_gmtimestamp($reqdateto);
   }
 
   $status = $_SESSION['storminvoice_list_filter']['status'];
@@ -98,8 +105,8 @@ function storminvoice_list() {
     if ($status=='overdue') {
       $where[] = "sin.paymentdate=0 AND sin.duedate<". time();
     }
-
-    $where[] = 'sin.requestdate<='. _storm_date_to_gmtimestamp($reqdateto);
+    $where[] = 'sin.requestdate<=%d';
+    $args[] = _storm_date_to_gmtimestamp($reqdateto);
   }
 
   $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
@@ -116,7 +123,7 @@ function storminvoice_list() {
 
   $s = storminvoice_access_sql($s, $where);
   $s = db_rewrite_sql($s);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
   $invoices = array();
   while ($invoice = db_fetch_object($r)) {
     $invoices[] = $invoice;
@@ -124,17 +131,17 @@ function storminvoice_list() {
 
   $s_totals_topay = storminvoice_access_sql($s_totals_topay, $where);
   $s_totals_topay = db_rewrite_sql($s_totals_topay);
-  $r = db_query($s_totals_topay);
+  $r = db_query($s_totals_topay, $args);
   if ($r) $totals_topay = db_fetch_object($r);
 
   $s_totals_paid = storminvoice_access_sql($s_totals_paid, $where);
   $s_totals_paid = db_rewrite_sql($s_totals_paid);
-  $r = db_query($s_totals_paid);
+  $r = db_query($s_totals_paid, $args);
   if ($r) $totals_paid = db_fetch_object($r);
 
   $s_totals = storminvoice_access_sql($s_totals, $where);
   $s_totals = db_rewrite_sql($s_totals);
-  $r = db_query($s_totals);
+  $r = db_query($s_totals, $args);
   if ($r) $totals = db_fetch_object($r);
 
   $o .= theme('storminvoice_list', $header, $invoices, $itemsperpage, $totals_topay, $totals_paid, $totals);

@@ -90,32 +90,42 @@ function stormtimetracking_list() {
 
   $s_duration = "SELECT SUM(duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
+  $where = array();
+  $args = array();
+
   if ($_SESSION['stormtimetracking_list_filter']['organization_nid']) {
-    $where[] = 'stt.organization_nid='. $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+    $where[] = 'stt.organization_nid=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormtimetracking_list_filter']['project_nid']) {
-    $where[] = 'stt.project_nid='. $_SESSION['stormtimetracking_list_filter']['project_nid'];
+    $where[] = 'stt.project_nid=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['project_nid'];
   }
   if ($_SESSION['stormtimetracking_list_filter']['task_nid']) {
-    $where[] = 'stt.task_nid='. $_SESSION['stormtimetracking_list_filter']['task_nid'];
+    $where[] = 'stt.task_nid=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['task_nid'];
   }
   if ($_SESSION['stormtimetracking_list_filter']['ticket_nid']) {
-    $where[] = 'stt.ticket_nid='. $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+    $where[] = 'stt.ticket_nid=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
   }
   if ($_SESSION['stormtimetracking_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
     $datefrom['hour'] = 0;
     $datefrom['minute'] = 0;
-    $where[] = 'stt.trackingdate>='. _storm_datetime_to_gmtimestamp($datefrom);
+    $where[] = 'stt.trackingdate>=%d';
+    $args[] = _storm_datetime_to_gmtimestamp($datefrom);
   }
   if ($_SESSION['stormtimetracking_list_filter']['dateto']) {
     $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
     $dateto['hour'] = 23;
     $dateto['minute'] = 59;
-    $where[] = 'stt.trackingdate<='. _storm_datetime_to_gmtimestamp($dateto);
+    $where[] = 'stt.trackingdate<=%d';
+    $args[] = _storm_datetime_to_gmtimestamp($dateto);
   }
   if ($_SESSION['stormtimetracking_list_filter']['billable']!='-' && $_SESSION['stormtimetracking_list_filter']['billable']!= NULL) {
-    $where[] = 'stt.billable='. $_SESSION['stormtimetracking_list_filter']['billable'];
+    $where[] = 'stt.billable=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['billable'];
   }
 
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
@@ -123,19 +133,21 @@ function stormtimetracking_list() {
   if ($_SESSION['stormtimetracking_list_filter']['user']) {
     $trackinguser = user_load(array('name' => $_SESSION['stormtimetracking_list_filter']['user']));
     if (!$trackinguser->uid) $trackinguser->uid =  -1;
-    $where[] = 'n.uid='. $trackinguser->uid;
+    $where[] = 'n.uid=%d';
+    $args[] = $trackinguser->uid;
   }
 
   $s = stormtimetracking_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
   
   $s_duration = stormtimetracking_access_sql($s_duration, $where);
   $s_duration = db_rewrite_sql($s_duration);
-  $duration = db_result(db_query($s_duration));
+  $duration = db_result(db_query($s_duration, $args));
 
   $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
+  $_SESSION['stormtimetracking_list_filter']['args'] = $args;
 
   $timetrackings = array();
   while ($item = db_fetch_object($r)) {
@@ -399,7 +411,9 @@ function stormtimetracking_list_report($report, $language) {
   $timetrackings = array();
 
   $s = $_SESSION['stormtimetracking_list_filter']['sql'];
-  $r = db_query($s);
+  $args = $_SESSION['stormtimetracking_list_filter']['args'];
+
+  $r = db_query($s, $args);
   while ($t = db_fetch_object($r)) {
     $timetracking = node_load($t->nid);
     $timetrackings[] = $timetracking;

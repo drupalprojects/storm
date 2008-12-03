@@ -161,7 +161,7 @@ function stormorganization_menu($may_cache) {
       'type' => MENU_NORMAL_ITEM
     );
 
-    $items['storm/organizations/autocomplete'] = array(
+    $items[] = array(
       'path' => 'storm/organizations/autocomplete',
       'title' => 'Organization autocomplete',
       'callback' => 'stormorganization_autocomplete',

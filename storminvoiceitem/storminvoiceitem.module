@@ -254,7 +254,7 @@ function storminvoiceitem_insert($node) {
   db_query("INSERT INTO {storminvoiceitem}
            (vid, nid,
            invoice_nid,
-           amount, vatpercent, vat, total,
+           amount, taxpercent, tax, total,
            weight) VALUES
            (%d, %d,
            %d,
@@ -262,7 +262,7 @@ function storminvoiceitem_insert($node) {
            %d)",
           $node->vid, $node->nid,
           $node->invoice_nid,
-          $node->amount, $node->vatpercent, $node->vat, $node->total,
+          $node->amount, $node->taxpercent, $node->tax, $node->total,
           $node->weight);
   _storminvoiceitem_aftersave($node);
 }
