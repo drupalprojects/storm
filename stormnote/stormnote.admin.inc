@@ -69,17 +69,24 @@ function stormnote_list() {
 
   $s  = "SELECT n.title, sno.* FROM {node} AS n INNER JOIN {stormnote} AS sno ON n.vid=sno.vid WHERE n.status=1 AND n.type='stormnote' ";
 
+  $where = array();
+  $args = array();
+
   if ($_SESSION['stormnote_list_filter']['organization_nid']) {
-    $where[] = 'sno.organization_nid='. $_SESSION['stormnote_list_filter']['organization_nid'];
+    $where[] = 'sno.organization_nid=%d';
+    $args[] = $_SESSION['stormnote_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormnote_list_filter']['project_nid']) {
-    $where[] = 'sno.project_nid='. $_SESSION['stormnote_list_filter']['project_nid'];
+    $where[] = 'sno.project_nid=%d';
+    $args[] = $_SESSION['stormnote_list_filter']['project_nid'];
   }
   if ($_SESSION['stormnote_list_filter']['task_nid']) {
-    $where[] = 'sno.task_nid='. $_SESSION['stormnote_list_filter']['task_nid'];
+    $where[] = 'sno.task_nid=%d';
+    $args[] = $_SESSION['stormnote_list_filter']['task_nid'];
   }
   if ($_SESSION['stormnote_list_filter']['title']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('". $_SESSION['stormnote_list_filter']['title'] ."')";
+    $where[] = "LOWER(n.title) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormnote_list_filter']['title'];
   }
   $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
 
@@ -87,7 +94,7 @@ function stormnote_list() {
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
 
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $notes = array();
   while ($item = db_fetch_object($r)) {

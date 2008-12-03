@@ -34,17 +34,21 @@ function stormattribute_list() {
 
   $s = "SELECT * FROM {stormattribute}";
   $where = array();
+  $args = array();
 
   if ($_SESSION['stormattribute_list_filter']['domain']) {
-    $where[] = "domain='". $_SESSION['stormattribute_list_filter']['domain'] ."'";
+    $where[] = "domain='%s'";
+    $args[] = $_SESSION['stormattribute_list_filter']['domain'];
   }
 
   if ($_SESSION['stormattribute_list_filter']['akey']) {
-    $where[] = "LOWER(akey) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['akey'] ."')";
+    $where[] = "LOWER(akey) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormattribute_list_filter']['akey'];
   }
 
   if ($_SESSION['stormattribute_list_filter']['avalue']) {
-    $where[] = "LOWER(avalue) LIKE LOWER('". $_SESSION['stormattribute_list_filter']['avalue'] ."')";
+    $where[] = "LOWER(avalue) LIKE LOWER('%s')";
+    $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
   }
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
@@ -53,7 +57,7 @@ function stormattribute_list() {
 
   $s = db_rewrite_sql($s, 'stormattribute', 'aid');
   $s = storm_rewrite_sql($s, $where) . $tablesort;
-  $r = pager_query($s, $itemsperpage, 0, NULL);
+  $r = pager_query($s, $itemsperpage, 0, NULL, $args);
 
   $attributes = array();
   while ($attribute = db_fetch_object($r)) {

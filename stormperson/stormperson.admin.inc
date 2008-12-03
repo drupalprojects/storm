@@ -41,12 +41,16 @@ function stormperson_list() {
   );
 
   $where = array();
+  $args = array();
+
   $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' ";
   if ($_SESSION['stormperson_list_filter']['organization_nid']) {
-    $where[] = 'spe.organization_nid='. $_SESSION['stormperson_list_filter']['organization_nid'];
+    $where[] = 'spe.organization_nid=%d';
+    $args[] = $_SESSION['stormperson_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormperson_list_filter']['name']) {
-    $where[] = "LOWER(n.title) LIKE LOWER('%%". $_SESSION['stormperson_list_filter']['name'] ."%%')";
+    $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
+    $args[] = $_SESSION['stormperson_list_filter']['name'];
   }
   $itemsperpage = $_SESSION['stormperson_list_filter']['itemsperpage'];
 
@@ -54,7 +58,7 @@ function stormperson_list() {
   $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $people = array();
   while ($person = db_fetch_object($r)) {

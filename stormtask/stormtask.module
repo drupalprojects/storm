@@ -512,7 +512,7 @@ function _stormtask_tasks_access($node=NULL) {
   return FALSE;
 }
 
-function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_depth = NULL, $where = NULL) {
+function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_depth = NULL, $where = NULL, $args = array()) {
   static $children, $parents, $tasks;
 
   $depth++;
@@ -526,7 +526,8 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
     ORDER BY sta.weight";
     $s = stormtask_access_sql($s, $where);
     $s = db_rewrite_sql($s);
-    $r = db_query($s, $project_nid);
+    $args = array($project_nid) + $args;
+    $r = db_query($s, $args);
     while ($task = db_fetch_object($r)) {
       $children[$project_nid][$task->parent_nid][] = $task->nid;
       $parents[$project_nid][$task->nid][] = $task->parent_nid;
@@ -544,7 +545,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
         $task->parents = $parents[$project_nid][$child_nid];
         $tree[] = $task;
         if ($children[$project_nid][$child_nid]) {
-          $tree = array_merge($tree, _stormtask_get_tree($project_nid, $child_nid, $depth, $max_depth, $where));
+          $tree = array_merge($tree, _stormtask_get_tree($project_nid, $child_nid, $depth, $max_depth, $where, $args));
         }
       }
     }

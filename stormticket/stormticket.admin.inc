@@ -75,25 +75,38 @@ function stormticket_list() {
   );
 
   $where = array();
+  $args = array();
+
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
   if ($_SESSION['stormticket_list_filter']['organization_nid']) {
-    $where[] = 'sti.organization_nid='. $_SESSION['stormticket_list_filter']['organization_nid'];
+    $where[] = 'sti.organization_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['project_nid']) {
-    $where[] = 'sti.project_nid='. $_SESSION['stormticket_list_filter']['project_nid'];
+    $where[] = 'sti.project_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['project_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['task_nid']) {
-    $where[] = 'sti.task_nid='. $_SESSION['stormticket_list_filter']['task_nid'];
+    $where[] = 'sti.task_nid=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
   }
   if ($_SESSION['stormticket_list_filter']['ticketstatus'] && $_SESSION['stormticket_list_filter']['ticketstatus'] != '-') {
-    $v = $_SESSION['stormticket_list_filter']['ticketstatus'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sti.ticketstatus IN ('". $v ."')";
+    $status = split(',', $_SESSION['stormticket_list_filter']['ticketstatus']);
+    $v = array();
+    foreach($status as $item) $v[] = '%s';
+    $where[] = "sti.ticketstatus IN ('". implode("','",$v) ."')";
+    foreach ($status as $key=>$value) {
+      $args[] = $value;
+    }
   }
   if ($_SESSION['stormticket_list_filter']['ticketpriority'] && $_SESSION['stormticket_list_filter']['ticketpriority'] != '-') {
-    $v = $_SESSION['stormticket_list_filter']['ticketpriority'];
-    $v = str_replace(',', "','", $v);
-    $where[] = "sti.ticketpriority IN ('". $v ."')";
+    $priority = split(',', $_SESSION['stormticket_list_filter']['ticketpriority']);
+    $v = array();
+    foreach($priority as $item) $v[] = '%s';
+    $where[] = "sti.ticketpriority IN ('". implode("','",$v) ."')";
+    foreach ($priority as $key=>$value) {
+      $args[] = $value;
+    }
   }
 
   $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
@@ -101,7 +114,10 @@ function stormticket_list() {
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
-    if ($datebeginfrom['year']>0 && $t>=0) $where[] = 'sti.datebegin>='. $t;
+    if ($datebeginfrom['year']>0 && $t>=0) {
+      $where[] = 'sti.datebegin>=%d';
+      $args[] = $t;
+    }
   }
 
   $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
@@ -109,7 +125,10 @@ function stormticket_list() {
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
-    if ($datebeginto['year']>0 && $t>=0) $where[] = 'sti.datebegin<='. $t;
+    if ($datebeginto['year']>0 && $t>=0) {
+      $where[] = 'sti.datebegin<=%d';
+      $args[] = $t;
+    }
   }
 
   $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
@@ -117,7 +136,10 @@ function stormticket_list() {
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
-    if ($dateendfrom['year']>0 && $t>=0) $where[] = 'sti.dateend>='. $t;
+    if ($dateendfrom['year']>0 && $t>=0) {
+      $where[] = 'sti.dateend>=%d';
+      $args[] = $t;
+    }
   }
 
   $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
@@ -125,7 +147,10 @@ function stormticket_list() {
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
-    if ($dateendto['year']>0 && $t>=0) $where[] = 'sti.dateend<='. $t;
+    if ($dateendto['year']>0 && $t>=0) {
+      $where[] = 'sti.dateend<=%d';
+      $args[] = $t;
+    }
   }
 
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
@@ -134,7 +159,7 @@ function stormticket_list() {
   $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $tickets = array();
   while ($item = db_fetch_object($r)) {
