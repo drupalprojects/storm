@@ -31,7 +31,7 @@ function storminvoice_schema() {
       'tax'                 => array('type' => 'float'),
       'total'               => array('type' => 'float'),
       'totalcustomercurr'   => array('type' => 'float'),
-      'taxexempt'           => array('type' => 'int', 'length' => 1),
+      'taxexempt'           => array('type' => 'int', 'size' => 'tiny'),
     ),
     'primary key' => array('vid', 'nid'),
   );
