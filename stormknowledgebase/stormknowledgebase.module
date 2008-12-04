@@ -178,6 +178,44 @@ function stormknowledgebase_form(&$node) {
     $form['body_filter']['format'] = filter_form($node->format);
   }
 
+  $form['topic'] = array(
+    '#weight' => -47,
+    '#type' => 'select',
+    '#title' => storm_t('Topic', 'knowledgebase'),
+    '#default_value' => $node->topic,
+    '#options' => stormattribute_attributes_bydomain('Knowledge base topic'),
+  );
+
   return $form;
+}
+
+function stormknowledgebase_insert($node) {
+  db_query("INSERT INTO {stormknowledgebase}
+          (vid, nid, topic)
+          VALUES
+          (%d, %d, '%s')",
+          $node->vid, $node->nid, $node->topic);
+}
+
+function stormknowledgebase_update($node) {
+  // if this is a new node or we're adding a new revision,
+  if ($node->revision) {
+    stormknowledgebase_insert($node);
+  }
+  else {
+    db_query("UPDATE {stormknowledgebase} SET
+        topic='%s' WHERE vid = %d",
+        $node->topic, $node->vid);
+  }
+}
+
+function stormknowledgebase_delete($node) {
+  // Notice that we're matching all revision, by using the node's nid.
+  db_query('DELETE FROM {stormknowledgebase} WHERE nid = %d', $node->nid);
+}
+
+function stormknowledgebase_load($node) {
+  $additions = db_fetch_object(db_query('SELECT * FROM {stormknowledgebase} WHERE vid = %d', $node->vid));
+  return $additions;
 }
 

@@ -15,6 +15,7 @@ function theme_stormknowledgebase_list($header, $notes) {
     $n->type = 'stormknowledgebase';
     $rows[] = array(
       l($note->title, 'node/'. $note->nid),
+      $note->topic,
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
