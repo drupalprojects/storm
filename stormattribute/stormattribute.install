@@ -370,6 +370,15 @@ function stormattribute_install() {
     'ZW'=>'Zimbabwe',
   );
 
+  $attributes['Knowledge base topic'] = array(
+    'OS'=>'Operating systems',
+    'Linux'=>'-- Linux',
+    'Ubuntu'=>'-- Ubuntu',
+    'DB'=>'Databases',
+    'MySQL'=>'-- MySQL',
+    'PostgreSQL'=>'-- PostgreSQL',
+  );
+
   $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
@@ -719,3 +728,28 @@ function stormattribute_update_2() {
   return $ret;
 }
 
+function stormattribute_update_3() {
+  $attributes['Knowledge base topic'] = array(
+    'OS'=>'Operating systems',
+    'Linux'=>'-- Linux',
+    'Ubuntu'=>'-- Ubuntu',
+    'DB'=>'Databases',
+    'MySQL'=>'-- MySQL',
+    'PostgreSQL'=>'-- PostgreSQL',
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
+  $ret = array();
+  return $ret;
+}
