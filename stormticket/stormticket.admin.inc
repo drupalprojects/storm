@@ -198,7 +198,7 @@ function stormticket_list_filter() {
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta
-  ON sta.vid=n.vid WHERE status=1 AND type='stormtask' AND sta.project_nid=%d ORDER BY title ";
+  ON sta.vid=n.vid WHERE n.status=1 AND type='stormtask' AND sta.project_nid=%d ORDER BY title ";
   $s = stormtask_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $project_nid);
