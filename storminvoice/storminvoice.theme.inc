@@ -243,10 +243,17 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   $w = 0;
-  $node->content['storminvoice']['links']['print'] = array(
-    '#prefix' => '<div class="print">',
+  $node->content['storminvoice']['links']['print']['html'] = array(
+    '#prefix' => '<div class="print_html">',
     '#suffix' => '</div>',
-    '#value' => l(t('Print'), 'storm/invoice/report/'. $node->nid .'/std/'. $language),
+    '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $language),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['links']['print']['pdf'] = array(
+    '#prefix' => '<div class="print_pdf">',
+    '#suffix' => '</div>',
+    '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
     '#weight' => $w++,
   );
 
@@ -254,6 +261,19 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
 }
 
 function theme_storminvoice_report($node, $report, $language) {
+  if($report=='html') {
+    print theme('storminvoice_report_html', $node, $language); 
+  }
+  else if ($report=='pdf') {
+    theme('storminvoice_report_pdf', $node, $language); 
+  }
+}
+
+function theme_storminvoice_report_pdf($node, $language) {
+  $tcpdf_dir = drupal_get_path('module', 'storm') .'/libs/tcpdf';
+  require_once($tcpdf_dir .'/config/lang/eng.php');
+  require_once($tcpdf_dir .'/tcpdf.php');
+
   $languages = explode(',', $language);
   $language = $languages[0];
   $language1 = '';
@@ -280,6 +300,72 @@ function theme_storminvoice_report($node, $report, $language) {
   $o = '';
   $title = storm_t('Invoice', 'invoice', array(), $language);
   if ($language1) $title .= '<br />'. storm_t('Invoice', 'invoice', array(), $language1);
+  $complete_title = $title .' '. $myorg->title .' : '. $organization->title .' - '. $node->number;
+
+  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
+
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor("Storm");
+  $pdf->SetTitle($complete_title);
+  $pdf->SetSubject($title);
+  $pdf->SetKeywords($title, $myorg->title, $organization->title, $node->number);
+
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+  $pdf->setPrintHeader(false);
+  $pdf->setPrintFooter(false);
+
+  $margins = $pdf->getMargins();
+  $pageWidth = $pdf->getPageWidth() - $margins['left'] - $margins['right'];
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+  $pdf->AddPage();
+
+  $pdf->SetFont("times", "B", 14);
+  $headerleft = variable_get('site_name', '') .'<br />'. variable_get('site_slogan', '');
+  $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 ,0, false, 'L');
+
+  $pdf->SetFont("times", "N", 10);
+  $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
+
+  $pdf->SetFont("times", "B", 14);
+  $pdf->setDrawColor(204, 204, 204);
+  $pdf->Cell(0, 12, $title, 'B' ,1,'C');
+
+  $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number));
+
+  //Close and output PDF document
+  $pdf->Output($filename, "I");
+
+}
+
+function theme_storminvoice_report_html($node, $language) {
+  $languages = explode(',', $language);
+  $language = $languages[0];
+  $language1 = '';
+  if (array_key_exists(1, $languages)) {
+    $language1 = $languages[1];
+  }
+
+  $status = 'open';
+  if ($node->paymentdate) {
+    $status = 'paid';
+  }
+  else if ($node->duedate < time()) {
+    $status = 'overdue';
+  }
+
+  $countries = stormattribute_attributes_bydomain('Country');
+  $currencies = stormattribute_attributes_bydomain('Currency');
+  $myorg = node_load(variable_get('storm_organization_nid', 0));
+  $mycurrency = $currencies[$myorg->currency];
+
+  $organization = node_load($node->organization_nid);
+  $project = node_load($node->project_nid);
+
+  $o = '';
+  $title = storm_t('Invoice', 'invoice', array(), $language);
+  if ($language1) $title .= '<br />'. storm_t('Invoice', 'invoice', array(), $language1);
+  $headtitle = $title . ' '. $myorg->title . ' : ' . $organization->title . ' - ' . $node->number;
 
   $o .= '<div>';
   $o .= '<div id="storminvoice_billto"><table>';
@@ -467,5 +553,5 @@ function theme_storminvoice_report($node, $report, $language) {
     $o .= '</div>';
   }
 
-  print theme('storm_report', $header, $o, $title, $footer);
+  return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }

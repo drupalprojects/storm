@@ -199,6 +199,14 @@ function storminvoice_theme() {
       'file'      => 'storminvoice.theme.inc',
       'arguments' => array('node', 'report', 'language'),
     ),
+    'storminvoice_report_html' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'language'),
+    ),
+    'storminvoice_report_pdf' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'language'),
+    ),
   );
 }
 

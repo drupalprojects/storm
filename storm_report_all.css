@@ -6,7 +6,7 @@ table.storm_report_header {
 width: 100%;
 }
 
-td.storm_report_logo {
+td.storm_report_myorganization {
 width: 50%;
 vertical-align: top;
 }
@@ -101,4 +101,14 @@ td.storminvoice_payment_title {
 
 #paid {
 text-align: center;
+}
+
+div.site_name {
+font-size: 18pt;
+font-weight: bold;
+}
+
+div.site_slogan {
+font-size: 12pt;
+font-weight: bold;
 }

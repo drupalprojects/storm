@@ -6,8 +6,9 @@ table.storm_report_header {
 width: 100%;
 }
 
-td.storm_report_logo {
+td.storm_report_myorganization {
 width: 50%;
+vertical-align: top;
 }
 
 td.storm_report_header {
@@ -49,4 +50,14 @@ background-color: #f6f6f6;
 
 div.storm_list_report_data table tr td {
 border: 1px solid #cccccc;
+}
+
+div.site_name {
+font-size: 18pt;
+font-weight: bold;
+}
+
+div.site_slogan {
+font-size: 12pt;
+font-weight: bold;
 }

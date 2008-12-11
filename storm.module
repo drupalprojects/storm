@@ -63,7 +63,7 @@ function storm_theme() {
     ),
     'storm_list_report' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array('header', 'rows', 'title', 'footer'),
+      'arguments' => array('header', 'rows', 'title', 'footer', 'headtitle'),
     ),
     'storm_report' => array(
       'file'      => 'storm.theme.inc',

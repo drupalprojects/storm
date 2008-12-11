@@ -28,6 +28,9 @@ function stormticket_schema() {
       'ticketcategory'      => array('type' => 'varchar', 'length' => 20),
       'ticketstatus'        => array('type' => 'varchar', 'length' => 20),
       'ticketpriority'      => array('type' => 'varchar', 'length' => 20),
+      'pricemode'           => array('type' => 'varchar', 'length' => 20),
+      'price'               => array('type' => 'float'),
+      'currency'            => array('type' => 'varchar', 'length' => 20),
       'datebegin'           => array('type' => 'int', 'default' => 0),
       'dateend'             => array('type' => 'int', 'default' => 0),
       'durationunit'        => array('type' => 'varchar', 'length' => 20),
@@ -48,3 +51,10 @@ function stormticket_update_1() {
   return $ret;
 }
 
+function stormticket_update_2() {
+  $ret = array();
+  db_add_field($ret, 'stormticket', 'pricemode', array('type' => 'varchar', 'length' => 20));
+  db_add_field($ret, 'stormticket', 'price', array('type' => 'float'));
+  db_add_field($ret, 'stormticket', 'currency', array('type' => 'varchar', 'length' => 20));
+  return $ret;
+}

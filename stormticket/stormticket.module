@@ -350,8 +350,69 @@ function stormticket_form(&$node) {
     '#weight' => -18,
   );
 
+  $form['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -17,
+  );
+
+  $form['group3']['datebegin'] = array(
+    '#type' => 'dateext',
+    '#title' => storm_t('Date begin', 'ticket'),
+    '#withnull' => true,
+    '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
+  );
+
+  $form['group3']['dateend'] = array(
+    '#type' => 'dateext',
+    '#title' => storm_t('Date end', 'ticket'),
+    '#withnull' => true,
+    '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
+  );
+
+  $form['group3']['durationunit'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Duration unit', 'ticket'),
+    '#default_value' => $node->durationunit,
+    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+  );
+
+  $form['group3']['duration'] = array(
+    '#type' => 'textfield',
+    '#title' => storm_t('Duration', 'ticket'),
+    '#size' => 20,
+    '#default_value' => $node->duration,
+  );
+
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => -16,
+  );
+
+  $form['group5']['pricemode'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Price mode', 'ticket'),
+    '#default_value' => $node->pricemode,
+    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
+  );
+
+  $form['group5']['price'] = array(
+    '#title' => storm_t('Price', 'ticket'),
+    '#type' => 'textfield',
+    '#size' => 15,
+    '#default_value' => $node->price,
+  );
+
+  $form['group5']['currency'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Price currency', 'ticket'),
+    '#default_value' => $node->currency,
+    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
+  );
+
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -17;
+    $form['body_filter']['#weight'] = -15;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
@@ -360,46 +421,6 @@ function stormticket_form(&$node) {
       '#required' => ($type->min_word_count > 0));
     $form['body_filter']['format'] = filter_form($node->format);
   }
-
-  $form['group3'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => -16,
-  );
-
-  $form['group3']['datebegin'] = array(
-    '#type' => 'dateext',
-    '#title' => storm_t('Date begin', 'project'),
-    '#withnull' => true,
-    '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
-  );
-
-  $form['group3']['dateend'] = array(
-    '#type' => 'dateext',
-    '#title' => storm_t('Date end', 'project'),
-    '#withnull' => true,
-    '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
-  );
-
-  $form['group4'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => -15,
-  );
-
-  $form['group4']['durationunit'] = array(
-    '#type' => 'select',
-    '#title' => storm_t('Duration unit', 'project'),
-    '#default_value' => $node->durationunit,
-    '#options' => stormattribute_attributes_bydomain('Duration unit'),
-  );
-
-  $form['group4']['duration'] = array(
-    '#type' => 'textfield',
-    '#title' => storm_t('Duration', 'project'),
-    '#size' => 20,
-    '#default_value' => $node->duration,
-  );
 
   $form['title_old'] = array(
     '#type' => 'hidden',
@@ -418,19 +439,21 @@ function stormticket_insert($node) {
             project_nid, project_title,
             task_nid, task_title, task_stepno,
             ticketcategory, ticketstatus, ticketpriority,
-            datebegin, dateend, durationunit, duration) VALUES
+            datebegin, dateend, durationunit, duration, pricemode, price, currency)
+           VALUES
            (%d, %d,
             %d, '%s',
             %d, '%s',
             %d, '%s', '%s',
             '%s', '%s', '%s',
-            %d, %d, '%s', %f)",
+            %d, %d, '%s', %f, '%s', %f, '%s')",
           $node->vid, $node->nid,
           $node->organization_nid, $node->organization_title,
           $node->project_nid, $node->project_title,
           $node->task_nid, $node->task_title, $node->task_stepno,
           $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-          $node->datebegin, $node->dateend, $node->durationunit, $node->duration);
+          $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
+          $node->pricemode, $node->price, $node->currency);
 }
 
 function stormticket_update($node) {
@@ -445,13 +468,16 @@ function stormticket_update($node) {
               project_nid=%d, project_title='%s',
               task_nid=%d, task_title='%s', task_stepno='%s',
               ticketcategory='%s', ticketstatus='%s', ticketpriority='%s',
-              datebegin=%d, dateend=%d, durationunit='%s', duration=%f 
+              datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
+              pricemode='%s', price=%f, currency='%s' 
               WHERE vid = %d",
               $node->organization_nid, $node->organization_title,
               $node->project_nid, $node->project_title,
               $node->task_nid, $node->task_title, $node->task_stepno,
               $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-              $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->vid);
+              $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
+              $node->pricemode, $node->price, $node->currency,
+              $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormticket_change', $node->nid, $node->title);
     }
