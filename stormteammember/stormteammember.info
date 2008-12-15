@@ -1,0 +1,11 @@
+; $Id$
+name = Storm Team member
+description = "SpeedTech Organizer and Resource Manager - Team member"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormorganization
+dependencies[] = stormproject
+dependencies[] = stormtask
+dependencies[] = stormticket
+package = Storm
+core = 6.x
