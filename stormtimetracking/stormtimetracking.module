@@ -281,13 +281,9 @@ function stormtimetracking_form(&$node) {
     if ($timeend['hour'] && $timebegin['hour']) {
       $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
-  else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
-  }
+  $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+              ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
 
   $type = node_get_types('type', $node);
 
@@ -312,7 +308,7 @@ function stormtimetracking_form(&$node) {
 
   $s_org = stormorganization_access_sql($s_org);
   $s_org = db_rewrite_sql($s_org);
-  $r = db_query($s_org);
+  $r = db_query($s_org, $node->organization_nid);
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
@@ -512,6 +508,15 @@ function _stormtimetracking_beforesave(&$node) {
   $r = db_query($s, $node->ticket_nid);
   $ti = db_fetch_object($r);
   $node->ticket_title = $ti->title;
+}
+
+function stormtimetracking_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormtimetracking} WHERE vid = %d', $node->vid);
+      break;
+  }
 }
 
 function stormtimetracking_delete($node) {

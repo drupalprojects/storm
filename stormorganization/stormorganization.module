@@ -389,6 +389,15 @@ function stormorganization_update($node) {
   }
 }
 
+function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormorganization_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
   db_query('DELETE FROM {stormorganization} WHERE nid = %d', $node->nid);

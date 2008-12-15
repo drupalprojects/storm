@@ -209,6 +209,15 @@ function stormknowledgebase_update($node) {
   }
 }
 
+function stormknowledgebase_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormknowledgebase} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormknowledgebase_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
   db_query('DELETE FROM {stormknowledgebase} WHERE nid = %d', $node->nid);

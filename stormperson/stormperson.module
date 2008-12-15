@@ -412,6 +412,15 @@ function _stormperson_aftersave(&$node) {
   }
 }
 
+function stormperson_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormperson} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormperson_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
   db_query('DELETE FROM {stormperson} WHERE nid = %d', $node->nid);

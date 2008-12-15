@@ -320,6 +320,9 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $pdf->AddPage();
 
+  $pdf->setDrawColor(204, 204, 204);
+  $pdf->setFillColor(220, 220, 220);
+
   $pdf->SetFont("times", "B", 14);
   $headerleft = variable_get('site_name', '') .'<br />'. variable_get('site_slogan', '');
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 ,0, false, 'L');
@@ -328,8 +331,65 @@ function theme_storminvoice_report_pdf($node, $language) {
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
 
   $pdf->SetFont("times", "B", 14);
-  $pdf->setDrawColor(204, 204, 204);
-  $pdf->Cell(0, 12, $title, 'B' ,1,'C');
+  $pdf->Cell(0, 12, $title, 0 ,1,'C');
+
+  $y = $pdf->getY() + 10;
+  $pdf->setY($y);
+  $pdf->SetFont("times", "B", 10);
+  $pdf->Cell($pageWidth *.4, 5, storm_t('Bill to', 'invoice', array(), $language), 'B', 0, 'L');
+  $o =  $organization->fullname ."\n";
+  $o .= $organization->address ."\n";
+  $o .= $organization->city ."\n";
+  $o .= $organization->provstate .' '. $organization->zip .' '. $countries[$organization->country] ."\n";;
+  if ($organization->taxid) {
+    $o .= storm_t('Tax ID', 'invoice', array(), $language);
+    if ($language1) $o .= ' / '. storm_t('Tax ID', 'invoice', array(), $language1);
+    $o .= ' : '. $organization->taxid;
+  }
+  $pdf->SetFont("times", "N", 10);
+  $pdf->MultiCell($pageWidth *.4, 0, $o, 0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY()+5);
+  
+  $w = ($pageWidth *.5) / 4;
+  $h = 5;
+  $pdf->setY($y);
+  $x = PDF_MARGIN_LEFT + $pageWidth *.5;
+  $pdf->setX($x);
+  $pdf->SetFont("times", "B", 10);
+  $pdf->Cell($w, $h, storm_t('Invoice#', 'invoice', array(), $language), 1, 0, 'L', 1);
+  $pdf->Cell($w, $h, storm_t('Currency', 'invoice', array(), $language), 1, 0, 'L', 1);
+  $pdf->Cell($w, $h, storm_t('Date', 'invoice', array(), $language), 1, 0, 'L', 1);
+  $pdf->Cell($w, $h, storm_t('Reference', 'invoice', array(), $language), 1, 0, 'L', 1);
+
+  $y += $h;
+  $pdf->setY($y);
+  $pdf->setX($x);
+  $pdf->SetFont("times", "N", 10);
+  $pdf->Cell($w, $h, $node->number, 1, 0, 'L', 0);
+  $pdf->Cell($w, $h, storm_t($mycurrency, 'invoice', array(), $language), 1, 0, 'L', 0);
+  $pdf->Cell($w, $h, format_date($node->requestdate, 'custom', 'Y-m-d'), 1, 0, 'L', 0);
+  $pdf->Cell($w, $h, $node->reference, 1, 0, 'L', 0);
+
+  $y += $h;
+  $pdf->setY($y);
+  $pdf->setX($x);
+  $pdf->setX(PDF_MARGIN_LEFT + $pageWidth *.5);
+  $pdf->SetFont("times", "B", 10);
+  $pdf->Cell($w*2, $h, storm_t('Due total', 'invoice', array(), $language), 1, 0, 'L', 1);
+  $pdf->Cell($w, $h, storm_t('Due date', 'invoice', array(), $language), 1, 0, 'L', 1);
+  $pdf->Cell($w, $h, storm_t('Terms', 'invoice', array(), $language), 1, 0, 'L', 1);
+
+  $y += $h;
+  $pdf->setY($y);
+  $pdf->setX($x);
+  $pdf->SetFont("times", "B", 10);
+  $o = storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
+  if ($organization->currency != $myorg->currency) {
+    $o .= "\n". '('. $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr) .')';
+  }
+  $pdf->MultiCell($w*2, $h*2, $o, 1, 'C', 0, 0);
+  $pdf->SetFont("times", "N", 10);
+  $pdf->Cell($w, $h*2, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 0, 'L', 0);
+  $pdf->Cell($w, $h*2, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 0, 'L', 0);
 
   $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number));
 
@@ -371,7 +431,7 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '<div id="storminvoice_billto"><table>';
   $o .= '<tr><td class="storminvoice_billto_title">';
   $o .= storm_t('Bill To :', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Bill To :', 'invoice', array(), $language1);
+  if ($language1) $o .= '<br />'. storm_t('Bill to :', 'invoice', array(), $language1);
   $o .= '</td></tr>';
   $o .= '<tr><td>';
   $o .= '<strong>'. $organization->fullname .'</strong>';
@@ -431,7 +491,7 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td style="text-align: center; font-weight: bold;" colspan="2">';
-  $o .= sprintf('%.2f', $node->total);
+  $o .= storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= '<br />';
     $o .= '('. $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr) .')';

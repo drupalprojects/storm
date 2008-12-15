@@ -428,6 +428,15 @@ function _stormproject_beforesave(&$node) {
   if (is_array($node->dateend)) $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
 }
 
+function stormproject_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormproject} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormproject_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
   db_query('DELETE FROM {stormproject} WHERE nid = %d', $node->nid);

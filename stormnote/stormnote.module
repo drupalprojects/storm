@@ -360,6 +360,15 @@ function _stormnote_beforesave(&$node) {
   $node->task_title = $t->title;
 }
 
+function stormnote_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormnote} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormnote_delete($node) {
   db_query('DELETE FROM {stormnote} WHERE nid = %d', $node->nid);
 }

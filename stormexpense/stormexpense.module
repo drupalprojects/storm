@@ -507,6 +507,15 @@ function _stormexpense_beforesave(&$node) {
   $node->ticket_title = $ti->title;
 }
 
+function stormexpense_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {stormexpense} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function stormexpense_delete($node) {
   db_query('DELETE FROM {stormexpense} WHERE nid = %d', $node->nid);
 }

@@ -480,6 +480,15 @@ function _storminvoice_beforesave(&$node) {
   }
 }
 
+function storminvoice_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'delete revision':
+      // Notice that we're matching a single revision based on the node's vid.
+      db_query('DELETE FROM {storminvoice} WHERE vid = %d', $node->vid);
+      break;
+  }
+}
+
 function storminvoice_delete($node) {
   db_query('DELETE FROM {storminvoiceitem} WHERE invoice_nid = %d', $node->nid);
   db_query('DELETE FROM {storminvoice} WHERE nid = %d', $node->nid);
