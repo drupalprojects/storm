@@ -174,17 +174,6 @@ function stormproject_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['node/%node/tasks'] = array(
-    'title' => storm_t('Tasks', 'project'),
-    'page callback' => 'stormtask_tasks',
-    'page arguments' => array(1),
-    'access callback' => '_stormtask_tasks_access',
-    'access arguments' => array(1),
-    'file' => 'stormtask.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3
-  );
-
   return $items;
 }
 
@@ -227,6 +216,16 @@ function stormproject_stormorganization_change($organization_nid, $organization_
 }
 
 function stormproject_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Projects'), 'storm/projects');
+  drupal_set_breadcrumb($breadcrumb);
+
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Projects'), 'storm/projects');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     $node->datebegin = time();
 
@@ -449,6 +448,11 @@ function stormproject_load($node) {
 }
 
 function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Projects'), 'storm/projects');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormproject_view', $node, $teaser, $page);
 }
 

@@ -6,6 +6,13 @@
  */
 
 function stormtask_tasks($project) {
+  $node_invoice = node_load($invoice->nid);
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Projects'), 'storm/projects');
+  $breadcrumb[] = l(t('Project : '. $project->title), 'node/'. $project->nid);
+  drupal_set_breadcrumb($breadcrumb);
+
   $i = new stdClass();
   $i->type = 'stormtask';
 
@@ -162,6 +169,10 @@ function _stormtask_project_tasks_js($project_nid) {
 }
 
 function stormtask_list() {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (array_key_exists('organization_nid', $_GET)) {
     if ($_SESSION['stormtask_list_filter']['organization_nid'] != $_GET['organization_nid']) {
       $_SESSION['stormtask_list_filter']['organization_nid'] = $_GET['organization_nid'];

@@ -214,6 +214,11 @@ function stormperson_stormorganization_change($organization_nid, $organization_t
 }
 
 function stormperson_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('People'), 'storm/people');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
@@ -440,6 +445,11 @@ function stormperson_load($node) {
 }
 
 function stormperson_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('People'), 'storm/people');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormperson_view', $node, $teaser, $page);
 }
 

@@ -185,6 +185,11 @@ function stormorganization_node_info() {
 }
 
 function stormorganization_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Organizations'), 'storm/organizations');
+  drupal_set_breadcrumb($breadcrumb);
+
   $type = node_get_types('type', $node);
 
   $form['title'] = array(
@@ -410,6 +415,11 @@ function stormorganization_load($node) {
 }
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Organizations'), 'storm/organizations');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormorganization_view', $node, $teaser, $page);
 }
 

@@ -227,6 +227,11 @@ function stormtask_stormproject_change($project_nid, $project_title) {
 }
 
 function stormtask_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     $node->datebegin = time();
 
@@ -536,6 +541,11 @@ function stormtask_validate(&$node) {
 }
 
 function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormtask_view', $node, $teaser, $page);
 }
 

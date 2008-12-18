@@ -239,6 +239,11 @@ function storminvoice_stormproject_change($project_nid, $project_title) {
 }
 
 function storminvoice_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     $node->requestdate = time();
     $node->duedate = $node->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
@@ -500,6 +505,11 @@ function storminvoice_load($node) {
 }
 
 function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('storminvoice_view', $node, $teaser = FALSE, $page = FALSE);
 }
 

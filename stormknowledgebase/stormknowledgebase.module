@@ -157,6 +157,11 @@ function stormknowledgebase_node_info() {
 }
 
 function stormknowledgebase_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Knowledge base'), 'storm/knowledgebase');
+  drupal_set_breadcrumb($breadcrumb);
+
   $type = node_get_types('type', $node);
 
   $form['title'] = array(
@@ -187,6 +192,16 @@ function stormknowledgebase_form(&$node) {
   );
 
   return $form;
+}
+
+function stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Knowledge base'), 'storm/knowledgebase');
+  drupal_set_breadcrumb($breadcrumb);
+
+  $node = node_prepare($node, $teaser);
+  return $node;
 }
 
 function stormknowledgebase_insert($node) {

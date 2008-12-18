@@ -197,6 +197,11 @@ function stormnote_stormtask_change($task_nid, $task_title, $task_stepno) {
 }
 
 function stormnote_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Notes'), 'storm/notes');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
@@ -379,6 +384,11 @@ function stormnote_load($node) {
 }
 
 function stormnote_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Notes'), 'storm/notes');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormnote_view', $node, $teaser = FALSE, $page = FALSE);
 }
 

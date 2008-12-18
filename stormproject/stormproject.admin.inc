@@ -6,6 +6,10 @@
  */
 
 function stormproject_list() {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (array_key_exists('organization_nid', $_GET)) {
     if ($_SESSION['stormproject_list_filter']['organization_nid'] != $_GET['organization_nid']) {
       $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];

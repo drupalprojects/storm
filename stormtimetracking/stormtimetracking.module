@@ -227,6 +227,11 @@ function stormtimetracking_stormticket_change($ticket_nid, $ticket_title) {
 }
 
 function stormtimetracking_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Timetrackings'), 'storm/timetrackings');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
@@ -529,6 +534,11 @@ function stormtimetracking_load($node) {
 }
 
 function stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Timetrackings'), 'storm/timetrackings');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormtimetracking_view', $node, $teaser, $page);
 }
 

@@ -6,6 +6,10 @@
  */
 
 function stormknowledgebase_list() {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  drupal_set_breadcrumb($breadcrumb);
+
   $o = drupal_get_form('stormknowledgebase_list_filter');
 
   $i = new stdClass();

@@ -179,6 +179,7 @@ function storminvoiceitem_node_info() {
 }
 
 function storminvoiceitem_form(&$node) {
+
   if (arg(1)=='add') {
     if (array_key_exists('invoice_nid', $_GET) && !$node->invoice_nid) {
       $node->invoice_nid = $_GET['invoice_nid'];
@@ -188,6 +189,14 @@ function storminvoiceitem_form(&$node) {
       drupal_goto('storm/invoices');
     }
   }
+
+  $node_invoice = node_load($node->invoice_nid);
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
+  $breadcrumb[] = l(t('Invoice : '. $node_invoice->title), 'node/'. $node_invoice->nid);
+  $breadcrumb[] = l(t('Invoice items'), 'node/'. $node_invoice->nid .'/invoiceitems');
+  drupal_set_breadcrumb($breadcrumb);
 
   $type = node_get_types('type', $node);
 

@@ -6,6 +6,13 @@
  */
 
 function storminvoiceitem_invoiceitems($invoice) {
+  $node_invoice = node_load($invoice->nid);
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
+  $breadcrumb[] = l(t('Invoice : '. $node_invoice->title), 'node/'. $node_invoice->nid);
+  drupal_set_breadcrumb($breadcrumb);
+
   $i = new stdClass();
   $i->type = 'storminvoiceitem';
 

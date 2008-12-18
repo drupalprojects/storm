@@ -223,6 +223,11 @@ function stormticket_stormtask_change($task_nid, $task_stepno, $task_title) {
 }
 
 function stormticket_form(&$node) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Tickets'), 'storm/tickets');
+  drupal_set_breadcrumb($breadcrumb);
+
   if (arg(1)=='add') {
     $node->datebegin = time();
 
@@ -528,6 +533,11 @@ function stormticket_load($node) {
 }
 
 function stormticket_view($node, $teaser = FALSE, $page = FALSE) {
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Tickets'), 'storm/tickets');
+  drupal_set_breadcrumb($breadcrumb);
+
   return theme('stormticket_view', $node, $teaser, $page);
 }
 
