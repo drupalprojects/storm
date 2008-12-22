@@ -102,6 +102,7 @@ function theme_storm_texts() {
 function theme_storm_texts() {
   $items = array (
     'default' => array (
+      'Tax %' => 'VAT %',
       'Tax' => 'VAT',
       'Tax ID' => 'VAT ID',
       'Tax percent' => 'VAT percent',

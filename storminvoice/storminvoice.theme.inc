@@ -2,9 +2,28 @@
 // $Id$
 
 /**
- * @file
+ * @file storminvoice.theme.inc
+ * Themable functions for Storm invoice component.
  */
 
+/**
+ * Returns the HTML code for the invoices list
+ *
+ * @param $header
+ *   Array with the fields headers.
+ * @param $invoices
+ *   Array with the list of invoices.
+ * @param $itempsperpage
+ *   Number of items to show on every page.
+ * @param $totals_topay
+ *   Total amount yet to pay.
+ * @param $totals_paid
+ *   Total amount already paid.
+ * @param $totals
+ *   Grand total.
+ * @return
+ *   HTML of the invoices list.
+ */
 function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topay, $totals_paid, $totals) {
   $rows = array();
   foreach ($invoices as $invoice) {
@@ -125,6 +144,18 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   return $o;
 }
 
+/**
+ * Returns the HTML code for the invoice view page
+ *
+ * @param $node
+ *   The node object that contains the invoice.
+ * @param $teaser
+ *   True if the teaser is showed.
+ * @param $page
+ *   True if the full page is showed.
+ * @return
+ *   The node object that contains the invoice.
+ */
 function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
 
@@ -299,7 +330,6 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $o = '';
   $title = storm_t('Invoice', 'invoice', array(), $language);
-  if ($language1) $title .= '<br />'. storm_t('Invoice', 'invoice', array(), $language1);
   $complete_title = $title .' '. $myorg->title .' : '. $organization->title .' - '. $node->number;
 
   $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
@@ -331,12 +361,15 @@ function theme_storminvoice_report_pdf($node, $language) {
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
 
   $pdf->SetFont("times", "B", 14);
-  $pdf->Cell(0, 12, $title, 0 ,1,'C');
+  if ($language1) $o = $title ."\n". storm_t('Invoice', 'invoice', array(), $language1);
+  $pdf->MultiCell(0, 0, $o, 0 ,'C', 0, 1,$pdf->getX(), $pdf->getY() + 10);
 
   $y = $pdf->getY() + 10;
-  $pdf->setY($y);
+
   $pdf->SetFont("times", "B", 10);
-  $pdf->Cell($pageWidth *.4, 5, storm_t('Bill to', 'invoice', array(), $language), 'B', 0, 'L');
+  $o = storm_t('Bill to', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Bill to', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth *.4, 0, $o, 'B', 'L', 0, 1, PDF_MARGIN_LEFT, $y);
   $o =  $organization->fullname ."\n";
   $o .= $organization->address ."\n";
   $o .= $organization->city ."\n";
@@ -347,49 +380,128 @@ function theme_storminvoice_report_pdf($node, $language) {
     $o .= ' : '. $organization->taxid;
   }
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth *.4, 0, $o, 0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY()+5);
-  
+  $pdf->MultiCell($pageWidth *.4, 0, $o,0 , 'L' ,0, 1, PDF_MARGIN_LEFT);
+  $destY = $pdf->getY();
+
   $w = ($pageWidth *.5) / 4;
-  $h = 5;
-  $pdf->setY($y);
-  $x = PDF_MARGIN_LEFT + $pageWidth *.5;
-  $pdf->setX($x);
-  $pdf->SetFont("times", "B", 10);
-  $pdf->Cell($w, $h, storm_t('Invoice#', 'invoice', array(), $language), 1, 0, 'L', 1);
-  $pdf->Cell($w, $h, storm_t('Currency', 'invoice', array(), $language), 1, 0, 'L', 1);
-  $pdf->Cell($w, $h, storm_t('Date', 'invoice', array(), $language), 1, 0, 'L', 1);
-  $pdf->Cell($w, $h, storm_t('Reference', 'invoice', array(), $language), 1, 0, 'L', 1);
 
-  $y += $h;
-  $pdf->setY($y);
-  $pdf->setX($x);
+  $pdf->SetFont("times", "B", 10);
+
+  $o = storm_t('Invoice#', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Invoice#', 'invoice', array(), $language1);
+  $pdf->MultiCell($w-2, 0, $o, 1, 'L', 1, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $y);
+
+  $o = storm_t('Currency', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Currency', 'invoice', array(), $language1);
+  $pdf->MultiCell($w-3, 0, $o, 1, 'L', 1, 0);
+
+  $o = storm_t('Date', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Date', 'invoice', array(), $language1);
+  $pdf->MultiCell($w+5, 0, $o, 1, 'L', 1, 0);
+
+  $o = storm_t('Reference', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Reference', 'invoice', array(), $language1);
+  $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
+
   $pdf->SetFont("times", "N", 10);
-  $pdf->Cell($w, $h, $node->number, 1, 0, 'L', 0);
-  $pdf->Cell($w, $h, storm_t($mycurrency, 'invoice', array(), $language), 1, 0, 'L', 0);
-  $pdf->Cell($w, $h, format_date($node->requestdate, 'custom', 'Y-m-d'), 1, 0, 'L', 0);
-  $pdf->Cell($w, $h, $node->reference, 1, 0, 'L', 0);
+  $h = $pdf->getY();
+  $pdf->MultiCell($w, 0, $node->reference?$node->reference:'-' , 1, 'L', 0, 1, PDF_MARGIN_LEFT + $pageWidth*.5 + $w*3);
+  $h = $pdf->getY() - $h;
+  $pdf->MultiCell($w-2, $h, $node->number, 1, 'L', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $pdf->getY() - $h);
+  $pdf->MultiCell($w-3, $h, storm_t($mycurrency, 'invoice', array(), $language), 1, 'L', 0, 0);
+  $pdf->MultiCell($w+5, $h, format_date($node->requestdate, 'custom', 'Y-m-d'), 1, 'L', 0, 1);
 
-  $y += $h;
-  $pdf->setY($y);
-  $pdf->setX($x);
-  $pdf->setX(PDF_MARGIN_LEFT + $pageWidth *.5);
   $pdf->SetFont("times", "B", 10);
-  $pdf->Cell($w*2, $h, storm_t('Due total', 'invoice', array(), $language), 1, 0, 'L', 1);
-  $pdf->Cell($w, $h, storm_t('Due date', 'invoice', array(), $language), 1, 0, 'L', 1);
-  $pdf->Cell($w, $h, storm_t('Terms', 'invoice', array(), $language), 1, 0, 'L', 1);
 
-  $y += $h;
-  $pdf->setY($y);
-  $pdf->setX($x);
+  $o = storm_t('Due total', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Due total', 'invoice', array(), $language1);
+  $pdf->MultiCell($w*2 - 5, 0, $o, 1, 'L', 1, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
+
+  $o = storm_t('Due date', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Due date', 'invoice', array(), $language1);
+  $pdf->MultiCell($w + 5, 0, $o, 1, 'L', 1, 0);
+
+  $o = storm_t('Terms', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Terms', 'invoice', array(), $language1);
+  $h = $pdf->getY();
+  $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
+  $h = $pdf->getY() - $h;
+
   $pdf->SetFont("times", "B", 10);
   $o = storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
-    $o .= "\n". '('. $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr) .')';
+    $o .= "\n". $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr);
   }
-  $pdf->MultiCell($w*2, $h*2, $o, 1, 'C', 0, 0);
+  $pdf->MultiCell($w*2 - 5, $h, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
   $pdf->SetFont("times", "N", 10);
-  $pdf->Cell($w, $h*2, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 0, 'L', 0);
-  $pdf->Cell($w, $h*2, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 0, 'L', 0);
+  $pdf->MultiCell($w + 5, $h, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 'L', 0, 0);
+  $pdf->MultiCell($w, $h, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 'L', 0, 1);
+
+  $y = $pdf->getY();
+  if($destY > $y) $y = $destY;
+  $pdf->setY($y+10);
+
+  $pdf->setX(PDF_MARGIN_LEFT);
+  $pdf->SetFont("times", "B", 10);
+
+  $o = storm_t('Description', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Description', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth * .4, 0, $o, 1, 'L', 1, 0);
+
+  $o = storm_t('Amount', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Amount', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
+
+  $o = storm_t('Tax %', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Tax %', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
+
+  $o = storm_t('Tax', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Tax', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
+
+  $o = storm_t('Total', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". storm_t('Total', 'invoice', array(), $language1);
+  $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 1);
+
+  $pdf->SetFont("times", "N", 10);
+  $items = storminvoiceitem_getitems($node->nid);
+  $rows = array();
+  $pdf->setFillColor(245, 245, 245);
+  $c = 0;
+  foreach ($items as $i) {
+    if ($c==2) $c=0;
+    $y = $pdf->getY();
+    $h = $pdf->getY();
+    $pdf->MultiCell($pageWidth * .4, 0, $i->title, 1, 'L', $c, 1);
+    $h = $pdf->getY() - $h;
+    $pdf->setY($y);
+    $pdf->setX(PDF_MARGIN_LEFT + $pageWidth * .4);
+    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->amount), 1, 0, 'R', $c);
+    $pdf->Cell($pageWidth * .15, $h, $i->taxpercent, 1, 0, 'R', $c);
+    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax), 1, 0, 'R', $c);
+    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->total), 1, 1, 'R', $c);
+    $c++;
+  }
+
+  if ($node->taxexempt && $language1=='it') {
+    $o = storm_t('Tax exempt art. 7', 'invoice', array(), $language);
+    if ($language1) $o .= "\n". storm_t('Tax exempt art. 7', 'invoice', array(), $language1);
+    $pdf->MultiCell($pageWidth, 0, $o,0 , 'L' ,0, 1, $pdf->getX(), $pdf->getY() + 5);
+  }
+
+  $y = $pdf->getY() + 10;
+  $pdf->setY($y);
+  $pdf->SetFont("times", "B", 10);
+  $pdf->Cell($pageWidth, 5, storm_t('Payment', 'invoice', array(), $language), 'B', 0, 'L');
+  $pdf->SetFont("times", "N", 10);
+  $pdf->MultiCell($pageWidth, 0, t(variable_get('storminvoice_payment_modes', ''), array(), $language),0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY(), true, 0, true);
+
+  if ($status=='paid') {
+    $y = $pdf->getY() + 10;
+    $pdf->setY($y);
+    $pdf->SetFont("times", "B", 14);
+    $pdf->Cell(0, 12, storm_t('Paid in full', 'invoice', array(), $language), 0 ,1,'C');  }
 
   $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number));
 
