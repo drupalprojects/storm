@@ -189,7 +189,7 @@ function stormtask_theme() {
     ),
     'stormtask_tasks' => array(
       'file'      => 'stormtask.theme.inc',
-      'arguments' => array('header', 'tasks'),
+      'arguments' => array('form'),
     ),
     'stormtask_view' => array(
       'file'      => 'stormtask.theme.inc',
@@ -229,7 +229,17 @@ function stormtask_stormproject_change($project_nid, $project_title) {
 function stormtask_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
+
+  if (array_key_exists('project_nid', $_GET)) {
+    $breadcrumb[] = l(t('Projects'), 'storm/projects');
+    $project = node_load($_GET['project_nid']);
+    $breadcrumb[] = l(t('Project : '. $project->title), 'node/'. $project->nid);
+    $breadcrumb[] = l(t('Tasks'), 'node/'. $project->nid .'/tasks');
+  }
+  else {
+    $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
+  }
+
   drupal_set_breadcrumb($breadcrumb);
 
   if (arg(1)=='add') {
@@ -564,7 +574,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
   if (!isset($children[$project_nid])) {
     $children[$project_nid] = array();
 
-    $s = "SELECT n.nid, n.title, sta.stepno, sta.parent_nid FROM {node} AS n INNER JOIN {stormtask} AS sta
+    $s = "SELECT n.nid, n.title, sta.stepno, sta.weight, sta.parent_nid, sta.taskcategory, sta.taskstatus, sta.taskpriority FROM {node} AS n INNER JOIN {stormtask} AS sta
     ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
     ORDER BY sta.weight";
     $s = stormtask_access_sql($s, $where);

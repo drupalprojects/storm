@@ -5,26 +5,37 @@
  * @file
  */
 
-function theme_stormtask_tasks($header, $tasks) {
-  $rows = array();
-  foreach ($tasks as $task) {
-    $n = new stdClass();
-    $n->nid = $task->nid;
-    $n->uid = $task->uid;
-    $n->type = 'stormtask';
+function theme_stormtask_tasks($form) {
+  drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
+  drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
 
-    $rows[] = array(
-      l($task->indentstepno, 'node/'. $task->nid, array('html' => TRUE)),
-      storm_icon('category_'. $task->taskcategory, $task->taskcategory),
-      storm_icon('status_'. $task->taskstatus, $task->taskstatus),
-      storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
-      array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+  $header = array();
+  $row = array();
+
+  $header = $form['header']['#value'];
+  unset($form['header']);
+
+  foreach (element_children($form['tasks']) as $key) {
+    $form['tasks'][$key]['task_parent-nid_'. $key]['#attributes']['class'] = 'task-parent-nid';
+    $form['tasks'][$key]['task_nid_'. $key]['#attributes']['class'] = 'task-nid';
+    $form['tasks'][$key]['task_weight_'. $key]['#attributes']['class'] = 'task-weight';
+    $data = array (
+      theme('indentation', $form['tasks'][$key]['task_depth_'. $key]['#value']) . drupal_render($form['tasks'][$key]['task_description_'. $key]),
+      drupal_render($form['tasks'][$key]['task_category_'. $key]),
+      drupal_render($form['tasks'][$key]['task_status_'. $key]),
+      drupal_render($form['tasks'][$key]['task_priority_'. $key]),
+      drupal_render($form['tasks'][$key]['task_parent-nid_'. $key]) . drupal_render($form['tasks'][$key]['task_nid_'. $key]),
+      drupal_render($form['tasks'][$key]['task_weight_'. $key]),
+      array (
+        'data' => drupal_render($form['tasks'][$key]['task_operations_'. $key]),
         'class' => 'storm_list_operations',
       ),
     );
+    $row['data'] = $data;
+    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
+    $rows[] = $row;
   }
-  $o  = theme('table', $header, $rows);
+  $o = theme('table', $header, $rows, array('id' => 'tasks'));
   return $o;
 }
 

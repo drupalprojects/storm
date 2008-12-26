@@ -161,7 +161,7 @@ function storminvoiceitem_theme() {
   return array(
     'storminvoiceitem_invoiceitems' => array(
       'file'      => 'storminvoiceitem.theme.inc',
-      'arguments' => array('header', 'invoiceitems'),
+      'arguments' => array('form'),
     ),
   );
 }

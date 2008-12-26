@@ -423,19 +423,17 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $o = storm_t('Terms', 'invoice', array(), $language);
   if ($language1) $o .= "\n". storm_t('Terms', 'invoice', array(), $language1);
-  $h = $pdf->getY();
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
-  $h = $pdf->getY() - $h;
 
   $pdf->SetFont("times", "B", 10);
   $o = storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= "\n". $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr);
   }
-  $pdf->MultiCell($w*2 - 5, $h, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
+  $pdf->MultiCell($w*2 - 5, 12, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($w + 5, $h, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 'L', 0, 0);
-  $pdf->MultiCell($w, $h, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 'L', 0, 1);
+  $pdf->MultiCell($w + 5, 12, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 'L', 0, 0);
+  $pdf->MultiCell($w, 12, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 'L', 0, 1);
 
   $y = $pdf->getY();
   if($destY > $y) $y = $destY;
@@ -503,7 +501,7 @@ function theme_storminvoice_report_pdf($node, $language) {
     $pdf->SetFont("times", "B", 14);
     $pdf->Cell(0, 12, storm_t('Paid in full', 'invoice', array(), $language), 0 ,1,'C');  }
 
-  $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number));
+  $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number)) .'.pdf';
 
   //Close and output PDF document
   $pdf->Output($filename, "I");

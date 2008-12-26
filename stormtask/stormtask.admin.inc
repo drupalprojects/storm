@@ -24,7 +24,7 @@ function stormtask_tasks($project) {
 
   $header = array(
     array(
-      'data' => storm_t('Description', 'task'),
+      'data' => storm_t('Title', 'task'),
     ),
     array(
       'data' => storm_t('Category', 'task'),
@@ -34,6 +34,12 @@ function stormtask_tasks($project) {
     ),
     array(
       'data' => storm_t('Priority', 'task'),
+    ),
+    array(
+      'data' => storm_t('Parent', 'task'),
+    ),
+    array(
+      'data' => storm_t('Weight', 'task'),
     ),
     array(
       'data' => storm_icon_add_node($i, $params),
@@ -72,19 +78,100 @@ function stormtask_tasks($project) {
     }
   }
 
-  $tree = _stormtask_get_tree($project->nid, 0, -1, NULL, $where, $args);
-  $taskstree = _stormtask_plain_tree($tree);
+  $taskstree = _stormtask_get_tree($project->nid, 0, -1, NULL, $where, $args);
+  $o .= drupal_get_form('stormtask_tasks_form', $header, $taskstree, $project);
+  return $o;
+}
 
+function stormtask_tasks_form($form_id, $header, $tasks, $project) {
+  $form = array();
+
+  $form['tasks'] = array(
+    '#theme' => 'stormtask_tasks',
+  );
+
+  $form['tasks']['header'] = array (
+    '#value' => $header,
+  );
+
+  $tree = _stormtask_get_tree($project->nid);
+  $parent_tasks = _stormtask_plain_tree($tree);
+
+  $params = $_GET;
+  $params['project_nid'] = $project->nid;
+
+  foreach ($tasks as $task) {
+    $n = new stdClass();
+    $n->nid = $task->nid;
+    $n->uid = $task->uid;
+    $n->type = 'stormtask';
+
+    $form['tasks']['tasks'][$task->nid]['task_depth_'. $task->nid] = array (
+      '#value' => $task->depth,
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_description_'. $task->nid] = array (
+      '#value' => l($task->stepno .' '. $task->title, 'node/'. $task->nid, array('html' => TRUE)),
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_category_'. $task->nid] = array (
+      '#value' => storm_icon('category_'. $task->taskcategory, $task->taskcategory),
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_status_'. $task->nid] = array (
+      '#value' => storm_icon('status_'. $task->taskstatus, $task->taskstatus),
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_priority_'. $task->nid] = array (
+      '#value' => storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_parent-nid_'. $task->nid] = array (
+      '#type' => 'select',
+      '#options' => array(0 => '-') + $parent_tasks,
+      '#default_value' => $task->parent_nid,
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_nid_'. $task->nid] = array (
+      '#type' => 'hidden',
+      '#default_value' => $task->nid,
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_weight_'. $task->nid] = array (
+      '#type' => 'weight',
+      '#default_value' => $task->weight,
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_operations_'. $task->nid] = array (
+      '#value' => storm_icon_edit_node($n, $params) .'&nbsp;'. storm_icon_delete_node($n, $params),
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#submit' => array('stormtask_tasks_submit'),
+    '#value' => storm_t('Save', 'task'),
+  );
+
+  return $form;
+}
+
+function stormtask_tasks_submit($form, &$form_state) {
   $tasks = array();
-  if ($taskstree) {
-    foreach ($taskstree as $nid => $indentstepno) {
-      $task = node_load($nid);
-      $task->indentstepno = $indentstepno;
-      $tasks[] = $task;
+  foreach($form_state['values'] as $key=>$value) {
+    $ar = explode('_', $key);
+    if($ar[0]=='task') {
+      if($ar[1]=='weight') $tasks[$ar[2]]['weight'] = $value;
+      if($ar[1]=='parent-nid') $tasks[$ar[2]]['parent-nid'] = $value;
     }
   }
-  $o .= theme('stormtask_tasks', $header, $tasks);
-  print theme('page', $o);
+
+  $s = "UPDATE {stormtask} SET weight=%d, parent_nid=%d WHERE nid=%d";  
+  foreach($tasks as $nid=>$values) {
+    db_query($s, $values['weight'], $values['parent-nid'], $nid);
+  }
+
+  drupal_set_message(storm_t('Tasks saved', 'task'));
 }
 
 function stormtask_tasks_filter() {
