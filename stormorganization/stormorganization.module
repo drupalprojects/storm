@@ -209,7 +209,7 @@ function stormorganization_form(&$node) {
   $form['group0']['iscustomer'] = array(
     '#type' => 'checkbox',
     '#title' => storm_t('Customer', 'organization'),
-    '#default_value' => !empty($node->iscustomer) ? $node->iscustomer : 1,
+    '#default_value' => $node->iscustomer,
   );
 
   $form['group0']['isprovider'] = array(
@@ -221,7 +221,7 @@ function stormorganization_form(&$node) {
   $form['group0']['isactive'] = array(
     '#type' => 'checkbox',
     '#title' => storm_t('Active', 'organization'),
-    '#default_value' => !empty($node->isactive) ? $node->isactive : 1,
+    '#default_value' => $node->isactive,
   );
 
   $form['group1'] = array(
@@ -396,6 +396,12 @@ function stormorganization_update($node) {
 
 function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
+    case 'prepare':
+      if(!$node->nid) {
+        $node->iscustomer = 1;
+        $node->isactive = 1;
+      }
+      break;
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
       db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
