@@ -32,7 +32,7 @@ function storm_menu() {
   $items['storm'] = array(
             'title' => storm_t('Storm'),
             'description' => storm_t('SpeedTech Organizer and Resource Manager'),
-            'page callback' => 'storm_storm',
+            'page callback' => 'storm_dashboard',
             'access arguments' => array('Storm: access'),
             'parent' => '',
             'type' => MENU_NORMAL_ITEM);
@@ -77,16 +77,16 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array(),
     ),
+    'storm_dashboard' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array(),
+    ),
   );
 }
 
-function storm_storm() {
-  $o = '<dl>';
-  foreach (module_invoke_all('storm_indexpage') as $key => $content) {
-    $o .= '<dt>'. $content['title'] .'</dt>';
-  }
-  $o .= '</dl>';
-  return $o;
+function storm_dashboard() {
+  drupal_set_title(storm_t('Storm dashboard'));
+  return theme('storm_dashboard');
 }
 
 function storm_admin_settings() {
@@ -100,12 +100,39 @@ function storm_admin_settings() {
     '#weight' => -11,
   );
 
+  $form['yearsrange'] = array(
+    '#type' => 'fieldset',
+    '#title' => storm_t('Years range in dates'),
+    '#collapsed' => false,
+    '#collapsible' => true,
+    '#weight' => -10,
+  );
+
+  $form['yearsrange']['group0'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['yearsrange']['group0']['storm_yearsrangebegin'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Begin'),
+    '#options' => drupal_map_assoc(range(1970, 2037)),
+    '#default_value' => variable_get('storm_yearsrangebegin', 2001),
+  );
+
+  $form['yearsrange']['group0']['storm_yearsrangeend'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('End'),
+    '#options' => drupal_map_assoc(range(1970, 2037)),
+    '#default_value' => variable_get('storm_yearsrangeend', 2012),
+  );
+
   $form['stormreports'] = array(
     '#type' => 'fieldset',
     '#title' => storm_t('Reports'),
     '#collapsed' => false,
     '#collapsible' => true,
-    '#weight' => -10,
+    '#weight' => -9,
   );
 
   $form['stormreports']['storm_report_header'] = array(
@@ -172,7 +199,7 @@ function storm_datetime_expand($element) {
   foreach ($order as $type) {
     switch ($type) {
       case 'year':
-        $options = drupal_map_assoc(range(1970, 2037));
+        $options = drupal_map_assoc(range(variable_get('storm_yearsrangebegin', 2001), variable_get('storm_yearsrangeend', 2012)));
         break;
       case 'month':
         $options = drupal_map_assoc(range(1, 12), 'map_month');
@@ -229,7 +256,7 @@ function storm_dateext_expand($element) {
   foreach ($order as $type) {
     switch ($type) {
       case 'year':
-        $options = drupal_map_assoc(range(1970, 2037));
+        $options = drupal_map_assoc(range(variable_get('storm_yearsrangebegin', 2001), variable_get('storm_yearsrangeend', 2012)));
         break;
       case 'month':
         $options = drupal_map_assoc(range(1, 12), 'map_month');
@@ -516,6 +543,23 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
       }
     }
     return $return;
+  }
+}
+
+function storm_form_alter(&$form, $form_state, $form_id) {
+  if (!isset($form['type'])) {
+    return;
+  }
+
+  if ($form_id == $form['type']['#value'] .'_node_form') {
+    foreach($form as $key=>$elem) {
+      if(is_array($elem) && $elem['#type']=='fieldset') {
+        $class = $elem['#attributes']['class'];
+        if ($class) $class .= ' ';
+        $class .= $key;
+        $form[$key]['#attributes']['class'] = $class;
+      }
+    }
   }
 }
 

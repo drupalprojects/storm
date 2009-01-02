@@ -112,3 +112,44 @@ function theme_storm_texts() {
   return $items;
 }
 
+function theme_storm_dashboard() {
+  $o = '<dl class="storm-dashboard">';
+  if (module_exists('stormorganization')) {
+    $o .= '<dt class="storm-component storm-organizations">'. l(storm_t('Organizations', 'organization'), 'storm/organizations') .'</dt>';
+  }
+  if (module_exists('stormperson')) {
+    $o .= '<dt class="storm-component storm-people">'. l(storm_t('People', 'person'), 'storm/people') .'</dt>';
+  }
+  if (module_exists('stormteammemeber')) {
+    $o .= '<dt class="storm-component storm-teammembers">'. l(storm_t('Team members', 'teammember'), 'storm/teammembrs') .'</dt>';
+  }
+  if (module_exists('stormproject')) {
+    $o .= '<dt class="storm-component storm-projects">'. l(storm_t('Projects', 'project'), 'storm/projects') .'</dt>';
+  }
+  if (module_exists('stormtask')) {
+    $o .= '<dt class="storm-component storm-tasks">'. l(storm_t('Tasks', 'task'), 'storm/tasks') .'</dt>';
+  }
+  if (module_exists('stormticket')) {
+    $o .= '<dt class="storm-component storm-tickets">'. l(storm_t('Tickets', 'ticket'), 'storm/tickets') .'</dt>';
+  }
+  if (module_exists('stormtimetracking')) {
+    $o .= '<dt class="storm-component storm-timetrackings">'. l(storm_t('Timetrackings', 'timetracking'), 'storm/timetrackings') .'</dt>';
+  }
+  if (module_exists('stormnote')) {
+    $o .= '<dt class="storm-component storm-notes">'. l(storm_t('Notes', 'note'), 'storm/notes') .'</dt>';
+  }
+  if (module_exists('storminvoice')) {
+    $o .= '<dt class="storm-component storm-invoices">'. l(storm_t('Invoices', 'invoice'), 'storm/invoices') .'</dt>';
+  }
+  if (module_exists('stormexpense')) {
+    $o .= '<dt class="storm-component storm-expenses">'. l(storm_t('Expenses', 'expense'), 'storm/expenses') .'</dt>';
+  }
+  if (module_exists('stormknowledgebase')) {
+    $o .= '<dt class="storm-component storm-knowledgebase">'. l(storm_t('Knowledge base', 'knowledgebase'), 'storm/knowledgebase') .'</dt>';
+  }
+  if (module_exists('stormattribute')) {
+    $o .= '<dt class="storm-component storm-attributes">'. l(storm_t('Attributes', 'attribute'), 'storm/attributes') .'</dt>';
+  }
+  $o .= '</dl>';
+  return $o;
+}

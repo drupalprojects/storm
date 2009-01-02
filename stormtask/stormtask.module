@@ -210,12 +210,6 @@ function stormtask_node_info() {
   );
 }
 
-function stormtask_storm_indexpage() {
-  $o = array();
-  $o['stormtask']['title'] =  l(storm_t('Tasks', 'task'), 'storm/tasks');
-  return $o;
-}
-
 function stormtask_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormtask} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);

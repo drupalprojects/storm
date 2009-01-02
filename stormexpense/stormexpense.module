@@ -206,12 +206,6 @@ function stormexpense_node_info() {
   );
 }
 
-function stormexpense_storm_indexpage() {
-  $o = array();
-  $o['stormexpense']['title'] =  l(storm_t('Expenses', 'expense'), 'storm/expenses');
-  return $o;
-}
-
 function stormexpense_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormexpense} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);

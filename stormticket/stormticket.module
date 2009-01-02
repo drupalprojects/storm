@@ -200,12 +200,6 @@ function stormticket_node_info() {
   );
 }
 
-function stormticket_storm_indexpage() {
-  $o = array();
-  $o['stormticket']['title'] =  l(t('Tickets'), 'storm/tickets');
-  return $o;
-}
-
 function stormticket_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormticket} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);

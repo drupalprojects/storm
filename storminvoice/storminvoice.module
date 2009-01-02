@@ -351,7 +351,7 @@ function storminvoice_form(&$node) {
   );
 
   $form['group3']['requestdate'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#withnull' => 'true',
     '#title' => storm_t('Request date', 'invoice'),
     '#default_value' => _storm_gmtimestamp_to_date($node->requestdate),
@@ -541,6 +541,13 @@ function storminvoice_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => variable_get('storminvoice_payment_terms', t('Due on receipt')),
       '#description' => storm_t('Payment terms', 'invoice'),
       '#size' => 50,
+    );
+    $form['storminvoice']['storminvoice_default_taxpercent'] = array(
+      '#type' => 'textfield',
+      '#title' => storm_t('Default tax percent', 'invoice'),
+      '#default_value' => variable_get('storminvoice_default_tax_percent', 20),
+      '#description' => storm_t('Defaul tax percent', 'invoice'),
+      '#size' => 5,
     );
   }
 }

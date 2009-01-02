@@ -199,12 +199,6 @@ function stormtimetracking_node_info() {
   );
 }
 
-function stormtimetracking_storm_indexpage() {
-  $o = array();
-  $o['stormtimetracking']['title'] =  l(t('Timetrackings'), 'storm/timetrackings');
-  return $o;
-}
-
 function stormtimetracking_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormtimetracking} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);

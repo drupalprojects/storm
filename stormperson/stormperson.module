@@ -202,12 +202,6 @@ function stormperson_node_info() {
   );
 }
 
-function stormperson_storm_indexpage() {
-  $o = array();
-  $o['stormperson']['title'] =  l(t('People'), 'storm/people');
-  return $o;
-}
-
 function stormperson_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormperson} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);

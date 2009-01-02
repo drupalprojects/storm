@@ -202,14 +202,6 @@ function stormproject_node_info() {
   );
 }
 
-function stormproject_storm_indexpage() {
-  $o = array();
-  if (user_access('Storm project: access')) {
-    $o['stormproject']['title'] =  l(t('Projects'), 'storm/projects');
-  }
-  return $o;
-}
-
 function stormproject_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormproject} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
