@@ -85,7 +85,7 @@ function storm_theme() {
 }
 
 function storm_dashboard() {
-  drupal_set_title(storm_t('Storm dashboard'));
+  drupal_set_title(storm_t('Storm Dashboard'));
   return theme('storm_dashboard');
 }
 

@@ -35,7 +35,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormorganization'] = array(
-    '#prefix' => '<div id="stormorganization">',
+    '#prefix' => '<div id="stormorganization" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -132,12 +132,13 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   $node->content['stormorganization']['links'] = array(
-    '#prefix' => '<div id="links">',
+    '#prefix' => '</div><div id="links">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
   $w = 0;
+
   if (module_exists('stormperson')) {
     $node->content['stormorganization']['links']['people'] = array(
       '#prefix' => '<div class="people">',
@@ -156,15 +157,6 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormnote')) {
-    $node->content['stormorganization']['links']['notes'] = array(
-      '#prefix' => '<div class="notes">',
-      '#suffix' => '</div>',
-      '#value' => l(storm_t('Notes', 'organization'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))),
-      '#weight' => $w++,
-    );
-  }
-
   if (module_exists('stormticket')) {
     $node->content['stormorganization']['links']['tickets'] = array(
       '#prefix' => '<div class="tickets">',
@@ -174,11 +166,20 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormtimetracking')) {
-    $node->content['stormorganization']['links']['timetrackings'] = array(
-      '#prefix' => '<div class="timetrackings">',
+  if (module_exists('storminvoice')) {
+    $node->content['stormorganization']['links']['invoices'] = array(
+      '#prefix' => '<div class="invoices">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Timetrackings', 'organization'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => l(storm_t('Invoices', 'organization'), 'storm/invoices/', array('query' => array('organization_nid' => $node->nid))),
+      '#weight' => $w++,
+    );
+  }
+
+  if (module_exists('stormnote')) {
+    $node->content['stormorganization']['links']['notes'] = array(
+      '#prefix' => '<div class="notes">',
+      '#suffix' => '</div>',
+      '#value' => l(storm_t('Notes', 'organization'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }

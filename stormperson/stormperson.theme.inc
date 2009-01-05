@@ -34,52 +34,61 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormperson'] = array(
-    '#prefix' => '<div id="stormperson">',
+    '#prefix' => '<div id="stormperson" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_organization'] = array(
+  $node->content['stormperson']['organization'] = array(
     '#prefix' => '<div id="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Organization', 'person'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_fullname'] = array(
+  $node->content['stormperson']['fullname'] = array(
     '#prefix' => '<div id="fullname">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Fullname', 'person'), $node->fullname),
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_email'] = array(
+  $node->content['stormperson']['email'] = array(
     '#prefix' => '<div id="email">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Email', 'person'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_www'] = array(
+  $node->content['stormperson']['www'] = array(
     '#prefix' => '<div id="www">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('WWW', 'person'), l($node->www, $node->www, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_phone'] = array(
+  $node->content['stormperson']['phone'] = array(
     '#prefix' => '<div id="phone">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Phone', 'person'), $node->phone),
     '#weight' => $w++,
   );
 
-  $node->content['stormperson_im'] = array(
+  $node->content['stormperson']['im'] = array(
     '#prefix' => '<div id="im">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('IM', 'person'), $node->im),
     '#weight' => $w++,
   );
+
+  $node->content['stormperson']['links'] = array(
+    '#prefix' => '</div><div id="links">',
+    '#suffix' => '</div>',
+    '#value' => '&nbsp;',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
 
   return $node;
 }

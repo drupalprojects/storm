@@ -38,7 +38,7 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormtimetracking'] = array(
-    '#prefix' => '<div id="stormtimetracking">',
+    '#prefix' => '<div id="stormtimetracking" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -63,6 +63,15 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', storm_t('Task', 'timetracking'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => $w++,
   );
+
+  $node->content['stormtimetracking']['links'] = array(
+    '#prefix' => '</div><div id="links">',
+    '#suffix' => '</div>',
+    '#value' => '&nbsp;',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
 
   return $node;
 }

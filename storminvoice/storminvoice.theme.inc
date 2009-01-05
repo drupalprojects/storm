@@ -161,7 +161,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['storminvoice'] = array(
-    '#prefix' => '<div id="storminvoice">',
+    '#prefix' => '<div id="storminvoice" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -195,12 +195,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['reference'] = array(
-    '#prefix' => '<div class="reference">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Reference', 'invoice'), $node->reference),
-    '#weight' => $w++,
-  );
+  if($node->reference) {
+    $node->content['storminvoice']['reference'] = array(
+      '#prefix' => '<div class="reference">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', storm_t('Reference', 'invoice'), $node->reference),
+      '#weight' => $w++,
+    );
+  }
 
   $node->content['storminvoice']['amount'] = array(
     '#prefix' => '<div class="amount">',
@@ -267,8 +269,18 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $language = $myorg->orglanguage;
   }
 
+  if($node->content['body']['#value']) {
+    $node->content['storminvoice']['body'] = array(
+      '#prefix' => '<div class="body">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', storm_t('Description', 'project'), $node->content['body']['#value']),
+      '#weight' => $w++,
+    );
+    unset($node->content['body']);
+  }
+
   $node->content['storminvoice']['links'] = array(
-    '#prefix' => '<div id="links">',
+    '#prefix' => '</div><div id="links">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -361,7 +373,8 @@ function theme_storminvoice_report_pdf($node, $language) {
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
 
   $pdf->SetFont("times", "B", 14);
-  if ($language1) $o = $title ."\n". storm_t('Invoice', 'invoice', array(), $language1);
+  $o = $title;
+  if ($language1) $o .= "\n". storm_t('Invoice', 'invoice', array(), $language1);
   $pdf->MultiCell(0, 0, $o, 0 ,'C', 0, 1,$pdf->getX(), $pdf->getY() + 10);
 
   $y = $pdf->getY() + 10;

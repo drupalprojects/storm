@@ -37,7 +37,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormproject'] = array(
-    '#prefix' => '<div id="stormproject">',
+    '#prefix' => '<div id="stormproject" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -69,8 +69,16 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  $node->content['stormproject']['body'] = array(
+    '#prefix' => '<div class="body">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Description', 'project'), $node->content['body']['#value']),
+    '#weight' => $w++,
+  );
+  unset($node->content['body']);
+
   $node->content['stormproject']['links'] = array(
-    '#prefix' => '<div id="links">',
+    '#prefix' => '</div><div id="links">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );

@@ -102,3 +102,168 @@ tr.formgroup {
   border: none !important;
 }
 
+body.nodetype-storminvoice fieldset.menu-item-form,
+body.nodetype-storminvoice fieldset.book-outline-form,
+body.nodetype-storminvoice fieldset.path,
+body.nodetype-storminvoice fieldset.revision_information,
+body.nodetype-storminvoice fieldset.comment_settings,
+body.nodetype-storminvoice fieldset.author,
+body.nodetype-storminvoice fieldset.options {
+display: none;
+}
+
+body.nodetype-storminvoiceitem fieldset.menu-item-form,
+body.nodetype-storminvoiceitem fieldset.book-outline-form,
+body.nodetype-storminvoiceitem fieldset.path,
+body.nodetype-storminvoiceitem fieldset.revision_information,
+body.nodetype-storminvoiceitem fieldset.comment_settings,
+body.nodetype-storminvoiceitem fieldset.author,
+body.nodetype-storminvoiceitem fieldset.options,
+body.nodetype-storminvoiceitem div.attachments {
+display: none;
+}
+
+body.nodetype-storminvoiceitem #edit-preview {
+display: none;
+}
+
+#stormdashboard {
+width: 100%
+}
+
+div.stormdashboard {
+float: left;
+width: 50%;
+}
+
+dt.stormcomponent {
+padding-left: 40px;
+padding-top: 10px;
+height: 40px;
+}
+
+dt.stormcomponent a {
+font-weight: bold;
+margin-right: 5px;
+}
+
+dt#stormorganizations {
+background: transparent url(images/organizations.png) no-repeat top left;
+}
+
+dt#stormprojects {
+background: transparent url(images/projects.png) no-repeat top left;
+}
+
+dt#stormtasks {
+background: transparent url(images/tasks.png) no-repeat top left;
+}
+
+dt#stormtickets {
+background: transparent url(images/tickets.png) no-repeat top left;
+}
+
+dt#stormpeople {
+background: transparent url(images/people.png) no-repeat top left;
+}
+
+dt#stormteammembers {
+background: transparent url(images/teammembers.png) no-repeat top left;
+}
+
+dt#stormknowledgebase {
+background: transparent url(images/knowledgebase.png) no-repeat top left;
+}
+
+dt#stormtimetrackings {
+background: transparent url(images/timetrackings.png) no-repeat top left;
+}
+
+dt#stormnotes {
+background: transparent url(images/notes.png) no-repeat top left;
+}
+
+dt#storminvoices {
+background: transparent url(images/invoices.png) no-repeat top left;
+}
+
+dt#stormexpenses {
+background: transparent url(images/expenses.png) no-repeat top left;
+}
+
+dt#stormattributes {
+background: transparent url(images/attributes.png) no-repeat top left;
+}
+
+dt#stormconfiguration {
+background: transparent url(images/configuration.png) no-repeat top left;
+}
+
+div.stormcomponent {
+clear: both;
+}
+
+div.stormcomponent div.fields {
+float: left;
+width: 70%;
+}
+
+div.stormcomponent div.fields div.label{
+float: left;
+width: 150px;
+text-align: right;
+clear: left;
+}
+
+div.stormcomponent div.fields div.value {
+float: left;
+margin-left: 4px;
+}
+
+div.stormcomponent div.fields div.value p {
+margin: 0;
+}
+
+div.stormcomponent #links {
+float: left;
+width: 30%;
+}
+
+div.stormcomponent #links div {
+padding-left: 34px;
+height: 34px;
+padding-top: 6px;
+}
+
+div.stormcomponent div.projects {
+background: transparent url(images/projects.png) no-repeat top left;
+}
+
+div.stormcomponent div.people {
+background: transparent url(images/people.png) no-repeat top left;
+}
+
+div.stormcomponent div.tickets {
+background: transparent url(images/tickets.png) no-repeat top left;
+}
+
+div.stormcomponent div.invoices {
+background: transparent url(images/invoices.png) no-repeat top left;
+}
+
+div.stormcomponent div.notes {
+background: transparent url(images/notes.png) no-repeat top left;
+}
+
+div.stormcomponent div.timetrackings {
+background: transparent url(images/timetrackings.png) no-repeat top left;
+}
+
+div.stormcomponent div.print_html {
+background: transparent url(images/html.png) no-repeat top left;
+}
+
+div.stormcomponent div.print_pdf {
+background: transparent url(images/pdf.png) no-repeat top left;
+}
+

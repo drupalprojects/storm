@@ -6,8 +6,10 @@
  */
 
 function theme_stormtask_tasks($form) {
-  drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
-  drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
+  if(count($form['tasks'])>0) {
+    drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
+    drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
+  }
 
   $header = array();
   $row = array();
@@ -70,7 +72,7 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormtask'] = array(
-    '#prefix' => '<div id="stormtask">',
+    '#prefix' => '<div id="stormtask" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -95,6 +97,15 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', storm_t('Step no.', 'task'), $node->stepno),
     '#weight' => $w++,
   );
+
+  $node->content['stormtask']['links'] = array(
+    '#prefix' => '</div><div id="links">',
+    '#suffix' => '</div>',
+    '#value' => '&nbsp;',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
 
   return $node;
 }

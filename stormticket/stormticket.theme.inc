@@ -38,7 +38,7 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormticket'] = array(
-    '#prefix' => '<div id="stormticket">',
+    '#prefix' => '<div id="stormticket" class="stormcomponent"><div class="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
@@ -63,6 +63,15 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', storm_t('Task', 'ticket'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => $w++,
   );
+
+  $node->content['stormticket']['links'] = array(
+    '#prefix' => '</div><div id="links">',
+    '#suffix' => '</div>',
+    '#value' => '&nbsp;',
+    '#weight' => $w++,
+  );
+
+  $w = 0;
 
   return $node;
 }
