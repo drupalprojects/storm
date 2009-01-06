@@ -138,6 +138,10 @@ function stormknowledgebase_menu() {
 
 function stormknowledgebase_theme() {
   return array(
+    'stormknowledgebase_view' => array(
+      'file'      => 'stormknowledgebase.theme.inc',
+      'arguments' => array('node', 'teaser', 'page'),
+    ),
     'stormknowledgebase_list' => array(
       'file'      => 'stormknowledgebase.theme.inc',
       'arguments' => array('header', 'knowledgebase'),
@@ -164,6 +168,8 @@ function stormknowledgebase_form(&$node) {
 
   $type = node_get_types('type', $node);
 
+  $form['#attributes']['class'] = 'stormcomponent_node_form';
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -188,7 +194,8 @@ function stormknowledgebase_form(&$node) {
     '#type' => 'select',
     '#title' => storm_t('Topic', 'knowledgebase'),
     '#default_value' => $node->topic,
-    '#options' => stormattribute_attributes_bydomain('Knowledge base topic'),
+    '#options' => 
+k,
   );
 
   return $form;
@@ -200,8 +207,7 @@ function stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $breadcrumb[] = l(t('Knowledge base'), 'storm/knowledgebase');
   drupal_set_breadcrumb($breadcrumb);
 
-  $node = node_prepare($node, $teaser);
-  return $node;
+  return theme('stormknowledgebase_view', $node, $teaser, $page);
 }
 
 function stormknowledgebase_insert($node) {

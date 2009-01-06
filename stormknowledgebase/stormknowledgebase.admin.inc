@@ -32,7 +32,7 @@ function stormknowledgebase_list() {
     ),
   );
 
-  $s  = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormknowledgebase} AS skb ON n.vid=skb.vid WHERE n.status=1 AND n.type='stormknowledgebase' ";
+  $s  = "SELECT n.nid, n.title, skb.* FROM {node} AS n INNER JOIN {stormknowledgebase} AS skb ON n.vid=skb.vid WHERE n.status=1 AND n.type='stormknowledgebase' ";
 
   $where = array();
   $args = array();

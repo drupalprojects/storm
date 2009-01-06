@@ -38,34 +38,48 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormtimetracking'] = array(
-    '#prefix' => '<div id="stormtimetracking" class="stormcomponent"><div class="fields">',
+    '#prefix' => '<div id="stormtimetracking" class="stormcomponent">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormtimetracking']['organization'] = array(
+  $node->content['stormtimetracking']['fields'] = array(
+    '#prefix' => '<div id="fields">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtimetracking']['fields']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Organization', 'timetracking'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormtimetracking']['project'] = array(
+  $node->content['stormtimetracking']['fields']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Project', 'timetracking'), l($node->project_title, 'node/'. $node->project_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormtimetracking']['task'] = array(
+  $node->content['stormtimetracking']['fields']['task'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Task', 'timetracking'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => $w++,
   );
 
+  $node->content['stormtimetracking']['fields']['body'] = array(
+    '#prefix' => '<div class="body">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Description', 'timetracking'), $node->content['body']['#value']),
+    '#weight' => $w++,
+  );
+  unset($node->content['body']);
+
   $node->content['stormtimetracking']['links'] = array(
-    '#prefix' => '</div><div id="links">',
+    '#prefix' => '<div id="links">',
     '#suffix' => '</div>',
     '#value' => '&nbsp;',
     '#weight' => $w++,

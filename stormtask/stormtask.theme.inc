@@ -72,34 +72,48 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormtask'] = array(
-    '#prefix' => '<div id="stormtask" class="stormcomponent"><div class="fields">',
+    '#prefix' => '<div id="stormtask" class="stormcomponent">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormtask']['organization'] = array(
+  $node->content['stormtask']['fields'] = array(
+    '#prefix' => '<div id="fields">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormtask']['fields']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Organization', 'task'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormtask']['project'] = array(
+  $node->content['stormtask']['fields']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Project', 'task'), l($node->project_title, 'node/'. $node->project_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormtask']['stepno'] = array(
+  $node->content['stormtask']['fields']['stepno'] = array(
     '#prefix' => '<div class="stepno">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Step no.', 'task'), $node->stepno),
     '#weight' => $w++,
   );
 
+  $node->content['stormtask']['fields']['body'] = array(
+    '#prefix' => '<div class="body">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', storm_t('Description', 'note'), $node->content['body']['#value']),
+    '#weight' => $w++,
+  );
+  unset($node->content['body']);
+
   $node->content['stormtask']['links'] = array(
-    '#prefix' => '</div><div id="links">',
+    '#prefix' => '<div id="links">',
     '#suffix' => '</div>',
     '#value' => '&nbsp;',
     '#weight' => $w++,

@@ -263,6 +263,8 @@ function stormticket_form(&$node) {
 
   $type = node_get_types('type', $node);
 
+  $form['#attributes']['class'] = 'stormcomponent_node_form';
+
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',

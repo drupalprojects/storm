@@ -102,28 +102,19 @@ tr.formgroup {
   border: none !important;
 }
 
-body.nodetype-storminvoice fieldset.menu-item-form,
-body.nodetype-storminvoice fieldset.book-outline-form,
-body.nodetype-storminvoice fieldset.path,
-body.nodetype-storminvoice fieldset.revision_information,
-body.nodetype-storminvoice fieldset.comment_settings,
-body.nodetype-storminvoice fieldset.author,
-body.nodetype-storminvoice fieldset.options {
+form.stormcomponent_node_form fieldset.menu-item-form,
+form.stormcomponent_node_form fieldset.book-outline-form,
+form.stormcomponent_node_form fieldset.path,
+form.stormcomponent_node_form fieldset.revision_information,
+form.stormcomponent_node_form fieldset.comment_settings,
+form.stormcomponent_node_form fieldset.author,
+form.stormcomponent_node_form fieldset.options,
+form.stormcomponent_node_form #edit-preview {
 display: none;
 }
 
-body.nodetype-storminvoiceitem fieldset.menu-item-form,
-body.nodetype-storminvoiceitem fieldset.book-outline-form,
-body.nodetype-storminvoiceitem fieldset.path,
-body.nodetype-storminvoiceitem fieldset.revision_information,
-body.nodetype-storminvoiceitem fieldset.comment_settings,
-body.nodetype-storminvoiceitem fieldset.author,
-body.nodetype-storminvoiceitem fieldset.options,
-body.nodetype-storminvoiceitem div.attachments {
-display: none;
-}
-
-body.nodetype-storminvoiceitem #edit-preview {
+form.storminvoiceitem_node_form div.attachments,
+form.stormtimetracking_node_form div.attachments {
 display: none;
 }
 
@@ -203,24 +194,24 @@ div.stormcomponent {
 clear: both;
 }
 
-div.stormcomponent div.fields {
+div.stormcomponent #fields {
 float: left;
 width: 70%;
 }
 
-div.stormcomponent div.fields div.label{
+div.stormcomponent #fields div.label{
 float: left;
 width: 150px;
 text-align: right;
 clear: left;
 }
 
-div.stormcomponent div.fields div.value {
+div.stormcomponent #fields div.value {
 float: left;
 margin-left: 4px;
 }
 
-div.stormcomponent div.fields div.value p {
+div.stormcomponent #fields div.value p {
 margin: 0;
 }
 

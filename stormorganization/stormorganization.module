@@ -192,6 +192,8 @@ function stormorganization_form(&$node) {
 
   $type = node_get_types('type', $node);
 
+  $form['#attributes']['class'] = 'stormcomponent_node_form';
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),

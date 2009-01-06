@@ -37,39 +37,45 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $node->content['stormproject'] = array(
-    '#prefix' => '<div id="stormproject" class="stormcomponent"><div class="fields">',
+    '#prefix' => '<div id="stormproject" class="stormcomponent">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormproject']['organization'] = array(
+  $node->content['stormproject']['fields'] = array(
+    '#prefix' => '<div id="fields">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['stormproject']['fields']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Organization', 'project'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
-  $node->content['stormproject']['projectcategory'] = array(
+  $node->content['stormproject']['fields']['projectcategory'] = array(
     '#prefix' => '<div class="projectcategory">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Category', 'project'), stormattribute_value('Project category', $node->projectcategory)),
     '#weight' => $w++,
   );
 
-  $node->content['stormproject']['projectstatus'] = array(
+  $node->content['stormproject']['fields']['projectstatus'] = array(
     '#prefix' => '<div class="projectstatus">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Status', 'project'), stormattribute_value('Project status', $node->projectstatus)),
     '#weight' => $w++,
   );
 
-  $node->content['stormproject']['projectpriority'] = array(
+  $node->content['stormproject']['fields']['projectpriority'] = array(
     '#prefix' => '<div class="projectpriority">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Priority', 'project'), stormattribute_value('Project priority', $node->projectpriority)),
     '#weight' => $w++,
   );
 
-  $node->content['stormproject']['body'] = array(
+  $node->content['stormproject']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', storm_t('Description', 'project'), $node->content['body']['#value']),
@@ -78,7 +84,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   unset($node->content['body']);
 
   $node->content['stormproject']['links'] = array(
-    '#prefix' => '</div><div id="links">',
+    '#prefix' => '<div id="links">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
