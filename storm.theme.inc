@@ -202,7 +202,7 @@ function theme_storm_dashboard() {
     $o .= '<dt class="stormcomponent" id="stormattributes">'. l(storm_t('Attributes', 'attribute'), 'storm/attributes');
     $i = new stdClass();
     $i->type = 'stormattribute';
-    $o .= storm_icon_add_node($i, $_GET);
+    $o .= storm_icon_add('storm/attributes/add', $i, $_GET);
     $o .= '</dt>';
   }
   $o .= '<dt class="stormcomponent" id="stormconfiguration">'. l(storm_t('Configuration'), 'admin/storm') .'</dt>';
