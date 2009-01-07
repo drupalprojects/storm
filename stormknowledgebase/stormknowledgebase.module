@@ -194,8 +194,7 @@ function stormknowledgebase_form(&$node) {
     '#type' => 'select',
     '#title' => storm_t('Topic', 'knowledgebase'),
     '#default_value' => $node->topic,
-    '#options' => 
-k,
+    '#options' => stormattribute_attributes_bydomain('Knowledge base topic'),
   );
 
   return $form;
