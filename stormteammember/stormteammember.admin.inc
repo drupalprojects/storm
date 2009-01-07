@@ -264,16 +264,24 @@ function stormteammember_add_submit($form, &$form_state) {
             (organization_nid, organization_title,
             project_nid, project_title,
             task_nid, task_title, task_stepno,
-            ticket_nid, ticket_title) VALUES
+            ticket_nid, ticket_title,
+            person_organization_nid, person_organization_title,
+            person_nid, person_title
+            ) VALUES
             (%d, '%s',
             %d, '%s',
             %d, '%s', '%s',
+            %d, '%s', 
+            %d, '%s',
             %d, '%s'
             )",
             $teammember->organization_nid, $teammember->organization_title,
             $teammember->project_nid, $teammember->project_title,
             $teammember->task_nid, $teammember->task_title, $teammember->task_stepno,
-            $teammember->ticket_nid, $teammember->ticket_title);
+            $teammember->ticket_nid, $teammember->ticket_title,
+            $teammember->person_organization_nid, $teammember->person_organization_title,
+            $teammember->person_nid, $teammember->person_title
+            );
 }
 
 function stormteammember_edit($form_state, $tid) {
@@ -291,6 +299,8 @@ function stormteammember_edit_submit($form, &$form_state) {
   $teammember->project_nid = $form_state['values']['project_nid'];
   $teammember->task_nid = $form_state['values']['task_nid'];
   $teammember->ticket_nid = $form_state['values']['ticket_nid'];
+  $teammember->person_organization_nid = $form_state['values']['person_organization_nid'];
+  $teammember->person_nid = $form_state['values']['person_nid'];
   $teammember->tid = $form_state['values']['tid'];
 
   _stormteammember_beforesave($teammember);
@@ -299,11 +309,17 @@ function stormteammember_edit_submit($form, &$form_state) {
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
             task_nid=%d, task_title='%s', task_stepno='%s',
-            ticket_nid=%d, ticket_title='%s' WHERE tid = %d",
+            ticket_nid=%d, ticket_title='%s', 
+            person_organization_nid=%d, person_organization_title='%s', 
+            person_nid=%d, person_title='%s' 
+            WHERE tid = %d",
             $teammember->organization_nid, $teammember->organization_title,
             $teammember->project_nid, $teammember->project_title,
             $teammember->task_nid, $teammember->task_title, $teammember->task_stepno,
-            $teammember->ticket_nid, $teammember->ticket_title, $teammember->tid);
+            $teammember->ticket_nid, $teammember->ticket_title, 
+            $teammember->person_organization_nid, $teammember->person_organization_title, 
+            $teammember->person_nid, $teammember->person_title, 
+            $teammember->tid);
 }
 
 function _stormteammember_beforesave(&$teammember) {
@@ -329,6 +345,16 @@ function _stormteammember_beforesave(&$teammember) {
   $r = db_query($s, $teammember->ticket_nid);
   $ti = db_fetch_object($r);
   $teammember->ticket_title = $ti->title;
+
+  $s = "SELECT title FROM {node} n INNER JOIN {stormorganization} t ON n.nid=t.nid WHERE n.type='stormorganization' AND n.nid=%d";
+  $r = db_query($s, $teammember->person_organization_nid);
+  $ti = db_fetch_object($r);
+  $teammember->person_organization_title = $ti->title;
+
+  $s = "SELECT title FROM {node} n INNER JOIN {stormperson} t ON n.nid=t.nid WHERE n.type='stormperson' AND n.nid=%d";
+  $r = db_query($s, $teammember->person_nid);
+  $ti = db_fetch_object($r);
+  $teammember->person_title = $ti->title;
 }
 
 function stormteammember_form(&$teammember) {
@@ -452,17 +478,17 @@ function stormteammember_form(&$teammember) {
     '#weight' => -18,
   );
 
-  $form['group2']['organization_nid'] = array(
+  $form['group2']['person_organization_nid'] = array(
     '#type' => 'select',
     '#title' => storm_t('Person organization', 'teammember'),
     '#default_value' => $teammember->person_organization_nid,
     '#options' => $organizations,
     '#required' => true,
-    '#attributes' => array('onchange' => "stormperson_organization_person(this, 'edit-person-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormperson_organization_people(this, 'edit-person-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {stormperson} sp INNER JOIN {node} n 
-              ON sp.nid=n.nid WHERE n.status=1 AND sp.organization_nid=%d AND n.type='stormperson' ORDER BY n.title";
+  $s = "SELECT n.nid, n.title FROM {stormperson} spe INNER JOIN {node} n 
+              ON spe.vid=n.vid WHERE n.status=1 AND spe.organization_nid=%d AND n.type='stormperson' ORDER BY n.title";
   $s = stormperson_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s, $teammember->person_organization_nid);
@@ -470,6 +496,7 @@ function stormteammember_form(&$teammember) {
   while ($person = db_fetch_object($r)) {
     $people[$person->nid] = $person->title;
   }
+  $people = array(0 => '-') + $people;
 
   $form['group2']['person_nid'] = array(
     '#type' => 'select',
@@ -477,6 +504,7 @@ function stormteammember_form(&$teammember) {
     '#default_value' => $teammember->person_nid,
     '#options' => $people,
     '#required' => true,
+    '#process' => array('storm_dependent_select_process'),
   );
 
   $form['save'] = array(

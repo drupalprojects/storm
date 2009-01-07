@@ -35,6 +35,16 @@ function stormperson_init() {
       $user->stormorganization_nid = -1;
     }
   }
+
+  $settings = array(
+                    'storm' => array(
+                      'organization_people_url' => url('storm/organization_people_js/')
+                    ),
+              );
+  drupal_add_js($settings, 'setting');
+
+  drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
+  drupal_add_js(drupal_get_path('module', 'stormperson') .'/stormperson.js', 'module', 'header', FALSE);
 }
 
 function stormperson_perm() {
@@ -170,6 +180,16 @@ function stormperson_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormperson.admin.inc',
   );
+
+  $items['storm/organization_people_js/%'] = array(
+    'title' => storm_t('People', 'person'),
+    'page callback' => '_stormperson_organization_people_js',
+    'page arguments' => array(2),
+    'access arguments' => array('Storm person: access'),
+    'file' => 'stormperson.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 

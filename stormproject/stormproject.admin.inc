@@ -305,7 +305,6 @@ function _stormproject_organization_projects_js($organization_nid=0) {
 
   if ($organization_nid) {
     $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject' AND spr.organization_nid=%d ORDER BY n.title";
-    $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject' AND spr.organization_nid=%d ORDER BY n.title";
     $s = stormproject_access_sql($s);
     $s = db_rewrite_sql($s);
     $r = db_query($s, $organization_nid);
