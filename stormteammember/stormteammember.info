@@ -7,5 +7,6 @@ dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
 dependencies[] = stormticket
+dependencies[] = stormperson
 package = Storm
 core = 6.x
