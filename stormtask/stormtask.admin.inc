@@ -36,6 +36,9 @@ function stormtask_tasks($project) {
       'data' => storm_t('Priority', 'task'),
     ),
     array(
+      'data' => storm_t('Duration', 'task'),
+    ),
+    array(
       'data' => storm_t('Parent', 'task'),
     ),
     array(
@@ -126,6 +129,10 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
       '#value' => storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
     );
 
+    $form['tasks']['tasks'][$task->nid]['task_duration_'. $task->nid] = array (
+      '#value' => $task->duration,
+    );
+
     $form['tasks']['tasks'][$task->nid]['task_parent-nid_'. $task->nid] = array (
       '#type' => 'select',
       '#options' => array(0 => '-') + $parent_tasks,
@@ -142,8 +149,12 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
       '#default_value' => $task->weight,
     );
 
+    $v = storm_icon_edit_node($n, $params);
+    $v .= '&nbsp;'. storm_icon_delete_node($n, $params);
+    $params['parent_nid'] = $task->nid;
+    $v .= '&nbsp;'. storm_icon_add_node($n, $params);
     $form['tasks']['tasks'][$task->nid]['task_operations_'. $task->nid] = array (
-      '#value' => storm_icon_edit_node($n, $params) .'&nbsp;'. storm_icon_delete_node($n, $params),
+      '#value' => $v,
     );
   }
 

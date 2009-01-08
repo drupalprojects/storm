@@ -26,6 +26,7 @@ function theme_stormtask_tasks($form) {
       drupal_render($form['tasks'][$key]['task_category_'. $key]),
       drupal_render($form['tasks'][$key]['task_status_'. $key]),
       drupal_render($form['tasks'][$key]['task_priority_'. $key]),
+      array('data' => drupal_render($form['tasks'][$key]['task_duration_'. $key]), 'style' => 'text-align: right'),
       drupal_render($form['tasks'][$key]['task_parent-nid_'. $key]) . drupal_render($form['tasks'][$key]['task_nid_'. $key]),
       drupal_render($form['tasks'][$key]['task_weight_'. $key]),
       array (

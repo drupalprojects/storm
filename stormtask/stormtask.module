@@ -248,6 +248,10 @@ function stormtask_form(&$node) {
       $node->organization_nid = $p->organization_nid;
     }
 
+    if (array_key_exists('parent_nid', $_GET) && !$node->parent_nid) {
+      $node->parent_nid = $_GET['parent_nid'];
+    }
+
     if ($_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
     }
@@ -570,7 +574,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
   if (!isset($children[$project_nid])) {
     $children[$project_nid] = array();
 
-    $s = "SELECT n.nid, n.title, sta.stepno, sta.weight, sta.parent_nid, sta.taskcategory, sta.taskstatus, sta.taskpriority FROM {node} AS n INNER JOIN {stormtask} AS sta
+    $s = "SELECT n.title, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta
     ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
     ORDER BY sta.weight";
     $s = stormtask_access_sql($s, $where);
@@ -590,7 +594,6 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
       if ($max_depth > $depth) {
         $task = drupal_clone($tasks[$project_nid][$child_nid]);
         $task->depth = $depth;
-        unset($task->parent_nid);
         $task->parents = $parents[$project_nid][$child_nid];
         $tree[] = $task;
         if ($children[$project_nid][$child_nid]) {
