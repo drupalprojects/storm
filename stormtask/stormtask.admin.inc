@@ -37,6 +37,7 @@ function stormtask_tasks($project) {
     ),
     array(
       'data' => storm_t('Duration', 'task'),
+      'style' => 'text-align: center;',
     ),
     array(
       'data' => storm_t('Parent', 'task'),
@@ -131,6 +132,11 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
 
     $form['tasks']['tasks'][$task->nid]['task_duration_'. $task->nid] = array (
       '#value' => $task->duration,
+    );
+
+    $form['tasks']['tasks'][$task->nid]['task_durationunit_'. $task->nid] = array (
+      '#type' => 'hidden',
+      '#value' => $task->durationunit,
     );
 
     $form['tasks']['tasks'][$task->nid]['task_parent-nid_'. $task->nid] = array (
