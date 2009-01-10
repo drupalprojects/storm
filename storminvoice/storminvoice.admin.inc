@@ -242,13 +242,13 @@ function storminvoice_list_filter() {
   );
 
   $form['filter']['group2']['reqdatefrom'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#title' => storm_t('Req. date from'),
     '#default_value' => $reqdatefrom,
   );
 
   $form['filter']['group2']['reqdateto'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#title' => storm_t('Req. date to'),
     '#default_value' => $reqdateto,
   );

@@ -293,13 +293,13 @@ function stormtimetracking_list_filter() {
   );
 
   $form['filter']['group2']['datefrom'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#title' => storm_t('Date from', 'timetracking'),
     '#default_value' => $datefrom,
   );
 
   $form['filter']['group2']['dateto'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#title' => storm_t('Date to', 'timetracking'),
     '#default_value' => $dateto,
   );
