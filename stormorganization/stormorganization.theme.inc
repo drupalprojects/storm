@@ -146,46 +146,80 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $w = 0;
 
   if (module_exists('stormperson')) {
+    $v = l(storm_t('People', 'organization'), 'storm/people/', array('query' => array('organization_nid' => $node->nid)));
+    $i = new stdClass();
+    $i->type = 'stormperson';
+    $params = $_GET;
+    $params['organization_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+
     $node->content['stormorganization']['links']['people'] = array(
       '#prefix' => '<div class="people">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('People', 'organization'), 'storm/people/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => $v,
       '#weight' => $w++,
     );
   }
 
   if (module_exists('stormproject')) {
+    $v = l(storm_t('Projects', 'organization'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid)));
+    $i = new stdClass();
+    $i->type = 'stormproject';
+    $params = $_GET;
+    $params['organization_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+
     $node->content['stormorganization']['links']['projects'] = array(
       '#prefix' => '<div class="projects">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Projects', 'organization'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => $v,
       '#weight' => $w++,
     );
   }
 
   if (module_exists('stormticket')) {
+    $v = l(storm_t('Tickets', 'organization'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid)));
+    $i = new stdClass();
+    $i->type = 'stormproject';
+    $params = $_GET;
+    $params['organization_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+
     $node->content['stormorganization']['links']['tickets'] = array(
       '#prefix' => '<div class="tickets">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Tickets', 'organization'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => $v,
       '#weight' => $w++,
     );
   }
 
   if (module_exists('storminvoice')) {
+    $v = l(storm_t('Invoices', 'organization'), 'storm/invoices/', array('query' => array('organization_nid' => $node->nid)));
+    $i = new stdClass();
+    $i->type = 'storminvoice';
+    $params = $_GET;
+    $params['organization_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
     $node->content['stormorganization']['links']['invoices'] = array(
       '#prefix' => '<div class="invoices">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Invoices', 'organization'), 'storm/invoices/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => $v,
       '#weight' => $w++,
     );
   }
 
   if (module_exists('stormnote')) {
+    $v = l(storm_t('Notes', 'organization'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid)));
+    $i = new stdClass();
+    $i->type = 'stormnote';
+    $params = $_GET;
+    $params['organization_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+
     $node->content['stormorganization']['links']['notes'] = array(
       '#prefix' => '<div class="notes">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Notes', 'organization'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid))),
+      '#value' => $v,
       '#weight' => $w++,
     );
   }
