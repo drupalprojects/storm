@@ -102,6 +102,15 @@ function stormattribute_install() {
   );
 
   $attributes['Ticket category'] = array(
+    'estimate' => 'estimate',
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $attributes['Ticket category search'] = array(
+    'estimate' => 'estimate',
     'bug' => 'bug',
     'feature request' => 'feature request',
     'support' => 'support',
@@ -404,12 +413,15 @@ function stormattribute_uninstall() {
 
 function stormattribute_schema() {
   $schema['stormattribute'] = array(
-    'fields'    => array(
-      'aid'     => array('type' => 'serial', 'not null' => TRUE),
-      'domain'  => array('type' => 'varchar', 'length' => 100),
-      'akey'    => array('type' => 'varchar', 'length' => 100),
-      'avalue'  => array('type' => 'varchar', 'length' => 100),
-      'weight'  => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny')
+    'fields'          => array(
+      'aid'           => array('type' => 'serial', 'not null' => TRUE),
+      'domain'        => array('type' => 'varchar', 'length' => 100),
+      'akey'          => array('type' => 'varchar', 'length' => 100),
+      'avalue'        => array('type' => 'varchar', 'length' => 100),
+      'parent_domain' => array('type' => 'varchar', 'length' => 100),
+      'weight'        => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
+      'isdefault'     => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
+      'isactive'      => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
     ),
     'primary key' => array('aid'),
   );
@@ -481,7 +493,6 @@ function stormattribute_update_2() {
   );
 
   $attributes['Country'] = array(
-    'US'=>'United States of America',
     'AD'=>'Andorra',
     'AE'=>'United Arab Emirates',
     'AF'=>'Afghanistan',
@@ -702,6 +713,7 @@ function stormattribute_update_2() {
     'UA'=>'Ukraine',
     'UG'=>'Uganda',
     'UY'=>'Uruguay',
+    'US'=>'United States of America',
     'UZ'=>'Uzbekistan',
     'VA'=>'Holy See',
     'VC'=>'Saint Vincent and the Grenadines',
@@ -780,3 +792,31 @@ function stormattribute_update_4() {
   $ret = array();
   return $ret;
 }
+
+function stormattribute_update_5() {
+  $attributes['Ticket category search'] = array(
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
+  $ret = array();
+  db_add_field($ret, 'stormattribute', 'parent_domain', array('type' => 'varchar', 'length' => 100));
+  db_add_field($ret, 'stormattribute', 'isactive', array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
+  db_add_field($ret, 'stormattribute', 'isdefault', array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
+  return $ret;
+}
+
