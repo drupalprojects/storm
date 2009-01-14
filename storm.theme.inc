@@ -134,7 +134,7 @@ function theme_storm_dashboard() {
     $o .= '<dt class="stormcomponent" id="stormteammembers">'. l(storm_t('Team members', 'teammember'), 'storm/teammembers');
     $i = new stdClass();
     $i->type = 'stormteammember';
-    $o .= storm_icon_add_node($i, $_GET);
+    $o .= storm_icon_add('storm/teammembers/add', $i, $_GET);
     $o .= '</dt>';
   }
   if (module_exists('stormproject')) {
