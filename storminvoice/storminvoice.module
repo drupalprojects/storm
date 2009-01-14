@@ -547,8 +547,8 @@ function storminvoice_form_alter(&$form, $form_state, $form_id) {
     $form['storminvoice']['storminvoice_default_taxpercent'] = array(
       '#type' => 'textfield',
       '#title' => storm_t('Default tax percent', 'invoice'),
-      '#default_value' => variable_get('storminvoice_default_tax_percent', 20),
-      '#description' => storm_t('Defaul tax percent', 'invoice'),
+      '#default_value' => variable_get('storminvoice_default_taxpercent', 20),
+      '#description' => storm_t('Default tax percent', 'invoice'),
       '#size' => 5,
     );
   }

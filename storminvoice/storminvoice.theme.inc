@@ -392,7 +392,9 @@ function theme_storminvoice_report_pdf($node, $language) {
   $o =  $organization->fullname ."\n";
   $o .= $organization->address ."\n";
   $o .= $organization->city ."\n";
-  $o .= $organization->provstate .' '. $organization->zip .' '. $countries[$organization->country] ."\n";;
+  if ($organization->zip) $o .= $organization->zip .' ';
+  if ($organization->provstate) $o .= $organization->provstate .' ';
+  $o .= $countries[$organization->country] ."\n";;
   if ($organization->taxid) {
     $o .= storm_t('Tax ID', 'invoice', array(), $language);
     if ($language1) $o .= ' / '. storm_t('Tax ID', 'invoice', array(), $language1);

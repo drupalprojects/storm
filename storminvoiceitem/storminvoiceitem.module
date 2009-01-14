@@ -332,7 +332,7 @@ function storminvoiceitem_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
       if(!$node->nid) {
-        $node->taxpercent = variable_get('storminvoice_default_tax_percent', 20);
+        $node->taxpercent = variable_get('storminvoice_default_taxpercent', 20);
       }
       break;
     case 'delete revision':
