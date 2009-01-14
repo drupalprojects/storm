@@ -94,6 +94,15 @@ function stormticket_list() {
     $where[] = 'sti.task_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
   }
+  if ($_SESSION['stormticket_list_filter']['ticketcategory'] && $_SESSION['stormticket_list_filter']['ticketcategory'] != '-') {
+    $category = split(',', $_SESSION['stormticket_list_filter']['ticketcategory']);
+    $v = array();
+    foreach($category as $item) $v[] = '%s';
+    $where[] = "sti.ticketcategory IN ('". implode("','",$v) ."')";
+    foreach ($category as $key=>$value) {
+      $args[] = $value;
+    }
+  }
   if ($_SESSION['stormticket_list_filter']['ticketstatus'] && $_SESSION['stormticket_list_filter']['ticketstatus'] != '-') {
     $status = split(',', $_SESSION['stormticket_list_filter']['ticketstatus']);
     $v = array();
@@ -177,6 +186,7 @@ function stormticket_list() {
 
 function stormticket_list_filter() {
   $status_list = stormattribute_attributes_bydomain('ticket status search');
+  $category_list = stormattribute_attributes_bydomain('ticket category search');
 
   $organization_nid = $_SESSION['stormticket_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormticket_list_filter']['project_nid'];
@@ -187,6 +197,7 @@ function stormticket_list_filter() {
     $ticketstatus = $rstatus_list['open'];
     $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
   }
+  $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
   $ticketpriority = $_SESSION['stormticket_list_filter']['ticketpriority'];
 
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
@@ -271,6 +282,13 @@ function stormticket_list_filter() {
   $form['filter']['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group2']['ticketcategory'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Category', 'ticket'),
+    '#default_value' => $ticketcategory,
+    '#options' => array('-' => storm_t('all', 'ticket')) + $category_list,
   );
 
   $form['filter']['group2']['ticketstatus'] = array(
