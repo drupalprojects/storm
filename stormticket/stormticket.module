@@ -302,7 +302,6 @@ function stormticket_form(&$node) {
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
-    '#required' => true,
     '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
   );
 
@@ -322,25 +321,28 @@ function stormticket_form(&$node) {
     '#weight' => -19,
   );
 
+  $category_list = stormattribute_attributes_bydomain('Ticket category');
   $form['group2']['ticketcategory'] = array(
     '#type' => 'select',
     '#title' => storm_t('Category', 'ticket'),
     '#default_value' => $node->ticketcategory,
-    '#options' => stormattribute_attributes_bydomain('Ticket category'),
+    '#options' => $category_list['values'],
   );
 
+  $status_list = stormattribute_attributes_bydomain('Ticket status');
   $form['group2']['ticketstatus'] = array(
     '#type' => 'select',
     '#title' => storm_t('Status', 'ticket'),
     '#default_value' => $node->ticketstatus,
-    '#options' => stormattribute_attributes_bydomain('Ticket status'),
+    '#options' => $status_list['values'],
   );
 
+  $priority_list = stormattribute_attributes_bydomain('Ticket priority');
   $form['group2']['ticketpriority'] = array(
     '#type' => 'select',
     '#title' => storm_t('Priority', 'ticket'),
     '#default_value' => $node->ticketpriority,
-    '#options' => stormattribute_attributes_bydomain('Ticket priority'),
+    '#options' => $priority_list['values'],
   );
 
   $form['title'] = array(
@@ -371,11 +373,12 @@ function stormticket_form(&$node) {
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
 
+  $durationunits = stormattribute_attributes_bydomain('Duration unit');
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
     '#title' => storm_t('Duration unit', 'ticket'),
     '#default_value' => $node->durationunit,
-    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+    '#options' => $durationunits['values'],
   );
 
   $form['group3']['duration'] = array(
@@ -391,11 +394,12 @@ function stormticket_form(&$node) {
     '#weight' => -16,
   );
 
+  $pricemodes = stormattribute_attributes_bydomain('Price mode');
   $form['group5']['pricemode'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price mode', 'ticket'),
     '#default_value' => $node->pricemode,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
+    '#options' => array('-' => '-') + $pricemodes['values'],
   );
 
   $form['group5']['price'] = array(
@@ -405,11 +409,12 @@ function stormticket_form(&$node) {
     '#default_value' => $node->price,
   );
 
+  $currencies = stormattribute_attributes_bydomain('Currency');
   $form['group5']['currency'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price currency', 'ticket'),
     '#default_value' => $node->currency,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
+    '#options' => array('-' => '-') + $currencies['values'],
   );
 
   if ($type->has_body) {
@@ -510,6 +515,18 @@ function _stormticket_beforesave(&$node) {
 
 function stormticket_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
+    case 'prepare':
+      if(!$node->nid) {
+        $category_list = stormattribute_attributes_bydomain('Ticket category');
+        $node->ticketcategory = $category_list['default'];
+
+        $status_list = stormattribute_attributes_bydomain('Ticket status');
+        $node->ticketstatus = $status_list['default'];
+
+        $priority_list = stormattribute_attributes_bydomain('Ticket priority');
+        $node->ticketpriority = $priority_list['default'];
+      }
+      break;
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
       db_query('DELETE FROM {stormticket} WHERE vid = %d', $node->vid);
@@ -535,62 +552,5 @@ function stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_set_breadcrumb($breadcrumb);
 
   return theme('stormticket_view', $node, $teaser, $page);
-}
-
-function stormticket_block($op = 'list', $delta = 0, $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $block[0]['info'] = storm_t('Tickets', 'ticket');
-      break;
-    case 'view':
-      if ($delta == 0) {
-        $block['subject'] = storm_t('Tickets', 'ticket');
-        $block['content'] = stormticket_listblock();
-      }
-      break;
-  }
-  return $block;
-}
-
-function stormticket_listblock($output=FALSE) {
-  if (!user_access('Storm ticket: access')) return;
-
-  drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
-  $status_list = stormattribute_attributes_bydomain('ticket status search');
-  $rstatus_list = array_flip($status_list);
-  $ticketstatus = $rstatus_list['open'];
-
-  $s  = "SELECT n.nid, n.title, n.uid, n.changed, sti.project_title, sti.project_nid, sti.task_title, 
-  sti.task_nid, sti.ticketcategory, sti.ticketstatus FROM {node} AS n INNER JOIN {stormticket} AS sti 
-  ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket'";
-  $v = str_replace(',', "','", $ticketstatus);
-  $where[] = "sti.ticketstatus IN ('". $v ."')";
-  $s = stormticket_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
-  $r = pager_query($s .' ORDER BY n.changed', 10, 0, NULL);
-
-  $header = array(
-    array(
-      'data' => '',
-    ),
-  );
-
-  $rows = array();
-
-  $tickets = array();
-  while ($item = db_fetch_object($r)) {
-    $tickets[] = $item;
-    $rows[] = array(
-      l($item->title, 'node/'. $item->nid) ."<a href=\"#\" onclick=\"return stormticket_popup_info('info_". $item->nid ."');\">S</a>".'<div id="info_'. $item->nid .'" style="display: none;">'. $item->project_title .'</div>',
-    );
-  }
-
-  $o = theme('table', $header, $rows);
-  if ($output) {
-    echo $o;
-  }
-  else {
-    return $o;
-  }
 }
 

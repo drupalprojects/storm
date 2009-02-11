@@ -356,25 +356,28 @@ function stormtask_form(&$node) {
     '#weight' => -48,
   );
 
+  $taskcategory_list = stormattribute_attributes_bydomain('Task category');
   $form['group3']['taskcategory'] = array(
     '#type' => 'select',
     '#title' => storm_t('Category', 'task'),
     '#default_value' => $node->taskcategory,
-    '#options' => stormattribute_attributes_bydomain('Task category'),
+    '#options' => $taskcategory_list['values'],
   );
 
+  $taskstatus_list = stormattribute_attributes_bydomain('Task status');
   $form['group3']['taskstatus'] = array(
     '#type' => 'select',
     '#title' => storm_t('Status', 'task'),
     '#default_value' => $node->taskstatus,
-    '#options' => stormattribute_attributes_bydomain('Task status'),
+    '#options' => $taskstatus_list['values'],
   );
 
+  $taskpriority_list = stormattribute_attributes_bydomain('Task priority');
   $form['group3']['taskpriority'] = array(
     '#type' => 'select',
     '#title' => storm_t('Priority', 'task'),
     '#default_value' => $node->taskpriority,
-    '#options' => stormattribute_attributes_bydomain('Task priority'),
+    '#options' => $taskpriority_list['values'],
   );
 
   $form['group4'] = array(
@@ -397,11 +400,12 @@ function stormtask_form(&$node) {
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
 
+  $durationunit_list = stormattribute_attributes_bydomain('Duration unit');
   $form['group4']['durationunit'] = array(
     '#type' => 'select',
     '#title' => storm_t('Duration unit', 'project'),
     '#default_value' => $node->durationunit,
-    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+    '#options' => $durationunit_list['values'],
   );
 
   $form['group4']['duration'] = array(
@@ -417,11 +421,12 @@ function stormtask_form(&$node) {
     '#weight' => -45,
   );
 
+  $pricemode_list = stormattribute_attributes_bydomain('Price mode');
   $form['group5']['pricemode'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price mode', 'task'),
     '#default_value' => $node->pricemode,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
+    '#options' => $pricemode_list['values'],
   );
 
   $form['group5']['price'] = array(
@@ -431,11 +436,12 @@ function stormtask_form(&$node) {
     '#default_value' => $node->price,
   );
 
+  $currency_list = stormattribute_attributes_bydomain('Currency');
   $form['group5']['currency'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price currency', 'task'),
     '#default_value' => $node->currency,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
+    '#options' => $currency_list['values'],
   );
 
   if ($type->has_body) {
@@ -525,6 +531,30 @@ function _stormtask_beforesave(&$node) {
 
 function stormtask_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
+    case 'prepare':
+      if(!$node->nid) {
+        $node->iscustomer = 1;
+        $node->isactive = 1;
+
+        $taskcategory_list = stormattribute_attributes_bydomain('Task category');
+        $node->taskcategory = $taskcategory_list['default'];
+
+        $taskstatus_list = stormattribute_attributes_bydomain('Task status');
+        $node->taskstatus = $taskstatus_list['default'];
+
+        $taskpriority_list = stormattribute_attributes_bydomain('Task priority');
+        $node->taskpriority = $taskpriority_list['default'];
+
+        $durationunit_list = stormattribute_attributes_bydomain('Duration unit');
+        $node->durationunit = $durationunit_list['default'];
+
+        $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+        $node->pricemode = $pricemode_list['default'];
+
+        $currency_list = stormattribute_attributes_bydomain('Currency');
+        $node->currency = $pricemode_list['currency'];
+      }
+      break;
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
       db_query('DELETE FROM {stormtask} WHERE vid = %d', $node->vid);

@@ -25,6 +25,12 @@ function stormattribute_list() {
       'field' => 'avalue',
     ),
     array(
+      'data' => storm_t('Active'),
+    ),
+    array(
+      'data' => storm_t('Default'),
+    ),
+    array(
       'data' => storm_t('Weight'),
       'field' => 'weight',
       'sort' => 'asc',
@@ -97,6 +103,15 @@ function stormattribute_list_form($form_id, $header, $attributes) {
       '#value' => $attribute->avalue,
     );
 
+    $form['attributes']['attributes'][$attribute->aid]['attribute_isactive_'. $attribute->aid] = array (
+      '#type' => 'checkbox',
+      '#default_value' => $attribute->isactive,
+    );
+
+    $form['attributes']['attributes'][$attribute->aid]['attribute_default_'. $attribute->aid] = array (
+      '#default_value' => $attribute->isdefault,
+    );
+
     $form['attributes']['attributes'][$attribute->aid]['attribute_weight_'. $attribute->aid] = array (
       '#type' => 'weight',
       '#default_value' => $attribute->weight,
@@ -118,16 +133,29 @@ function stormattribute_list_form($form_id, $header, $attributes) {
 
 function stormattribute_list_submit($form, &$form_state) {
   $attributes = array();
-  foreach($form_state['values'] as $key=>$value) {
+  $default_for_domain = array();
+  foreach($_POST as $key=>$value) {
     $ar = explode('_', $key);
     if($ar[0]=='attribute') {
       if($ar[1]=='weight') $attributes[$ar[2]]['weight'] = $value;
+      if($ar[1]=='isactive') $attributes[$ar[2]]['isactive'] = $value;
+      if($ar[1]=='default') {
+        $domain = str_replace('|',' ',$ar[2]);
+        $default_for_domain[$domain] = $value;
+      }
     }
   }
 
-  $s = "UPDATE {stormattribute} SET weight=%d WHERE aid=%d";  
+  $s = "UPDATE {stormattribute} SET isactive=%d, weight=%d WHERE aid=%d";  
   foreach($attributes as $aid=>$values) {
-    db_query($s, $values['weight'], $aid);
+    db_query($s, $values['isactive'], $values['weight'], $aid);
+  }
+
+  foreach($default_for_domain as $domain=>$aid) {
+    $s = "UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'";  
+    db_query($s, $domain);
+    $s = "UPDATE {stormattribute} SET isdefault=1 WHERE aid=%d";
+    db_query($s, $aid);  
   }
 
   drupal_set_message(storm_t('Attributes saved', 'attribute'));
@@ -137,6 +165,8 @@ function stormattribute_list_filter() {
   $domain = $_SESSION['stormattribute_list_filter']['domain'];
   $akey = $_SESSION['stormattribute_list_filter']['akey'];
   $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
+  $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
+  $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -183,25 +213,44 @@ function stormattribute_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group2']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => storm_t('Filter'),
-    '#submit' => array('stormattribute_list_filter_filter'),
+  $form['filter']['group2']['isactive'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Active'),
+    '#default_value' => $isactive,
+    '#options' => array('-'=>'-', '0'=>t('No'), '1'=>t('Yes')),
   );
 
-  $form['filter']['group2']['reset'] = array(
-    '#type' => 'submit',
-    '#value' => storm_t('Reset'),
-    '#submit' => array('stormattribute_list_filter_reset'),
+  $form['filter']['group2']['isdefault'] = array(
+    '#type' => 'select',
+    '#title' => storm_t('Default'),
+    '#default_value' => $isdefault,
+    '#options' => array('-'=>'-', '0'=>t('No'), '1'=>t('Yes')),
   );
 
-  $form['filter']['group2']['itemsperpage'] = array(
+  $form['filter']['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => storm_t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
+  );
+
+  $form['filter']['group3']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => storm_t('Filter'),
+    '#submit' => array('stormattribute_list_filter_filter'),
+  );
+
+  $form['filter']['group3']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => storm_t('Reset'),
+    '#submit' => array('stormattribute_list_filter_reset'),
   );
 
   return $form;
@@ -211,6 +260,8 @@ function stormattribute_list_filter_filter($form, &$form_state) {
   $_SESSION['stormattribute_list_filter']['domain'] = $form_state['values']['domain'];
   $_SESSION['stormattribute_list_filter']['akey'] = $form_state['values']['akey'];
   $_SESSION['stormattribute_list_filter']['avalue'] = $form_state['values']['avalue'];
+  $_SESSION['stormattribute_list_filter']['isactive'] = $form_state['values']['isactive'];
+  $_SESSION['stormattribute_list_filter']['isdefault'] = $form_state['values']['isdefault'];
   $_SESSION['stormattribute_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 
@@ -224,8 +275,14 @@ function stormattribute_add() {
 }
 
 function stormattribute_add_submit($form, &$form_state) {
-  db_query("INSERT INTO {stormattribute} (domain, akey, avalue, parent_domain, weight) VALUES ('%s', '%s', '%s', '%s', %d)", 
-  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['parent_domain'], $form_state['values']['weight']);
+  if($form_state['values']['isdefault']) {
+    db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
+  }
+
+  db_query("INSERT INTO {stormattribute} (domain, akey, avalue, parent_domain, weight, isactive, isdefault) 
+  VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", 
+  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['parent_domain'], 
+  $form_state['values']['weight'], $form_state['values']['isactive'], $form_state['values']['isdefault']);
 
   if ($_REQUEST['destination']) {
     $destination = urldecode($_REQUEST['destination']);
@@ -246,8 +303,14 @@ function stormattribute_edit($form_state, $aid) {
 }
 
 function stormattribute_edit_submit($form, &$form_state) {
-  db_query("UPDATE {stormattribute} SET domain='%s', akey='%s', avalue='%s', parent_domain='%s', weight=%d WHERE aid=%d", 
-  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['parent_domain'], $form_state['values']['weight'], $form_state['values']['aid']);
+  if($form_state['values']['isdefault']) {
+    db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
+  }
+
+  db_query("UPDATE {stormattribute} SET domain='%s', akey='%s', avalue='%s', 
+  parent_domain='%s', weight=%d, isactive=%d, isdefault=%d WHERE aid=%d", 
+  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], 
+  $form_state['values']['parent_domain'], $form_state['values']['weight'], $form_state['values']['isactive'], $form_state['values']['isdefault'], $form_state['values']['aid']);
 
   if ($_REQUEST['destination']) {
     $destination = urldecode($_REQUEST['destination']);
@@ -372,16 +435,16 @@ function stormattribute_form($attribute = NULL) {
     '#theme' => 'storm_form_group',
   );
 
-  $form['group3']['active'] = array(
+  $form['group3']['isactive'] = array(
     '#type' => 'checkbox',
     '#title' => storm_t('Active'),
-    '#default_value' => $attribute->active,
+    '#default_value' => $attribute->isactive,
   );
 
-  $form['group3']['default'] = array(
+  $form['group3']['isdefault'] = array(
     '#type' => 'checkbox',
     '#title' => storm_t('Default'),
-    '#default_value' => $attribute->default,
+    '#default_value' => $attribute->isdefault,
   );
 
   $form['save'] = array(
@@ -446,7 +509,7 @@ function _stormattribute_domain_autocomplete($string = '') {
   $matches = array();
   if ($string) {
     $s = "SELECT DISTINCT(domain) AS domain FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s%%')";
-    $s = db_rewrite_sql($s);
+    $s = db_rewrite_sql($s, 'stormattribute', 'aid');
     $result = db_query($s, $string);
     while ($a = db_fetch_object($result)) {
       $matches[$a->domain] = check_plain($a->domain);

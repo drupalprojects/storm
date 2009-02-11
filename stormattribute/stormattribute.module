@@ -109,12 +109,16 @@ function stormattribute_attributes_bydomain($domain) {
 
   if (array_key_exists($domain, $attributes_cache)) return $attributes_cache[$domain];
 
-  $s = "SELECT * FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s') ORDER BY weight, avalue";
+  $s = "SELECT * FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s') AND isactive=1 ORDER BY weight, avalue";
   $r = db_query($s, $domain);
-  while ($attribute = db_fetch_array($r)) {
-    $akey = $attribute['akey'];
-    $avalue = $attribute['avalue'];
-    $attributes[$akey] = $avalue;
+  $attributes['values'] = array();
+  while ($attribute = db_fetch_object($r)) {
+    $attributes['values'][$attribute->akey] = t($attribute->avalue);
+    if($attribute->isdefault) $attributes['default'] = $attribute->akey;
+  }
+  if(is_array($attributes['values']) && !array_key_exists('default', $attributes)) {
+    $v = array_flip($attributes['values']);
+    $attributes['default'] = array_shift($v);
   }
 
   $attributes_cache[$domain] = $attributes;

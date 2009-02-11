@@ -252,10 +252,11 @@ function stormorganization_form(&$node) {
     '#weight' => -48,
   );
 
+  $country_list = stormattribute_attributes_bydomain('Country');
   $form['group2']['country'] = array(
     '#type' => 'select',
     '#title' => storm_t('Country', 'organization'),
-    '#options' => stormattribute_attributes_bydomain('Country'),
+    '#options' => $country_list['values'],
     '#default_value' => $node->country,
   );
 
@@ -298,10 +299,11 @@ function stormorganization_form(&$node) {
     '#weight' => -46,
   );
 
+  $currency_list = stormattribute_attributes_bydomain('Currency');
   $form['group4']['currency'] = array(
     '#type' => 'select',
     '#title' => storm_t('Currency', 'organization'),
-    '#options' => stormattribute_attributes_bydomain('Currency'),
+    '#options' => $currency_list['values'],
     '#default_value' => $node->currency,
   );
 
@@ -402,6 +404,12 @@ function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
       if(!$node->nid) {
         $node->iscustomer = 1;
         $node->isactive = 1;
+
+        $country_list = stormattribute_attributes_bydomain('Country');
+        $node->country = $country_list['default'];
+
+        $currency_list = stormattribute_attributes_bydomain('Currency');
+        $node->currency = $currency_list['default'];
       }
       break;
     case 'delete revision':

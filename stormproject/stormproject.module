@@ -274,25 +274,28 @@ function stormproject_form(&$node) {
     '#weight' => -48,
   );
 
+  $category_list = stormattribute_attributes_bydomain('Project category');
   $form['group2']['projectcategory'] = array(
     '#type' => 'select',
     '#title' => storm_t('Category', 'project'),
     '#default_value' => $node->projectcategory,
-    '#options' => stormattribute_attributes_bydomain('Project category'),
+    '#options' => $category_list['values'],
   );
 
+  $status_list = stormattribute_attributes_bydomain('Project status');
   $form['group2']['projectstatus'] = array(
     '#type' => 'select',
     '#title' => storm_t('Status', 'project'),
     '#default_value' => $node->projectstatus,
-    '#options' => stormattribute_attributes_bydomain('Project status'),
+    '#options' => $status_list['values'],
   );
 
+  $priority_list = stormattribute_attributes_bydomain('Project priority');
   $form['group2']['projectpriority'] = array(
     '#type' => 'select',
     '#title' => storm_t('Priority', 'project'),
     '#default_value' => $node->projectpriority,
-    '#options' => stormattribute_attributes_bydomain('Project priority'),
+    '#options' => $priority_list['values'],
   );
 
   $form['group3'] = array(
@@ -315,11 +318,12 @@ function stormproject_form(&$node) {
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
 
+  $durationunit_list = stormattribute_attributes_bydomain('Duration unit'); 
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
     '#title' => storm_t('Duration unit', 'project'),
     '#default_value' => $node->durationunit,
-    '#options' => stormattribute_attributes_bydomain('Duration unit'),
+    '#options' => $durationunit_list['values'],
   );
 
   $form['group3']['duration'] = array(
@@ -335,11 +339,12 @@ function stormproject_form(&$node) {
     '#weight' => -45,
   );
 
+  $pricemode_list = stormattribute_attributes_bydomain('Price mode');
   $form['group4']['pricemode'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price mode', 'project'),
     '#default_value' => $node->pricemode,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Price mode'),
+    '#options' => $pricemode_list['values'],
   );
 
   $form['group4']['price'] = array(
@@ -349,11 +354,12 @@ function stormproject_form(&$node) {
     '#default_value' => $node->price,
   );
 
+  $currency_list = stormattribute_attributes_bydomain('Currency');
   $form['group4']['currency'] = array(
     '#type' => 'select',
     '#title' => storm_t('Price currency', 'project'),
     '#default_value' => $node->currency,
-    '#options' => array('-' => '-') + stormattribute_attributes_bydomain('Currency'),
+    '#options' => $currency_list['values'],
   );
 
   if ($type->has_body) {
@@ -423,6 +429,27 @@ function _stormproject_beforesave(&$node) {
 
 function stormproject_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
+    case 'prepare':
+      if(!$node->nid) {
+        $category_list = stormattribute_attributes_bydomain('Project category');
+        $node->projectcategory = $category_list['default'];
+
+        $status_list = stormattribute_attributes_bydomain('Project status');
+        $node->projectstatus = $status_list['default'];
+
+        $priority_list = stormattribute_attributes_bydomain('Project priority');
+        $node->projectpriority = $priority_list['default'];
+
+        $durationunit_list = stormattribute_attributes_bydomain('Duration unit');
+        $node->durationunit = $durationunit_list['default'];
+
+        $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+        $node->pricemode = $pricemode_list['default'];
+
+        $currency_list = stormattribute_attributes_bydomain('Currency');
+        $node->currency = $currency_list['default'];
+      }
+      break;
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
       db_query('DELETE FROM {stormproject} WHERE vid = %d', $node->vid);

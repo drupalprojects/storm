@@ -100,7 +100,13 @@ function stormorganization_list() {
 }
 
 function stormorganization_list_filter() {
-  $country = $_SESSION['stormorganization_list_filter']['country'];
+  $country_list = stormattribute_attributes_bydomain('Country');
+  $country = $_SESSION['stormproject_list_filter']['country'];
+  if(!$country) {
+    $country = $country_list['default'];
+    $_SESSION['stormproject_list_filter']['country'] = $country;
+  }
+
   $name = $_SESSION['stormorganization_list_filter']['name'];
   $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
   $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];

@@ -339,7 +339,9 @@ function theme_storminvoice_report_pdf($node, $language) {
   }
 
   $countries = stormattribute_attributes_bydomain('Country');
+  $countries = $countries['values'];
   $currencies = stormattribute_attributes_bydomain('Currency');
+  $currencies = $currencies['values'];
   $myorg = node_load(variable_get('storm_organization_nid', 0));
   $mycurrency = $currencies[$myorg->currency];
 

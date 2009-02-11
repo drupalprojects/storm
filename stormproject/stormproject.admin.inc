@@ -139,19 +139,25 @@ function stormproject_list() {
 
 function stormproject_list_filter() {
   $organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
+
+  $category_list = stormattribute_attributes_bydomain('project category search');
   $projectcategory = $_SESSION['stormproject_list_filter']['projectcategory'];
+  if(!$projectcategory) {
+    $projectcategory = $category_list['default'];
+    $_SESSION['stormproject_list_filter']['projectcategory'] = $projectcategory;
+  }
+
   $status_list = stormattribute_attributes_bydomain('project status search');
   $projectstatus = $_SESSION['stormproject_list_filter']['projectstatus'];
-  if (!$projectstatus) {
-    $rstatus_list = array_flip($status_list);
-    $projectstatus = $rstatus_list['open'];
+  if(!$projectstatus) {
+    $projectstatus = $status_list['default'];
     $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
   }
+
   $priority_list = stormattribute_attributes_bydomain('project priority search');
   $projectpriority = $_SESSION['stormproject_list_filter']['projectpriority'];
-  if (!$projectpriority) {
-    $rpriority_list = array_flip($priority_list);
-    $projectpriority = $rpriority_list['-'];
+  if(!$projectpriority) {
+    $projectpriority = $priority_list['default'];
     $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
   }
 
@@ -163,7 +169,7 @@ function stormproject_list_filter() {
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = 10;
-    $_SESSION['stormproject_list_filter']['itemsperpage'] = $itemsperpage;
+    $_SESSION['stormproject_list_filter']['itemsperpage'] = 10;
   }
 
   $form = array();
@@ -200,21 +206,21 @@ function stormproject_list_filter() {
     '#type' => 'select',
     '#title' => storm_t('Category', 'project'),
     '#default_value' => $projectcategory,
-    '#options' => array('-' => storm_t('all', 'project')) + stormattribute_attributes_bydomain('Project category'),
+    '#options' => $category_list['values'],
   );
 
   $form['filter']['group1']['projectstatus'] = array(
     '#type' => 'select',
     '#title' => storm_t('Status', 'project'),
     '#default_value' => $projectstatus,
-    '#options' => array('-' => storm_t('all', 'project')) + $status_list,
+    '#options' => $status_list['values'],
   );
 
   $form['filter']['group1']['projectpriority'] = array(
     '#type' => 'select',
     '#title' => storm_t('Priority', 'project'),
     '#default_value' => $projectpriority,
-    '#options' => array('-' => storm_t('all', 'project')) + $priority_list,
+    '#options' => $priority_list['values'],
   );
 
   $form['filter']['group2'] = array(
@@ -260,6 +266,15 @@ function stormproject_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
+  $form['filter']['group4']['itemsperpage'] = array(
+    '#type' => 'textfield',
+    '#title' => storm_t('Items', 'project'),
+    '#size' => 10,
+    '#default_value' => $itemsperpage,
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+
   $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
     '#value' => storm_t('Filter', 'project'),
@@ -270,15 +285,6 @@ function stormproject_list_filter() {
     '#type' => 'submit',
     '#value' => storm_t('Reset', 'project'),
     '#submit' => array('stormproject_list_filter_reset'),
-  );
-
-  $form['filter']['group4']['itemsperpage'] = array(
-    '#type' => 'textfield',
-    '#title' => storm_t('Items', 'project'),
-    '#size' => 10,
-    '#default_value' => $itemsperpage,
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
   );
 
   return $form;

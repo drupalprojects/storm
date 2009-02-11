@@ -185,20 +185,30 @@ function stormticket_list() {
 }
 
 function stormticket_list_filter() {
-  $status_list = stormattribute_attributes_bydomain('ticket status search');
-  $category_list = stormattribute_attributes_bydomain('ticket category search');
-
   $organization_nid = $_SESSION['stormticket_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormticket_list_filter']['project_nid'];
   $task_nid = $_SESSION['stormticket_list_filter']['task_nid'];
+
+  $category_list = stormattribute_attributes_bydomain('ticket category search');
+  $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
+  if(!$ticketcategory) {
+    $ticketcategory = $category_list['default'];
+    $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
+  }
+
+  $status_list = stormattribute_attributes_bydomain('ticket status search');
   $ticketstatus = $_SESSION['stormticket_list_filter']['ticketstatus'];
-  if (!$ticketstatus) {
-    $rstatus_list = array_flip($status_list);
-    $ticketstatus = $rstatus_list['open'];
+  if(!$ticketstatus) {
+    $ticketstatus = $status_list['default'];
     $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
   }
-  $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
+
+  $priority_list = stormattribute_attributes_bydomain('ticket priority search');
   $ticketpriority = $_SESSION['stormticket_list_filter']['ticketpriority'];
+  if(!$ticketpriority) {
+    $ticketpriority = $priority_list['default'];
+    $_SESSION['stormticket_list_filter']['ticketpriority'] = $ticketpriority;
+  }
 
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -288,21 +298,21 @@ function stormticket_list_filter() {
     '#type' => 'select',
     '#title' => storm_t('Category', 'ticket'),
     '#default_value' => $ticketcategory,
-    '#options' => array('-' => storm_t('all', 'ticket')) + $category_list,
+    '#options' => $category_list['values'],
   );
 
   $form['filter']['group2']['ticketstatus'] = array(
     '#type' => 'select',
     '#title' => storm_t('Status', 'ticket'),
     '#default_value' => $ticketstatus,
-    '#options' => array('-' => storm_t('all', 'ticket')) + $status_list,
+    '#options' => $status_list['values'],
   );
 
   $form['filter']['group2']['ticketpriority'] = array(
     '#type' => 'select',
     '#title' => storm_t('Priority', 'ticket'),
     '#default_value' => $ticketpriority,
-    '#options' => array('-' => storm_t('all', 'ticket')) + stormattribute_attributes_bydomain('ticket priority search'),
+    '#options' => $priority_list['values'],
   );
 
   $form['filter']['group3'] = array(

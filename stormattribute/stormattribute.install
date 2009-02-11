@@ -24,6 +24,7 @@ function stormattribute_install() {
   );
 
   $attributes['Project status search'] = array(
+    '-' => 'all',
     'inserted,in progress,on hold' => 'open',
     'inserted' => '-- inserted',
     'in progress' => '-- in progress',
@@ -44,6 +45,7 @@ function stormattribute_install() {
   );
 
   $attributes['Project priority search'] = array(
+    '-' => 'all',
     '1-low' => 'low',
     '2-normal' => 'normal',
     '3-high' => 'high',
@@ -58,6 +60,7 @@ function stormattribute_install() {
   );
 
   $attributes['Task status search'] = array(
+    '-' => 'all',
     'inserted,in progress,on hold' => 'open',
     'inserted' => '-- inserted',
     'in progress' => '-- in progress',
@@ -80,10 +83,19 @@ function stormattribute_install() {
   );
 
   $attributes['Task priority search'] = array(
+    '-' => 'all',
     '1-low' => 'low',
     '2-normal' => 'normal',
     '3-high' => 'high',
     '4-urgent' => 'urgent'
+  );
+
+  $attributes['Task category search'] = array(
+    '-' => 'all',
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
   );
 
   $attributes['Ticket status'] = array(
@@ -94,6 +106,7 @@ function stormattribute_install() {
   );
 
   $attributes['Ticket status search'] = array(
+    '-' => 'all',
     'inserted,in progress,on hold' => 'open',
     'inserted' => '-- inserted',
     'in progress' => '-- in progress',
@@ -110,6 +123,7 @@ function stormattribute_install() {
   );
 
   $attributes['Ticket category search'] = array(
+    '-' => 'all',
     'estimate' => 'estimate',
     'bug' => 'bug',
     'feature request' => 'feature request',
@@ -125,6 +139,7 @@ function stormattribute_install() {
   );
 
   $attributes['Ticket priority search'] = array(
+    '-' => 'all',
     '1-low' => 'low',
     '2-normal' => 'normal',
     '3-high' => 'high',
@@ -419,9 +434,9 @@ function stormattribute_schema() {
       'akey'          => array('type' => 'varchar', 'length' => 100),
       'avalue'        => array('type' => 'varchar', 'length' => 100),
       'parent_domain' => array('type' => 'varchar', 'length' => 100),
-      'weight'        => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
+      'weight'        => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'small'),
       'isdefault'     => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
-      'isactive'      => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
+      'isactive'      => array('type' => 'int','not null' => FALSE, 'default' => 1, 'size' => 'tiny'),
     ),
     'primary key' => array('aid'),
   );
@@ -815,8 +830,52 @@ function stormattribute_update_5() {
 
   $ret = array();
   db_add_field($ret, 'stormattribute', 'parent_domain', array('type' => 'varchar', 'length' => 100));
-  db_add_field($ret, 'stormattribute', 'isactive', array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
+  db_add_field($ret, 'stormattribute', 'isactive', array('type' => 'int','not null' => FALSE, 'default' => 1, 'size' => 'tiny'));
   db_add_field($ret, 'stormattribute', 'isdefault', array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
+  return $ret;
+}
+
+function stormattribute_update_6() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {stormattribute} CHANGE COLUMN weight weight SMALLINT NOT NULL default 0");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'stormattribute', "weight", "weight", 'int', array('not null' => FALSE, 'default' => 0, 'size' => 'small'));
+      break;
+  }
+
+
+  $attributes['Task category search'] = array(
+    '-' => 'all',
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $attributes['Project status search'] = array('-' => 'all');
+  $attributes['Project priority search'] = array('-' => 'all');
+  $attributes['Task status search'] = array('-' => 'all');
+  $attributes['Task priority search'] = array('-' => 'all');
+  $attributes['Ticket status search'] = array('-' => 'all');
+  $attributes['Ticket category search'] = array('-' => 'all');
+  $attributes['Ticket priority search'] = array('-' => 'all');
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('%s', '%s', '%s', %d, 1)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
   return $ret;
 }
 
