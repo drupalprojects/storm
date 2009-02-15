@@ -60,7 +60,12 @@ function stormknowledgebase_list() {
 }
 
 function stormknowledgebase_list_filter() {
-  $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
+  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+  $topic = $_SESSION['stormknowledgebase_list_filter']['projectcategory'];
+  if(!$topic) {
+    $topic = $topic_list['default'];
+    $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
+  }
 
   $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -86,7 +91,7 @@ function stormknowledgebase_list_filter() {
     '#type' => 'select',
     '#title' => t('Topic'),
     '#default_value' => $topic,
-    '#options' => array('-' => t('all')) + stormattribute_attributes_bydomain('Knowledge base topic'),
+    '#options' => $topic_list['values'],
   );
 
   $form['filter']['group2'] = array(

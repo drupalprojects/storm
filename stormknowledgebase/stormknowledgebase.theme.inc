@@ -11,8 +11,8 @@ function theme_stormknowledgebase_list($header, $kbs) {
 
   foreach ($kbs as $kb) {
     $n = new stdClass();
-    $n->nid = $note->nid;
-    $n->uid = $note->uid;
+    $n->nid = $kb->nid;
+    $n->uid = $kb->uid;
     $n->type = 'stormknowledgebase';
     $rows[] = array(
       l($kb->title, 'node/'. $kb->nid),
