@@ -71,15 +71,15 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'data' => ' ',
     ),
     array(
-      'data' => storm_t('Amount', 'invoice'),
+      'data' => t('Amount'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => storm_t('Tax', 'invoice'),
+      'data' => t('Tax'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => storm_t('Total', 'invoice'),
+      'data' => t('Total'),
       'style' => 'text-align: center;',
     ),
   );
@@ -87,7 +87,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   $rows = array();
   $rows[] = array(
     array(
-      'data' => storm_t('Total to pay', 'invoice'),
+      'data' => t('Total to pay'),
       'style' => 'font-weight: bold;',
     ),
     array(
@@ -105,7 +105,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   );
   $rows[] = array(
     array(
-      'data' => storm_t('Total paid', 'invoice'),
+      'data' => t('Total paid'),
       'style' => 'font-weight: bold;',
     ),
     array(
@@ -123,7 +123,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   );
   $rows[] = array(
     array(
-      'data' => storm_t('Total', 'invoice'),
+      'data' => t('Total'),
       'style' => 'font-weight: bold;',
     ),
     array(
@@ -176,28 +176,28 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['storminvoice']['fields']['number'] = array(
     '#prefix' => '<div class="number">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Number', 'invoice'), $node->number),
+    '#value' => theme('storm_view_item', t('Number'), $node->number),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['description'] = array(
     '#prefix' => '<div class="invoicedescription">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Description', 'invoice'), $node->title),
+    '#value' => theme('storm_view_item', t('Description'), $node->title),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Organization', 'invoice'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Project', 'invoice'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
     '#weight' => $w++,
   );
 
@@ -205,7 +205,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['storminvoice']['fields']['reference'] = array(
       '#prefix' => '<div class="reference">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', storm_t('Reference', 'invoice'), $node->reference),
+      '#value' => theme('storm_view_item', t('Reference'), $node->reference),
       '#weight' => $w++,
     );
   }
@@ -213,42 +213,42 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['storminvoice']['fields']['amount'] = array(
     '#prefix' => '<div class="amount">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Amount', 'invoice'), sprintf('%.2f', $node->amount)),
+    '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['tax'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Tax', 'invoice'), sprintf('%.2f', $node->tax)),
+    '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['total'] = array(
     '#prefix' => '<div class="total">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Total', 'invoice'), sprintf('%.2f', $node->total)),
+    '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['requestdate'] = array(
     '#prefix' => '<div class="requestdate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Request date', 'invoice'), format_date($node->requestdate, 'custom', 'Y-m-d')),
+    '#value' => theme('storm_view_item', t('Request date'), format_date($node->requestdate, 'custom', 'Y-m-d')),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['duedate'] = array(
     '#prefix' => '<div class="duedate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Due date', 'invoice'), format_date($node->duedate, 'custom', 'Y-m-d')),
+    '#value' => theme('storm_view_item', t('Due date'), format_date($node->duedate, 'custom', 'Y-m-d')),
     '#weight' => $w++,
   );
 
   $node->content['storminvoice']['fields']['paymentdate'] = array(
     '#prefix' => '<div class="paymentdate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Payment date', 'invoice'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
+    '#value' => theme('storm_view_item', t('Payment date'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
     '#weight' => $w++,
   );
 
@@ -262,7 +262,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['storminvoice']['fields']['status'] = array(
     '#prefix' => '<div class="invoicestatus">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Status', 'invoice'), $status),
+    '#value' => theme('storm_view_item', t('Status'), $status),
     '#weight' => $w++,
   );
 
@@ -279,7 +279,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['storminvoice']['fields']['body'] = array(
       '#prefix' => '<div class="body">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', storm_t('Description', 'project'), $node->content['body']['#value']),
+      '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
       '#weight' => $w++,
     );
     unset($node->content['body']);
@@ -349,7 +349,7 @@ function theme_storminvoice_report_pdf($node, $language) {
   $project = node_load($node->project_nid);
 
   $o = '';
-  $title = storm_t('Invoice', 'invoice', array(), $language);
+  $title = t('Invoice', array(), $language);
   $complete_title = $title .' '. $myorg->title .' : '. $organization->title .' - '. $node->number;
 
   $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
@@ -382,14 +382,14 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $pdf->SetFont("times", "B", 14);
   $o = $title;
-  if ($language1) $o .= "\n". storm_t('Invoice', 'invoice', array(), $language1);
+  if ($language1) $o .= "\n". t('Invoice', array(), $language1);
   $pdf->MultiCell(0, 0, $o, 0 ,'C', 0, 1,$pdf->getX(), $pdf->getY() + 10);
 
   $y = $pdf->getY() + 10;
 
   $pdf->SetFont("times", "B", 10);
-  $o = storm_t('Bill to', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Bill to', 'invoice', array(), $language1);
+  $o = t('Bill to', array(), $language);
+  if ($language1) $o .= "\n". t('Bill to', array(), $language1);
   $pdf->MultiCell($pageWidth *.4, 0, $o, 'B', 'L', 0, 1, PDF_MARGIN_LEFT, $y);
   $o =  $organization->fullname ."\n";
   $o .= $organization->address ."\n";
@@ -398,8 +398,8 @@ function theme_storminvoice_report_pdf($node, $language) {
   if ($organization->provstate) $o .= $organization->provstate .' ';
   $o .= $countries[$organization->country] ."\n";;
   if ($organization->taxid) {
-    $o .= storm_t('Tax ID', 'invoice', array(), $language);
-    if ($language1) $o .= ' / '. storm_t('Tax ID', 'invoice', array(), $language1);
+    $o .= t('Tax ID', array(), $language);
+    if ($language1) $o .= ' / '. t('Tax ID', array(), $language1);
     $o .= ' : '. $organization->taxid;
   }
   $pdf->SetFont("times", "N", 10);
@@ -410,20 +410,20 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $pdf->SetFont("times", "B", 10);
 
-  $o = storm_t('Invoice#', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Invoice#', 'invoice', array(), $language1);
+  $o = t('Invoice#', array(), $language);
+  if ($language1) $o .= "\n". t('Invoice#', array(), $language1);
   $pdf->MultiCell($w-2, 0, $o, 1, 'L', 1, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $y);
 
-  $o = storm_t('Currency', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Currency', 'invoice', array(), $language1);
+  $o = t('Currency', array(), $language);
+  if ($language1) $o .= "\n". t('Currency', array(), $language1);
   $pdf->MultiCell($w-3, 0, $o, 1, 'L', 1, 0);
 
-  $o = storm_t('Date', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Date', 'invoice', array(), $language1);
+  $o = t('Date', array(), $language);
+  if ($language1) $o .= "\n". t('Date', array(), $language1);
   $pdf->MultiCell($w+5, 0, $o, 1, 'L', 1, 0);
 
-  $o = storm_t('Reference', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Reference', 'invoice', array(), $language1);
+  $o = t('Reference', array(), $language);
+  if ($language1) $o .= "\n". t('Reference', array(), $language1);
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
 
   $pdf->SetFont("times", "N", 10);
@@ -431,25 +431,25 @@ function theme_storminvoice_report_pdf($node, $language) {
   $pdf->MultiCell($w, 0, $node->reference?$node->reference:'-' , 1, 'L', 0, 1, PDF_MARGIN_LEFT + $pageWidth*.5 + $w*3);
   $h = $pdf->getY() - $h;
   $pdf->MultiCell($w-2, $h, $node->number, 1, 'L', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $pdf->getY() - $h);
-  $pdf->MultiCell($w-3, $h, storm_t($mycurrency, 'invoice', array(), $language), 1, 'L', 0, 0);
+  $pdf->MultiCell($w-3, $h, t($mycurrency, array(), $language), 1, 'L', 0, 0);
   $pdf->MultiCell($w+5, $h, format_date($node->requestdate, 'custom', 'Y-m-d'), 1, 'L', 0, 1);
 
   $pdf->SetFont("times", "B", 10);
 
-  $o = storm_t('Due total', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Due total', 'invoice', array(), $language1);
+  $o = t('Due total', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". t('Due total', array(), $language1);
   $pdf->MultiCell($w*2 - 5, 0, $o, 1, 'L', 1, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
 
-  $o = storm_t('Due date', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Due date', 'invoice', array(), $language1);
+  $o = t('Due date', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". t('Due date', array(), $language1);
   $pdf->MultiCell($w + 5, 0, $o, 1, 'L', 1, 0);
 
-  $o = storm_t('Terms', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Terms', 'invoice', array(), $language1);
+  $o = t('Terms', 'invoice', array(), $language);
+  if ($language1) $o .= "\n". t('Terms', array(), $language1);
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
 
   $pdf->SetFont("times", "B", 10);
-  $o = storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
+  $o = t($mycurrency, array(), $language) .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= "\n". $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr);
   }
@@ -465,24 +465,24 @@ function theme_storminvoice_report_pdf($node, $language) {
   $pdf->setX(PDF_MARGIN_LEFT);
   $pdf->SetFont("times", "B", 10);
 
-  $o = storm_t('Description', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Description', 'invoice', array(), $language1);
+  $o = t('Description', array(), $language);
+  if ($language1) $o .= "\n". t('Description', array(), $language1);
   $pdf->MultiCell($pageWidth * .4, 0, $o, 1, 'L', 1, 0);
 
-  $o = storm_t('Amount', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Amount', 'invoice', array(), $language1);
+  $o = t('Amount', array(), $language);
+  if ($language1) $o .= "\n". t('Amount', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = storm_t('Tax %', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Tax %', 'invoice', array(), $language1);
+  $o = t('Tax %', array(), $language);
+  if ($language1) $o .= "\n". t('Tax %', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = storm_t('Tax', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Tax', 'invoice', array(), $language1);
+  $o = t('Tax', array(), $language);
+  if ($language1) $o .= "\n". t('Tax', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = storm_t('Total', 'invoice', array(), $language);
-  if ($language1) $o .= "\n". storm_t('Total', 'invoice', array(), $language1);
+  $o = t('Total', array(), $language);
+  if ($language1) $o .= "\n". t('Total', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 1);
 
   $pdf->SetFont("times", "N", 10);
@@ -506,15 +506,15 @@ function theme_storminvoice_report_pdf($node, $language) {
   }
 
   if ($node->taxexempt && $language1=='it') {
-    $o = storm_t('Tax exempt art. 7', 'invoice', array(), $language);
-    if ($language1) $o .= "\n". storm_t('Tax exempt art. 7', 'invoice', array(), $language1);
+    $o = t('Tax exempt art. 7', array(), $language);
+    if ($language1) $o .= "\n". t('Tax exempt art. 7', array(), $language1);
     $pdf->MultiCell($pageWidth, 0, $o,0 , 'L' ,0, 1, $pdf->getX(), $pdf->getY() + 5);
   }
 
   $y = $pdf->getY() + 10;
   $pdf->setY($y);
   $pdf->SetFont("times", "B", 10);
-  $pdf->Cell($pageWidth, 5, storm_t('Payment', 'invoice', array(), $language), 'B', 0, 'L');
+  $pdf->Cell($pageWidth, 5, t('Payment', array(), $language), 'B', 0, 'L');
   $pdf->SetFont("times", "N", 10);
   $pdf->MultiCell($pageWidth, 0, t(variable_get('storminvoice_payment_modes', ''), array(), $language),0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY(), true, 0, true);
 
@@ -522,7 +522,7 @@ function theme_storminvoice_report_pdf($node, $language) {
     $y = $pdf->getY() + 10;
     $pdf->setY($y);
     $pdf->SetFont("times", "B", 14);
-    $pdf->Cell(0, 12, storm_t('Paid in full', 'invoice', array(), $language), 0 ,1,'C');  }
+    $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0 ,1,'C');  }
 
   $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number)) .'.pdf';
 
@@ -556,15 +556,15 @@ function theme_storminvoice_report_html($node, $language) {
   $project = node_load($node->project_nid);
 
   $o = '';
-  $title = storm_t('Invoice', 'invoice', array(), $language);
-  if ($language1) $title .= '<br />'. storm_t('Invoice', 'invoice', array(), $language1);
+  $title = t('Invoice', array(), $language);
+  if ($language1) $title .= '<br />'. t('Invoice', array(), $language1);
   $headtitle = $title . ' '. $myorg->title . ' : ' . $organization->title . ' - ' . $node->number;
 
   $o .= '<div>';
   $o .= '<div id="storminvoice_billto"><table>';
   $o .= '<tr><td class="storminvoice_billto_title">';
-  $o .= storm_t('Bill To :', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Bill to :', 'invoice', array(), $language1);
+  $o .= t('Bill To :', array(), $language);
+  if ($language1) $o .= '<br />'. t('Bill to :', array(), $language1);
   $o .= '</td></tr>';
   $o .= '<tr><td>';
   $o .= '<strong>'. $organization->fullname .'</strong>';
@@ -576,8 +576,8 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= $organization->provstate .' '. $organization->zip .' '. $countries[$organization->country];
   $o .= '<br />';
   if ($organization->taxid) {
-    $o .= storm_t('Tax ID', 'invoice', array(), $language);
-    if ($language1) $o .= ' / '. storm_t('Tax ID', 'invoice', array(), $language1);
+    $o .= t('Tax ID', 'invoice', array(), $language);
+    if ($language1) $o .= ' / '. t('Tax ID', array(), $language1);
     $o .= ' : '. $organization->taxid;
   }
   $o .= '</td></tr>';
@@ -586,45 +586,45 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '<div id="storminvoice_details"><table>';
   $o .= '<tr>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Invoice#', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Invoice#', 'invoice', array(), $language1);
+  $o .= t('Invoice#', array(), $language);
+  if ($language1) $o .= '<br />'. t('Invoice#', array(), $language1);
   $o .='</td>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Currency', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Currency', 'invoice', array(), $language1);
+  $o .= t('Currency', array(), $language);
+  if ($language1) $o .= '<br />'. t('Currency', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Date', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Date', 'invoice', array(), $language1);
+  $o .= t('Date', array(), $language);
+  if ($language1) $o .= '<br />'. t('Date', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Reference', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Reference', 'invoice', array(), $language1);
+  $o .= t('Reference', array(), $language);
+  if ($language1) $o .= '<br />'. t('Reference', array(), $language1);
   $o .= '</td>';
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td>'. $node->number .'</td>';
-  $o .= '<td>'. storm_t($mycurrency, 'invoice', array(), $language) .'</td>';
+  $o .= '<td>'. t($mycurrency, array(), $language) .'</td>';
   $o .= '<td>'. format_date($node->requestdate, 'custom', 'Y-m-d') .'</td>';
   $o .= '<td>'. $node->reference .'</td>';
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td class="storminvoice_details_title" colspan="2">';
-  $o .= storm_t('Due total', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Due total', 'invoice', array(), $language1);
+  $o .= t('Due total', array(), $language);
+  if ($language1) $o .= '<br />'. t('Due total', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Due date', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Due date', 'invoice', array(), $language1);
+  $o .= t('Due date', array(), $language);
+  if ($language1) $o .= '<br />'. t('Due date', array(), $language1);
   $o .= '</td>';
   $o .= '<td class="storminvoice_details_title">';
-  $o .= storm_t('Terms', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Terms', 'invoice', array(), $language1);
+  $o .= t('Terms', array(), $language);
+  if ($language1) $o .= '<br />'. t('Terms', array(), $language1);
   $o .= '</td>';
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td style="text-align: center; font-weight: bold;" colspan="2">';
-  $o .= storm_t($mycurrency, 'invoice', array(), $language) .' '. sprintf('%.2f', $node->total);
+  $o .= t($mycurrency, array(), $language) .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= '<br />';
     $o .= '('. $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr) .')';
@@ -636,20 +636,20 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '</table></div>';
   $o .= '</div>';
 
-  $description = storm_t('Description', 'invoice', array(), $language);
-  if ($language1) $description .= '<br />'. storm_t('Description', 'invoice', array(), $language1);
+  $description = t('Description', array(), $language);
+  if ($language1) $description .= '<br />'. t('Description', array(), $language1);
 
-  $amount = storm_t('Amount', 'invoice', array(), $language);
-  if ($language1) $amount .= '<br />'. storm_t('Amount', 'invoice', array(), $language1);
+  $amount = t('Amount', array(), $language);
+  if ($language1) $amount .= '<br />'. t('Amount', array(), $language1);
 
-  $taxpercent = storm_t('Tax %', 'invoice', array(), $language);
-  if ($language1) $taxpercent .= '<br />'. storm_t('Tax %', 'invoice', array(), $language1);
+  $taxpercent = t('Tax %', array(), $language);
+  if ($language1) $taxpercent .= '<br />'. t('Tax %', array(), $language1);
 
-  $tax = storm_t('Tax', 'invoice', array(), $language);
-  if ($language1) $tax .= '<br />'. storm_t('Tax', 'invoice', array(), $language1);
+  $tax = t('Tax', array(), $language);
+  if ($language1) $tax .= '<br />'. t('Tax', array(), $language1);
 
-  $total = storm_t('Total', 'invoice', array(), $language);
-  if ($language1) $total .= '<br />'. storm_t('Total', 'invoice', array(), $language1);
+  $total = t('Total', array(), $language);
+  if ($language1) $total .= '<br />'. t('Total', array(), $language1);
 
   $header = array(
     array(
@@ -694,8 +694,8 @@ function theme_storminvoice_report_html($node, $language) {
     );
   }
 
-  $total = storm_t('Total', 'invoice', array(), $language);
-  if ($language1) $total .= ' / '. storm_t('Total', 'invoice', array(), $language1);
+  $total = t('Total', array(), $language);
+  if ($language1) $total .= ' / '. t('Total', array(), $language1);
 
   $rows[] = array(
     array(
@@ -724,15 +724,15 @@ function theme_storminvoice_report_html($node, $language) {
 
   if ($node->taxexempt && $language1=='it') {
     $o .= '<div id="storminvoice_tax_exempt">';
-    $o .= storm_t('Tax exempt art. 7', 'invoice', array(), $language);
-    if ($language1) $o .= '<br />'. storm_t('Tax exempt art. 7', 'invoice', array(), $language1);
+    $o .= t('Tax exempt art. 7', array(), $language);
+    if ($language1) $o .= '<br />'. t('Tax exempt art. 7', array(), $language1);
     $o .= '</div>';
   }
 
   $o .= '<div id="storminvoice_payment_modes"><table>';
   $o .= '<tr><td class="storminvoice_payment_title">';
-  $o .= storm_t('Payment', 'invoice', array(), $language);
-  if ($language1) $o .= '<br />'. storm_t('Payment', 'invoice', array(), $language1);
+  $o .= t('Payment', array(), $language);
+  if ($language1) $o .= '<br />'. t('Payment', array(), $language1);
   $o .= '</td></tr>';
   $o .= '<tr><td>';
   $o .= t(variable_get('storminvoice_payment_modes', ''), array(), $language);
@@ -741,8 +741,8 @@ function theme_storminvoice_report_html($node, $language) {
 
   if ($status=='paid') {
     $o .= '<div id="paid">';
-    $o .= '<h2>'. storm_t('Paid in full', 'invoice', array(), $language) .'</h2>';
-    if ($language1) $o .= '<h2>'. storm_t('Paid in full', 'invoice', array(), $language1) .'</h2>';
+    $o .= '<h2>'. t('Paid in full', array(), $language) .'</h2>';
+    if ($language1) $o .= '<h2>'. t('Paid in full', array(), $language1) .'</h2>';
     $o .= '</div>';
   }
 

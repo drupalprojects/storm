@@ -35,29 +35,29 @@ function storminvoice_list() {
       'data' => ' ',
     ),
     array(
-      'data' => storm_t('Number'),
+      'data' => t('Number'),
       'field' => 'sin.number',
       'sort' => 'asc',
       'nowrap' => 'nowrap',
     ),
     array(
-      'data' => storm_t('Organization'),
+      'data' => t('Organization'),
       'field' => 'sin.organization_title',
     ),
     array(
-      'data' => storm_t('Project'),
+      'data' => t('Project'),
       'field' => 'sin.project_title',
     ),
     array(
-      'data' => storm_t('Description'),
+      'data' => t('Description'),
       'field' => 'n.title',
     ),
     array(
-      'data' => storm_t('Req. date'),
+      'data' => t('Req. date'),
       'field' => 'sin.requestdate',
     ),
     array(
-      'data' => storm_t('Total'),
+      'data' => t('Total'),
     ),
     array(
       'data' => storm_icon_add_node($i, $_GET),
@@ -189,7 +189,7 @@ function storminvoice_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => storm_t('Search'),
+        '#title' => t('Search'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
   );
@@ -208,10 +208,10 @@ function storminvoice_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, 'All')"),
@@ -226,10 +226,10 @@ function storminvoice_list_filter() {
   while ($project = db_fetch_array($r)) {
     $projects[$project['nid']] = $project['title'];
   }
-  $projects = array(0 => storm_t('All')) + $projects;
+  $projects = array(0 => t('All')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project'),
+    '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -243,20 +243,20 @@ function storminvoice_list_filter() {
 
   $form['filter']['group2']['reqdatefrom'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Req. date from'),
+    '#title' => t('Req. date from'),
     '#default_value' => $reqdatefrom,
   );
 
   $form['filter']['group2']['reqdateto'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Req. date to'),
+    '#title' => t('Req. date to'),
     '#default_value' => $reqdateto,
   );
 
   $form['filter']['status'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Status'),
-    '#options' => array('-' => storm_t('all'), 'to pay' => storm_t('to pay'), 'paid' => storm_t('paid'), 'overdue' => storm_t('overdue')),
+    '#title' => t('Status'),
+    '#options' => array('-' => t('all'), 'to pay' => t('to pay'), 'paid' => t('paid'), 'overdue' => t('overdue')),
     '#default_value' => $status,
   );
 
@@ -267,19 +267,19 @@ function storminvoice_list_filter() {
 
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter'),
+    '#value' => t('Filter'),
     '#submit' => array('storminvoice_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset'),
+    '#value' => t('Reset'),
     '#submit' => array('storminvoice_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

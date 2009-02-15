@@ -10,7 +10,7 @@ function stormticket_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormticket":
-      $o = '<p>'. storm_t("Provides ticket support for Storm", 'ticket') .'</p>';
+      $o = '<p>'. t("Provides ticket support for Storm") .'</p>';
       break;
   }
 
@@ -156,8 +156,8 @@ function stormticket_menu() {
   $items = array();
 
   $items['storm/tickets'] = array(
-            'title' => storm_t('Tickets', 'ticket'),
-            'description' => storm_t('Storm Tickets', 'ticket'),
+            'title' => t('Tickets'),
+            'description' => t('Storm Tickets'),
             'page callback' => 'stormticket_list',
             'access arguments' => array('Storm ticket: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -165,7 +165,7 @@ function stormticket_menu() {
   );
 
   $items['storm/task_tickets_js/%/%/%'] = array(
-    'title' => storm_t('Tickets', 'ticket'),
+    'title' => t('Tickets'),
     'page callback' => '_stormticket_task_tickets_js',
     'page arguments' => array(2, 3, 4),
     'access arguments' => array('Storm ticket: access'),
@@ -191,11 +191,11 @@ function stormticket_theme() {
 function stormticket_node_info() {
   return array(
     'stormticket' => array(
-      'name' => storm_t('Ticket', 'ticket'),
+      'name' => t('Ticket'),
       'module' => 'stormticket',
-      'description' => storm_t("A ticket for Storm.", 'ticket'),
-      'title_label' => storm_t("Title", 'ticket'),
-      'body_label' => storm_t("Description", 'ticket'),
+      'description' => t("A ticket for Storm."),
+      'title_label' => t("Title"),
+      'body_label' => t("Description"),
     )
   );
 }
@@ -281,7 +281,7 @@ function stormticket_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'ticket'),
+    '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -298,7 +298,7 @@ function stormticket_form(&$node) {
   }
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'ticket'),
+    '#title' => t('Project'),
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -309,7 +309,7 @@ function stormticket_form(&$node) {
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'ticket'),
+    '#title' => t('Task'),
     '#default_value' => $node->task_nid,
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -324,7 +324,7 @@ function stormticket_form(&$node) {
   $category_list = stormattribute_attributes_bydomain('Ticket category');
   $form['group2']['ticketcategory'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Category', 'ticket'),
+    '#title' => t('Category'),
     '#default_value' => $node->ticketcategory,
     '#options' => $category_list['values'],
   );
@@ -332,7 +332,7 @@ function stormticket_form(&$node) {
   $status_list = stormattribute_attributes_bydomain('Ticket status');
   $form['group2']['ticketstatus'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Status', 'ticket'),
+    '#title' => t('Status'),
     '#default_value' => $node->ticketstatus,
     '#options' => $status_list['values'],
   );
@@ -340,7 +340,7 @@ function stormticket_form(&$node) {
   $priority_list = stormattribute_attributes_bydomain('Ticket priority');
   $form['group2']['ticketpriority'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Priority', 'ticket'),
+    '#title' => t('Priority'),
     '#default_value' => $node->ticketpriority,
     '#options' => $priority_list['values'],
   );
@@ -361,14 +361,14 @@ function stormticket_form(&$node) {
 
   $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date begin', 'ticket'),
+    '#title' => t('Date begin'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
   );
 
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date end', 'ticket'),
+    '#title' => t('Date end'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
@@ -376,14 +376,14 @@ function stormticket_form(&$node) {
   $durationunits = stormattribute_attributes_bydomain('Duration unit');
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Duration unit', 'ticket'),
+    '#title' => t('Duration unit'),
     '#default_value' => $node->durationunit,
     '#options' => $durationunits['values'],
   );
 
   $form['group3']['duration'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Duration', 'ticket'),
+    '#title' => t('Duration'),
     '#size' => 20,
     '#default_value' => $node->duration,
   );
@@ -397,13 +397,13 @@ function stormticket_form(&$node) {
   $pricemodes = stormattribute_attributes_bydomain('Price mode');
   $form['group5']['pricemode'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Price mode', 'ticket'),
+    '#title' => t('Price mode'),
     '#default_value' => $node->pricemode,
     '#options' => array('-' => '-') + $pricemodes['values'],
   );
 
   $form['group5']['price'] = array(
-    '#title' => storm_t('Price', 'ticket'),
+    '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
     '#default_value' => $node->price,
@@ -412,7 +412,7 @@ function stormticket_form(&$node) {
   $currencies = stormattribute_attributes_bydomain('Currency');
   $form['group5']['currency'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Price currency', 'ticket'),
+    '#title' => t('Price currency'),
     '#default_value' => $node->currency,
     '#options' => array('-' => '-') + $currencies['values'],
   );

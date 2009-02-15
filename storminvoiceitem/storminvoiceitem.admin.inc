@@ -23,22 +23,22 @@ function storminvoiceitem_invoiceitems($invoice) {
 
   $header = array(
     array(
-      'data' => storm_t('Title', 'invoiceitem'),
+      'data' => t('Title'),
     ),
     array(
-      'data' => storm_t('Amount', 'invoiceitem'),
+      'data' => t('Amount'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => storm_t('VAT', 'invoiceitem'),
+      'data' => t('VAT'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => storm_t('Total', 'invoiceitem'),
+      'data' => t('Total'),
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => storm_t('Weight', 'invoiceitem'),
+      'data' => t('Weight'),
       'style' => 'text-align: center;',
     ),
     array(
@@ -110,7 +110,7 @@ function storminvoiceitem_invoiceitems_form($form_id, $header, $invoiceitems, $i
   $form['submit'] = array(
     '#type' => 'submit',
     '#submit' => array('storminvoiceitem_invoiceitems_submit'),
-    '#value' => storm_t('Save', 'invoiceitem'),
+    '#value' => t('Save'),
   );
 
   return $form;
@@ -130,6 +130,6 @@ function storminvoiceitem_invoiceitems_submit($form, &$form_state) {
     db_query($s, $values['weight'], $nid);
   }
 
-  drupal_set_message(storm_t('Invoice items saved', 'invoice'));
+  drupal_set_message(t('Invoice items saved'));
 }
 

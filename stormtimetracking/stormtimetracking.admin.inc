@@ -63,28 +63,28 @@ function stormtimetracking_list() {
 
   $header = array(
     array(
-      'data' => storm_t('Organization', 'timetracking'),
+      'data' => t('Organization'),
       'field' => 'stt.organization_title',
     ),
     array(
-      'data' => storm_t('Project', 'timetracking'),
+      'data' => t('Project'),
       'field' => 'stt.project_title',
     ),
     array(
-      'data' => storm_t('Title', 'timetracking'),
+      'data' => t('Title'),
       'field' => 'n.title',
     ),
     array(
-      'data' => storm_t('Date', 'timetracking'),
+      'data' => t('Date'),
       'field' => 'stt.trackingdate',
       'sort' => 'desc',
     ),
     array(
-      'data' => storm_t('Duration (h)', 'timetracking'),
+      'data' => t('Duration (h)'),
       'style' => 'text-align: right;'
     ),
     array(
-      'data' => storm_icon_l('report', '', storm_t('Reports', 'timetracking'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
+      'data' => storm_icon_l('report', '', t('Reports'), '', array(), $report_attrs) .'&nbsp;'. storm_icon_add_node($i, $_GET),
       'class' => 'storm_list_operations',
     ),
   );
@@ -207,7 +207,7 @@ function stormtimetracking_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => storm_t('Filter', 'timetracking'),
+        '#title' => t('Filter'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#theme' => 'stormtimetracking_list_filter',
@@ -228,10 +228,10 @@ function stormtimetracking_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All', 'timetracking')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'timetracking'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
@@ -246,10 +246,10 @@ function stormtimetracking_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => storm_t('All', 'timetracking')) + $projects;
+  $projects = array(0 => t('All')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'timetracking'),
+    '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -258,10 +258,10 @@ function stormtimetracking_list_filter() {
 
   $tree = _stormtask_get_tree($project_nid);
   $tasks = _stormtask_plain_tree($tree);
-  $tasks = array(0 => storm_t('All', 'timetracking')) + $tasks;
+  $tasks = array(0 => t('All')) + $tasks;
   $form['filter']['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'timetracking'),
+    '#title' => t('Task'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -277,10 +277,10 @@ function stormtimetracking_list_filter() {
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
-  $tickets = array(0 => storm_t('All', 'timetracking')) + $tickets;
+  $tickets = array(0 => t('All')) + $tickets;
   $form['filter']['group1']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Ticket', 'timetracking'),
+    '#title' => t('Ticket'),
     '#default_value' => $ticket_nid,
     '#process' => array('storm_dependent_select_process'),
     '#options' => $tickets,
@@ -294,19 +294,19 @@ function stormtimetracking_list_filter() {
 
   $form['filter']['group2']['datefrom'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date from', 'timetracking'),
+    '#title' => t('Date from'),
     '#default_value' => $datefrom,
   );
 
   $form['filter']['group2']['dateto'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date to', 'timetracking'),
+    '#title' => t('Date to'),
     '#default_value' => $dateto,
   );
 
   $form['filter']['group2']['user'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('User', 'timetracking'),
+    '#title' => t('User'),
     '#size' => 25,
     '#default_value' => $trackinguser,
     '#autocomplete_path' => 'user/autocomplete',
@@ -315,7 +315,7 @@ function stormtimetracking_list_filter() {
   $form['filter']['billable'] = array(
     '#type' => 'select',
     '#title' => 'Billable',
-    '#options' => array('-' => storm_t('all', 'timetracking'), '1' => storm_t('billable', 'timetracking'), '0' => storm_t('not billable', 'timetracking')),
+    '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
     '#default_value' => $_SESSION['stormtimetracking_list_filter']['billable'],
   );
 
@@ -326,19 +326,19 @@ function stormtimetracking_list_filter() {
 
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'timetracking'),
+    '#value' => t('Filter'),
     '#submit' => array('stormtimetracking_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'timetracking'),
+    '#value' => t('Reset'),
     '#submit' => array('stormtimetracking_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'timetracking'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
@@ -369,7 +369,7 @@ function stormtimetracking_list_form_report() {
   $form['#prefix'] = '<div id="stormtimetracking_list_form_report" class="storm_list_form_report">';
   $form['report'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Reports', 'timetracking'),
+    '#title' => t('Reports'),
     '#options' => theme('stormtimetracking_list_form_report_reports'),
   );
 
@@ -381,7 +381,7 @@ function stormtimetracking_list_form_report() {
     }
     $form['language'] = array(
       '#type' => 'select',
-      '#title' => storm_t('Language', 'timetracking'),
+      '#title' => t('Language'),
       '#options' => $languages,
     );
   }
@@ -393,7 +393,7 @@ function stormtimetracking_list_form_report() {
   }
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Report', 'timetracking'),
+    '#value' => t('Report'),
   );
   $form['#suffix'] = '</div>';
   return $form;

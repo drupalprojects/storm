@@ -7,6 +7,7 @@
 
 function stormexpense_install() {
   drupal_install_schema('stormexpense');
+  variable_set('node_options_expense', array('status'));
 }
 
 function stormexpense_uninstall() {

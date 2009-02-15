@@ -55,19 +55,19 @@ function stormteammember_list() {
 
   $header = array(
     array(
-      'data' => storm_t('Organization', 'teammember'),
+      'data' => t('Organization'),
       'field' => 'stm.organization_title',
     ),
     array(
-      'data' => storm_t('Project', 'teammember'),
+      'data' => t('Project'),
       'field' => 'stm.project_title',
     ),
     array(
-      'data' => storm_t('Task', 'teammember'),
+      'data' => t('Task'),
       'field' => 'stm.task_title',
     ),
     array(
-      'data' => storm_t('Ticket', 'teammember'),
+      'data' => t('Ticket'),
       'field' => 'stm.ticket_title',
     ),
     array(
@@ -126,7 +126,7 @@ function stormteammember_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => storm_t('Filter', 'teammember'),
+        '#title' => t('Filter'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#theme' => 'stormteammember_list_filter',
@@ -147,10 +147,10 @@ function stormteammember_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All', 'teammember')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'teammember'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, 'All')"),
@@ -165,10 +165,10 @@ function stormteammember_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => storm_t('All', 'teammember')) + $projects;
+  $projects = array(0 => t('All')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'teammember'),
+    '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -177,10 +177,10 @@ function stormteammember_list_filter() {
 
   $tree = _stormtask_get_tree($project_nid);
   $tasks = _stormtask_plain_tree($tree);
-  $tasks = array(0 => storm_t('All', 'teammember')) + $tasks;
+  $tasks = array(0 => t('All')) + $tasks;
   $form['filter']['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'teammember'),
+    '#title' => t('Task'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -196,10 +196,10 @@ function stormteammember_list_filter() {
   while ($ticket = db_fetch_object($r)) {
     $tickets[$ticket->nid] = $ticket->title;
   }
-  $tickets = array(0 => storm_t('All', 'teammember')) + $tickets;
+  $tickets = array(0 => t('All')) + $tickets;
   $form['filter']['group1']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Ticket', 'teammember'),
+    '#title' => t('Ticket'),
     '#default_value' => $ticket_nid,
     '#process' => array('storm_dependent_select_process'),
     '#options' => $tickets,
@@ -212,19 +212,19 @@ function stormteammember_list_filter() {
 
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'teammember'),
+    '#value' => t('Filter'),
     '#submit' => array('stormteammember_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'teammember'),
+    '#value' => t('Reset'),
     '#submit' => array('stormteammember_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'teammember'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
@@ -419,7 +419,7 @@ function stormteammember_form(&$teammember) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'teammember'),
+    '#title' => t('Organization'),
     '#default_value' => $teammember->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -437,7 +437,7 @@ function stormteammember_form(&$teammember) {
   $projects = array(0 => '-') + $projects;
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'teammember'),
+    '#title' => t('Project'),
     '#default_value' => $teammember->project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -449,7 +449,7 @@ function stormteammember_form(&$teammember) {
   $tasks = array(0 => '-') + $tasks;
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'teammember'),
+    '#title' => t('Task'),
     '#default_value' => $teammember->task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -466,7 +466,7 @@ function stormteammember_form(&$teammember) {
   }
   $form['group1']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Ticket', 'teammember'),
+    '#title' => t('Ticket'),
     '#default_value' => $teammember->ticket_nid,
     '#options' => array(0 => '-') + $tickets,
     '#process' => array('storm_dependent_select_process'),
@@ -480,7 +480,7 @@ function stormteammember_form(&$teammember) {
 
   $form['group2']['person_organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Person organization', 'teammember'),
+    '#title' => t('Person organization'),
     '#default_value' => $teammember->person_organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -500,7 +500,7 @@ function stormteammember_form(&$teammember) {
 
   $form['group2']['person_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Person', 'teammember'),
+    '#title' => t('Person'),
     '#default_value' => $teammember->person_nid,
     '#options' => $people,
     '#required' => true,
@@ -509,19 +509,19 @@ function stormteammember_form(&$teammember) {
 
   $form['save'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Save')
+    '#value' => t('Save')
   );
 
   if ($teammember->tid) {
     $form['delete'] = array(
       '#type' => 'submit',
-      '#value' => storm_t('Delete'),
+      '#value' => t('Delete'),
       '#submit' => array('stormteammember_form_delete'),
     );
   }
   $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Cancel'),
+    '#value' => t('Cancel'),
     '#submit' => array('stormteammember_cancel_submit'),
   );
 

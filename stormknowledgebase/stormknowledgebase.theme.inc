@@ -47,14 +47,14 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormknowledgebase']['fields']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Topic', 'knowledgebase'), $topics[$node->topic]),
+    '#value' => theme('storm_view_item', t('Topic'), $topics[$node->topic]),
     '#weight' => $w++,
   );
 
   $node->content['stormknowledgebase']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Description', 'expense'), $node->content['body']['#value']),
+    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => $w++,
   );
   unset($node->content['body']);

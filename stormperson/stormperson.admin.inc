@@ -27,15 +27,15 @@ function stormperson_list() {
 
   $header = array(
     array(
-      'data' => storm_t('Organization', 'person'),
+      'data' => t('Organization'),
       'field' => 'spe.organization_title',
     ),
     array(
-      'data' => storm_t('Name', 'person'),
+      'data' => t('Name'),
       'field' => 'n.title',
     ),
     array(
-      'data' => storm_t('Email', 'person'),
+      'data' => t('Email'),
       'field' => 'spe.email',
     ),
     array(
@@ -88,7 +88,7 @@ function stormperson_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => storm_t('Filter', 'person'),
+    '#title' => t('Filter'),
     '#collapsible' => true,
     '#collapsed' => true,
   );
@@ -107,17 +107,17 @@ function stormperson_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All', 'person')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'person'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
   );
 
   $form['filter']['group1']['name'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Name', 'person'),
+    '#title' => t('Name'),
     '#default_value' => $name,
     '#size' => 30,
   );
@@ -129,19 +129,19 @@ function stormperson_list_filter() {
 
   $form['filter']['group2']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'person'),
+    '#value' => t('Filter'),
     '#submit' => array('stormperson_list_filter_filter'),
   );
 
   $form['filter']['group2']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'person'),
+    '#value' => t('Reset'),
     '#submit' => array('stormperson_list_filter_reset'),
   );
 
   $form['filter']['group2']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'person'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

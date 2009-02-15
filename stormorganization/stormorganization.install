@@ -7,6 +7,7 @@
 
 function stormorganization_install() {
   drupal_install_schema('stormorganization');
+  variable_set('node_options_stormorganization', array('status'));
 }
 
 function stormorganization_uninstall() {

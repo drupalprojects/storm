@@ -10,7 +10,7 @@ function stormperson_help($path, $arg) {
 
   switch ($help) {
     case "admin/help#stormperson":
-      $o = '<p>'. storm_t("Provides person support for Storm", 'person') .'</p>';
+      $o = '<p>'. t("Provides person support for Storm") .'</p>';
       break;
   }
 
@@ -139,8 +139,8 @@ function stormperson_access_sql($sql, $where = array()) {
 function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -167,14 +167,14 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 
 function stormperson_menu() {
   $items['storm/people'] = array(
-    'title' => storm_t('People', 'person'),
-    'description' => storm_t('Storm people', 'person'),
+    'title' => t('People'),
+    'description' => t('Storm people'),
     'page callback' => 'stormperson_list',
     'access arguments' => array('Storm person: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -182,7 +182,7 @@ function stormperson_menu() {
   );
 
   $items['storm/organization_people_js/%'] = array(
-    'title' => storm_t('People', 'person'),
+    'title' => t('People'),
     'page callback' => '_stormperson_organization_people_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm person: access'),
@@ -213,11 +213,11 @@ function stormperson_theme() {
 function stormperson_node_info() {
   return array(
     'stormperson' => array(
-      'name' => storm_t('Person', 'person'),
+      'name' => t('Person'),
       'module' => 'stormperson',
-      'description' => storm_t("A person for Storm.", 'person'),
-      'title_label' => storm_t("Name", 'person'),
-      'body_label' => storm_t("Description", 'person'),
+      'description' => t("A person for Storm."),
+      'title_label' => t("Name"),
+      'body_label' => t("Description"),
     )
   );
 }
@@ -264,7 +264,7 @@ function stormperson_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'person'),
+    '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -281,7 +281,7 @@ function stormperson_form(&$node) {
 
   $form['group1']['user_name'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('User', 'person'),
+    '#title' => t('User'),
     '#default_value' => $node->user_name,
     '#autocomplete_path' => 'user/autocomplete',
     '#size' => 40,
@@ -295,14 +295,14 @@ function stormperson_form(&$node) {
 
   $form['group2']['prefix'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Prefix', 'person'),
+    '#title' => t('Prefix'),
     '#size' => 20,
     '#default_value' => $node->prefix,
   );
 
   $form['group2']['fullname'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Fullname', 'person'),
+    '#title' => t('Fullname'),
     '#size' => 40,
     '#default_value' => $node->fullname,
   );
@@ -315,14 +315,14 @@ function stormperson_form(&$node) {
 
   $form['group3']['email'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Email', 'person'),
+    '#title' => t('Email'),
     '#size' => 30,
     '#default_value' => $node->email,
   );
 
   $form['group3']['www'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('WWW', 'person'),
+    '#title' => t('WWW'),
     '#size' => 30,
     '#default_value' => $node->www,
   );
@@ -335,14 +335,14 @@ function stormperson_form(&$node) {
 
   $form['group4']['phone'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Phone', 'person'),
+    '#title' => t('Phone'),
     '#size' => 30,
     '#default_value' => $node->phone,
   );
 
   $form['group4']['im'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('IM', 'person'),
+    '#title' => t('IM'),
     '#size' => 30,
     '#default_value' => $node->im,
   );

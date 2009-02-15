@@ -26,20 +26,20 @@ function stormproject_list() {
       'data' => ' ',
     ),
     array(
-      'data' => storm_t('Organization', 'project'),
+      'data' => t('Organization'),
       'field' => 'spr.organization_title',
       'sort' => 'asc',
     ),
     array(
-      'data' => storm_t('Title', 'project'),
+      'data' => t('Title'),
       'field' => 'n.title',
     ),
     array(
-      'data' => storm_t('Status', 'project'),
+      'data' => t('Status'),
       'field' => 'spr.projectstatus',
     ),
     array(
-      'data' => storm_t('Priority', 'project'),
+      'data' => t('Priority'),
       'field' => 'spr.projectpriority',
     ),
     array(
@@ -176,7 +176,7 @@ function stormproject_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => storm_t('Filter', 'project'),
+        '#title' => t('Filter'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
   );
@@ -192,9 +192,9 @@ function stormproject_list_filter() {
   }
   $form['filter']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'project'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
-    '#options' => array(0 => storm_t('All', 'project')) + $organizations,
+    '#options' => array(0 => t('All')) + $organizations,
   );
 
   $form['filter']['group1'] = array(
@@ -204,21 +204,21 @@ function stormproject_list_filter() {
 
   $form['filter']['group1']['projectcategory'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Category', 'project'),
+    '#title' => t('Category'),
     '#default_value' => $projectcategory,
     '#options' => $category_list['values'],
   );
 
   $form['filter']['group1']['projectstatus'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Status', 'project'),
+    '#title' => t('Status'),
     '#default_value' => $projectstatus,
     '#options' => $status_list['values'],
   );
 
   $form['filter']['group1']['projectpriority'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Priority', 'project'),
+    '#title' => t('Priority'),
     '#default_value' => $projectpriority,
     '#options' => $priority_list['values'],
   );
@@ -231,14 +231,14 @@ function stormproject_list_filter() {
   $form['filter']['group2']['datebeginfrom'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date begin from', 'task'),
+    '#title' => t('Date begin from'),
     '#default_value' => $datebeginfrom,
   );
 
   $form['filter']['group2']['datebeginto'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date begin to', 'task'),
+    '#title' => t('Date begin to'),
     '#default_value' => $datebeginto,
   );
 
@@ -250,14 +250,14 @@ function stormproject_list_filter() {
   $form['filter']['group3']['dateendfrom'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date end from', 'task'),
+    '#title' => t('Date end from'),
     '#default_value' => $dateendfrom,
   );
 
   $form['filter']['group3']['dateendto'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date end to', 'task'),
+    '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
 
@@ -268,7 +268,7 @@ function stormproject_list_filter() {
 
   $form['filter']['group4']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'project'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',
@@ -277,13 +277,13 @@ function stormproject_list_filter() {
 
   $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'project'),
+    '#value' => t('Filter'),
     '#submit' => array('stormproject_list_filter_filter'),
   );
 
   $form['filter']['group4']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'project'),
+    '#value' => t('Reset'),
     '#submit' => array('stormproject_list_filter_reset'),
   );
 

@@ -50,19 +50,19 @@ function stormnote_list() {
 
   $header = array(
     array(
-      'data' => storm_t('Organization', 'note'),
+      'data' => t('Organization'),
       'field' => 'sno.organization_title',
     ),
     array(
-      'data' => storm_t('Project', 'note'),
+      'data' => t('Project'),
       'field' => 'sno.project_title',
     ),
     array(
-      'data' => storm_t('Task', 'note'),
+      'data' => t('Task'),
       'field' => 'sno.task_title',
     ),
     array(
-      'data' => storm_t('Title', 'note'),
+      'data' => t('Title'),
       'field' => 'n.title',
     ),
     array(
@@ -126,7 +126,7 @@ function stormnote_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => storm_t('Filter', 'note'),
+    '#title' => t('Filter'),
     '#collapsible' => true,
     '#collapsed' => true,
   );
@@ -144,10 +144,10 @@ function stormnote_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All', 'note')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'note'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', true, 'All')"),
@@ -162,10 +162,10 @@ function stormnote_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => storm_t('All', 'note')) + $projects;
+  $projects = array(0 => t('All')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'note'),
+    '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -180,10 +180,10 @@ function stormnote_list_filter() {
   while ($task = db_fetch_object($r)) {
     $tasks[$task->nid] = $task->title;
   }
-  $tasks = array(0 => storm_t('All', 'note')) + $tasks;
+  $tasks = array(0 => t('All')) + $tasks;
   $form['filter']['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'note'),
+    '#title' => t('Task'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
   );
@@ -195,7 +195,7 @@ function stormnote_list_filter() {
 
   $form['filter']['group2']['title'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Title', 'note'),
+    '#title' => t('Title'),
     '#default_value' => $title,
   );
 
@@ -206,19 +206,19 @@ function stormnote_list_filter() {
 
   $form['filter']['group3']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'note'),
+    '#value' => t('Filter'),
     '#submit' => array('stormnote_list_filter_filter'),
   );
 
   $form['filter']['group3']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'note'),
+    '#value' => t('Reset'),
     '#submit' => array('stormnote_list_filter_reset'),
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'note'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

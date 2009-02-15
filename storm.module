@@ -10,7 +10,7 @@ function storm_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#storm":
-      $output = '<p>'.  storm_t("Provides a complete project management environment") .'</p>';
+      $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
       break;
   }
 
@@ -30,16 +30,16 @@ function storm_menu() {
   $items = array();
 
   $items['storm'] = array(
-            'title' => storm_t('Storm'),
-            'description' => storm_t('SpeedTech Organizer and Resource Manager'),
+            'title' => t('Storm'),
+            'description' => t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'storm_dashboard',
             'access arguments' => array('Storm: access'),
             'parent' => '',
             'type' => MENU_NORMAL_ITEM);
 
   $items['admin/storm'] = array(
-            'title' => storm_t('Storm'),
-            'description' => storm_t('SpeedTech Organizer and Resource Manager'),
+            'title' => t('Storm'),
+            'description' => t('SpeedTech Organizer and Resource Manager'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('storm_admin_settings'),
             'access arguments' => array('access administration pages'),
@@ -73,10 +73,6 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array('label', 'value'),
     ),
-    'storm_texts' => array(
-      'file'      => 'storm.theme.inc',
-      'arguments' => array(),
-    ),
     'storm_dashboard' => array(
       'file'      => 'storm.theme.inc',
       'arguments' => array(),
@@ -85,7 +81,7 @@ function storm_theme() {
 }
 
 function storm_dashboard() {
-  drupal_set_title(storm_t('Storm Dashboard'));
+  drupal_set_title(t('Storm Dashboard'));
   return theme('storm_dashboard');
 }
 
@@ -94,15 +90,15 @@ function storm_admin_settings() {
 
   $form['storm_icons_path'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Icons directory'),
+    '#title' => t('Icons directory'),
     '#default_value' => variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons'),
-    '#description' => storm_t("The directory that contains the Storm's icons"),
+    '#description' => t("The directory that contains the Storm's icons"),
     '#weight' => -11,
   );
 
   $form['yearsrange'] = array(
     '#type' => 'fieldset',
-    '#title' => storm_t('Years range in dates'),
+    '#title' => t('Years range in dates'),
     '#collapsed' => false,
     '#collapsible' => true,
     '#weight' => -10,
@@ -115,21 +111,21 @@ function storm_admin_settings() {
 
   $form['yearsrange']['group0']['storm_yearsrangebegin'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Begin'),
+    '#title' => t('Begin'),
     '#options' => drupal_map_assoc(range(1970, 2037)),
     '#default_value' => variable_get('storm_yearsrangebegin', 2001),
   );
 
   $form['yearsrange']['group0']['storm_yearsrangeend'] = array(
     '#type' => 'select',
-    '#title' => storm_t('End'),
+    '#title' => t('End'),
     '#options' => drupal_map_assoc(range(1970, 2037)),
     '#default_value' => variable_get('storm_yearsrangeend', 2012),
   );
 
   $form['stormreports'] = array(
     '#type' => 'fieldset',
-    '#title' => storm_t('Reports'),
+    '#title' => t('Reports'),
     '#collapsed' => false,
     '#collapsible' => true,
     '#weight' => -9,
@@ -137,9 +133,9 @@ function storm_admin_settings() {
 
   $form['stormreports']['storm_report_header'] = array(
     '#type' => 'textarea',
-    '#title' => storm_t('Report header'),
+    '#title' => t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
-    '#description' => storm_t('The header that will appear on the reports'),
+    '#description' => t('The header that will appear on the reports'),
   );
 
   return system_settings_form($form);
@@ -228,7 +224,7 @@ function storm_datetime_expand($element) {
 
 function storm_datetime_validate($form) {
   if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
-    form_error($form, storm_t('The specified date is invalid.'));
+    form_error($form, t('The specified date is invalid.'));
   }
 }
 
@@ -307,7 +303,7 @@ function storm_icon_add($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('create', $item, $user)) return '';
-  return storm_icon_l('application_add', $path, storm_t('Add'), '', $params);
+  return storm_icon_l('application_add', $path, t('Add'), '', $params);
 }
 
 function storm_icon_edit($path, $item, $params=array()) {
@@ -315,7 +311,7 @@ function storm_icon_edit($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('update', $item, $user)) return '';
-  return storm_icon_l('application_edit', $path, storm_t('Edit'), '', $params);
+  return storm_icon_l('application_edit', $path, t('Edit'), '', $params);
 }
 
 function storm_icon_delete($path, $item, $params=array()) {
@@ -323,7 +319,7 @@ function storm_icon_delete($path, $item, $params=array()) {
   $type = $item->type;
   $af = $type .'_access';
   if (!$af('delete', $item, $user)) return '';
-  return storm_icon_l('application_delete', $path, storm_t('Delete'), '', $params);
+  return storm_icon_l('application_delete', $path, t('Delete'), '', $params);
 }
 
 function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $attributes=array()) {
@@ -384,7 +380,7 @@ function storm_icon($icon, $title) {
   return $o;
 }
 
-function _storm_timestamp_to_gm($timestamp, $timezone=NULL) {
+function _timestamp_to_gm($timestamp, $timezone=NULL) {
   if (!isset($timezone)) {
     global $user;
     if (variable_get('configurable_timezones', 1) && $user->uid && drupal_strlen($user->timezone)) {
@@ -404,14 +400,14 @@ function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
   }
   else {
     $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
-    return _storm_timestamp_to_gm($gmttimestamp, $timezone);
+    return _timestamp_to_gm($gmttimestamp, $timezone);
   }
 }
 
 function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
   $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']),
   intval($datetime['day']), intval($datetime['year']));
-  return _storm_timestamp_to_gm($gmttimestamp, $timezone);
+  return _timestamp_to_gm($gmttimestamp, $timezone);
 }
 
 function _storm_gmtimestamp_to_datetime($timestamp, $timezone=NULL) {
@@ -447,7 +443,7 @@ function _storm_gmtimestamp_to_date($timestamp, $timezone=NULL) {
 function _storm_gmtimestamp_without_time($timestamp, $timezone=NULL) {
   $date = _storm_gmtimestamp_to_date($timestamp, $timezone);
   $gmttimestamp = gmmktime(0, 0, 0, $date['month'], $date['day'], $date['year']);
-  return _storm_timestamp_to_gm($gmttimestamp, $timezone);
+  return _timestamp_to_gm($gmttimestamp, $timezone);
 }
 
 function _storm_strtotime($timestr='') {
@@ -464,7 +460,7 @@ function _storm_strtotime($timestr='') {
   return $time;
 }
 
-function _storm_timetostr($time=array()) {
+function _timetostr($time=array()) {
   $timestr = str_pad($time['hour'], 2, "0", STR_PAD_LEFT) .':'. str_pad($time['minute'], 2, "0", STR_PAD_RIGHT);
   return $timestr;
 }
@@ -567,26 +563,4 @@ function storm_form_alter(&$form, $form_state, $form_id) {
   }
 }
 
-function storm_t($text, $domain='default', $args = array(), $langcode = NULL) {
-  if (!$text) return '';
-
-  static $items;
-  if (!$items) {
-    $items = theme('storm_texts');
-  }
-  if ($domain && is_array($items)) {
-    if (array_key_exists($domain, $items) && is_array($items[$domain]) && array_key_exists($text, $items[$domain])) {
-      return t($items[$domain][$text], $args, $langcode);
-    }
-    else if (array_key_exists('default', $items) && is_array($items['default']) && array_key_exists($text, $items['default'])) {
-      return t($items['default'][$text], $args, $langcode);
-    }    
-    else {
-      return t($text, $args, $langcode);
-    }
-  }
-  else {
-    return t($text, $args, $langcode);
-  }
-}
 

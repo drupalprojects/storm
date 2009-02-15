@@ -10,7 +10,7 @@ function stormteammember_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormteammember":
-      $o = '<p>'. storm_t("Provides team member support for Storm", 'teammember') .'</p>';
+      $o = '<p>'. t("Provides team member support for Storm") .'</p>';
       break;
   }
 
@@ -97,31 +97,31 @@ function stormteammember_menu() {
   $items = array();
 
   $items['storm/teammembers'] = array(
-            'title' => storm_t('Team members'),
-            'description' => storm_t('Storm team members'),
+            'title' => t('Team members'),
+            'description' => t('Storm team members'),
             'page callback' => 'stormteammember_list',
             'access arguments' => array('Storm teammember: access'),
             'file' => 'stormteammember.admin.inc',
             'type' => MENU_NORMAL_ITEM);
   $items['storm/teammembers/add'] = array(
-            'title' => storm_t('Add a new team member'),
-            'description' => storm_t('Storm team members'),
+            'title' => t('Add a new team member'),
+            'description' => t('Storm team members'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('stormteammember_add'),
             'access arguments' => array('Storm teammember: add'),
             'file' => 'stormteammember.admin.inc',
             'type' => MENU_CALLBACK);
   $items['storm/teammembers/edit/%'] = array(
-            'title' => storm_t('Edit a team member'),
-            'description' => storm_t('Storm team members'),
+            'title' => t('Edit a team member'),
+            'description' => t('Storm team members'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('stormteammember_edit', 3),
             'access arguments' => array('Storm teammember: edit'),
             'file' => 'stormteammember.admin.inc',
             'type' => MENU_CALLBACK);
   $items['storm/teammembers/delete/%'] = array(
-            'title' => storm_t('Delete a team member'),
-            'description' => storm_t('Storm Attributes'),
+            'title' => t('Delete a team member'),
+            'description' => t('Storm Attributes'),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('stormteammember_delete', 3),
             'access arguments' => array('Storm teammember: delete'),

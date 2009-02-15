@@ -7,6 +7,7 @@
 
 function storminvoiceitem_install() {
   drupal_install_schema('storminvoiceitem');
+  variable_set('node_options_storminvoiceitem', array('status'));
 }
 
 function storminvoiceitem_uninstall() {

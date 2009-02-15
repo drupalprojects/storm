@@ -48,28 +48,28 @@ function stormticket_list() {
       'data' => ' ',
     ),
     array(
-      'data' => storm_t('Organization', 'ticket'),
+      'data' => t('Organization'),
       'field' => 'sti.organization_title',
     ),
     array(
-      'data' => storm_t('Project', 'ticket'),
+      'data' => t('Project'),
       'field' => 'sti.project_title',
     ),
     array(
-      'data' => storm_t('Title', 'ticket'),
+      'data' => t('Title'),
       'field' => 'n.title',
     ),
     array(
-      'data' => storm_t('Date', 'ticket'),
+      'data' => t('Date'),
       'field' => 'n.created',
       'sort' => 'desc',
     ),
     array(
-      'data' => storm_t('Status', 'ticket'),
+      'data' => t('Status'),
       'field' => 'sti.ticketstatus',
     ),
     array(
-      'data' => storm_t('Priority', 'ticket'),
+      'data' => t('Priority'),
       'field' => 'sti.ticketpriority',
     ),
     array(
@@ -225,7 +225,7 @@ function stormticket_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => storm_t('Filter', 'ticket'),
+    '#title' => t('Filter'),
     '#collapsible' => true,
     '#collapsed' => true,
     '#theme' => 'stormticket_list_filter',
@@ -244,10 +244,10 @@ function stormticket_list_filter() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  $organizations = array(0 => storm_t('All', 'ticket')) + $organizations;
+  $organizations = array(0 => t('All')) + $organizations;
   $form['filter']['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'ticket'),
+    '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', true, 'All')"),
@@ -262,10 +262,10 @@ function stormticket_list_filter() {
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
   }
-  $projects = array(0 => storm_t('All', 'ticket')) + $projects;
+  $projects = array(0 => t('All')) + $projects;
   $form['filter']['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'ticket'),
+    '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -281,10 +281,10 @@ function stormticket_list_filter() {
   while ($task = db_fetch_object($r)) {
     $tasks[$task->nid] = $task->title;
   }
-  $tasks = array(0 => storm_t('All', 'ticket')) + $tasks;
+  $tasks = array(0 => t('All')) + $tasks;
   $form['filter']['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'ticket'),
+    '#title' => t('Task'),
     '#default_value' => $task_nid,
     '#options' => $tasks,
   );
@@ -296,21 +296,21 @@ function stormticket_list_filter() {
 
   $form['filter']['group2']['ticketcategory'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Category', 'ticket'),
+    '#title' => t('Category'),
     '#default_value' => $ticketcategory,
     '#options' => $category_list['values'],
   );
 
   $form['filter']['group2']['ticketstatus'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Status', 'ticket'),
+    '#title' => t('Status'),
     '#default_value' => $ticketstatus,
     '#options' => $status_list['values'],
   );
 
   $form['filter']['group2']['ticketpriority'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Priority', 'ticket'),
+    '#title' => t('Priority'),
     '#default_value' => $ticketpriority,
     '#options' => $priority_list['values'],
   );
@@ -323,14 +323,14 @@ function stormticket_list_filter() {
   $form['filter']['group3']['datebeginfrom'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date begin from', 'ticket'),
+    '#title' => t('Date begin from'),
     '#default_value' => $datebeginfrom,
   );
 
   $form['filter']['group3']['datebeginto'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date begin to', 'ticket'),
+    '#title' => t('Date begin to'),
     '#default_value' => $datebeginto,
   );
 
@@ -342,14 +342,14 @@ function stormticket_list_filter() {
   $form['filter']['group4']['dateendfrom'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date end from', 'ticket'),
+    '#title' => t('Date end from'),
     '#default_value' => $dateendfrom,
   );
 
   $form['filter']['group4']['dateendto'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
-    '#title' => storm_t('Date end to', 'ticket'),
+    '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
 
@@ -360,19 +360,19 @@ function stormticket_list_filter() {
 
   $form['filter']['group5']['submit'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Filter', 'ticket'),
+    '#value' => t('Filter'),
     '#submit' => array('stormticket_list_filter_filter'),
   );
 
   $form['filter']['group5']['reset'] = array(
     '#type' => 'submit',
-    '#value' => storm_t('Reset', 'ticket'),
+    '#value' => t('Reset'),
     '#submit' => array('stormticket_list_filter_reset'),
   );
 
   $form['filter']['group5']['itemsperpage'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Items', 'ticket'),
+    '#title' => t('Items'),
     '#size' => 10,
     '#default_value' => $itemsperpage,
     '#prefix' => '<div class="container-inline">',

@@ -10,7 +10,7 @@ function stormproject_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormproject":
-      $o = '<p>'.  storm_t("Provides project support for Storm", 'project') .'</p>';
+      $o = '<p>'.  t("Provides project support for Storm") .'</p>';
       break;
   }
 
@@ -121,8 +121,8 @@ function stormproject_access_sql($sql, $where = array()) {
 function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -149,7 +149,7 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 
@@ -157,8 +157,8 @@ function stormproject_menu() {
   $items = array();
 
   $items['storm/projects'] = array(
-    'title' => storm_t('Projects', 'project'),
-    'description' => storm_t('Storm Projects', 'project'),
+    'title' => t('Projects'),
+    'description' => t('Storm Projects'),
     'page callback' => 'stormproject_list',
     'access arguments' => array('Storm project: access'),
     'file' => 'stormproject.admin.inc',
@@ -166,7 +166,7 @@ function stormproject_menu() {
   );
 
   $items['storm/organization_projects_js/%'] = array(
-    'title' => storm_t('Projects', 'project'),
+    'title' => t('Projects'),
     'page callback' => '_stormproject_organization_projects_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm project: access'),
@@ -193,11 +193,11 @@ function stormproject_theme() {
 function stormproject_node_info() {
   return array(
     'stormproject' => array(
-      'name' => storm_t('Project', 'project'),
+      'name' => t('Project'),
       'module' => 'stormproject',
-      'description' => storm_t("A project for Storm.", 'project'),
-      'title_label' => storm_t("Title", 'project'),
-      'body_label' => storm_t("Description", 'project'),
+      'description' => t("A project for Storm."),
+      'title_label' => t("Title"),
+      'body_label' => t("Description"),
     )
   );
 }
@@ -255,7 +255,7 @@ function stormproject_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'project'),
+    '#title' => t('Organization'),
     '#options' => $organizations,
     '#default_value' => $node->organization_nid,
     '#process' => array('storm_dependent_select_process'),
@@ -277,7 +277,7 @@ function stormproject_form(&$node) {
   $category_list = stormattribute_attributes_bydomain('Project category');
   $form['group2']['projectcategory'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Category', 'project'),
+    '#title' => t('Category'),
     '#default_value' => $node->projectcategory,
     '#options' => $category_list['values'],
   );
@@ -285,7 +285,7 @@ function stormproject_form(&$node) {
   $status_list = stormattribute_attributes_bydomain('Project status');
   $form['group2']['projectstatus'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Status', 'project'),
+    '#title' => t('Status'),
     '#default_value' => $node->projectstatus,
     '#options' => $status_list['values'],
   );
@@ -293,7 +293,7 @@ function stormproject_form(&$node) {
   $priority_list = stormattribute_attributes_bydomain('Project priority');
   $form['group2']['projectpriority'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Priority', 'project'),
+    '#title' => t('Priority'),
     '#default_value' => $node->projectpriority,
     '#options' => $priority_list['values'],
   );
@@ -306,14 +306,14 @@ function stormproject_form(&$node) {
 
   $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date begin', 'project'),
+    '#title' => t('Date begin'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
   );
 
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date end', 'project'),
+    '#title' => t('Date end'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
@@ -321,14 +321,14 @@ function stormproject_form(&$node) {
   $durationunit_list = stormattribute_attributes_bydomain('Duration unit'); 
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Duration unit', 'project'),
+    '#title' => t('Duration unit'),
     '#default_value' => $node->durationunit,
     '#options' => $durationunit_list['values'],
   );
 
   $form['group3']['duration'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Duration', 'project'),
+    '#title' => t('Duration'),
     '#size' => 20,
     '#default_value' => $node->duration,
   );
@@ -342,7 +342,7 @@ function stormproject_form(&$node) {
   $pricemode_list = stormattribute_attributes_bydomain('Price mode');
   $form['group4']['pricemode'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Price mode', 'project'),
+    '#title' => t('Price mode'),
     '#default_value' => $node->pricemode,
     '#options' => $pricemode_list['values'],
   );
@@ -357,7 +357,7 @@ function stormproject_form(&$node) {
   $currency_list = stormattribute_attributes_bydomain('Currency');
   $form['group4']['currency'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Price currency', 'project'),
+    '#title' => t('Price currency'),
     '#default_value' => $node->currency,
     '#options' => $currency_list['values'],
   );

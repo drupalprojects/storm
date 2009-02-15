@@ -10,7 +10,7 @@ function stormnote_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormnote":
-      $o = '<p>'. storm_t("Provides note support for Storm", 'note') .'</p>';
+      $o = '<p>'. t("Provides note support for Storm") .'</p>';
       break;
   }
 
@@ -109,8 +109,8 @@ function stormnote_access_sql($sql, $where = array()) {
 function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -137,7 +137,7 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 
@@ -145,8 +145,8 @@ function stormnote_menu() {
   $items = array();
 
   $items['storm/notes'] = array(
-            'title' => storm_t('Notes', 'note'),
-            'description' => storm_t('Storm notes', 'note'),
+            'title' => t('Notes'),
+            'description' => t('Storm notes'),
             'page callback' => 'stormnote_list',
             'access arguments' => array('Storm note: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -172,9 +172,9 @@ function stormnote_theme() {
 function stormnote_node_info() {
   return array(
     'stormnote' => array(
-      'name' => storm_t('Note', 'note'),
+      'name' => t('Note'),
       'module' => 'stormnote',
-      'description' => storm_t("A note for Storm.", 'note'),
+      'description' => t("A note for Storm."),
       'has_body' => true,
     )
   );
@@ -255,7 +255,7 @@ function stormnote_form(&$node) {
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'note'),
+    '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -272,7 +272,7 @@ function stormnote_form(&$node) {
   }
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'note'),
+    '#title' => t('Project'),
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -284,7 +284,7 @@ function stormnote_form(&$node) {
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'note'),
+    '#title' => t('Task'),
     '#default_value' => $node->task_nid,
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),

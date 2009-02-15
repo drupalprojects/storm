@@ -7,6 +7,7 @@
 
 function stormteammember_install() {
   drupal_install_schema('stormteammember');
+  variable_set('node_options_stormteammember', array('status'));
 }
 
 function stormteammember_uninstall() {

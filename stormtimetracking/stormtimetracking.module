@@ -10,7 +10,7 @@ function stormtimetracking_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormtimetracking":
-      $o = '<p>'. storm_t("Provides timetracking support for Storm", 'timetracking') .'</p>';
+      $o = '<p>'. t("Provides timetracking support for Storm") .'</p>';
       break;
   }
 
@@ -146,8 +146,8 @@ function stormtimetracking_menu() {
   $items = array();
 
   $items['storm/timetrackings'] = array(
-            'title' => storm_t('Timetrackings', 'timetracking'),
-            'description' => storm_t('Storm Timetrackings', 'timetracking'),
+            'title' => t('Timetrackings'),
+            'description' => t('Storm Timetrackings'),
             'page callback' => 'stormtimetracking_list',
             'access arguments' => array('Storm timetracking: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -155,9 +155,9 @@ function stormtimetracking_menu() {
   );
 
   $items['storm/timetrackings/report/%/%'] = array(
-            'title' => storm_t('Timetrackings', 'timetracking'),
+            'title' => t('Timetrackings'),
             'page arguments' => array(3, 4),
-            'description' => storm_t('Storm Timetrackings', 'timetracking'),
+            'description' => t('Storm Timetrackings'),
             'page callback' => 'stormtimetracking_list_report',
             'access arguments' => array('Storm timetracking: access'),
             'type' => MENU_CALLBACK,
@@ -190,11 +190,11 @@ function stormtimetracking_theme() {
 function stormtimetracking_node_info() {
   return array(
     'stormtimetracking' => array(
-      'name' => storm_t('Timetracking', 'timetracking'),
+      'name' => t('Timetracking'),
       'module' => 'stormtimetracking',
-      'description' => storm_t("A timetracking for Storm.", 'timetracking'),
-      'title_label' => storm_t("Title", 'timetracking'),
-      'body_label' => storm_t("Description", 'timetracking'),
+      'description' => t("A timetracking for Storm."),
+      'title_label' => t("Title"),
+      'body_label' => t("Description"),
     )
   );
 }
@@ -317,7 +317,7 @@ function stormtimetracking_form(&$node) {
   }
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Organization', 'timetracking'),
+    '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
@@ -335,7 +335,7 @@ function stormtimetracking_form(&$node) {
   $projects = array(0 => '-') + $projects;
   $form['group2']['project_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Project', 'timetracking'),
+    '#title' => t('Project'),
     '#default_value' => $node->project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
@@ -347,7 +347,7 @@ function stormtimetracking_form(&$node) {
   $tasks = array(0 => '-') + $tasks;
   $form['group2']['task_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Task', 'timetracking'),
+    '#title' => t('Task'),
     '#default_value' => $node->task_nid,
     '#options' => $tasks,
     '#process' => array('storm_dependent_select_process'),
@@ -364,7 +364,7 @@ function stormtimetracking_form(&$node) {
   }
   $form['group2']['ticket_nid'] = array(
     '#type' => 'select',
-    '#title' => storm_t('Ticket', 'timetracking'),
+    '#title' => t('Ticket'),
     '#default_value' => $node->ticket_nid,
     '#options' => array(0 => '-') + $tickets,
     '#process' => array('storm_dependent_select_process'),
@@ -378,13 +378,13 @@ function stormtimetracking_form(&$node) {
 
   $form['group3']['trackingdate'] = array(
     '#type' => 'dateext',
-    '#title' => storm_t('Date', 'timetracking'),
+    '#title' => t('Date'),
     '#default_value' => _storm_gmtimestamp_to_date($node->trackingdate),
   );
 
   $form['group3']['timebegin'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Time begin', 'timetracking'),
+    '#title' => t('Time begin'),
     '#size' => 5,
     '#maxlength' => 5,
     '#default_value' => $node->timebegin,
@@ -392,7 +392,7 @@ function stormtimetracking_form(&$node) {
 
   $form['group3']['timeend'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Time end', 'timetracking'),
+    '#title' => t('Time end'),
     '#size' => 5,
     '#maxlength' => 5,
     '#default_value' => $node->timeend,
@@ -402,7 +402,7 @@ function stormtimetracking_form(&$node) {
   if ($duration) $duration = sprintf("%01.2f", $node->duration);
   $form['group3']['duration'] = array(
     '#type' => 'textfield',
-    '#title' => storm_t('Duration (h)', 'timetracking'),
+    '#title' => t('Duration (h)'),
     '#default_value' => $duration,
     '#size' => 10,
     '#maxlength' => 5,
@@ -410,7 +410,7 @@ function stormtimetracking_form(&$node) {
 
   $form['billable'] = array(
     '#type' => 'checkbox',
-    '#title' => storm_t('Billable', 'timetracking'),
+    '#title' => t('Billable'),
     '#default_value' => $node->billable,
     '#weight' => -17,
   );
@@ -477,8 +477,8 @@ function _stormtimetracking_beforesave(&$node) {
     $node->trackingdate = _storm_datetime_to_gmtimestamp($node->trackingdate + $timebegin);
   }
 
-  $node->timebegin = _storm_timetostr($timebegin);
-  $node->timeend = _storm_timetostr($timeend);
+  $node->timebegin = _timetostr($timebegin);
+  $node->timeend = _timetostr($timeend);
 
   if (!$node->duration) {
     $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);

@@ -51,34 +51,34 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormproject']['fields']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Organization', 'project'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
   $node->content['stormproject']['fields']['projectcategory'] = array(
     '#prefix' => '<div class="projectcategory">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Category', 'project'), stormattribute_value('Project category', $node->projectcategory)),
+    '#value' => theme('storm_view_item', t('Category'), stormattribute_value('Project category', $node->projectcategory)),
     '#weight' => $w++,
   );
 
   $node->content['stormproject']['fields']['projectstatus'] = array(
     '#prefix' => '<div class="projectstatus">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Status', 'project'), stormattribute_value('Project status', $node->projectstatus)),
+    '#value' => theme('storm_view_item', t('Status'), stormattribute_value('Project status', $node->projectstatus)),
     '#weight' => $w++,
   );
 
   $node->content['stormproject']['fields']['projectpriority'] = array(
     '#prefix' => '<div class="projectpriority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Priority', 'project'), stormattribute_value('Project priority', $node->projectpriority)),
+    '#value' => theme('storm_view_item', t('Priority'), stormattribute_value('Project priority', $node->projectpriority)),
     '#weight' => $w++,
   );
 
   $node->content['stormproject']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Description', 'project'), $node->content['body']['#value']),
+    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => $w++,
   );
   unset($node->content['body']);
@@ -95,7 +95,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormproject']['links']['notes']  = array(
       '#prefix' => '<div class="notes">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Notes', 'project'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))),
+      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -104,7 +104,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormproject']['links']['tickets'] = array(
       '#prefix' => '<div class="tickets">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Tickets', 'project'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))),
+      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }
@@ -113,7 +113,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormproject']['links']['timetrackings'] = array(
       '#prefix' => '<div class="timetrackings">',
       '#suffix' => '</div>',
-      '#value' => l(storm_t('Timetrackings', 'project'), 'storm/timetrackings/', array(), 'project_nid='. $node->nid),
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('project_nid' => $node->nid))),
       '#weight' => $w++,
     );
   }

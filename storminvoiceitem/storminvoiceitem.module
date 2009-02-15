@@ -10,7 +10,7 @@ function storminvoiceitem_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#storminvoiceitem":
-      $o = '<p>'. storm_t("Provides invoice item support for Storm", 'invoiceitem') .'</p>';
+      $o = '<p>'. t("Provides invoice item support for Storm") .'</p>';
       break;
   }
 
@@ -66,10 +66,10 @@ function storminvoiceitem_access($op, $node, $account=NULL) {
 
   if ($op == 'view') {
     $invoice = node_load($node->invoice_nid);
-    if (storminvoice('view', $invoice, $account) && user_access('Storm invoice item: view all')) {
+    if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice item: view all')) {
       return TRUE;
     }
-    else if (storminvoice('view', $invoice, $account) && user_access('Storm invoice item: view own') && ($account->uid == $node->uid)) {
+    else if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice item: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
@@ -116,8 +116,8 @@ function storminvoiceitem_access_sql($sql, $where = array()) {
 function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -140,12 +140,13 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $accou
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
+
 function storminvoiceitem_menu() {
   $items['node/%node/invoiceitems'] = array(
-    'title' => storm_t('Invoice items', 'invoiceitem'),
+    'title' => t('Invoice items'),
     'page callback' => 'storminvoiceitem_invoiceitems',
     'page arguments' => array(1),
     'access callback' => '_storminvoiceitem_invoiceitems_access',
@@ -169,10 +170,10 @@ function storminvoiceitem_theme() {
 function storminvoiceitem_node_info() {
   return array(
     'storminvoiceitem' => array(
-      'name' => storm_t('Invoice item', 'invoiceitem'),
+      'name' => t('Invoice item'),
       'module' => 'storminvoiceitem',
-      'description' => storm_t("An invoice item for Storm.", 'invoiceitem'),
-      'title_label' => storm_t("Description", 'invoiceitem'),
+      'description' => t("An invoice item for Storm."),
+      'title_label' => t("Description"),
       'has_body' => false,
     )
   );
@@ -229,7 +230,7 @@ function storminvoiceitem_form(&$node) {
 
   $form['group2']['weight'] = array(
     '#type' => 'weight',
-    '#title' => storm_t('Weight', 'invoiceitem'),
+    '#title' => t('Weight'),
     '#default_value' => $node->weight,
   );
 
@@ -242,7 +243,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['amount'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('Amount', 'invoiceitem'),
+    '#title' => t('Amount'),
     '#size' => 15,
     '#default_value' => $node->amount,
   );
@@ -250,7 +251,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['taxpercent'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('Tax percent', 'invoiceitem'),
+    '#title' => t('Tax percent'),
     '#size' => 15,
     '#default_value' => $node->taxpercent,
   );
@@ -258,7 +259,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['tax'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('Tax', 'invoiceitem'),
+    '#title' => t('Tax'),
     '#size' => 15,
     '#default_value' => $node->tax,
   );
@@ -266,7 +267,7 @@ function storminvoiceitem_form(&$node) {
   $form['group3']['total'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => storm_t('Total', 'invoiceitem'),
+    '#title' => t('Total'),
     '#size' => 15,
     '#default_value' => $node->total,
   );
@@ -357,7 +358,7 @@ function storminvoiceitem_load($node) {
 
 function storminvoiceitem_validate(&$node) {
   if (($node->nid == $node->parent_nid) && $node->parent_nid) {
-    form_set_error('parent_nid', storm_t('Impossible to assign itself as parent.', 'invoiceitem'));
+    form_set_error('parent_nid', t('Impossible to assign itself as parent.'));
   }
 }
 

@@ -7,6 +7,7 @@
 
 function stormtimetracking_install() {
   drupal_install_schema('stormtimetracking');
+  variable_set('node_options_stormtimetracking', array('status'));
 }
 
 function stormtimetracking_uninstall() {

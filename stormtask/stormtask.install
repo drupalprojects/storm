@@ -7,6 +7,7 @@
 
 function stormtask_install() {
   drupal_install_schema('stormtask');
+  variable_set('node_options_stormtask', array('status'));
 }
 
 function stormtask_uninstall() {

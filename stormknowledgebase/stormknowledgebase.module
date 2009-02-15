@@ -10,7 +10,7 @@ function stormknowledgebase_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormknowledgebase":
-      $o = '<p>'. storm_t("Provides knowledgebase support for Storm", 'knowledgebase') .'</p>';
+      $o = '<p>'. t("Provides knowledgebase support for Storm", 'knowledgebase') .'</p>';
       break;
   }
 
@@ -93,8 +93,8 @@ function stormknowledgebase_access_sql($sql, $where = array()) {
 function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -117,7 +117,7 @@ function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table, $acc
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 
@@ -125,8 +125,8 @@ function stormknowledgebase_menu() {
   $items = array();
 
   $items['storm/knowledgebase'] = array(
-            'title' => storm_t('Knowledge base', 'knowledgebase'),
-            'description' => storm_t('Storm Knowledge base', 'knowledgebase'),
+            'title' => t('Knowledge base'),
+            'description' => t('Storm Knowledge base'),
             'page callback' => 'stormknowledgebase_list',
             'access arguments' => array('Storm knowledgebase: access'),
             'type' => MENU_NORMAL_ITEM,
@@ -144,7 +144,7 @@ function stormknowledgebase_theme() {
     ),
     'stormknowledgebase_list' => array(
       'file'      => 'stormknowledgebase.theme.inc',
-      'arguments' => array('header', 'knowledgebase'),
+      'arguments' => array('header'),
     ),
   );
 }
@@ -152,9 +152,9 @@ function stormknowledgebase_theme() {
 function stormknowledgebase_node_info() {
   return array(
     'stormknowledgebase' => array(
-      'name' => storm_t('Knowledge base', 'knowledgebase'),
+      'name' => t('Knowledge base'),
       'module' => 'stormknowledgebase',
-      'description' => storm_t("A knowledge base for Storm.", 'knowledgebase'),
+      'description' => t("A knowledge base for Storm."),
       'has_body' => true,
     )
   );
@@ -192,7 +192,7 @@ function stormknowledgebase_form(&$node) {
   $form['topic'] = array(
     '#weight' => -47,
     '#type' => 'select',
-    '#title' => storm_t('Topic', 'knowledgebase'),
+    '#title' => t('Topic'),
     '#default_value' => $node->topic,
     '#options' => stormattribute_attributes_bydomain('Knowledge base topic'),
   );

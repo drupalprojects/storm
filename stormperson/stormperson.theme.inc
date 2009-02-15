@@ -48,42 +48,42 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormperson']['fields']['organization'] = array(
     '#prefix' => '<div id="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Organization', 'person'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
   $node->content['stormperson']['fields']['fullname'] = array(
     '#prefix' => '<div id="fullname">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Fullname', 'person'), $node->fullname),
+    '#value' => theme('storm_view_item', t('Fullname'), $node->fullname),
     '#weight' => $w++,
   );
 
   $node->content['stormperson']['fields']['email'] = array(
     '#prefix' => '<div id="email">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Email', 'person'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#value' => theme('storm_view_item', t('Email'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
   $node->content['stormperson']['fields']['www'] = array(
     '#prefix' => '<div id="www">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('WWW', 'person'), l($node->www, $node->www, array('absolute' => TRUE))),
+    '#value' => theme('storm_view_item', t('WWW'), l($node->www, $node->www, array('absolute' => TRUE))),
     '#weight' => $w++,
   );
 
   $node->content['stormperson']['fields']['phone'] = array(
     '#prefix' => '<div id="phone">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Phone', 'person'), $node->phone),
+    '#value' => theme('storm_view_item', t('Phone'), $node->phone),
     '#weight' => $w++,
   );
 
   $node->content['stormperson']['fields']['im'] = array(
     '#prefix' => '<div id="im">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('IM', 'person'), $node->im),
+    '#value' => theme('storm_view_item', t('IM'), $node->im),
     '#weight' => $w++,
   );
 

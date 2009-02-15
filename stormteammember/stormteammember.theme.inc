@@ -39,21 +39,21 @@ function theme_stormteammember_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormteammember']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Organization', 'teammember'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
   $node->content['stormteammember']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Project', 'teammember'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
     '#weight' => $w++,
   );
 
   $node->content['stormteammember']['task'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', storm_t('Task', 'teammember'), l($node->task_title, 'node/'. $node->task_nid)),
+    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => $w++,
   );
 
