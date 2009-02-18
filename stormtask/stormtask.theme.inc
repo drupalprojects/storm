@@ -112,7 +112,7 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormtask']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Description', 'note'), $node->content['body']['#value']),
+    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => $w++,
   );
   unset($node->content['body']);
