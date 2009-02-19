@@ -535,3 +535,42 @@ function stormteammember_form(&$teammember) {
   return $form;
 }
 
+function stormteammember_form_delete($form, &$form_state) {
+  $destination = drupal_get_destination(); 
+  if(array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
+  drupal_goto('storm/teammembers/delete/'. $form_state['values']['tid'], $destination);
+}
+
+function stormteammember_delete($form_state, $tid) {
+  if(array_key_exists('destination', $_REQUEST)) {
+    $destination = $_REQUEST['destination'];
+    unset($_REQUEST['destination']);
+    $form['destination'] = array('#type' => 'value', '#value' => $destination);
+  }
+
+  $form['tid'] = array('#type' => 'value', '#value' => $tid);
+  $r = db_query("SELECT * FROM {stormteammember} WHERE tid=%d", $tid);
+  $t = db_fetch_object($r);
+  $title = $t->person_organization_title .' : '. $t->person_title;
+
+  return confirm_form($form,
+  t('Are you sure you want to delete the team member %title?', array('%title' => $title)),
+  array('path' => 'storm/teammembers/edit/'. $tid, 'query' => $destination),
+  t('This action cannot be undone.'),
+  t('Delete'), t('Cancel'));
+}
+
+function stormteammember_delete_submit($form, &$form_state) {
+  if ($form_state['values']['tid']) {
+    db_query('DELETE FROM {stormteammember} WHERE tid=%d', $form_state['values']['tid']);
+    drupal_set_message('Storm team member deleted');
+    if ($form_state['values']['destination']) {
+      $destination = $form_state['values']['destination'];
+    }
+    else {
+      $destination = 'storm/teammembers';
+    }
+    drupal_goto($destination);
+  }
+}
+

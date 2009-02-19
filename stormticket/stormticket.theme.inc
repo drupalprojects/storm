@@ -73,7 +73,7 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormticket']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Description', 'note'), $node->content['body']['#value']),
+    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => $w++,
   );
   unset($node->content['body']);

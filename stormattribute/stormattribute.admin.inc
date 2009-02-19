@@ -322,18 +322,27 @@ function stormattribute_edit_submit($form, &$form_state) {
 }
 
 function stormattribute_form_delete($form, &$form_state) {
-  drupal_goto('storm/attributes/delete/'. $form_state['values']['aid']);
+  $destination = drupal_get_destination(); 
+  if(array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
+  drupal_goto('storm/attributes/delete/'. $form_state['values']['aid'], $destination);
 }
 
 function stormattribute_delete($form_state, $aid) {
+  $destination = drupal_get_destination();
+  if(array_key_exists('destination', $_REQUEST)) {
+    $destination = $_REQUEST['destination'];
+    unset($_REQUEST['destination']);
+    $form['destination'] = array('#type' => 'value', '#value' => $destination);
+  }
+
   $form['aid'] = array('#type' => 'value', '#value' => $aid);
   $r = db_query("SELECT * FROM {stormattribute} WHERE aid=%d", $aid);
   $a = db_fetch_object($r);
   $title = $a->domain .' : '. $a->avalue;
 
   return confirm_form($form,
-  t('Are you sure you want to delete the attribute %title?', 'default', array('%title' => $title)),
-  'storm/attributes/edit/'. $aid,
+  t('Are you sure you want to delete the attribute %title?', array('%title' => $title)),
+  array('path'=>'storm/attributes/edit/'. $aid, 'query'=>$destination),
   t('This action cannot be undone.'),
   t('Delete'), t('Cancel'));
 }
@@ -342,8 +351,8 @@ function stormattribute_delete_submit($form, &$form_state) {
   if ($form_state['values']['aid']) {
     db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_state['values']['aid']);
     drupal_set_message('Storm attribute deleted');
-    if ($_REQUEST['destination']) {
-      $destination = urldecode($_REQUEST['destination']);
+    if ($form_state['values']['destination']) {
+      $destination = $form_state['values']['destination'];
     }
     else {
       $destination = 'storm/attributes';
