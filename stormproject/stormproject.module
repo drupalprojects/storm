@@ -348,7 +348,7 @@ function stormproject_form(&$node) {
   );
 
   $form['group4']['price'] = array(
-    '#title' => 'Price',
+    '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
     '#default_value' => $node->price,

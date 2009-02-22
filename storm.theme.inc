@@ -125,7 +125,7 @@ function theme_storm_dashboard() {
     $o .= '</dt>';
   }
   if (module_exists('stormtask')) {
-    $o .= '<dt class="stormcomponent" id="stormtasks">'. l(('Tasks'), 'storm/tasks');
+    $o .= '<dt class="stormcomponent" id="stormtasks">'. l(t('Tasks'), 'storm/tasks');
     $i = new stdClass();
     $i->type = 'stormtask';
     $o .= storm_icon_add_node($i, $_GET);
