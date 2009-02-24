@@ -436,15 +436,15 @@ function theme_storminvoice_report_pdf($node, $language) {
 
   $pdf->SetFont("times", "B", 10);
 
-  $o = t('Due total', 'invoice', array(), $language);
+  $o = t('Due total', array(), $language);
   if ($language1) $o .= "\n". t('Due total', array(), $language1);
   $pdf->MultiCell($w*2 - 5, 0, $o, 1, 'L', 1, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
 
-  $o = t('Due date', 'invoice', array(), $language);
+  $o = t('Due date', array(), $language);
   if ($language1) $o .= "\n". t('Due date', array(), $language1);
   $pdf->MultiCell($w + 5, 0, $o, 1, 'L', 1, 0);
 
-  $o = t('Terms', 'invoice', array(), $language);
+  $o = t('Terms', array(), $language);
   if ($language1) $o .= "\n". t('Terms', array(), $language1);
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
 
@@ -576,7 +576,7 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= $organization->provstate .' '. $organization->zip .' '. $countries[$organization->country];
   $o .= '<br />';
   if ($organization->taxid) {
-    $o .= t('Tax ID', 'invoice', array(), $language);
+    $o .= t('Tax ID', array(), $language);
     if ($language1) $o .= ' / '. t('Tax ID', array(), $language1);
     $o .= ' : '. $organization->taxid;
   }
