@@ -135,7 +135,7 @@ function stormorganization_list_filter() {
     '#type' => 'select',
     '#title' => t('Country'),
     '#default_value' => $country,
-    '#options' => array(0 => t('All')) + stormattribute_attributes_bydomain('Country'),
+    '#options' => $country_list['values'],
   );
 
   $form['filter']['name'] = array(
