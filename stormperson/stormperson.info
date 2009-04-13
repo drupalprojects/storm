@@ -1,4 +1,4 @@
-; $Id
+; $Id$
 name = Storm Person
 description = "SpeedTech Organizer and Resource Manager - Person"
 dependencies[] = storm 
