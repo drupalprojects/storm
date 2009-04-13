@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function theme_stormattribute_list($form) {
   drupal_add_tabledrag('attributes', 'order', 'sibling', 'attribute-weight'); 
