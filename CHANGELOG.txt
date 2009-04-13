@@ -1,8 +1,11 @@
 /* $Id$ */
 
-Version 6.x-1.21:
+Version 6.x-1.x-dev:
+- CVS headers added to all files
 
+Version 6.x-1.21:
 - Active and default settings for attributes
+- Addition of documentation
 - Bug fixes
 
 [Changelog begins at version 6.x-1.20]

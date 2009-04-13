@@ -1,3 +1,5 @@
+// $Id$
+
 function storm_empty_select(_select) {
   if(_select == undefined) return;
   for (var i=_select.length-1; i>=0; i--) {
