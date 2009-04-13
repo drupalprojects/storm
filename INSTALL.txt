@@ -1,0 +1,9 @@
+/* $Id$ */
+
+STORM Project Management Module for Drupal 6.x
+
+INSTALLATION:
+
+1) Copy this 'storm' directory into the /sites/all/modules directory of your Drupal installation.
+
+2) Enable STORM and whatever components of STORM that you wish, but visiting http://example.com/admin/build/modules in your web-browser.
