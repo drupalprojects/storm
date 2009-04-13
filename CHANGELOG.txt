@@ -1,0 +1,8 @@
+/* $Id$ */
+
+Version 6.x-1.21:
+
+- Active and default settings for attributes
+- Bug fixes
+
+[Changelog begins at version 6.x-1.20]
