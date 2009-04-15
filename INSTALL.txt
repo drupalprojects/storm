@@ -7,3 +7,5 @@ INSTALLATION:
 1) Copy this 'storm' directory into the /sites/all/modules directory of your Drupal installation.
 
 2) Enable STORM and whatever components of STORM that you wish, but visiting http://example.com/admin/build/modules in your web-browser.
+
+3) To enable the pdf invoice feature, you must separately install the tcpdf library (http://www.tcpdf.org) under sites/all/modules/storm/libs/tcpdf. If you do not install the tcpdf library, the core STORM installation will work, but you will not be able to view pdf invoices, instead seeing a PHP warning.
