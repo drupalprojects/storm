@@ -97,27 +97,27 @@ function stormticket_list() {
   if ($_SESSION['stormticket_list_filter']['ticketcategory'] && $_SESSION['stormticket_list_filter']['ticketcategory'] != '-') {
     $category = split(',', $_SESSION['stormticket_list_filter']['ticketcategory']);
     $v = array();
-    foreach($category as $item) $v[] = '%s';
+    foreach ($category as $item) $v[] = '%s';
     $where[] = "sti.ticketcategory IN ('". implode("','",$v) ."')";
-    foreach ($category as $key=>$value) {
+    foreach ($category as $key => $value) {
       $args[] = $value;
     }
   }
   if ($_SESSION['stormticket_list_filter']['ticketstatus'] && $_SESSION['stormticket_list_filter']['ticketstatus'] != '-') {
     $status = split(',', $_SESSION['stormticket_list_filter']['ticketstatus']);
     $v = array();
-    foreach($status as $item) $v[] = '%s';
+    foreach ($status as $item) $v[] = '%s';
     $where[] = "sti.ticketstatus IN ('". implode("','",$v) ."')";
-    foreach ($status as $key=>$value) {
+    foreach ($status as $key => $value) {
       $args[] = $value;
     }
   }
   if ($_SESSION['stormticket_list_filter']['ticketpriority'] && $_SESSION['stormticket_list_filter']['ticketpriority'] != '-') {
     $priority = split(',', $_SESSION['stormticket_list_filter']['ticketpriority']);
     $v = array();
-    foreach($priority as $item) $v[] = '%s';
+    foreach ($priority as $item) $v[] = '%s';
     $where[] = "sti.ticketpriority IN ('". implode("','",$v) ."')";
-    foreach ($priority as $key=>$value) {
+    foreach ($priority as $key => $value) {
       $args[] = $value;
     }
   }
@@ -191,21 +191,21 @@ function stormticket_list_filter() {
 
   $category_list = stormattribute_attributes_bydomain('ticket category search');
   $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
-  if(!$ticketcategory) {
+  if (!$ticketcategory) {
     $ticketcategory = $category_list['default'];
     $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
   }
 
   $status_list = stormattribute_attributes_bydomain('ticket status search');
   $ticketstatus = $_SESSION['stormticket_list_filter']['ticketstatus'];
-  if(!$ticketstatus) {
+  if (!$ticketstatus) {
     $ticketstatus = $status_list['default'];
     $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
   }
 
   $priority_list = stormattribute_attributes_bydomain('ticket priority search');
   $ticketpriority = $_SESSION['stormticket_list_filter']['ticketpriority'];
-  if(!$ticketpriority) {
+  if (!$ticketpriority) {
     $ticketpriority = $priority_list['default'];
     $_SESSION['stormticket_list_filter']['ticketpriority'] = $ticketpriority;
   }

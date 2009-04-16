@@ -537,12 +537,12 @@ function stormteammember_form(&$teammember) {
 
 function stormteammember_form_delete($form, &$form_state) {
   $destination = drupal_get_destination(); 
-  if(array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
+  if (array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
   drupal_goto('storm/teammembers/delete/'. $form_state['values']['tid'], $destination);
 }
 
 function stormteammember_delete($form_state, $tid) {
-  if(array_key_exists('destination', $_REQUEST)) {
+  if (array_key_exists('destination', $_REQUEST)) {
     $destination = $_REQUEST['destination'];
     unset($_REQUEST['destination']);
     $form['destination'] = array('#type' => 'value', '#value' => $destination);

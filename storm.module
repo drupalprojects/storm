@@ -552,8 +552,8 @@ function storm_form_alter(&$form, $form_state, $form_id) {
     if ($class) $class .= ' ';
     $class .= $form_id;
     $form['#attributes']['class'] = $class;
-    foreach($form as $key=>$elem) {
-      if(is_array($elem) && $elem['#type']=='fieldset') {
+    foreach ($form as $key => $elem) {
+      if (is_array($elem) && $elem['#type']=='fieldset') {
         $class = $elem['#attributes']['class'];
         if ($class) $class .= ' ';
         $class .= $key;
