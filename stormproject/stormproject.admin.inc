@@ -64,9 +64,9 @@ function stormproject_list() {
   if ($_SESSION['stormproject_list_filter']['projectstatus'] && $_SESSION['stormproject_list_filter']['projectstatus'] != '-') {
     $status = split(',', $_SESSION['stormproject_list_filter']['projectstatus']);
     $v = array();
-    foreach($status as $item) $v[] = '%s';
-    $where[] = "spr.projectstatus IN ('". implode("','",$v) ."')";
-    foreach ($status as $key=>$value) {
+    foreach ($status as $item) $v[] = '%s';
+    $where[] = "spr.projectstatus IN ('". implode("','", $v) ."')";
+    foreach ($status as $key => $value) {
       $args[] = $value;
     }
   }
@@ -142,21 +142,21 @@ function stormproject_list_filter() {
 
   $category_list = stormattribute_attributes_bydomain('project category search');
   $projectcategory = $_SESSION['stormproject_list_filter']['projectcategory'];
-  if(!$projectcategory) {
+  if (!$projectcategory) {
     $projectcategory = $category_list['default'];
     $_SESSION['stormproject_list_filter']['projectcategory'] = $projectcategory;
   }
 
   $status_list = stormattribute_attributes_bydomain('project status search');
   $projectstatus = $_SESSION['stormproject_list_filter']['projectstatus'];
-  if(!$projectstatus) {
+  if (!$projectstatus) {
     $projectstatus = $status_list['default'];
     $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
   }
 
   $priority_list = stormattribute_attributes_bydomain('project priority search');
   $projectpriority = $_SESSION['stormproject_list_filter']['projectpriority'];
-  if(!$projectpriority) {
+  if (!$projectpriority) {
     $projectpriority = $priority_list['default'];
     $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
   }

@@ -102,7 +102,7 @@ function stormorganization_list() {
 function stormorganization_list_filter() {
   $country_list = stormattribute_attributes_bydomain('Country');
   $country = $_SESSION['stormproject_list_filter']['country'];
-  if(!$country) {
+  if (!$country) {
     $country = $country_list['default'];
     $_SESSION['stormproject_list_filter']['country'] = $country;
   }
@@ -169,7 +169,7 @@ function stormorganization_list_filter() {
     '#theme' => 'storm_form_group',
   );
 
-  $options = array (
+  $options = array(
     '-' => t('-'),
     'no' => t('no'),
     'yes' => t('yes')

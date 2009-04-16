@@ -6,7 +6,7 @@
  */
 
 function theme_stormtask_tasks($form) {
-  if(count($form['tasks'])>0) {
+  if (count($form['tasks'])>0) {
     drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
     drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
   }
@@ -23,17 +23,17 @@ function theme_stormtask_tasks($form) {
     $form['tasks'][$key]['task_weight_'. $key]['#attributes']['class'] = 'task-weight';
     $durationunit = $form['tasks'][$key]['task_durationunit_'. $key]['#value'];
 
-    $data = array (
+    $data = array(
       theme('indentation', $form['tasks'][$key]['task_depth_'. $key]['#value']) . drupal_render($form['tasks'][$key]['task_description_'. $key]),
       drupal_render($form['tasks'][$key]['task_category_'. $key]),
       drupal_render($form['tasks'][$key]['task_status_'. $key]),
       drupal_render($form['tasks'][$key]['task_priority_'. $key]),
       array(
-        'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) . ' ' . substr($durationunit, 0, 1), 
+        'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) .' '. substr($durationunit, 0, 1), 
         'style' => 'text-align: right'),
       drupal_render($form['tasks'][$key]['task_parent-nid_'. $key]) . drupal_render($form['tasks'][$key]['task_nid_'. $key]),
       drupal_render($form['tasks'][$key]['task_weight_'. $key]),
-      array (
+      array(
         'data' => drupal_render($form['tasks'][$key]['task_operations_'. $key]),
         'class' => 'storm_list_operations',
       ),

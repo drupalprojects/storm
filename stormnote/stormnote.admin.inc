@@ -127,8 +127,8 @@ function stormnote_list_filter() {
   $form['filter'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filter'),
-    '#collapsible' => true,
-    '#collapsed' => true,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
 
   $form['filter']['group1'] = array(
