@@ -98,7 +98,7 @@ function stormticket_list() {
     $category = split(',', $_SESSION['stormticket_list_filter']['ticketcategory']);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
-    $where[] = "sti.ticketcategory IN ('". implode("','",$v) ."')";
+    $where[] = "sti.ticketcategory IN ('". implode("','", $v) ."')";
     foreach ($category as $key => $value) {
       $args[] = $value;
     }
@@ -226,8 +226,8 @@ function stormticket_list_filter() {
   $form['filter'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filter'),
-    '#collapsible' => true,
-    '#collapsed' => true,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
     '#theme' => 'stormticket_list_filter',
   );
 

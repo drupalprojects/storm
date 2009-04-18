@@ -284,7 +284,7 @@ function stormticket_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
@@ -362,14 +362,14 @@ function stormticket_form(&$node) {
   $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
     '#title' => t('Date begin'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
   );
 
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
     '#title' => t('Date end'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
   );
 
@@ -516,7 +516,7 @@ function _stormticket_beforesave(&$node) {
 function stormticket_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!$node->nid) {
+      if (!$node->nid) {
         $category_list = stormattribute_attributes_bydomain('Ticket category');
         $node->ticketcategory = $category_list['default'];
 
