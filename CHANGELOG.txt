@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Documentation updated and extended
 - Code style changes as per Drupal Coding Standards
 - CVS headers added to all files
 
