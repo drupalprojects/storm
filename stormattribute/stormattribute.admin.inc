@@ -158,7 +158,7 @@ function stormattribute_list_submit($form, &$form_state) {
     db_query($s, $aid);  
   }
 
-  drupal_set_message(t('Attributes saved', 'attribute'));
+  drupal_set_message(t('Attributes saved'));
 }
 
 function stormattribute_list_filter() {
