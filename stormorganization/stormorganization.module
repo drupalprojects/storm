@@ -199,13 +199,13 @@ function stormorganization_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -51,
+    '#weight' => 1,
   );
 
   $form['group0'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => 2,
   );
 
   $form['group0']['iscustomer'] = array(
@@ -229,7 +229,7 @@ function stormorganization_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -49,
+    '#weight' => 3,
   );
 
   $form['group1']['prefix'] = array(
@@ -249,7 +249,7 @@ function stormorganization_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -48,
+    '#weight' => 4,
   );
 
   $country_list = stormattribute_attributes_bydomain('Country');
@@ -277,7 +277,7 @@ function stormorganization_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -47,
+    '#weight' => 5,
   );
 
   $form['group3']['zip'] = array(
@@ -296,7 +296,7 @@ function stormorganization_form(&$node) {
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -46,
+    '#weight' => 6,
   );
 
   $currency_list = stormattribute_attributes_bydomain('Currency');
@@ -329,7 +329,7 @@ function stormorganization_form(&$node) {
   $form['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -45,
+    '#weight' => 7,
   );
 
   $form['group5']['www'] = array(
@@ -347,7 +347,7 @@ function stormorganization_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -44;
+    $form['body_filter']['#weight'] = 8;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
