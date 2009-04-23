@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Fixed bug #343818 (Title field displayed below body when CCK enabled)
 - Fixed bug #432148 (PHP warning due to invalid argument supplied...)
 - Documentation updated and extended
 - Code style changes as per Drupal Coding Standards
