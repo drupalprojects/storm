@@ -350,13 +350,13 @@ function stormticket_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -18,
+    '#weight' => 1,
   );
 
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -17,
+    '#weight' => 2,
   );
 
   $form['group3']['datebegin'] = array(
@@ -391,7 +391,7 @@ function stormticket_form(&$node) {
   $form['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -16,
+    '#weight' => 3,
   );
 
   $pricemodes = stormattribute_attributes_bydomain('Price mode');
@@ -418,7 +418,7 @@ function stormticket_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -15;
+    $form['body_filter']['#weight'] = 4;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
