@@ -295,11 +295,11 @@ function stormnote_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -49,
+    '#weight' => 1,
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -48;
+    $form['body_filter']['#weight'] = 2;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
