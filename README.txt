@@ -7,7 +7,7 @@ Documentation for STORM project management application.
 
 Storm consists of a set of modules as follows: Storm (base module), Attributes (settings), Organizations, Projects, Tasks, Tickets, Timetrackings, People, Notes, Knowledgebase, Invoices, Invoice items, and Expenses.
 
-Each of these provides permissions to control the sharing of data with other users and organizations, and link together - for example, an invoice can be associated with an organization and project.
+Each of these provides permissions to control the sharing of data with other users and organizations. NB: This may conflict with other node access modules.
 
 All components (except Attributes) are nodes, so can be extended as follows:
 
@@ -17,6 +17,7 @@ All components (except Attributes) are nodes, so can be extended as follows:
     * Upload (core) can be used to attach files to Storm nodes
     * Comments (core) can be used to permit comments on each of the Storm nodes
 
+Storm content nodes also all link together - for example, an invoice can be associated with an organization and project.
 
 SEE BELOW FOR DETAILS OF EACH OF THE MODULES INCLUDED WITHIN THE STORM PACKAGE.
 
