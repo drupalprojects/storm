@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Storm Invoice Items: Permissions moved to Storm Invoice (task #436922)
+- Storm Invoice: Improved module description
 - Documentation updated to mention conflict with node access modules (bug #450648)
 
 Version 6.x-1.22:
