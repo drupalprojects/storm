@@ -17,7 +17,7 @@ function storminvoiceitem_help($path, $arg) {
   return $o;
 }
 
-function storminvoiceitem_perm() {
+/*function storminvoiceitem_perm() {
   return array(
     'Storm invoice item: access',
     'Storm invoice item: add',
@@ -28,7 +28,7 @@ function storminvoiceitem_perm() {
     'Storm invoice item: view all',
     'Storm invoice item: view own',
   );
-}
+}*/
 
 function storminvoiceitem_init() {
   drupal_add_js(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.js', 'module', 'header', FALSE);
@@ -43,33 +43,33 @@ function storminvoiceitem_access($op, $node, $account=NULL) {
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
-    return user_access('Storm invoice item: add');
+    return user_access('Storm invoice: add');
   }
 
   if ($op == 'delete') {
-    if (user_access('Storm invoice item: delete all')) {
+    if (user_access('Storm invoice: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm invoice item: delete own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm invoice: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('Storm invoice item: edit all')) {
+    if (user_access('Storm invoice: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm invoice item: edit own') && ($account->uid == $node->uid)) {
+    else if (user_access('Storm invoice: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
 
   if ($op == 'view') {
     $invoice = node_load($node->invoice_nid);
-    if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice item: view all')) {
+    if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice: view all')) {
       return TRUE;
     }
-    else if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice item: view own') && ($account->uid == $node->uid)) {
+    else if (storminvoice_access('view', $invoice, $account) && user_access('Storm invoice: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
@@ -97,13 +97,13 @@ function storminvoiceitem_access_sql($sql, $where = array()) {
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
   
-  if (user_access('Storm invoice item: view all')) {
+  if (user_access('Storm invoice: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
 
   $cond = '';
-  if (user_access('Storm invoice item: view own')) {
+  if (user_access('Storm invoice: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (empty($cond)) $cond = '0=1';
@@ -124,12 +124,12 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $accou
     $cond = '';
   }
   else {
-    if (user_access('Storm invoice item: view all', $account)) {
+    if (user_access('Storm invoice: view all', $account)) {
       return '';
     }
 
     $cond = '';
-    if (user_access('Storm invoice item: view own', $account)) {
+    if (user_access('Storm invoice: view own', $account)) {
       $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if ($cond) {
@@ -369,7 +369,7 @@ function storminvoiceitem_view($node, $teaser = FALSE, $page = FALSE) {
 
 function _storminvoiceitem_invoiceitems_access($node=NULL) {
   if ($node == NULL) return FALSE;
-  if ($node->type == 'storminvoice' && user_access('Storm invoice item: access')) return TRUE;
+  if ($node->type == 'storminvoice' && user_access('Storm invoice: access')) return TRUE;
   return FALSE;
 }
 
