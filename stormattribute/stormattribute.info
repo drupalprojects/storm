@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Attribute
-description = "SpeedTech Organizer and Resource Manager - Attributes"
+description = "Allows setting of attributes (allowed field values) for use within Storm modules"
 dependencies[] = storm
 package = Storm
 core = 6.x

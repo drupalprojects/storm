@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Expense
-description = "SpeedTech Organizer and Resource Manager - Expense"
+description = "Allows recording of expenses based on organizations, projects, tasks and tickets."
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization

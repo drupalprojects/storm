@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Ticket
-description = "SpeedTech Organizer and Resource Manager - Ticket"
+description = "Allows creation of tickets for Storm Projects and Tasks"
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization

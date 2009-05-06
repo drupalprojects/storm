@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Person
-description = "SpeedTech Organizer and Resource Manager - Person"
+description = "Allows storage of people within organizations, and linking of these to Drupal user accounts."
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization

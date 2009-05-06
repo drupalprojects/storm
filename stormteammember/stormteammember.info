@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Team member
-description = "SpeedTech Organizer and Resource Manager - Team member"
+description = "Allows adding persons to teams for specific projects, tasks or tickets"
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization

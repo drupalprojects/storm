@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Note
-description = "SpeedTech Organizer and Resource Manager - Note"
+description = "Allows creation of notes about organizations, projects or tasks."
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject

@@ -1,6 +1,6 @@
 ; $Id$
 name = Storm Project
-description = "SpeedTech Organizer and Resource Manager - Project"
+description = "Allows recording of projects based on Storm Organizations"
 dependencies[] = storm 
 dependencies[] = stormattribute
 dependencies[] = stormorganization
