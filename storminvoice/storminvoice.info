@@ -1,7 +1,8 @@
 ; $Id$
 name = Storm Invoice
-description = "SpeedTech Organizer and Resource Manager - Invoice"
+description = "Allows invoices to be created based on organizations and projects."
 dependencies[] = storm
+dependencies[] = stormattribute
 dependencies[] = stormorganization
 dependencies[] = stormproject
 package = Storm
