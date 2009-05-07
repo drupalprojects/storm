@@ -61,7 +61,7 @@ function stormknowledgebase_list() {
 
 function stormknowledgebase_list_filter() {
   $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
-  $topic = $_SESSION['stormknowledgebase_list_filter']['projectcategory'];
+  $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
   if(!$topic) {
     $topic = $topic_list['default'];
     $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
