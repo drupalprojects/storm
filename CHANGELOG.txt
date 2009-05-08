@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #348777: Organization Phone Number
 - Feature #320801: Addition of experimental views support
 - Bug #436382: Wysiwyg doesn't show up on timetracking
 - Bug #454412: Knowledge Base - allow filtering by non-default attributes
