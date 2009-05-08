@@ -416,7 +416,7 @@ function stormtimetracking_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body'] = array(
+    $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
