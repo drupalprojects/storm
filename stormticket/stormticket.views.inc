@@ -76,7 +76,7 @@ function stormticket_views_data() {
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
@@ -129,7 +129,7 @@ function stormticket_views_handlers() {
     'handlers' => array(
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
-      ),
+    ),
     ),
   );
 }
