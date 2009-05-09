@@ -466,3 +466,9 @@ function stormorganization_form_alter(&$form, $form_state, $form_id) {
   }
 }
 
+function stormorganization_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormorganization'),
+  );
+}
