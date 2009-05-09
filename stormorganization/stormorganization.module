@@ -395,7 +395,7 @@ function stormorganization_update($node) {
               prefix = '%s', fullname = '%s', country='%s', www='%s', phone='%s', email='%s', currency = '%s',
               provstate = '%s', zip = '%s', city = '%s', address = '%s', taxid = '%s', orglanguage = '%s',
               iscustomer=%d, isprovider=%d, isactive=%d WHERE vid = %d",
-              $node->prefix, $node->fullname, $node->country, $node->www, $node->email, $node->email, $node->currency,
+              $node->prefix, $node->fullname, $node->country, $node->www, $node->phone, $node->email, $node->currency,
               $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, $node->orglanguage,
               $node->iscustomer, $node->isprovider, $node->isactive, $node->vid);
     if ($node->title != $node->title_old) {
