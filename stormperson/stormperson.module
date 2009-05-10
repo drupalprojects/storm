@@ -497,3 +497,9 @@ function _stormperson_user_delete(&$account) {
   db_query("UPDATE {stormperson} SET user_uid=NULL WHERE user_uid=%d", $account->uid);
 }
 
+function stormperson_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormperson'),
+  );
+}
