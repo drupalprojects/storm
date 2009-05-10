@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #433300: Can't cancel attribute creation - removed code
 - Feature #348777: Organization Phone Number
 - Feature #320801: Addition of experimental views support
 - Bug #436382: Wysiwyg doesn't show up on timetracking
