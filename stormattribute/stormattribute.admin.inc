@@ -468,12 +468,7 @@ function stormattribute_form($attribute = NULL) {
       '#submit' => array('stormattribute_form_delete'),
     );
   }
-  /*$form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => t('Cancel'),
-    '#submit' => array('stormattribute_cancel_submit'),
-  );*/ //This section of code is disabled, as cancel button tries to run validation which can produce errors (Issue #433300)
-
+  
   return $form;
 }
 
