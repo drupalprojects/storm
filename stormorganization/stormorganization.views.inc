@@ -11,7 +11,7 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['prefix'] = array(
-    'title' => t('Prefix'),
+    'title' => t('Organisation Prefix'),
     'help' => 'Storm Organization Prefix',
     'field' => array(
       'click sortable' => TRUE,
@@ -22,8 +22,165 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['fullname'] = array(
-    'title' => t('Fullname'),
+    'title' => t('Organisation Fullname'),
     'help' => 'Storm Organization Fullname',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['country'] = array(
+    'title' => t('Organisation Country'),
+    'help' => 'Storm Organization Country',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['orglanguage'] = array(
+    'title' => t('Organisation Language'),
+    'help' => 'Storm Organization Language',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['provstate'] = array(
+    'title' => t('Organisation Province / State'),
+    'help' => 'Storm Organization Province / State',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['city'] = array(
+    'title' => t('Organisation City'),
+    'help' => 'Storm Organization City',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['zip'] = array(
+    'title' => t('Organisation Zip'),
+    'help' => 'Storm Organization Zip',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['address'] = array(
+    'title' => t('Organisation Address'),
+    'help' => 'Storm Organization Address',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['taxid'] = array(
+    'title' => t('Organisation Tax ID'),
+    'help' => 'Storm Organization Tax ID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['email'] = array(
+    'title' => t('Organisation Email'),
+    'help' => 'Storm Organization Email',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['www'] = array(
+    'title' => t('Organisation WWW'),
+    'help' => 'Storm Organization WWW',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['phone'] = array(
+    'title' => t('Organisation Phone'),
+    'help' => 'Storm Organization Phone',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['currency'] = array(
+    'title' => t('Organisation Currency'),
+    'help' => 'Storm Organization Currency',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'domain' => 'Currency',
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['iscustomer'] = array(
+    'title' => t('Organisation Is Customer'),
+    'help' => 'Storm Organization Is Customer',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['isprovider'] = array(
+    'title' => t('Organisation Is Provider'),
+    'help' => 'Storm Organization Is Provider',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormorganization']['isactive'] = array(
+    'title' => t('Organisation Is Active'),
+    'help' => 'Storm Organization Is Active',
     'field' => array(
       'click sortable' => TRUE,
     ),
