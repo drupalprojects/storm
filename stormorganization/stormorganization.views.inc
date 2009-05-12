@@ -151,6 +151,7 @@ function stormorganization_views_data() {
     'filter' => array(
       'handler' => 'stormattribute_handler_filter_attributes_domain',
       'domain' => 'Currency',
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
