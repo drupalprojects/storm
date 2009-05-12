@@ -249,3 +249,9 @@ function stormknowledgebase_load($node) {
   return $additions;
 }
 
+function stormknowledgebase_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormknowledgebase'),
+  );
+}
