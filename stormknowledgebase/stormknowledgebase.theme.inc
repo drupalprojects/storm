@@ -16,7 +16,7 @@ function theme_stormknowledgebase_list($header, $kbs) {
     $n->type = 'stormknowledgebase';
     $rows[] = array(
       l($kb->title, 'node/'. $kb->nid),
-      $topics[$kb->topic],
+      $topics[values][$kb->topic],
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
@@ -47,7 +47,7 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormknowledgebase']['fields']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Topic'), $topics[$node->topic]),
+    '#value' => theme('storm_view_item', t('Topic'), $topics[values][$node->topic]),
     '#weight' => $w++,
   );
 
