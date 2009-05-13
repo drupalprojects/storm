@@ -1,14 +1,15 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #460472: Knowledgebase topics not displayed
 - Bug #433300: Can't cancel attribute creation - removed code
 - Feature #348777: Organization Phone Number
 - Feature #320801: Addition of experimental views support
 - Bug #436382: Wysiwyg doesn't show up on timetracking
 - Bug #454412: Knowledge Base - allow filtering by non-default attributes
-- Storm Invoice Items: Removed add_js on init. (TODO, delete function and .js file)
+- Task #436922: Removed add_js on init from Storm Invoice Items. (TODO, delete function and .js file)
 - Task #436922: Storm Invoice Items permissions moved to Storm Invoice
-- Storm Invoice: Improved module description
+- Improved module descriptions
 - Bug #450648: Documentation updated to mention conflict with node access modules
 
 Version 6.x-1.22:
