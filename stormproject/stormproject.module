@@ -477,3 +477,9 @@ function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormproject_view', $node, $teaser, $page);
 }
 
+function stormproject_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormproject'),
+  );
+}
