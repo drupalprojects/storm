@@ -645,3 +645,10 @@ function _stormtask_plain_tree($tree) {
   }
   return $rows;
 }
+
+function stormtask_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormtask'),
+  );
+}
