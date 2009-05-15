@@ -394,3 +394,9 @@ function stormnote_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormnote_view', $node, $teaser = FALSE, $page = FALSE);
 }
 
+function stormnote_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormnote'),
+  );
+}
