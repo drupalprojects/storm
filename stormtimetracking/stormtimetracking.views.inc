@@ -10,21 +10,6 @@ function stormtimetracking_views_data() {
     ),
   );
   
-  $data['stormtimetracking']['ticketstatus'] = array(
-    'title' => t('Timetracking Status'),
-    'help' => 'Storm Timetracking status',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
-      'domain' => 'Ticket Status',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-  );
-  
   $data['stormtimetracking']['organization_nid'] = array(
     'title' => t('Timetracking Organization Node ID'),
     'help' => 'Storm Timetracking Organization Node ID',
