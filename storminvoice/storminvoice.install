@@ -40,6 +40,15 @@ function storminvoice_schema() {
   return $schema;
 }
 
+/* UPGRADE PATH INCOMPLETE see #436922
+function storminvoice_update_6011() {
+  $ret = array();
+  
+  
+  return $ret;
+}
+*/
+
 function storminvoice_update_1() {
   $ret = array();
   db_change_field($ret, 'storminvoice', 'vat', 'tax', array('type' => 'float'));
