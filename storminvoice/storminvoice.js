@@ -29,4 +29,3 @@ function storminvoice_organization_project_invoices(_organization_select, _proje
   var project_select = $("#" + _project_select_id).get(0);
   storminvoice_project_invoices(project_select, _organization_select.id, _invoice_select_id, _with_all_option, _all_text);
 };
-
