@@ -320,9 +320,9 @@ function theme_storminvoice_report($node, $report, $language) {
 
 function theme_storminvoice_report_pdf($node, $language) {
   $tcpdf_dir = drupal_get_path('module', 'storm') .'/libs/tcpdf';
+
   require_once($tcpdf_dir .'/config/lang/eng.php');
   require_once($tcpdf_dir .'/tcpdf.php');
-
   $languages = explode(',', $language);
   $language = $languages[0];
   $language1 = '';
@@ -353,33 +353,26 @@ function theme_storminvoice_report_pdf($node, $language) {
   $complete_title = $title .' '. $myorg->title .' : '. $organization->title .' - '. $node->number;
 
   $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
-
   $pdf->SetCreator(PDF_CREATOR);
   $pdf->SetAuthor("Storm");
   $pdf->SetTitle($complete_title);
   $pdf->SetSubject($title);
   $pdf->SetKeywords($title, $myorg->title, $organization->title, $node->number);
-
   $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
   $pdf->setPrintHeader(false);
   $pdf->setPrintFooter(false);
-
   $margins = $pdf->getMargins();
   $pageWidth = $pdf->getPageWidth() - $margins['left'] - $margins['right'];
-  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
   $pdf->AddPage();
-
   $pdf->setDrawColor(204, 204, 204);
   $pdf->setFillColor(220, 220, 220);
 
   $pdf->SetFont("times", "B", 14);
   $headerleft = variable_get('site_name', '') .'<br />'. variable_get('site_slogan', '');
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 ,0, false, 'L');
-
   $pdf->SetFont("times", "N", 10);
   $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
-
   $pdf->SetFont("times", "B", 14);
   $o = $title;
   if ($language1) $o .= "\n". t('Invoice', array(), $language1);
@@ -417,11 +410,9 @@ function theme_storminvoice_report_pdf($node, $language) {
   $o = t('Currency', array(), $language);
   if ($language1) $o .= "\n". t('Currency', array(), $language1);
   $pdf->MultiCell($w-3, 0, $o, 1, 'L', 1, 0);
-
   $o = t('Date', array(), $language);
   if ($language1) $o .= "\n". t('Date', array(), $language1);
   $pdf->MultiCell($w+5, 0, $o, 1, 'L', 1, 0);
-
   $o = t('Reference', array(), $language);
   if ($language1) $o .= "\n". t('Reference', array(), $language1);
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
@@ -522,13 +513,13 @@ function theme_storminvoice_report_pdf($node, $language) {
     $y = $pdf->getY() + 10;
     $pdf->setY($y);
     $pdf->SetFont("times", "B", 14);
-    $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0 ,1,'C');  }
+    $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0 ,1,'C');
+  }
 
   $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number)) .'.pdf';
 
   //Close and output PDF document
   $pdf->Output($filename, "I");
-
 }
 
 function theme_storminvoice_report_html($node, $language) {
