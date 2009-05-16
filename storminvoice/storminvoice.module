@@ -551,6 +551,12 @@ function storminvoice_form_alter(&$form, $form_state, $form_id) {
       '#description' => t('Default tax percent'),
       '#size' => 5,
     );
+    $form['storminvoice']['storminvoice_tcpdf_location'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Location of tcpdf library'),
+      '#default_value' => variable_get('storminvoice_default_taxpercent', t('/sites/all/libraries/tcpdf')),
+      '#description' => t('The directory that contains the TCPDF library (/sites/all/libraries/tcpdf is recommended)'),
+      '#size' => 50,
+    );
   }
 }
-
