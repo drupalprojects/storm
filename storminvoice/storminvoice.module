@@ -19,26 +19,26 @@ function storminvoice_help($path, $arg) {
 
 function storminvoice_perm() {
   return array(
-                'Storm invoice: access',
-                'Storm invoice: add',
-                'Storm invoice: delete all',
-                'Storm invoice: delete own',
-                'Storm invoice: delete of user organization',
-                'Storm invoice: edit all',
-                'Storm invoice: edit own',
-                'Storm invoice: edit of user organization',
-                'Storm invoice: view all',
-                'Storm invoice: view own',
-                'Storm invoice: view of user organization',
+    'Storm invoice: access',
+    'Storm invoice: add',
+    'Storm invoice: delete all',
+    'Storm invoice: delete own',
+    'Storm invoice: delete of user organization',
+    'Storm invoice: edit all',
+    'Storm invoice: edit own',
+    'Storm invoice: edit of user organization',
+    'Storm invoice: view all',
+    'Storm invoice: view own',
+    'Storm invoice: view of user organization',
   );
 }
 
 function storminvoice_init() {
   $settings = array(
-                    'storm' => array(
-                      'project_invoices_url' => url('storm/project_invoices_js/')
-                    ),
-              );
+    'storm' => array(
+      'project_invoices_url' => url('storm/project_invoices_js/')
+    ),
+  );
   drupal_add_js($settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'storminvoice') .'/storminvoice.js', 'module', 'header', FALSE);
 }

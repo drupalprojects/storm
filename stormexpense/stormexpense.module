@@ -19,17 +19,17 @@ function stormexpense_help($path, $arg) {
 
 function stormexpense_perm() {
   return array(
-                'Storm expense: access',
-                'Storm expense: add',
-                'Storm expense: delete all',
-                'Storm expense: delete own',
-                'Storm expense: delete of user organization',
-                'Storm expense: edit all',
-                'Storm expense: edit own',
-                'Storm expense: edit of user organization',
-                'Storm expense: view all',
-                'Storm expense: view own',
-                'Storm expense: view of user organization',
+    'Storm expense: access',
+    'Storm expense: add',
+    'Storm expense: delete all',
+    'Storm expense: delete own',
+    'Storm expense: delete of user organization',
+    'Storm expense: edit all',
+    'Storm expense: edit own',
+    'Storm expense: edit of user organization',
+    'Storm expense: view all',
+    'Storm expense: view own',
+    'Storm expense: view of user organization',
   );
 }
 
