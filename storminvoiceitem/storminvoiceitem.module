@@ -368,3 +368,10 @@ function storminvoiceitem_getitems($invoice_nid) {
   }
   return $items;
 }
+
+function storminvoiceitem_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'storminvoiceitem'),
+  );
+}
