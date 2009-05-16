@@ -1,13 +1,14 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- Bug #460472: Knowledgebase topics not displayed
+- Task #456164: Added variable for location of tcpdf library plus check of existance
+- Bug #460472: Knowledgebase topics not displayed, plus similar bug for organization countries
 - Bug #433300: Can't cancel attribute creation - removed code
 - Feature #348777: Organization Phone Number
-- Feature #320801: Addition of experimental views support
+- Feature #320801: Exposed Storm fields to views
 - Bug #436382: Wysiwyg doesn't show up on timetracking
 - Bug #454412: Knowledge Base - allow filtering by non-default attributes
-- Task #436922: Removed add_js on init from Storm Invoice Items. (TODO, delete function and .js file)
+- Task #436922: Removed add_js on init from Storm Invoice Items.
 - Task #436922: Storm Invoice Items permissions moved to Storm Invoice
 - Improved module descriptions
 - Bug #450648: Documentation updated to mention conflict with node access modules
