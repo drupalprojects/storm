@@ -530,4 +530,9 @@ function stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormexpense_view', $node, $teaser, $page);
 }
 
-
+function stormexpense_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormexpense'),
+  );
+}
