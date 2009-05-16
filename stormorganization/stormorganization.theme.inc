@@ -18,7 +18,7 @@ function theme_stormorganization_list($header, $organizations) {
 
     $rows[] = array(
       l($organization->title, 'node/'. $organization->nid),
-      $countries[$organization->country],
+      $countries['values'][$organization->country],
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
