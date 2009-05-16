@@ -299,12 +299,17 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['links']['print']['pdf'] = array(
-    '#prefix' => '<div class="print_pdf">',
-    '#suffix' => '</div>',
-    '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
-    '#weight' => $w++,
-  );
+  // Display link to tcpdf library only if library is installed.
+  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', t('/sites/all/libraries/tcpdf'));
+  if(file_exists($tcpdf_dir .'/tcpdf.php')) {
+
+    $node->content['storminvoice']['links']['print']['pdf'] = array(
+      '#prefix' => '<div class="print_pdf">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
+      '#weight' => $w++,
+    );
+  }
 
   return $node;
 }
@@ -319,8 +324,14 @@ function theme_storminvoice_report($node, $report, $language) {
 }
 
 function theme_storminvoice_report_pdf($node, $language) {
-  $tcpdf_dir = drupal_get_path('module', 'storm') .'/libs/tcpdf';
+  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', t('/sites/all/libraries/tcpdf'));
 
+  // Performs simple check for existance of tcpdf library . If it doesn't exist,  revert to node display with message about tcpdf library.
+  if(!file_exists($tcpdf_dir .'/tcpdf.php')) {
+    drupal_set_message(t('The tcpdf library has not been installed. See the Storm module README.txt for more details.'));
+    drupal_goto('node/'. $node);
+  }
+  
   require_once($tcpdf_dir .'/config/lang/eng.php');
   require_once($tcpdf_dir .'/tcpdf.php');
   $languages = explode(',', $language);
