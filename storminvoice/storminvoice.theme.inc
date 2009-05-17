@@ -329,7 +329,7 @@ function theme_storminvoice_report_pdf($node, $language) {
   // Performs simple check for existance of tcpdf library . If it doesn't exist,  revert to node display with message about tcpdf library.
   if(!file_exists($tcpdf_dir .'/tcpdf.php')) {
     drupal_set_message(t('The tcpdf library has not been installed. See the Storm module README.txt for more details.'));
-    drupal_goto('node/'. $node);
+    drupal_goto('node/'. $node->nid);
   }
   
   require_once($tcpdf_dir .'/config/lang/eng.php');
