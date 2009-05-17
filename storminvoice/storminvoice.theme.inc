@@ -300,7 +300,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Display link to tcpdf library only if library is installed.
-  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', t('/sites/all/libraries/tcpdf'));
+  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
   if(file_exists($tcpdf_dir .'/tcpdf.php')) {
 
     $node->content['storminvoice']['links']['print']['pdf'] = array(
@@ -324,7 +324,7 @@ function theme_storminvoice_report($node, $report, $language) {
 }
 
 function theme_storminvoice_report_pdf($node, $language) {
-  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', t('/sites/all/libraries/tcpdf'));
+  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
 
   // Performs simple check for existance of tcpdf library . If it doesn't exist,  revert to node display with message about tcpdf library.
   if(!file_exists($tcpdf_dir .'/tcpdf.php')) {
