@@ -210,27 +210,6 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  $node->content['storminvoice']['fields']['amount'] = array(
-    '#prefix' => '<div class="amount">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
-    '#weight' => $w++,
-  );
-
-  $node->content['storminvoice']['fields']['tax'] = array(
-    '#prefix' => '<div class="tax">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
-    '#weight' => $w++,
-  );
-
-  $node->content['storminvoice']['fields']['total'] = array(
-    '#prefix' => '<div class="total">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
-    '#weight' => $w++,
-  );
-
   $node->content['storminvoice']['fields']['requestdate'] = array(
     '#prefix' => '<div class="requestdate">',
     '#suffix' => '</div>',
@@ -252,13 +231,6 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#value' => theme('storm_view_item', t('Payment date'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
       '#weight' => $w++,
     );
-  } else {
-    $node->content['storminvoice']['fields']['paymentdate'] = array(
-      '#prefix' => '<div class="paymentdate">',
-      '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', t('Payment date'), t('Unpaid')),
-      '#weight' => $w++,
-    );
   }
     
   $status = 'open';
@@ -275,6 +247,27 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  $node->content['storminvoice']['fields']['amount'] = array(
+    '#prefix' => '<div class="amount">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['fields']['tax'] = array(
+    '#prefix' => '<div class="tax">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['fields']['total'] = array(
+    '#prefix' => '<div class="total">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
+    '#weight' => $w++,
+  );
+  
   $organization = node_load($node->organization_nid);
   $myorg = node_load(variable_get('storm_organization_nid', 0));
   if ($myorg->orglanguage != $organization->orglanguage) {
