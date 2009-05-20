@@ -245,13 +245,22 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['fields']['paymentdate'] = array(
-    '#prefix' => '<div class="paymentdate">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Payment date'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
-    '#weight' => $w++,
-  );
-
+  if($node->paymentdate) {
+    $node->content['storminvoice']['fields']['paymentdate'] = array(
+      '#prefix' => '<div class="paymentdate">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', t('Payment date'), $node->paymentdate? format_date($node->paymentdate, 'custom', 'Y-m-d') : ''),
+      '#weight' => $w++,
+    );
+  } else {
+    $node->content['storminvoice']['fields']['paymentdate'] = array(
+      '#prefix' => '<div class="paymentdate">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', t('Payment date'), t('Unpaid')),
+      '#weight' => $w++,
+    );
+  }
+    
   $status = 'open';
   if ($node->paymentdate) {
     $status = 'paid';
