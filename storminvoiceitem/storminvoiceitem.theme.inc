@@ -5,7 +5,8 @@
  * @file
  */
 
-function theme_storminvoiceitem_invoiceitems($form) {
+// FUNCTION MOVED TO STORM INVOICE AS PART OF #436922
+/*function theme_storminvoiceitem_invoiceitems($form) {
   drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
 
   $header = array();
@@ -33,5 +34,5 @@ function theme_storminvoiceitem_invoiceitems($form) {
   }
   $o = theme('table', $header, $rows, array('id' => 'invoiceitems'));
   return $o;
-}
+}*/
 

@@ -141,14 +141,15 @@ function storminvoiceitem_menu() {
   return $items;
 }
 
-function storminvoiceitem_theme() {
+// FUNCTION MOVED TO STORM INVOICE AS PART OF #436922
+/*function storminvoiceitem_theme() {
   return array(
     'storminvoiceitem_invoiceitems' => array(
       'file'      => 'storminvoiceitem.theme.inc',
       'arguments' => array('form'),
     ),
   );
-}
+}*/
 
 function storminvoiceitem_node_info() {
   return array(
