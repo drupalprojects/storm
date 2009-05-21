@@ -207,7 +207,7 @@ function storminvoice_theme() {
       'file'      => 'storminvoice.theme.inc',
       'arguments' => array('node', 'language'),
     ),
-    'storminvoice_items'] => array(
+    'storminvoice_items' => array(
       'file'      => 'storminvoiceitem.theme.inc',
       'arguments' => array('form'),
     ),
