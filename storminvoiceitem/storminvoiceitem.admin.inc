@@ -69,7 +69,7 @@ function storminvoiceitem_invoiceitems($invoice) {
 function storminvoiceitem_invoiceitems_form($form_id, $header, $invoiceitems, $invoice) {
   $form = array();
 
-  $form['invoiceitems']['#theme'] = 'storminvoice_items';
+  $form['invoiceitems']['#theme'] = 'storminvoiceitem_invoiceitems';
 
   $form['invoiceitems']['header'] = array (
     '#value' => $header,
