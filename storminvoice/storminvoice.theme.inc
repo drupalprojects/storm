@@ -752,8 +752,8 @@ function theme_storminvoice_report_html($node, $language) {
 
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
-
-function theme_storminvoice_items($form) {
+/*
+function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #436922
   drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
 
   $header = array();
@@ -782,3 +782,4 @@ function theme_storminvoice_items($form) {
   $o = theme('table', $header, $rows, array('id' => 'invoiceitems'));
   return $o;
 }
+*/
