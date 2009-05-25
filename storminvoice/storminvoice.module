@@ -386,7 +386,7 @@ function storminvoice_form(&$node) {
   $form['group4']['amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Amount'),
-    '#attributes' => array('readonly' => 'readonly'),
+    /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
     '#default_value' => $node->amount,
   );
@@ -394,7 +394,7 @@ function storminvoice_form(&$node) {
   $form['group4']['tax'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax'),
-    '#attributes' => array('readonly' => 'readonly'),
+    /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
     '#default_value' => $node->tax,
   );
@@ -402,7 +402,7 @@ function storminvoice_form(&$node) {
   $form['group4']['total'] = array(
     '#type' => 'textfield',
     '#title' => t('Total'),
-    '#attributes' => array('readonly' => 'readonly'),
+    /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
     '#default_value' => $node->total,
   );
