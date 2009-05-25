@@ -70,6 +70,27 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  $node->content['stormticket']['fields']['category'] = array(
+    '#prefix' => '<div class="category">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Category'), $node->ticketcategory),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormticket']['fields']['status'] = array(
+    '#prefix' => '<div class="storm_status">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Status'), $node->ticketstatus),
+    '#weight' => $w++,
+  );
+
+  $node->content['stormticket']['fields']['priority'] = array(
+    '#prefix' => '<div class="priority">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Priority'), $node->ticketpriority),
+    '#weight' => $w++,
+  );
+  
   $node->content['stormticket']['fields']['body'] = array(
     '#prefix' => '<div class="body">',
     '#suffix' => '</div>',
@@ -84,7 +105,7 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => '&nbsp;',
     '#weight' => $w++,
   );
-
+  
   $w = 0;
 
   return $node;
