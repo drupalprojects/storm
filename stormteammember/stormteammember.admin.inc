@@ -257,6 +257,9 @@ function stormteammember_add_submit($form, &$form_state) {
   $teammember->project_nid = $form_state['values']['project_nid'];
   $teammember->task_nid = $form_state['values']['task_nid'];
   $teammember->ticket_nid = $form_state['values']['ticket_nid'];
+  $teammember->person_organization_nid = $form_state['values']['person_organization_nid'];
+  $teammember->person_nid = $form_state['values']['person_nid'];
+  $teammember->tid = $form_state['values']['tid'];
 
   _stormteammember_beforesave($teammember);
 
@@ -573,4 +576,3 @@ function stormteammember_delete_submit($form, &$form_state) {
     drupal_goto($destination);
   }
 }
-
