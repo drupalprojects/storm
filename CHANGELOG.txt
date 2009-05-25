@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #469002: Teammember - assigned person not remembered after save
+- Bug #450778: Invoice - allow editting of invoice amount fields
 - Task #456164: Added variable for location of tcpdf library plus check of existance. Defaults now to sites/all/libraries.
 - Bug #460472: Knowledgebase topics not displayed, plus similar bug for organization countries
 - Bug #433300: Can't cancel attribute creation - removed code
