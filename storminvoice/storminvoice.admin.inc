@@ -325,11 +325,6 @@ function storminvoice_report($node, $report, $language) {
 }
 function storminvoice_items($invoice) {
   $node_invoice = node_load($invoice->nid);
-  $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
-  $breadcrumb[] = l(t('Invoice : '. $node_invoice->title), 'node/'. $node_invoice->nid);
-  drupal_set_breadcrumb($breadcrumb);
 
   $i = new stdClass();
   $i->type = 'storminvoiceitem';
@@ -387,7 +382,7 @@ function storminvoice_items($invoice) {
 function storminvoice_items_form($form_id, $header, $invoiceitems, $invoice) {
   $form = array();
 
-  $form['invoiceitems']['#theme'] = 'storminvoiceitem_invoiceitems';
+  $form['invoiceitems']['#theme'] = 'storminvoice_items';
 
   $form['invoiceitems']['header'] = array (
     '#value' => $header,

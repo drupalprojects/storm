@@ -283,7 +283,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
   
-  $node->content['storminvoice']['fields2']['amount'] = array(
+  $node->content['storminvoice']['fields_2']['amount'] = array(
     '#prefix' => '<div class="amount">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
@@ -763,7 +763,6 @@ function theme_storminvoice_report_html($node, $language) {
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
 
-/*
 function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #436922
   drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
 
@@ -793,4 +792,3 @@ function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #4369
   $o = theme('table', $header, $rows, array('id' => 'invoiceitems'));
   return $o;
 }
-*/
