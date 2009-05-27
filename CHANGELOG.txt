@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #329401: Display invoice items on view invoice page
 - Feature #325363: Ticket - more fields visible on node view
 - Bug #469002: Teammember - assigned person not remembered after save
 - Bug #450778: Invoice - allow editting of invoice amount fields
