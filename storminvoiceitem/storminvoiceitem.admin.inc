@@ -4,7 +4,7 @@
 /**
  * @file
  */
-
+/*
 function storminvoiceitem_invoiceitems($invoice) {
   $node_invoice = node_load($invoice->nid);
   $breadcrumb = array();
@@ -132,4 +132,4 @@ function storminvoiceitem_invoiceitems_submit($form, &$form_state) {
 
   drupal_set_message(t('Invoice items saved'));
 }
-
+*/
