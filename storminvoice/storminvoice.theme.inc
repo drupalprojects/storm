@@ -72,15 +72,15 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     ),
     array(
       'data' => t('Amount'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Tax'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Total'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
   );
 
@@ -166,13 +166,36 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  $node->content['storminvoice']['links'] = array(
+    '#prefix' => '<div id="links">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+
+  $node->content['storminvoice']['links']['print']['html'] = array(
+    '#prefix' => '<div class="print_html">',
+    '#suffix' => '</div>',
+    '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $language),
+    '#weight' => $w++,
+  );
+
+  // Display link to tcpdf library only if library is installed.
+  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
+  if(file_exists($tcpdf_dir .'/tcpdf.php')) {
+    $node->content['storminvoice']['links']['print']['pdf'] = array(
+      '#prefix' => '<div class="print_pdf">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
+      '#weight' => $w++,
+    );
+  }
+
   $node->content['storminvoice']['fields'] = array(
     '#prefix' => '<div id="fields">',
     '#suffix' => '</div>',
     '#weight' => $w++,
   );
 
-  $w = 0;
   $node->content['storminvoice']['fields']['number'] = array(
     '#prefix' => '<div class="number">',
     '#suffix' => '</div>',
@@ -246,22 +269,35 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Status'), $status),
     '#weight' => $w++,
   );
-
-  $node->content['storminvoice']['fields']['amount'] = array(
+  require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
+  require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.theme.inc');
+  $node->content['storminvoice']['items'] = array(
+    '#prefix' => '<div id="items">',
+    '#value' => storminvoice_items($node),
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+  $node->content['storminvoice']['fields_2'] = array(
+    '#prefix' => '<div id="fields">',
+    '#suffix' => '</div>',
+    '#weight' => $w++,
+  );
+  
+  $node->content['storminvoice']['fields2']['amount'] = array(
     '#prefix' => '<div class="amount">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['fields']['tax'] = array(
+  $node->content['storminvoice']['fields_2']['tax'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['fields']['total'] = array(
+  $node->content['storminvoice']['fields_2']['total'] = array(
     '#prefix' => '<div class="total">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
@@ -285,32 +321,6 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => $w++,
     );
     unset($node->content['body']);
-  }
-
-  $node->content['storminvoice']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
-  );
-
-  $w = 0;
-  $node->content['storminvoice']['links']['print']['html'] = array(
-    '#prefix' => '<div class="print_html">',
-    '#suffix' => '</div>',
-    '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $language),
-    '#weight' => $w++,
-  );
-
-  // Display link to tcpdf library only if library is installed.
-  $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
-  if(file_exists($tcpdf_dir .'/tcpdf.php')) {
-
-    $node->content['storminvoice']['links']['print']['pdf'] = array(
-      '#prefix' => '<div class="print_pdf">',
-      '#suffix' => '</div>',
-      '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
-      '#weight' => $w++,
-    );
   }
 
   return $node;
@@ -752,6 +762,7 @@ function theme_storminvoice_report_html($node, $language) {
 
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
+
 /*
 function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #436922
   drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
