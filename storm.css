@@ -206,6 +206,7 @@ float: left;
 width: 150px;
 text-align: right;
 clear: left;
+font-weight: bold;
 }
 
 div.stormcomponent #fields div.value {
@@ -218,7 +219,7 @@ margin: 0;
 }
 
 div.stormcomponent #links {
-float: left;
+float: right;
 width: 30%;
 }
 
