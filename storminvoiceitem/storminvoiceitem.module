@@ -180,7 +180,6 @@ function storminvoiceitem_form(&$node) {
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
   $breadcrumb[] = l(t('Invoice : '. $node_invoice->title), 'node/'. $node_invoice->nid);
-  $breadcrumb[] = l(t('Invoice items'), 'node/'. $node_invoice->nid .'/invoiceitems');
   drupal_set_breadcrumb($breadcrumb);
 
   $type = node_get_types('type', $node);
