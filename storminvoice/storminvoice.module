@@ -207,8 +207,8 @@ function storminvoice_theme() {
       'file'      => 'storminvoice.theme.inc',
       'arguments' => array('node', 'language'),
     ),
-    'storminvoice_items' => array( // UNDO of commit 214250, issue #436922
-      'file'      => 'storminvoiceitem.theme.inc',
+    'storminvoice_items' => array(
+      'file'      => 'storminvoice.theme.inc',
       'arguments' => array('form'),
     ),
   );

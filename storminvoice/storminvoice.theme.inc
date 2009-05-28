@@ -172,10 +172,12 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  // Bodge fix to keep html and pdf invoices working. Without language, menu items default to /storm
+  if(!$node->language) { $node->language = 'en'; }
   $node->content['storminvoice']['links']['print']['html'] = array(
     '#prefix' => '<div class="print_html">',
     '#suffix' => '</div>',
-    '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $language),
+    '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $node->language),
     '#weight' => $w++,
   );
 
@@ -185,7 +187,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['storminvoice']['links']['print']['pdf'] = array(
       '#prefix' => '<div class="print_pdf">',
       '#suffix' => '</div>',
-      '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $language),
+      '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $node->language),
       '#weight' => $w++,
     );
   }
