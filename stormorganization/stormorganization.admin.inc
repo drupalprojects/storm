@@ -124,11 +124,11 @@ function stormorganization_list_filter() {
   $form = array();
 
   $form['filter'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Filter'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#weight' => -20,
+    '#type' => 'fieldset',
+    '#title' => t('Filter'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => -20,
   );
 
   $form['filter']['country'] = array(
@@ -252,4 +252,3 @@ function stormorganization_autocomplete($string = '') {
 
   drupal_json($matches);
 }
-
