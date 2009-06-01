@@ -35,10 +35,10 @@ function stormproject_perm() {
 
 function stormproject_init() {
   $settings = array(
-                    'storm' => array(
-                      'organization_projects_url' => url('storm/organization_projects_js/')
-                    ),
-              );
+    'storm' => array(
+      'organization_projects_url' => url('storm/organization_projects_js/')
+    ),
+  );
   drupal_add_js($settings, 'setting');
 
   drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);

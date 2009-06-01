@@ -19,18 +19,18 @@ function stormorganization_help($path, $arg) {
 
 function stormorganization_perm() {
   return array(
-                'Storm organization: access',
-                'Storm organization: add',
-                'Storm organization: delete all',
-                'Storm organization: delete own',
-                'Storm organization: edit all',
-                'Storm organization: edit own',
-                'Storm organization: edit belonged',
-                'Storm organization: view all',
-                'Storm organization: view own',
-                'Storm organization: view belonged',
-                'Storm organization: associate user'
-              );
+    'Storm organization: access',
+    'Storm organization: add',
+    'Storm organization: delete all',
+    'Storm organization: delete own',
+    'Storm organization: edit all',
+    'Storm organization: edit own',
+    'Storm organization: edit belonged',
+    'Storm organization: view all',
+    'Storm organization: view own',
+    'Storm organization: view belonged',
+    'Storm organization: associate user'
+  );
 }
 
 function stormorganization_access($op, $node, $account = NULL) {
