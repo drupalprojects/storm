@@ -5,18 +5,6 @@
  * @file
  */
 
-/*function storminvoiceitem_help($path, $arg) {
-  $o = '';
-
-  switch ($path) {
-    case "admin/help#storminvoiceitem":
-      $o = '<p>'. t("Provides invoice item support for Storm") .'</p>';
-      break;
-  }
-
-  return $o;
-}*/
-
 function storminvoiceitem_access($op, $node, $account=NULL) {
   if (empty($account)) {
     global $user;
@@ -126,30 +114,6 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $accou
   $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
-
-/*function storminvoiceitem_menu() {
-  $items['node/%node/invoiceitems'] = array(
-    'title' => t('Invoice items'),
-    'page callback' => 'storminvoiceitem_invoiceitems',
-    'page arguments' => array(1),
-    'access callback' => '_storminvoiceitem_invoiceitems_access',
-    'access arguments' => array(1),
-    'file' => 'storminvoiceitem.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3
-  );
-  return $items;
-}*/
-
-// FUNCTION MOVED TO STORM INVOICE AS PART OF #436922, moved back as UNDO of commit 214252
-/*function storminvoiceitem_theme() {
-  return array(
-    'storminvoiceitem_invoiceitems' => array(
-      'file'      => 'storminvoiceitem.theme.inc',
-      'arguments' => array('form'),
-    ),
-  );
-}*/
 
 function storminvoiceitem_node_info() {
   return array(
@@ -367,11 +331,4 @@ function storminvoiceitem_getitems($invoice_nid) {
     $items[] = $i;
   }
   return $items;
-}
-
-function storminvoiceitem_views_api() {
-  return array(
-    'api' => 2,
-    'path' => drupal_get_path('module', 'storminvoiceitem'),
-  );
 }
