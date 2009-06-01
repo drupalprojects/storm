@@ -6,11 +6,15 @@
  */
 
 function storminvoiceitem_access($op, $node, $account=NULL) {
+
   if (empty($account)) {
     global $user;
     $account = $user;
   }
 
+  storminvoice_access($op, $node, $account);
+
+/*
   if (is_numeric($node)) $node = node_load($node);
 
   if ($op == 'create') {
@@ -44,9 +48,9 @@ function storminvoiceitem_access($op, $node, $account=NULL) {
       return TRUE;
     }
   }
-  return FALSE;
+  return FALSE;*/
 }
-
+/*
 function storminvoiceitem_access_sql($sql, $where = array()) {
   global $user;
 
@@ -82,8 +86,9 @@ function storminvoiceitem_access_sql($sql, $where = array()) {
 
   $where[] = "'storm_access'='storm_access'";
   return storm_rewrite_sql($sql, $where, $join);
-}
+}*/
 
+/*
 function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
@@ -113,7 +118,7 @@ function storminvoiceitem_storm_rewrite_where_sql($query, $primary_table, $accou
 
   $conds[$primary_table][$account->uid] = $cond;
   return $cond;
-}
+}*/
 
 function storminvoiceitem_node_info() {
   return array(
