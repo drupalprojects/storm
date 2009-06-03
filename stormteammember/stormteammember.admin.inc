@@ -125,11 +125,11 @@ function stormteammember_list_filter() {
   $form = array();
 
   $form['filter'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Filter'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#theme' => 'stormteammember_list_filter',
+    '#type' => 'fieldset',
+    '#title' => t('Filter'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#theme' => 'stormteammember_list_filter',
   );
 
   $form['filter']['group1'] = array(
@@ -403,7 +403,7 @@ function stormteammember_form(&$teammember) {
 
   }
   $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND n.type='stormorganization' ORDER BY n.title";
 
   $form['group1'] = array(
     '#type' => 'markup',
