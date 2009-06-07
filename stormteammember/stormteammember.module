@@ -19,14 +19,14 @@ function stormteammember_help($path, $arg) {
 
 function stormteammember_perm() {
   return array(
-                'Storm teammember: access',
-                'Storm teammember: add',
-                'Storm teammember: delete all',
-                'Storm teammember: delete of user organization',
-                'Storm teammember: edit all',
-                'Storm teammember: edit of user organization',
-                'Storm teammember: view all',
-                'Storm teammember: view of user organization',
+    'Storm teammember: access',
+    'Storm teammember: add',
+    'Storm teammember: delete all',
+    'Storm teammember: delete of user organization',
+    'Storm teammember: edit all',
+    'Storm teammember: edit of user organization',
+    'Storm teammember: view all',
+    'Storm teammember: view of user organization',
   );
 }
 
@@ -83,7 +83,9 @@ function stormteammember_access_sql($sql, $where = array()) {
     $cond .= 'n.uid='. $user->uid;
   }
   if (user_access('Storm teammember: view of user organization')) {
-    if (!empty($cond)) $cond .= ' OR ';
+    if (!empty($cond)) {
+      $cond .= ' OR ';
+    }
     $cond .= 'stm.person_organization_nid='. $user->stormorganization_nid;
   }
   if (empty($cond)) $cond = '0=1';
@@ -97,36 +99,40 @@ function stormteammember_menu() {
   $items = array();
 
   $items['storm/teammembers'] = array(
-            'title' => t('Team members'),
-            'description' => t('Storm team members'),
-            'page callback' => 'stormteammember_list',
-            'access arguments' => array('Storm teammember: access'),
-            'file' => 'stormteammember.admin.inc',
-            'type' => MENU_NORMAL_ITEM);
+    'title' => t('Team members'),
+    'description' => t('Storm team members'),
+    'page callback' => 'stormteammember_list',
+    'access arguments' => array('Storm teammember: access'),
+    'file' => 'stormteammember.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
   $items['storm/teammembers/add'] = array(
-            'title' => t('Add a new team member'),
-            'description' => t('Storm team members'),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('stormteammember_add'),
-            'access arguments' => array('Storm teammember: add'),
-            'file' => 'stormteammember.admin.inc',
-            'type' => MENU_CALLBACK);
+    'title' => t('Add a new team member'),
+    'description' => t('Storm team members'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormteammember_add'),
+    'access arguments' => array('Storm teammember: add'),
+    'file' => 'stormteammember.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
   $items['storm/teammembers/edit/%'] = array(
-            'title' => t('Edit a team member'),
-            'description' => t('Storm team members'),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('stormteammember_edit', 3),
-            'access arguments' => array('Storm teammember: edit'),
-            'file' => 'stormteammember.admin.inc',
-            'type' => MENU_CALLBACK);
+    'title' => t('Edit a team member'),
+    'description' => t('Storm team members'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormteammember_edit', 3),
+    'access arguments' => array('Storm teammember: edit'),
+    'file' => 'stormteammember.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
   $items['storm/teammembers/delete/%'] = array(
-            'title' => t('Delete a team member'),
-            'description' => t('Storm Attributes'),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('stormteammember_delete', 3),
-            'access arguments' => array('Storm teammember: delete'),
-            'file' => 'stormteammember.admin.inc',
-            'type' => MENU_CALLBACK);
+    'title' => t('Delete a team member'),
+    'description' => t('Storm Attributes'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormteammember_delete', 3),
+    'access arguments' => array('Storm teammember: delete'),
+    'file' => 'stormteammember.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }
@@ -162,4 +168,3 @@ function stormteammember_stormticket_change($ticket_nid, $ticket_title) {
   $s = "UPDATE {stormteammember} SET ticket_title='%s' WHERE ticket_nid=%d AND ticket_title <> '%s'";
   db_query($s, $ticket_title, $ticket_nid, $ticket_title);
 }
-
