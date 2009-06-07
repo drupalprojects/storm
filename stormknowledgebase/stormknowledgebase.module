@@ -19,14 +19,14 @@ function stormknowledgebase_help($path, $arg) {
 
 function stormknowledgebase_perm() {
   return array(
-                'Storm knowledgebase: access',
-                'Storm knowledgebase: add',
-                'Storm knowledgebase: delete all',
-                'Storm knowledgebase: delete own',
-                'Storm knowledgebase: edit all',
-                'Storm knowledgebase: edit own',
-                'Storm knowledgebase: view all',
-                'Storm knowledgebase: view own',
+    'Storm knowledgebase: access',
+    'Storm knowledgebase: add',
+    'Storm knowledgebase: delete all',
+    'Storm knowledgebase: delete own',
+    'Storm knowledgebase: edit all',
+    'Storm knowledgebase: edit own',
+    'Storm knowledgebase: view all',
+    'Storm knowledgebase: view own',
   );
 }
 
@@ -40,7 +40,9 @@ function stormknowledgebase_access($op, $node, $account=NULL) {
     return user_access('Storm knowledgebase: add');
   }
 
-  if (is_numeric($node)) $node = node_load($node);
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
 
   if ($op == 'delete') {
     if (user_access('Storm knowledgebase: delete all')) {
