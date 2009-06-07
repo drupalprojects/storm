@@ -137,7 +137,14 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table, $account) 
       $cond .= "${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm invoice: view of user organization', $account)) {
-      if ($cond) $cond .= ' OR ';
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      // If function is called without viewing an organization, this variable may not be set.
+      // These lines check for that and set the organization node id to zero if not otherwise set.
+      if (!isset($account->stormorganization_nid)) {
+        $account->stormorganization_nid = 0;
+      }
       $cond .= ' sin1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
@@ -174,13 +181,13 @@ function storminvoice_menu() {
   );
 
   $items['storm/invoice/report/%node/%/%'] = array(
-            'title' => t('Invoice'),
-            'page arguments' => array(3, 4, 5),
-            'description' => t('Storm Invoice'),
-            'page callback' => 'storminvoice_report',
-            'access arguments' => array('Storm invoice: access'),
-            'type' => MENU_CALLBACK,
-            'file' => 'storminvoice.admin.inc',
+    'title' => t('Invoice'),
+    'page arguments' => array(3, 4, 5),
+    'description' => t('Storm Invoice'),
+    'page callback' => 'storminvoice_report',
+    'access arguments' => array('Storm invoice: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'storminvoice.admin.inc',
   );
 
   return $items;
@@ -253,7 +260,7 @@ function storminvoice_form(&$node) {
     $node->requestdate = time();
     $node->duedate = $node->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
     $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
-          WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
+      WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
     $date = getdate($node->requestdate);
     $node->number = (db_result(db_query($s, $node->requestdate)) + 1) .'/'. $date['year'];
 
@@ -273,11 +280,11 @@ function storminvoice_form(&$node) {
       $node->project_nid = $_SESSION['storminvoice_list_filter']['project_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);
@@ -429,24 +436,24 @@ function storminvoice_insert($node) {
   _storminvoice_beforesave($node);
 
   db_query("INSERT INTO {storminvoice}
-           (vid, nid,
-           number, reference,
-           organization_nid, organization_title,
-           project_nid, project_title,
-           amount, tax, total, totalcustomercurr,
-           requestdate, duedate, paymentdate, taxexempt) VALUES
-           (%d, %d,
-           '%s', '%s',
-           %d, '%s',
-           %d, '%s',
-           %f, %f, %f, %f,
-           %d, %d, %d, %d)",
-          $node->vid, $node->nid,
-          $node->number, $node->reference,
-          $node->organization_nid, $node->organization_title,
-          $node->project_nid, $node->project_title,
-          $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
-          $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
+      (vid, nid,
+      number, reference,
+      organization_nid, organization_title,
+      project_nid, project_title,
+      amount, tax, total, totalcustomercurr,
+      requestdate, duedate, paymentdate, taxexempt) VALUES
+      (%d, %d,
+      '%s', '%s',
+      %d, '%s',
+      %d, '%s',
+      %f, %f, %f, %f,
+      %d, %d, %d, %d)",
+      $node->vid, $node->nid,
+      $node->number, $node->reference,
+      $node->organization_nid, $node->organization_title,
+      $node->project_nid, $node->project_title,
+      $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
 
   $_REQUEST['destination'] = 'node/'. $node->nid .'/invoiceitems';
 }
@@ -455,17 +462,16 @@ function storminvoice_update($node) {
   _storminvoice_beforesave($node);
 
   db_query("UPDATE {storminvoice} SET
-            number='%s', reference='%s',
-            organization_nid=%d, organization_title='%s',
-            project_nid=%d, project_title='%s',
-            amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
-            requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
-            $node->number, $node->reference,
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
-            $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
-
+    number='%s', reference='%s',
+    organization_nid=%d, organization_title='%s',
+    project_nid=%d, project_title='%s',
+    amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
+    requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
+    $node->number, $node->reference,
+    $node->organization_nid, $node->organization_title,
+    $node->project_nid, $node->project_title,
+    $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+    $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
 }
 
 function _storminvoice_beforesave(&$node) {
@@ -481,8 +487,8 @@ function _storminvoice_beforesave(&$node) {
   $node->organization_title = $o->title;
 
   $s = "SELECT n.title FROM {node} AS n 
-        INNER JOIN {stormproject} AS p ON n.vid=p.vid
-        WHERE type='stormproject' AND n.nid=%d";
+    INNER JOIN {stormproject} AS p ON n.vid=p.vid
+    WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
