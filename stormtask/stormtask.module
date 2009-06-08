@@ -35,10 +35,10 @@ function stormtask_perm() {
 
 function stormtask_init() {
   $settings = array(
-                    'storm' => array(
-                      'project_tasks_url' => url('storm/project_tasks_js/')
-                    ),
-              );
+    'storm' => array(
+      'project_tasks_url' => url('storm/project_tasks_js/')
+    ),
+  );
   drupal_add_js($settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'stormtask') .'/stormtask.js', 'module', 'header', FALSE);
 }
@@ -136,7 +136,14 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table, $account) {
       $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm task: view of user organization', $account)) {
-      if ($cond) $cond .= ' OR ';
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      // If function is called without viewing a task, this variable may not be set.
+      // These lines check for that and set the organization node id to zero if not otherwise set.
+      if (!isset($account->stormorganization_nid)) {
+        $account->stormorganization_nid = 0;
+      }
       $cond .= ' sta1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
@@ -263,7 +270,7 @@ function stormtask_form(&$node) {
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);
@@ -472,18 +479,18 @@ function stormtask_form(&$node) {
 function stormtask_insert($node) {
   _stormtask_beforesave($node);
   db_query("INSERT INTO {stormtask}
-          (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
-          organization_nid, organization_title,
-          project_nid, project_title, parent_nid, weight,
-          datebegin, dateend, durationunit, duration, pricemode, price, currency)
-          VALUES
-          (%d, %d, '%s', '%s', '%s', '%s',
-          %d, '%s',
-          %d, '%s', %d, %d, %d, %d, '%s', %f, '%s', %f, '%s')",
-          $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
-          $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
-          $node->parent_nid, $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-          $node->pricemode, $node->price, $node->currency);
+    (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
+    organization_nid, organization_title,
+    project_nid, project_title, parent_nid, weight,
+    datebegin, dateend, durationunit, duration, pricemode, price, currency)
+    VALUES
+    (%d, %d, '%s', '%s', '%s', '%s',
+    %d, '%s',
+    %d, '%s', %d, %d, %d, %d, '%s', %f, '%s', %f, '%s')",
+    $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
+    $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+    $node->parent_nid, $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
+    $node->pricemode, $node->price, $node->currency);
 }
 
 function stormtask_update($node) {
