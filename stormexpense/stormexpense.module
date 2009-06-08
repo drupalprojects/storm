@@ -126,7 +126,14 @@ function stormexpense_storm_rewrite_where_sql($query, $primary_table, $account) 
       $cond .= "${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm expense view of user organization', $account)) {
-      if ($cond) $cond .= ' OR ';
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      // If function is called without viewing an expense, this variable may not be set.
+      // These lines check for that and set the organization node id to zero if not otherwise set.
+      if (!isset($account->stormorganization_nid)) {
+        $account->stormorganization_nid = 0;
+      }
       $cond .= ' sex1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
