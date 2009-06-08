@@ -323,6 +323,7 @@ function _storminvoice_project_invoices_js($organization_nid, $project_nid) {
 function storminvoice_report($node, $report, $language) {
   print theme('storminvoice_report', $node, $report, $language);
 }
+
 function storminvoice_items($invoice) {
   $node_invoice = node_load($invoice->nid);
 
