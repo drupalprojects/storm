@@ -19,17 +19,17 @@ function stormticket_help($path, $arg) {
 
 function stormticket_perm() {
   return array(
-                'Storm ticket: access',
-                'Storm ticket: add',
-                'Storm ticket: delete all',
-                'Storm ticket: delete own',
-                'Storm ticket: delete of user organization',
-                'Storm ticket: edit all',
-                'Storm ticket: edit own',
-                'Storm ticket: edit of user organization',
-                'Storm ticket: view all',
-                'Storm ticket: view own',
-                'Storm ticket: view of user organization',
+    'Storm ticket: access',
+    'Storm ticket: add',
+    'Storm ticket: delete all',
+    'Storm ticket: delete own',
+    'Storm ticket: delete of user organization',
+    'Storm ticket: edit all',
+    'Storm ticket: edit own',
+    'Storm ticket: edit of user organization',
+    'Storm ticket: view all',
+    'Storm ticket: view own',
+    'Storm ticket: view of user organization',
   );
 }
 
@@ -37,10 +37,10 @@ function stormticket_init() {
   drupal_add_js(drupal_get_path('module', 'stormticket') .'/stormticket.js', 'module', 'header', FALSE);
 
   $settings = array(
-                    'storm' => array(
-                      'task_tickets_url' => url('storm/task_tickets_js/')
-                    ),
-              );
+    'storm' => array(
+      'task_tickets_url' => url('storm/task_tickets_js/')
+    ),
+  );
   drupal_add_js($settings, 'setting');
 }
 
@@ -137,7 +137,14 @@ function stormticket_storm_rewrite_where_sql($query, $primary_table, $account) {
       $cond .= " ${primary_table}.uid=". $account->uid;
     }
     if (user_access('Storm ticket: view of user organization', $account)) {
-      if ($cond) $cond .= ' OR ';
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      // If function is called without viewing a ticket, this variable may not be set.
+      // These lines check for that and set the organization node id to zero if not otherwise set.
+      if (!isset($account->stormorganization_nid)) {
+        $account->stormorganization_nid = 0;
+      }
       $cond .= ' sti1.organization_nid='. $account->stormorganization_nid;
     }
     if ($cond) {
@@ -156,12 +163,12 @@ function stormticket_menu() {
   $items = array();
 
   $items['storm/tickets'] = array(
-            'title' => t('Tickets'),
-            'description' => t('Storm Tickets'),
-            'page callback' => 'stormticket_list',
-            'access arguments' => array('Storm ticket: access'),
-            'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormticket.admin.inc',
+    'title' => t('Tickets'),
+    'description' => t('Storm Tickets'),
+    'page callback' => 'stormticket_list',
+    'access arguments' => array('Storm ticket: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'stormticket.admin.inc',
   );
 
   $items['storm/task_tickets_js/%/%/%'] = array(
