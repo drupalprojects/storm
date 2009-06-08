@@ -30,20 +30,23 @@ function storm_menu() {
   $items = array();
 
   $items['storm'] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
-            'page callback' => 'storm_dashboard',
-            'access arguments' => array('Storm: access'),
-            'parent' => '',
-            'type' => MENU_NORMAL_ITEM);
+    'title' => t('Storm'),
+    'description' => t('SpeedTech Organizer and Resource Manager'),
+    'page callback' => 'storm_dashboard',
+    'access arguments' => array('Storm: access'),
+    'parent' => '',
+    'type' => MENU_NORMAL_ITEM,
+  );
 
   $items['admin/storm'] = array(
-            'title' => t('Storm'),
-            'description' => t('SpeedTech Organizer and Resource Manager'),
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('storm_admin_settings'),
-            'access arguments' => array('access administration pages'),
-            'type' => MENU_NORMAL_ITEM);
+    'title' => t('Storm'),
+    'description' => t('SpeedTech Organizer and Resource Manager'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('storm_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
   return $items;
 }
 
