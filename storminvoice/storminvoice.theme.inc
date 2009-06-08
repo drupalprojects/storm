@@ -272,7 +272,6 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
   require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
-  require_once(drupal_get_path('module', 'storminvoiceitem') .'/storminvoiceitem.theme.inc');
   $node->content['storminvoice']['items'] = array(
     '#prefix' => '<div id="items">',
     '#value' => storminvoice_items($node),
