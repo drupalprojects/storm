@@ -31,7 +31,7 @@ function storm_menu() {
 
   $items['storm'] = array(
     'title' => t('Storm'),
-    'description' => t('SpeedTech Organizer and Resource Manager'),
+    'description' => t('Storm Project Management Dashboard'),
     'page callback' => 'storm_dashboard',
     'access arguments' => array('Storm: access'),
     'parent' => '',
@@ -40,7 +40,7 @@ function storm_menu() {
 
   $items['admin/storm'] = array(
     'title' => t('Storm'),
-    'description' => t('SpeedTech Organizer and Resource Manager'),
+    'description' => t('Storm Administration Page'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
     'access arguments' => array('access administration pages'),
@@ -173,11 +173,11 @@ function storm_elements() {
 function storm_datetime_expand($element) {
   if (empty($element['#value'])) {
     $element['#value'] = array(
-                          'day' => format_date(time(), 'custom', 'j'),
-                          'month' => format_date(time(), 'custom', 'n'),
-                          'year' => format_date(time(), 'custom', 'Y'),
-                          'hour' => format_date(time(), 'custom', 'H'),
-                          'minute' => format_date(time(), 'custom', 'i'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
+      'hour' => format_date(time(), 'custom', 'H'),
+      'minute' => format_date(time(), 'custom', 'i'),
     );
   }
 
@@ -234,9 +234,9 @@ function storm_datetime_validate($form) {
 function storm_dateext_expand($element) {
   if (empty($element['#value']) && !$element['#withnull']) {
     $element['#value'] = array(
-                          'day' => format_date(time(), 'custom', 'j'),
-                          'month' => format_date(time(), 'custom', 'n'),
-                          'year' => format_date(time(), 'custom', 'Y'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
     );
   }
 
@@ -304,6 +304,10 @@ function storm_icon_delete_node($node, $params=array()) {
 function storm_icon_add($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
+  // Work around during 436922
+  if ($type=="storminvoiceitem") {
+    $type = "storminvoice";
+  } // End workaround
   $af = $type .'_access';
   if (!$af('create', $item, $user)) return '';
   return storm_icon_l('application_add', $path, t('Add'), '', $params);
@@ -312,6 +316,10 @@ function storm_icon_add($path, $item, $params=array()) {
 function storm_icon_edit($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
+  // Work around during 436922
+  if ($type=="storminvoiceitem") {
+    $type = "storminvoice";
+  } // End workaround  
   $af = $type .'_access';
   if (!$af('update', $item, $user)) return '';
   return storm_icon_l('application_edit', $path, t('Edit'), '', $params);
@@ -320,6 +328,10 @@ function storm_icon_edit($path, $item, $params=array()) {
 function storm_icon_delete($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
+  // Work around during 436922
+  if ($type=="storminvoiceitem") {
+    $type = "storminvoice";
+  } // End workaround  
   $af = $type .'_access';
   if (!$af('delete', $item, $user)) return '';
   return storm_icon_l('application_delete', $path, t('Delete'), '', $params);
