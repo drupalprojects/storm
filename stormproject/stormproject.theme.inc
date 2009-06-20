@@ -91,7 +91,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
 
-  if (module_exists('stormnote')) {
+  if (module_exists('stormnote') && user_access('Storm note: access')) {
     $node->content['stormproject']['links']['notes']  = array(
       '#prefix' => '<div class="notes">',
       '#suffix' => '</div>',
@@ -100,7 +100,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormticket')) {
+  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
     $node->content['stormproject']['links']['tickets'] = array(
       '#prefix' => '<div class="tickets">',
       '#suffix' => '</div>',
@@ -109,7 +109,7 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormtimetracking')) {
+  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
     $node->content['stormproject']['links']['timetrackings'] = array(
       '#prefix' => '<div class="timetrackings">',
       '#suffix' => '</div>',

@@ -145,7 +145,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
 
-  if (module_exists('stormperson')) {
+  if (module_exists('stormperson') && user_access('Storm person: access')) {
     $v = l(t('People'), 'storm/people/', array('query' => array('organization_nid' => $node->nid)));
     $i = new stdClass();
     $i->type = 'stormperson';
@@ -161,7 +161,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormproject')) {
+  if (module_exists('stormproject') && user_access('Storm project: access')) {
     $v = l(t('Projects'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid)));
     $i = new stdClass();
     $i->type = 'stormproject';
@@ -177,7 +177,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormticket')) {
+  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
     $v = l(t('Tickets'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid)));
     $i = new stdClass();
     $i->type = 'stormproject';
@@ -193,7 +193,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('storminvoice')) {
+  if (module_exists('storminvoice') && user_access('Storm invoice: access')) {
     $v = l(t('Invoices'), 'storm/invoices/', array('query' => array('organization_nid' => $node->nid)));
     $i = new stdClass();
     $i->type = 'storminvoice';
@@ -208,7 +208,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if (module_exists('stormnote')) {
+  if (module_exists('stormnote') && user_access('Storm note: access')) {
     $v = l(t('Notes'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid)));
     $i = new stdClass();
     $i->type = 'stormnote';

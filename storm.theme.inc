@@ -96,49 +96,49 @@ function theme_storm_dashboard() {
   $o = '<div id="stormdashboard">';
   $o .= '<div class="stormdashboard">';
   $o .= '<dl class="stormdashboard">';
-  if (module_exists('stormorganization')) {
+  if (module_exists('stormorganization') && user_access('Storm organization: access')) {
     $o .= '<dt class="stormcomponent" id="stormorganizations">'. l(t('Organizations'), 'storm/organizations');
     $i = new stdClass();
     $i->type = 'stormorganization';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormperson')) {
+  if (module_exists('stormperson') && user_access('Storm person: access')) {
     $o .= '<dt class="stormcomponent" id="stormpeople">'. l(t('People'), 'storm/people');
     $i = new stdClass();
     $i->type = 'stormperson';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormteammember')) {
+  if (module_exists('stormteammember') && user_access('Storm teammember: access')) {
     $o .= '<dt class="stormcomponent" id="stormteammembers">'. l(t('Team members'), 'storm/teammembers');
     $i = new stdClass();
     $i->type = 'stormteammember';
     $o .= storm_icon_add('storm/teammembers/add', $i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormproject')) {
+  if (module_exists('stormproject') && user_access('Storm project: access')) {
     $o .= '<dt class="stormcomponent" id="stormprojects">'. l(t('Projects'), 'storm/projects');
     $i = new stdClass();
     $i->type = 'stormproject';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormtask')) {
+  if (module_exists('stormtask') && user_access('Storm task: access')) {
     $o .= '<dt class="stormcomponent" id="stormtasks">'. l(t('Tasks'), 'storm/tasks');
     $i = new stdClass();
     $i->type = 'stormtask';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormticket')) {
+  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
     $o .= '<dt class="stormcomponent" id="stormtickets">'. l(t('Tickets'), 'storm/tickets');
     $i = new stdClass();
     $i->type = 'stormticket';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormtimetracking')) {
+  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
     $o .= '<dt class="stormcomponent" id="stormtimetrackings">'. l(t('Timetrackings'), 'storm/timetrackings');
     $i = new stdClass();
     $i->type = 'stormtimetracking';
@@ -148,7 +148,7 @@ function theme_storm_dashboard() {
   $o .= '</div>';
 
   $o .= '<div class="stormdashboard">';
-  if (module_exists('stormnote')) {
+  if (module_exists('stormnote') && user_access('Storm note: access')) {
     $o .= '<dt class="stormcomponent" id="stormnotes">'. l(t('Notes'), 'storm/notes');
     $i = new stdClass();
     $i->type = 'stormnote';
@@ -156,7 +156,7 @@ function theme_storm_dashboard() {
     $o .= '</dt>';
   }
 
-  if (module_exists('storminvoice')) {
+  if (module_exists('storminvoice') && user_access('Storm invoice: access')) {
     $o .= '<dt class="stormcomponent" id="storminvoices">'. l(t('Invoices'), 'storm/invoices');
     $i = new stdClass();
     $i->type = 'storminvoice';
@@ -164,28 +164,30 @@ function theme_storm_dashboard() {
     $o .= '</dt>';
   }
 
-  if (module_exists('stormexpense')) {
+  if (module_exists('stormexpense') && user_access('Storm expense: access')) {
     $o .= '<dt class="stormcomponent" id="stormexpenses">'. l(t('Expenses'), 'storm/expenses');
     $i = new stdClass();
     $i->type = 'stormexpense';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormknowledgebase')) {
+  if (module_exists('stormknowledgebase') && user_access('Storm knowledgebase: access')) {
     $o .= '<dt class="stormcomponent" id="stormknowledgebase">'. l(t('Knowledge base'), 'storm/knowledgebase');
     $i = new stdClass();
     $i->type = 'stormknowledgebase';
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-  if (module_exists('stormattribute')) {
+  if (module_exists('stormattribute') && user_access('Storm attribute: access')) {
     $o .= '<dt class="stormcomponent" id="stormattributes">'. l(t('Attributes'), 'storm/attributes');
     $i = new stdClass();
     $i->type = 'stormattribute';
     $o .= storm_icon_add('storm/attributes/add', $i, $_GET);
     $o .= '</dt>';
   }
-  $o .= '<dt class="stormcomponent" id="stormconfiguration">'. l(t('Configuration'), 'admin/storm') .'</dt>';
+  if (user_access('access administration pages')) {
+    $o .= '<dt class="stormcomponent" id="stormconfiguration">'. l(t('Configuration'), 'admin/storm') .'</dt>';
+  }
   $o .= '</dl>';
   $o .= '</div>';
   $o .= '</div>';
