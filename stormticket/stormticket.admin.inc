@@ -386,6 +386,7 @@ function stormticket_list_filter_filter($form, &$form_state) {
   $_SESSION['stormticket_list_filter']['organization_nid'] = $form_state['values']['organization_nid'];
   $_SESSION['stormticket_list_filter']['project_nid'] = $form_state['values']['project_nid'];
   $_SESSION['stormticket_list_filter']['task_nid'] = $form_state['values']['task_nid'];
+  $_SESSION['stormticket_list_filter']['ticketcategory'] = $form_state['values']['ticketcategory'];
   $_SESSION['stormticket_list_filter']['ticketstatus'] = $form_state['values']['ticketstatus'];
   $_SESSION['stormticket_list_filter']['ticketpriority'] = $form_state['values']['ticketpriority'];
   $_SESSION['stormticket_list_filter']['datebeginfrom'] = $form_state['values']['datebeginfrom'];
