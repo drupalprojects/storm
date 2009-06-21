@@ -454,6 +454,14 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
 function stormorganization_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'storm_admin_settings') {
+    $form['stormorganization'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Organizations'),
+      '#collapsed' => false,
+      '#collapsible' => true,
+      '#weight' => 1,
+    );
+    
     $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
     $s = stormorganization_access_sql($s);
     $s = db_rewrite_sql($s);
@@ -462,7 +470,7 @@ function stormorganization_form_alter(&$form, $form_state, $form_id) {
     while ($organization = db_fetch_object($r)) {
       $organizations[$organization->nid] = $organization->title;
     }
-    $form['storm_organization_nid'] = array(
+    $form['stormorganization']['storm_organization_nid'] = array(
       '#type' => 'select',
       '#title' => t('Organization'),
       '#options' => $organizations,
