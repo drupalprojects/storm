@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #436922: Storm Invoice Items module removed (functionality now within Storm Invoice)
 - Bug #495070: Dashboard does not pay attention to permissions
 - Bug #478022: Add workaround to avoid SQL error with some menu modules
 - Feature #329401: Display invoice items on view invoice page
