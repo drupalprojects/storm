@@ -117,5 +117,6 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => $w++,
     );
   }
+  
   return $node;
 }
