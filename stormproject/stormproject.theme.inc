@@ -90,30 +90,34 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   $w = 0;
+  $i = new stdClass();
 
   if (module_exists('stormnote') && user_access('Storm note: access')) {
+    $i->type = 'stormnote';
     $node->content['stormproject']['links']['notes']  = array(
-      '#prefix' => '<div class="notes">',
-      '#suffix' => '</div>',
-      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))),
+      '#prefix' => '<dt id="stormnotes" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => l(t('Notes'), 'storm/notes/', array('query' => array('project_nid' => $node->nid))).storm_icon_add_node($i, $_GET),
       '#weight' => $w++,
     );
   }
 
   if (module_exists('stormticket') && user_access('Storm ticket: access')) {
+    $i->type = 'stormticket';
     $node->content['stormproject']['links']['tickets'] = array(
-      '#prefix' => '<div class="tickets">',
-      '#suffix' => '</div>',
-      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))),
+      '#prefix' => '<dt id="stormtickets" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => l(t('Tickets'), 'storm/tickets/', array('query' => array('project_nid' => $node->nid))).storm_icon_add_node($i, $_GET),
       '#weight' => $w++,
     );
   }
 
   if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
+    $i->type = 'stormtimetracking';
     $node->content['stormproject']['links']['timetrackings'] = array(
-      '#prefix' => '<div class="timetrackings">',
-      '#suffix' => '</div>',
-      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('project_nid' => $node->nid))),
+      '#prefix' => '<dt id="stormtimetrackings" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('project_nid' => $node->nid))).storm_icon_add_node($i, $_GET),
       '#weight' => $w++,
     );
   }
