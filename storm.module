@@ -18,7 +18,7 @@ function storm_help($path, $arg) {
 }
 
 function storm_perm() {
-  return array('Storm: access');
+  return array('Storm: access dashboard');
 }
 
 function storm_init() {
@@ -31,9 +31,9 @@ function storm_menu() {
 
   $items['storm'] = array(
     'title' => t('Storm'),
-    'description' => t('Storm Project Management Dashboard'),
+    'description' => t('Storm Dashboard'),
     'page callback' => 'storm_dashboard',
-    'access arguments' => array('Storm: access'),
+    'access arguments' => array('Storm: access dashboard'),
     'parent' => '',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -577,5 +577,3 @@ function storm_form_alter(&$form, $form_state, $form_id) {
     }
   }
 }
-
-
