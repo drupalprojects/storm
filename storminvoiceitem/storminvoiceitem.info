@@ -1,6 +1,0 @@
-; $Id$
-name = Storm Invoice item
-description = "Allows itemisation of Storm Invoices. This functionality is moving to become an intrinsic of the Storm Invoices module"
-dependencies[] = storminvoice
-package = Storm
-core = 6.x
