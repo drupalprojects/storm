@@ -191,7 +191,7 @@ function storminvoice_menu() {
   );
   
   $items['admin/storm/invoice'] = array(
-    'title' => t('Storm'),
+    'title' => t('Storm Invoice'),
     'description' => t('Storm Invoice Administration Page'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storminvoice_admin_settings'),
@@ -546,41 +546,34 @@ function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
 function storminvoice_admin_settings() {
   $form = array();
   
-  $form['storminvoice'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Invoices'),
-    '#collapsed' => false,
-    '#collapsible' => true,
-    '#weight' => 2,
-  );
-  $form['storminvoice']['storminvoice_payment_days'] = array(
+  $form['storminvoice_payment_days'] = array(
     '#type' => 'textfield',
     '#title' => t('Number of days for invoice payment'),
     '#default_value' => variable_get('storminvoice_payment_days', 30),
     '#description' => t('Default number of days for invoice payment'),
     '#size' => 5,
   );
-  $form['storminvoice']['storminvoice_payment_modes'] = array(
+  $form['storminvoice_payment_modes'] = array(
     '#type' => 'textarea',
     '#title' => t('Modes for invoice payment'),
     '#default_value' => variable_get('storminvoice_payment_modes', ''),
     '#description' => t('Modes for invoice payment'),
   );
-  $form['storminvoice']['storminvoice_payment_terms'] = array(
+  $form['storminvoice_payment_terms'] = array(
     '#type' => 'textfield',
     '#title' => t('Payment terms'),
     '#default_value' => variable_get('storminvoice_payment_terms', t('Due on receipt')),
     '#description' => t('Payment terms'),
     '#size' => 50,
   );
-  $form['storminvoice']['storminvoice_default_taxpercent'] = array(
+  $form['storminvoice_default_taxpercentage'] = array(
     '#type' => 'textfield',
-    '#title' => t('Default tax percent'),
+    '#title' => t('Default tax percentage'),
     '#default_value' => variable_get('storminvoice_default_taxpercent', 20),
-    '#description' => t('Default tax percent'),
+    '#description' => t('Default tax percentage'),
     '#size' => 5,
   );
-  $form['storminvoice']['storminvoice_tcpdf_location'] = array(
+  $form['storminvoice_tcpdf_location'] = array(
     '#type' => 'textfield',
     '#title' => t('Location of tcpdf library'),
     '#default_value' => variable_get('storminvoice_tcpdf_location', t('sites/all/libraries/tcpdf')),
