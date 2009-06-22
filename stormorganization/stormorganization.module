@@ -163,6 +163,16 @@ function stormorganization_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'stormorganization.admin.inc',
   );
+  
+  $items['admin/storm/organization'] = array(
+    'title' => t('Storm Organization'),
+    'description' => t('Storm Organization Administration Page'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormorganization_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
 }
 
@@ -452,33 +462,35 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormorganization_view', $node, $teaser, $page);
 }
 
-function stormorganization_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'storm_admin_settings') {
-    $form['stormorganization'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Organizations'),
-      '#collapsed' => false,
-      '#collapsible' => true,
-      '#weight' => 1,
-    );
-    
-    $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-    $s = stormorganization_access_sql($s);
-    $s = db_rewrite_sql($s);
-    $r = db_query($s);
-    $organizations = array();
-    while ($organization = db_fetch_object($r)) {
-      $organizations[$organization->nid] = $organization->title;
-    }
-    $form['stormorganization']['storm_organization_nid'] = array(
+function stormorganization_admin_settings() {
+  $form = array();
+
+  $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = stormorganization_access_sql($s);
+  $s = db_rewrite_sql($s);
+  $r = db_query($s);
+  $organizations = array();
+  while ($organization = db_fetch_object($r)) {
+    $organizations[$organization->nid] = $organization->title;
+  }
+  
+  if (count($organizations) > 0) {
+    $form['storm_organization_nid'] = array(
       '#type' => 'select',
-      '#title' => t('Organization'),
+      '#title' => t('Host Organization'),
       '#options' => $organizations,
       '#default_value' => variable_get('storm_organization_nid', 0),
       '#description' => t('The organization that owns this system'),
       '#weight' => -30,
     );
+  } else {
+    $form['storm_organization_nid'] = array(
+      '#type' => 'item',
+      '#title' => t('Host Organization'),
+      '#value' => t('There are no Storm Organizations in the system. ').'<br />'.l('Create a Storm Organization', 'node/add/stormorganization'),
+    );
   }
+  return system_settings_form($form);
 }
 
 function stormorganization_views_api() {
