@@ -47,6 +47,14 @@ function storm_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   
+  $items['admin/storm/storm'] = array(
+    'title' => t('Storm'),
+    'description' => t('Storm Administration Page'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -100,
+  );
+  
   return $items;
 }
 
