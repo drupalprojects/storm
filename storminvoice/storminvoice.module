@@ -240,14 +240,14 @@ function storminvoice_node_info() {
       'description' => t("An invoice for Storm."),
       'title_label' => t("Description"),
       'has_body' => false,
-    )
+    ),
     'storminvoiceitem' => array(
       'name' => t('Invoice item'),
       'module' => 'storminvoiceitem',
       'description' => t("An invoice item for Storm."),
       'title_label' => t("Description"),
       'has_body' => false,
-    )
+    ),
   );
 }
 

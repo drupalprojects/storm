@@ -65,7 +65,7 @@ function storminvoice_update_1() {
 function storminvoice_update_6011() {
   $ret = array();
   
-  if (!db_table_exists({storminvoiceitem}) { //if Storminvoiceitem was not active
+  if (!db_table_exists('storminvoiceitem')) { //if Storminvoiceitem was not active
     //add table
     $schema['storminvoiceitem'] = array(
       'fields'                => array(
