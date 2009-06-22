@@ -344,7 +344,7 @@ function storminvoice_items($invoice) {
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('VAT'),
+      'data' => t('Tax'),
       'style' => 'text-align: right;',
     ),
     array(
