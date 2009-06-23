@@ -62,7 +62,7 @@ function storminvoice_update_1() {
   return $ret;
 }
 
-function storminvoice_update_6011() {
+function storminvoice_update_6101() {
   $ret = array();
   
   if (!db_table_exists('storminvoiceitem')) { //if Storminvoiceitem was not active
