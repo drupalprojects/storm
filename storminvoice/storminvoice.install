@@ -85,12 +85,14 @@ function storminvoice_update_6011() {
     
   } else { // if Storminvoiceitem was active
     //check that storminvoiceitem_update_1 has been run
-    $sql = "SELECT 'schema_version' FROM {system} WHERE 'name' = 'storminvoiceitem'";
-    $version = db_result(db_query($sql));
-    if ($version != 1) {
+    
+    if (db_column_exists('storminvoiceitem', 'vatpercent')) {
       db_change_field($ret, 'storminvoiceitem', 'vatpercent', 'taxpercent', array('type' => 'float'));
+    }
+    if (db_column_exists('storminvoiceitem', 'vat')) {
       db_change_field($ret, 'storminvoiceitem', 'vat', 'tax', array('type' => 'float'));
     }
+
     $ret .= "Ran updates on Storminvoiceitem table. ";
     
     //deactivate storminvoiceitem
