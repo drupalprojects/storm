@@ -2,20 +2,22 @@
 
 Documentation for STORM project management application.
 - Project homepage: http://drupal.org/project/storm
+- Issue tracking: http://drupal.org/project/issues/storm
 
 --
 
-Storm consists of a set of modules as follows: Storm (base module), Attributes (settings), Organizations, Projects, Tasks, Tickets, Timetrackings, People, Notes, Knowledgebase, Invoices, Invoice items, and Expenses.
+Storm consists of a set of modules as follows: Storm (base module), Attributes (settings), Organizations, Projects, Tasks, Tickets, Timetrackings, People, Notes, Knowledgebase, Invoices and Expenses.
 
-Each of these provides permissions to control the sharing of data with other users and organizations. NB: This may conflict with other node access modules.
+Each of these provides permissions to control the sharing of data with other users and organizations.
+NB: This may conflict with other node access modules.
 
 All components (except Attributes) are nodes, so can be extended as follows:
 
     * CCK can be used to add more fields to the Storm content types
-    * Views (support yet to implement) can build customised views
-    * Taxonomy (core) can be used to tag the contents of the Storm nodes
-    * Upload (core) can be used to attach files to Storm nodes
-    * Comments (core) can be used to permit comments on each of the Storm nodes
+    * Views can build customised views
+    * Taxonomy can be used to tag the contents of the Storm nodes
+    * Upload can be used to attach files to Storm nodes
+    * Comments can be used to permit comments on each of the Storm nodes
 
 Storm content nodes also all link together - for example, an invoice can be associated with an organization and project.
 
@@ -57,9 +59,6 @@ This module allows notes to be attached to organizations, projects or tasks.
 
 --Storm Invoice--
 Within Storm Invoice, you can create invoices between yourself and clients. A printer friendly version comes included, and with the addition of the tcpdf library (see the INSTALL.txt), you can also download pdf versions of your invoices directly from Storm.
-
---Storm Invoice Item--
-As an addition to Storm Invoice, this module allows itemisation of Storm Invoices.
 
 --Storm Expense--
 Storm Expense allows the recording of expenses attached to a specific task or project, including information such as whether it is billable.
