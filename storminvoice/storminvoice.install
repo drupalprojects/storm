@@ -84,8 +84,7 @@ function storminvoice_update_6101() {
     db_create_table($ret, 'storminvoiceitem', $schema['storminvoiceitem']);
     
   } else { // if Storminvoiceitem was active
-    //check that storminvoiceitem_update_1 has been run
-    
+    // if needed, run storminvoiceitem update
     if (db_column_exists('storminvoiceitem', 'vatpercent')) {
       db_change_field($ret, 'storminvoiceitem', 'vatpercent', 'taxpercent', array('type' => 'float'));
     }
@@ -93,12 +92,9 @@ function storminvoice_update_6101() {
       db_change_field($ret, 'storminvoiceitem', 'vat', 'tax', array('type' => 'float'));
     }
 
-    $ret .= "Ran updates on Storminvoiceitem table. ";
-    
     //deactivate storminvoiceitem
     $sql = "DELETE FROM {system} WHERE 'name' = 'storminvoiceitem'";
-    db_query($sql);
-    $ret .= "Deactivated Storminvoiceitem module. ";
+    $ret[] = update_sql($sql);
   }
   
   return $ret;
