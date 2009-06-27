@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- No changes since 6.x-1.23.
+
 Version 6.x-1.23:
 - Feature #334396: Adding create ticket link to task node view (plus style changes on links on right hand side of node views)
 - Task #436922: Storm Invoice Items module removed (functionality now within Storm Invoice)
