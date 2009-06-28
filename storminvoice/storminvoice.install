@@ -107,6 +107,8 @@ function storminvoiceitem_update_6102() {
 
   db_add_column($ret, 'storminvoiceitem', 'src_nid', 'int');
   db_add_column($ret, 'storminvoiceitem', 'src_vid', 'int');
-
+  variable_set('storm_tax1_percent', variable_get('storminvoice_default_taxpercent', 20));
+  variable_del('storminvoice_default_taxpercent');
+  
   return $ret;
 }
