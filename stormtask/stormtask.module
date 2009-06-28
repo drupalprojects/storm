@@ -653,6 +653,20 @@ function _stormtask_plain_tree($tree) {
   return $rows;
 }
 
+function stormtask_admin_settings() {
+  $form = array();
+  
+  $form['stormtask_jsgantt_location'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Location of jsGantt library'),
+    '#default_value' => variable_get('stormtask_jsgantt_location', t('sites/all/libraries/jsgantt')),
+    '#description' => t('The directory that contains the jsGantt library (sites/all/libraries/jsgantt is recommended)'),
+    '#size' => 50,
+  );
+  
+  return system_settings_form($form);
+}
+
 function stormtask_views_api() {
   return array(
     'api' => 2,
