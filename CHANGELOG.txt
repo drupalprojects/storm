@@ -1,7 +1,10 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- No changes since 6.x-1.23.
+- Part of Feature 301301: (Timetracker -> Invoice): Added database columns for src
+- Part of Feature 311855: (Compound tax): Moved tax settings to Storm.module
+- Part of Feature 297775: (Gantt charts): Added setting for chart location
+- Bug #500876: Fixed error when filering views by Storm Attributes values
 
 Version 6.x-1.23:
 - Feature #334396: Adding create ticket link to task node view (plus style changes on links on right hand side of node views)
