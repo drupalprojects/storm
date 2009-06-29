@@ -172,6 +172,7 @@ function storm_admin_settings() {
     '#options' => array(
       'item' => t('Apply to item amount'),
       'none' => t('Do not apply tax'),
+    ),
     '#weight' => $w++,
   );
   
