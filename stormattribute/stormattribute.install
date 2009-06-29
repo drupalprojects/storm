@@ -418,6 +418,11 @@ function stormattribute_install() {
     'paid' => 'Paid',
   );
   
+  $attributes['Expense status search'] = array(
+    'outstanding' => 'Outstanding',
+    'paid' => 'Paid',
+  );
+
   $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
@@ -906,7 +911,12 @@ function stormattribute_update_6108(){
     'outstanding' => 'Outstanding',
     'paid' => 'Paid',
   );
-  
+    
+  $attributes['Expense status search'] = array(
+    'outstanding' => 'Outstanding',
+    'paid' => 'Paid',
+  );
+
   $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('%s', '%s', '%s', %d, 1)";
   $prevdomain = '';
   $weight = 0;
