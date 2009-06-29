@@ -31,6 +31,7 @@ function stormexpense_schema() {
       'provider_nid'        => array('type' => 'int'),
       'provider_title'      => array('type' => 'varchar', 'length' => 128),
       'expensedate'         => array('type' => 'int'),
+      'expensestatus'       => array('type' => 'varchar', 'length' => 128),
       'amount'              => array('type' => 'float'),
       'tax'                 => array('type' => 'float'),
       'total'               => array('type' => 'float'),
@@ -44,5 +45,11 @@ function stormexpense_schema() {
 function stormexpense_update_1() {
   $ret = array();
   db_change_field($ret, 'stormexpense', 'vat', 'tax', array('type' => 'float'));
+  return $ret;
+}
+
+function stormexpense_update_6101() {
+  $ret = array();
+  db_add_field($ret, 'stormexpense', 'expensestatus', array('type' => 'varchar', 'length' => 128));
   return $ret;
 }
