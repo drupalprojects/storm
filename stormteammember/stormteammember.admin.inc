@@ -94,7 +94,6 @@ function stormteammember_list() {
   $itemsperpage = $_SESSION['stormteammember_list_filter']['itemsperpage'];
 
   $s = stormteammember_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
 
   $tablesort = tablesort_sql($header);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL);
