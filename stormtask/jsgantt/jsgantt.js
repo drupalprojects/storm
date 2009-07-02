@@ -478,7 +478,7 @@ JSGantt.GanttChart =  function(pGanttVar, pDiv, pFormat)
         
 		   // DRAW the Left-side of the chart (names, resources, comp%)
          vLeftTable =
-            '<DIV class=scroll id=leftside style="width:' + vLeftWidth + 'px"><TABLE cellSpacing=0 cellPadding=0 border=0><TBODY>' +
+            '<DIV class=scroll id=leftside style="width: ' + 400 + 'px"><TABLE cellSpacing=0 cellPadding=0 border=0><TBODY>' +
             '<TR style="HEIGHT: 17px">' +
             '  <TD style="WIDTH: 15px; HEIGHT: 17px"></TD>' +
             '  <TD style="WIDTH: ' + vNameWidth + 'px; HEIGHT: 17px"><NOBR></NOBR></TD>'; 
@@ -1451,7 +1451,9 @@ JSGantt.taskLink = function(pRef,pWidth,pHeight)
     if(pWidth)  vWidth =pWidth;  else vWidth =400;
     if(pHeight) vHeight=pHeight; else vHeight=400;
 
-    var OpenWindow=window.open(pRef, "newwin", "height="+vHeight+",width="+vWidth); 
+    // Prevent forced opening of new window/tab
+    //var OpenWindow=window.open(pRef, "newwin", "height="+vHeight+",width="+vWidth); 
+    var OpenWindow=window.location.href=pRef;
 
   }
 
