@@ -4,6 +4,10 @@ Version 6.x-1.x-dev:
 - Part of Feature 301301: (Timetracker -> Invoice): Added database columns for src
 - Part of Feature 311855: (Compound tax): Moved tax settings to Storm.module
 - Part of Feature 297775: (Gantt charts): Added setting for chart location
+- Bug #510056: Domain key shown instead of domain value in ticket display
+- Feature #450360: Email invoicing
+- Bug #469004: Teammember list does not show persons assigned
+- Bug #377972: SQL warning when combined with i18n module
 - Bug #500876: Fixed error when filering views by Storm Attributes values
 
 Version 6.x-1.23:
