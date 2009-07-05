@@ -190,6 +190,16 @@ function storminvoice_menu() {
     'file' => 'storminvoice.admin.inc',
   );
   
+  $items['storm/invoice/report/%node/email/%'] = array(
+    'title' => t('Send Invoice by Email'),
+    'page arguments' => array(3, 5),
+    'description' => t('Storm Invoice'),
+    'page callback' => 'storminvoice_send_page',
+    'access arguments' => array('Storm invoice: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'storminvoice.admin.inc',
+  );
+
   $items['admin/storm/invoice'] = array(
     'title' => t('Storm Invoice'),
     'description' => t('Storm Invoice Administration Page'),
@@ -199,7 +209,6 @@ function storminvoice_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  
   return $items;
 }
 
@@ -559,6 +568,21 @@ function storminvoice_admin_settings() {
     '#title' => t('Modes for invoice payment'),
     '#default_value' => variable_get('storminvoice_payment_modes', ''),
     '#description' => t('Modes for invoice payment'),
+  );
+  
+  $form['storminvoice_cover_note_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cover note subject'),
+    '#default_value' => t(variable_get('storminvoice_cover_note_subject', 'Invoice from !site'), array('!site' => variable_get('site_name', 'STORM'))),
+    '#description' => t('Default subject for cover note'),
+    '#size' => 50,
+  );
+
+  $form['storminvoice_cover_note'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Cover note for invoice'),
+    '#default_value' => variable_get('storminvoice_cover_note', 'Hope this comes easy to you.'),
+    '#description' => t('Default cover note for pdf invoice sent by email'),
   );
   
   $form['storminvoice_payment_terms'] = array(

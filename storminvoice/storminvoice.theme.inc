@@ -190,7 +190,21 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $node->language),
       '#weight' => $w++,
     );
+      $node->content['storminvoice']['links']['print']['email'] = array(
+      '#value' => t('Send PDF via e-mail'),
+      '#prefix' => '<div class="print_pdf">',
+      '#suffix' => '</div>',
+      '#value' => l(t('Send PDF via e-mail'), 'storm/invoice/report/'. $node->nid .'/email/'. $node->language, array('query' => drupal_get_destination())),
+      '#weight' => $w++,
+    );
   }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#submit' => array('storminvoice_items_submit'),
+    '#value' => t('Save item ordering'),
+  );
+
 
   $node->content['storminvoice']['fields'] = array(
     '#prefix' => '<div id="fields">',
