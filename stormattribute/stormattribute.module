@@ -138,5 +138,6 @@ function stormattribute_value($domain, $key) {
   if (array_key_exists($key, $attributes)) {
     return $attributes[$key];
   }
+  
   return $key;
 }
