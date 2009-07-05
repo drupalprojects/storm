@@ -29,7 +29,6 @@ function theme_stormknowledgebase_list($header, $kbs) {
 
 function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-  $topics = stormattribute_attributes_bydomain('Knowledge base topic');
 
   $w = 0;
   $node->content['stormknowledgebase'] = array(
@@ -47,7 +46,7 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['stormknowledgebase']['fields']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Topic'), $topics[values][$node->topic]),
+    '#value' => theme('storm_view_item', t('Topic'), stormattribute_value('Knowledge base topic', $node->topic)),
     '#weight' => $w++,
   );
 
