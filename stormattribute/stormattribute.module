@@ -17,6 +17,7 @@ function stormattribute_help($path, $arg) {
   return $output;
 }
 
+
 function stormattribute_perm() {
   return array(
     'Storm attribute: access',
@@ -26,7 +27,9 @@ function stormattribute_perm() {
   );
 }
 
+
 function stormattribute_menu() {
+  
   $items['storm/attributes'] = array(
     'title' => t('Attributes'),
     'description' => t('Storm Attributes'),
@@ -34,6 +37,7 @@ function stormattribute_menu() {
     'access arguments' => array('Storm attribute: access'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_NORMAL_ITEM);
+  
   $items['storm/attributes/add'] = array(
     'title' => t('Add a new attribute'),
     'description' => t('Storm Attributes'),
@@ -42,6 +46,7 @@ function stormattribute_menu() {
     'access arguments' => array('Storm attribute: add'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
+  
   $items['storm/attributes/edit/%'] = array(
     'title' => t('Edit an attribute'),
     'description' => t('Storm Attributes'),
@@ -50,6 +55,7 @@ function stormattribute_menu() {
     'access arguments' => array('Storm attribute: edit'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
+  
   $items['storm/attributes/delete/%'] = array(
     'title' => t('Delete an attribute'),
     'description' => t('Storm Attributes'),
@@ -58,6 +64,7 @@ function stormattribute_menu() {
     'access arguments' => array('Storm attribute: delete'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
+  
   $items['storm/attributes/domain/autocomplete'] = array(
     'title' => t('List of attributes'),
     'description' => t('Storm Attributes'),
@@ -66,8 +73,10 @@ function stormattribute_menu() {
     'access arguments' => array('Storm attribute: access'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
+  
   return $items;
 }
+
 
 function stormattribute_theme() {
   return array(
@@ -77,6 +86,7 @@ function stormattribute_theme() {
     ),
   );
 }
+
 
 function stormattribute_access($op, $item=NULL, $account=NULL) {
   if (empty($account)) {
@@ -89,18 +99,16 @@ function stormattribute_access($op, $item=NULL, $account=NULL) {
   }
 
   if ($op == 'delete') {
-    if (user_access('Storm attribute: delete')) {
-      return TRUE;
-    }
+    return user_access('Storm attribute: delete');
   }
 
   if ($op == 'update') {
-    if (user_access('Storm attribute: edit')) {
-      return TRUE;
-    }
+    return user_access('Storm attribute: edit');
   }
+  
   return FALSE;
 }
+
 
 function stormattribute_attributes_bydomain($domain) {
   static $attributes_cache = array();
@@ -123,6 +131,7 @@ function stormattribute_attributes_bydomain($domain) {
   $attributes_cache[$domain] = $attributes;
   return $attributes;
 }
+
 
 function stormattribute_value($domain, $key) {
   $attributes = stormattribute_attributes_bydomain($domain);
