@@ -3,8 +3,18 @@
 
 /**
  * @file
+ * Main module file for the Storm module.
+ * Basic Storm module provides a dashboard to access other Storm modules from and some API functions.
+ * 1: Hooks (help, perm,  init, menu, theme)
+ * 2: Dashboard
+ * 3: Admin Settings
+ * 4: Date / time manipulation
+ * 5: Storm Icons
+ * 6: SQL Functions
+ * 7: Node form theming
  */
 
+// HOOKS
 function storm_help($path, $arg) {
   $output = '';
 
@@ -21,6 +31,7 @@ function storm_perm() {
   return array('Storm: access dashboard');
 }
 
+// Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
 function storm_init() {
   drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
@@ -91,11 +102,13 @@ function storm_theme() {
   );
 }
 
+// FUNCTION TO CREATE STORM DASHBOARD
 function storm_dashboard() {
   drupal_set_title(t('Storm Dashboard'));
   return theme('storm_dashboard');
 }
 
+// ADMIN SETTINGS FORM
 function storm_admin_settings() {
   $form = array();
   $w = 0;
@@ -184,9 +197,46 @@ function storm_admin_settings() {
     '#size' => 5,
   );
   
+  $form['taxation']['tax2'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Tax 2'),
+    '#collapsed' => FALSE,
+    '#collapsible' => TRUE,
+  );
+  
+  $form['taxation']['tax2']['status'] = array(
+    '#type' => 'select',
+    '#title' => t('Application of Tax 2'),
+    '#default_value' => variable_get('storm_tax2_app', 'none'),
+    '#description' => t('The method of application to use for Tax 2'),
+    '#options' => array(
+      'total' => t('Apply to total of item amount plus previous tax'),
+      'item' => t('Apply to item amount'),
+      'none' => t('Do not apply tax'),
+    ),
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['tax2']['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name of Tax 2'),
+    '#default_value' => variable_get('storm_tax2_name', 'VAT'),
+    '#description' => t('The name to use for Tax 2'),
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['tax2']['percentage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tax 2: Default percentage'),
+    '#default_value' => variable_get('storm_tax2_percent', 20),
+    '#description' => t('Default percentage for Tax 2'),
+    '#size' => 5,
+  );
+
   return system_settings_form($form);
 }
 
+// DATE / TIME MANIPULATION
 function storm_elements() {
   $type['datetime'] = array(
     '#input' => TRUE,
@@ -332,6 +382,92 @@ function storm_dependent_select_process($form, $edit, $form_state, $complete_for
   return $form;
 }
 
+function _timestamp_to_gm($timestamp, $timezone=NULL) {
+  if (!isset($timezone)) {
+    global $user;
+    if (variable_get('configurable_timezones', 1) && $user->uid && drupal_strlen($user->timezone)) {
+      $timezone = $user->timezone;
+    }
+    else {
+      $timezone = variable_get('date_default_timezone', 0);
+    }
+  }
+  $timestamp -= $timezone;
+  return $timestamp;
+}
+
+function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
+  if ($date['month'] == -1 || $date['year'] == -1 || $date['day'] == -1) {
+    return NULL;
+  }
+  else {
+    $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
+    return _timestamp_to_gm($gmttimestamp, $timezone);
+  }
+}
+
+function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
+  $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']),
+  intval($datetime['day']), intval($datetime['year']));
+  return _timestamp_to_gm($gmttimestamp, $timezone);
+}
+
+function _storm_gmtimestamp_to_datetime($timestamp, $timezone=NULL) {
+  $datetime = array(
+    'day' => format_date($timestamp, 'custom', 'j', $timezone),
+    'month' => format_date($timestamp, 'custom', 'n', $timezone),
+    'year' => format_date($timestamp, 'custom', 'Y', $timezone),
+    'hour' => (int)format_date($timestamp, 'custom', 'H', $timezone),
+    'minute' => (int)format_date($timestamp, 'custom', 'i', $timezone),
+  );
+  return $datetime;
+}
+
+function _storm_gmtimestamp_to_date($timestamp, $timezone=NULL) {
+  if ($timestamp) {
+    $date = array(
+      'day' => format_date($timestamp, 'custom', 'j', $timezone),
+      'month' => format_date($timestamp, 'custom', 'n', $timezone),
+      'year' => format_date($timestamp, 'custom', 'Y', $timezone),
+    );
+  }
+  else {
+    $date = array(
+      'day' => -1,
+      'month' => -1,
+      'year' => -1,
+    );
+  }
+
+  return $date;
+}
+
+function _storm_gmtimestamp_without_time($timestamp, $timezone=NULL) {
+  $date = _storm_gmtimestamp_to_date($timestamp, $timezone);
+  $gmttimestamp = gmmktime(0, 0, 0, $date['month'], $date['day'], $date['year']);
+  return _timestamp_to_gm($gmttimestamp, $timezone);
+}
+
+function _storm_strtotime($timestr='') {
+  $timestr = drupal_substr($timestr, 0, 5);
+  $time = array();
+  $time['hour'] = 0;
+  $time['minute'] = 0;
+
+  $ar = explode(':', $timestr);
+  if (is_array($ar)) {
+    if (array_key_exists(0, $ar)) $time['hour'] = $ar[0];
+    if (array_key_exists(0, $ar)) $time['minute'] = $ar[1];
+  }
+  return $time;
+}
+
+function _timetostr($time=array()) {
+  $timestr = str_pad($time['hour'], 2, "0", STR_PAD_LEFT) .':'. str_pad($time['minute'], 2, "0", STR_PAD_RIGHT);
+  return $timestr;
+}
+
+// STORM ICON ADD / EDIT / LINK FUNCTIONS
 function storm_icon_add_node($node, $params=array()) {
   return storm_icon_add('node/add/'. $node->type, $node, $params);
 }
@@ -438,91 +574,7 @@ function storm_icon($icon, $title) {
   return $o;
 }
 
-function _timestamp_to_gm($timestamp, $timezone=NULL) {
-  if (!isset($timezone)) {
-    global $user;
-    if (variable_get('configurable_timezones', 1) && $user->uid && drupal_strlen($user->timezone)) {
-      $timezone = $user->timezone;
-    }
-    else {
-      $timezone = variable_get('date_default_timezone', 0);
-    }
-  }
-  $timestamp -= $timezone;
-  return $timestamp;
-}
-
-function _storm_date_to_gmtimestamp($date, $timezone=NULL) {
-  if ($date['month'] == -1 || $date['year'] == -1 || $date['day'] == -1) {
-    return NULL;
-  }
-  else {
-    $gmttimestamp = gmmktime(0, 0, 0, intval($date['month']), intval($date['day']), intval($date['year']));
-    return _timestamp_to_gm($gmttimestamp, $timezone);
-  }
-}
-
-function _storm_datetime_to_gmtimestamp($datetime, $timezone=NULL) {
-  $gmttimestamp = gmmktime(intval($datetime['hour']), intval($datetime['minute']), 0, intval($datetime['month']),
-  intval($datetime['day']), intval($datetime['year']));
-  return _timestamp_to_gm($gmttimestamp, $timezone);
-}
-
-function _storm_gmtimestamp_to_datetime($timestamp, $timezone=NULL) {
-  $datetime = array(
-    'day' => format_date($timestamp, 'custom', 'j', $timezone),
-    'month' => format_date($timestamp, 'custom', 'n', $timezone),
-    'year' => format_date($timestamp, 'custom', 'Y', $timezone),
-    'hour' => (int)format_date($timestamp, 'custom', 'H', $timezone),
-    'minute' => (int)format_date($timestamp, 'custom', 'i', $timezone),
-  );
-  return $datetime;
-}
-
-function _storm_gmtimestamp_to_date($timestamp, $timezone=NULL) {
-  if ($timestamp) {
-    $date = array(
-      'day' => format_date($timestamp, 'custom', 'j', $timezone),
-      'month' => format_date($timestamp, 'custom', 'n', $timezone),
-      'year' => format_date($timestamp, 'custom', 'Y', $timezone),
-    );
-  }
-  else {
-    $date = array(
-      'day' => -1,
-      'month' => -1,
-      'year' => -1,
-    );
-  }
-
-  return $date;
-}
-
-function _storm_gmtimestamp_without_time($timestamp, $timezone=NULL) {
-  $date = _storm_gmtimestamp_to_date($timestamp, $timezone);
-  $gmttimestamp = gmmktime(0, 0, 0, $date['month'], $date['day'], $date['year']);
-  return _timestamp_to_gm($gmttimestamp, $timezone);
-}
-
-function _storm_strtotime($timestr='') {
-  $timestr = drupal_substr($timestr, 0, 5);
-  $time = array();
-  $time['hour'] = 0;
-  $time['minute'] = 0;
-
-  $ar = explode(':', $timestr);
-  if (is_array($ar)) {
-    if (array_key_exists(0, $ar)) $time['hour'] = $ar[0];
-    if (array_key_exists(0, $ar)) $time['minute'] = $ar[1];
-  }
-  return $time;
-}
-
-function _timetostr($time=array()) {
-  $timestr = str_pad($time['hour'], 2, "0", STR_PAD_LEFT) .':'. str_pad($time['minute'], 2, "0", STR_PAD_RIGHT);
-  return $timestr;
-}
-
+// SQL FUNCTIONS
 function storm_rewrite_sql($sql, $where=array(), $join=array()) {
   $where = empty($where) ? '' : '('. implode(') AND (', $where) .')';
   $join = empty($join) ? '' : implode(' ', $join);
@@ -600,6 +652,7 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
   }
 }
 
+// FUNCTION TO ADD STORM CLASSES TO NODE FORM
 function storm_form_alter(&$form, $form_state, $form_id) {
   if (!isset($form['type'])) {
     return;

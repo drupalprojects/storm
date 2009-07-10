@@ -92,6 +92,7 @@ function theme_storm_view_item($label, $value) {
   return $o;
 }
 
+// See 498108: Proposed to refactor creation of Storm Dashboard
 function theme_storm_dashboard() {
   $o = '<div id="stormdashboard">';
   $o .= '<div class="stormdashboard">';
