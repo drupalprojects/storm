@@ -343,7 +343,11 @@ function stormnote_insert($node) {
 function stormnote_update($node) {
   _stormnote_beforesave($node);
 
-  db_query("UPDATE {stormnote} SET
+  if ($node->revision) {
+    stormnote_insert($node);
+  }
+  else {
+    db_query("UPDATE {stormnote} SET
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
             task_nid=%d, task_title='%s', task_stepno='%s'
@@ -352,6 +356,7 @@ function stormnote_update($node) {
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->vid);
+  }
 }
 
 function _stormnote_beforesave(&$node) {

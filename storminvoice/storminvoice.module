@@ -504,17 +504,22 @@ function storminvoice_insert($node) {
 function storminvoice_update($node) {
   _storminvoice_beforesave($node);
 
-  db_query("UPDATE {storminvoice} SET
-    number='%s', reference='%s',
-    organization_nid=%d, organization_title='%s',
-    project_nid=%d, project_title='%s',
-    amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
-    requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
-    $node->number, $node->reference,
-    $node->organization_nid, $node->organization_title,
-    $node->project_nid, $node->project_title,
-    $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
-    $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+  if ($node->revision) {
+    storminvoice_insert($node);
+  }
+  else {
+    db_query("UPDATE {storminvoice} SET
+        number='%s', reference='%s',
+        organization_nid=%d, organization_title='%s',
+        project_nid=%d, project_title='%s',
+        amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
+        requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
+        $node->number, $node->reference,
+        $node->organization_nid, $node->organization_title,
+        $node->project_nid, $node->project_title,
+        $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+        $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+  }
 }
 
 function _storminvoice_beforesave(&$node) {
@@ -751,7 +756,11 @@ function storminvoiceitem_insert($node) {
 function storminvoiceitem_update($node) {
   _storminvoiceitem_beforesave($node);
 
-  db_query("UPDATE {storminvoiceitem} SET
+  if ($node->revision) {
+    storminvoiceitem_insert($node);
+  }
+  else {
+    db_query("UPDATE {storminvoiceitem} SET
             invoice_nid=%d,
             amount=%f, taxpercent=%f, tax=%f, total=%f,
             weight=%d
@@ -759,7 +768,8 @@ function storminvoiceitem_update($node) {
             $node->invoice_nid,
             $node->amount, $node->taxpercent, $node->tax, $node->total,
             $node->weight, $node->vid);
-  _storminvoiceitem_aftersave($node);
+    _storminvoiceitem_aftersave($node);
+  }
 }
 
 function _storminvoiceitem_beforesave(&$node) {
