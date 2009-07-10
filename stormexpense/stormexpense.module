@@ -468,7 +468,11 @@ function stormexpense_insert($node) {
 function stormexpense_update($node) {
   _stormexpense_beforesave($node);
 
-  db_query("UPDATE {stormexpense} SET
+  if ($node->revision) {
+    stormexpense_insert($node);
+  }
+  else {
+    db_query("UPDATE {stormexpense} SET
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
             task_nid=%d, task_title='%s', task_stepno='%s',
@@ -481,6 +485,7 @@ function stormexpense_update($node) {
             $node->ticket_nid, $node->ticket_title,
             $node->provider_nid, $node->provider_title,
             $node->expensedate, $node->amount, $node->tax, $node->total, $node->vid);
+  }
 }
 
 function _stormexpense_beforesave(&$node) {
