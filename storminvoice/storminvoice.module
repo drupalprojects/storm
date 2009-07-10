@@ -3,8 +3,19 @@
 
 /**
  * @file
+ *
+ * 1: Hooks (help, perm, init, menu, theme, node_info)
+ * 2: Access functions
+ * 3: Index page function
+ * 4: Load organization and project details
+ * 5: Invoice create / edit form
+ * 6: Invoice node manipulation functions
+ * 7: Admin settings
+ * 8: Views hook
+ * 9: Storminvoiceitem legacy functions
  */
 
+// HOOKS
 function storminvoice_help($path, $arg) {
   $o = '';
 
@@ -43,6 +54,108 @@ function storminvoice_init() {
   drupal_add_js(drupal_get_path('module', 'storminvoice') .'/storminvoice.js', 'module', 'header', FALSE);
 }
 
+function storminvoice_menu() {
+  $items = array();
+
+  $items['storm/project_invoices_js/%/%'] = array(
+    'title' => t('Tasks'),
+    'page callback' => '_storminvoice_project_invoices_js',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('Storm invoice: access'),
+    'file' => 'storminvoice.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['storm/invoices'] = array(
+    'title' => t('Invoices'),
+    'description' => t('Storm invoices'),
+    'page callback' => 'storminvoice_list',
+    'access arguments' => array('Storm invoice: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'storminvoice.admin.inc',
+  );
+
+  $items['storm/invoice/report/%node/%/%'] = array(
+    'title' => t('Invoice'),
+    'page arguments' => array(3, 4, 5),
+    'description' => t('Storm Invoice'),
+    'page callback' => 'storminvoice_report',
+    'access arguments' => array('Storm invoice: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'storminvoice.admin.inc',
+  );
+  
+  $items['storm/invoice/report/%node/email/%'] = array(
+    'title' => t('Send Invoice by Email'),
+    'page arguments' => array(3, 5),
+    'description' => t('Storm Invoice'),
+    'page callback' => 'storminvoice_send_page',
+    'access arguments' => array('Storm invoice: access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'storminvoice.admin.inc',
+  );
+
+  $items['admin/storm/invoice'] = array(
+    'title' => t('Storm Invoice'),
+    'description' => t('Storm Invoice Administration Page'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('storminvoice_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+function storminvoice_theme() {
+  return array(
+    'storminvoice_list' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('header', 'invoices', 'itemsperpage', 'totals_topay', 'totals_paid', 'totals'),
+    ),
+    'storminvoice_view' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'teaser', 'page'),
+    ),
+    'storminvoice_report' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'report', 'language'),
+    ),
+    'storminvoice_report_html' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'language'),
+    ),
+    'storminvoice_report_pdf' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('node', 'language'),
+    ),
+    'storminvoice_items' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('form'),
+    ),
+  );
+}
+
+function storminvoice_node_info() {
+  return array(
+    'storminvoice' => array(
+      'name' => t('Invoice'),
+      'module' => 'storminvoice',
+      'description' => t("An invoice for Storm."),
+      'title_label' => t("Description"),
+      'has_body' => false,
+    ),
+    'storminvoiceitem' => array(
+      'name' => t('Invoice item'),
+      'module' => 'storminvoiceitem',
+      'description' => t("An invoice item for Storm."),
+      'title_label' => t("Description"),
+      'has_body' => false,
+    ),
+  );
+}
+
+// ACCESS FUNCTIONS
 function storminvoice_access($op, $node, $account=NULL) {
   if (empty($account)) {
     global $user;
@@ -159,113 +272,15 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table, $account) 
   return $cond;
 }
 
-function storminvoice_menu() {
-  $items = array();
-
-  $items['storm/project_invoices_js/%/%'] = array(
-    'title' => t('Tasks'),
-    'page callback' => '_storminvoice_project_invoices_js',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('Storm invoice: access'),
-    'file' => 'storminvoice.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['storm/invoices'] = array(
-    'title' => t('Invoices'),
-    'description' => t('Storm invoices'),
-    'page callback' => 'storminvoice_list',
-    'access arguments' => array('Storm invoice: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'storminvoice.admin.inc',
-  );
-
-  $items['storm/invoice/report/%node/%/%'] = array(
-    'title' => t('Invoice'),
-    'page arguments' => array(3, 4, 5),
-    'description' => t('Storm Invoice'),
-    'page callback' => 'storminvoice_report',
-    'access arguments' => array('Storm invoice: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'storminvoice.admin.inc',
-  );
-  
-  $items['storm/invoice/report/%node/email/%'] = array(
-    'title' => t('Send Invoice by Email'),
-    'page arguments' => array(3, 5),
-    'description' => t('Storm Invoice'),
-    'page callback' => 'storminvoice_send_page',
-    'access arguments' => array('Storm invoice: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'storminvoice.admin.inc',
-  );
-
-  $items['admin/storm/invoice'] = array(
-    'title' => t('Storm Invoice'),
-    'description' => t('Storm Invoice Administration Page'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('storminvoice_admin_settings'),
-    'access arguments' => array('access administration pages'),
-    'type' => MENU_LOCAL_TASK,
-  );
-
-  return $items;
-}
-
-function storminvoice_theme() {
-  return array(
-    'storminvoice_list' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('header', 'invoices', 'itemsperpage', 'totals_topay', 'totals_paid', 'totals'),
-    ),
-    'storminvoice_view' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-    'storminvoice_report' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'report', 'language'),
-    ),
-    'storminvoice_report_html' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'language'),
-    ),
-    'storminvoice_report_pdf' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'language'),
-    ),
-    'storminvoice_items' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('form'),
-    ),
-  );
-}
-
-function storminvoice_node_info() {
-  return array(
-    'storminvoice' => array(
-      'name' => t('Invoice'),
-      'module' => 'storminvoice',
-      'description' => t("An invoice for Storm."),
-      'title_label' => t("Description"),
-      'has_body' => false,
-    ),
-    'storminvoiceitem' => array(
-      'name' => t('Invoice item'),
-      'module' => 'storminvoiceitem',
-      'description' => t("An invoice item for Storm."),
-      'title_label' => t("Description"),
-      'has_body' => false,
-    ),
-  );
-}
-
+// INDEX PAGE
+// Is this function called by anything?
 function storminvoice_storm_indexpage() {
   $o = array();
   $o['storminvoice']['title'] =  l(t('Invoices'), 'storm/invoices');
   return $o;
 }
 
+// LOAD ORGANISATION AND PROJECT DETAILS
 function storminvoice_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {storminvoice} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
@@ -276,6 +291,7 @@ function storminvoice_stormproject_change($project_nid, $project_title) {
   db_query($s, $project_title, $project_nid, $project_title);
 }
 
+// INVOICE CREATE/EDIT FORM
 function storminvoice_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
@@ -458,6 +474,7 @@ function storminvoice_form(&$node) {
   return $form;
 }
 
+// INVOICE NODE MANIPULATION FUNCTIONS
 function storminvoice_insert($node) {
   _storminvoice_beforesave($node);
 
@@ -552,6 +569,7 @@ function storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('storminvoice_view', $node, $teaser = FALSE, $page = FALSE);
 }
 
+// ADMIN SETTINGS
 function storminvoice_admin_settings() {
   $form = array();
   
@@ -604,6 +622,7 @@ function storminvoice_admin_settings() {
   return system_settings_form($form);
 }
 
+// VIEWS HOOK
 function storminvoice_views_api() {
   return array(
     'api' => 2,
@@ -611,9 +630,8 @@ function storminvoice_views_api() {
   );
 }
 
-
-// FUNCTIONS CARRIED OVER FROM STORM INVOICE ITEM
-
+// STORM INVOICE ITEM LEGACY FUNCTIONS
+// Intention is to combine these into storminvoice node manipulation functions
 function storminvoiceitem_form(&$node) {
 
   if (arg(1)=='add') {
@@ -696,6 +714,7 @@ function storminvoiceitem_form(&$node) {
     '#title' => t('Tax'),
     '#size' => 15,
     '#default_value' => $node->tax,
+    '#attributes' => array('readonly' => 'readonly'),
   );
 
   $form['group3']['total'] = array(
@@ -704,6 +723,7 @@ function storminvoiceitem_form(&$node) {
     '#title' => t('Total'),
     '#size' => 15,
     '#default_value' => $node->total,
+    '#attributes' => array('readonly' => 'readonly'),
   );
 
   return $form;
@@ -743,12 +763,9 @@ function storminvoiceitem_update($node) {
 }
 
 function _storminvoiceitem_beforesave(&$node) {
-  if (!$node->tax) {
-    $node->tax = $node->amount * $node->taxpercent * .01;
-  }
-  if (!$node->total) {
-    $node->total = $node->amount + $node->tax;
-  }
+  // Update the tax based on tax percentage and item total, then total based on these. Totals update automatically on each save to keep consistency.
+  $node->tax = $node->amount * $node->taxpercent * .01;
+  $node->total = $node->amount + $node->tax;
 }
 
 function _storminvoiceitem_aftersave(&$node) {

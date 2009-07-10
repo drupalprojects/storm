@@ -422,6 +422,7 @@ function stormexpense_form(&$node) {
     '#title' => t('Total'),
     '#size' => 15,
     '#default_value' => $node->total,
+    '#attributes' => array('readonly' => 'readonly'),
   );
 
   if ($type->has_body) {
@@ -485,10 +486,8 @@ function stormexpense_update($node) {
 function _stormexpense_beforesave(&$node) {
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
-  if (!$node->total) {
-    $node->total = $node->amount + $node->tax;
-  }
-
+  $node->total = $node->amount + $node->tax;
+  
   $s = "SELECT n.title FROM {node} AS n
         INNER JOIN {stormorganization} AS o ON n.nid=o.nid
         WHERE type='stormorganization' AND n.nid=%d";
