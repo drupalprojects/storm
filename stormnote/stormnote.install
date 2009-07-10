@@ -10,6 +10,10 @@ function stormnote_install() {
   variable_set('node_options_stormnote', array('status'));
 }
 
+function stormnote_disable() {
+  drupal_set_message(t('Warning: Nodes of type "Note" have not been deleted on disabling Storm Note. Please note that they will now have reduced functionality, and will not be protected by Storm Note access controls.', 'warning'));
+}
+
 function stormnote_uninstall() {
   drupal_uninstall_schema('stormnote');
 }

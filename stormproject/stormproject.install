@@ -10,6 +10,10 @@ function stormproject_install() {
   variable_set('node_options_stormproject', array('status'));
 }
 
+function stormproject_disable() {
+  drupal_set_message(t('Warning: Nodes of type "Project" have not been deleted on disabling Storm Project. Please note that they will now have reduced functionality, and will not be protected by Storm Project access controls.', 'warning'));
+}
+
 function stormproject_uninstall() {
   drupal_uninstall_schema('stormproject');
 }
