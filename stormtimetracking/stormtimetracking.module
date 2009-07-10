@@ -171,6 +171,15 @@ function stormtimetracking_menu() {
             'file' => 'stormtimetracking.admin.inc',
   );
 
+  $items['admin/storm/timetracking'] = array(
+    'title' => t('Storm Timetracking'),
+    'description' => t('Storm Timetracking Administration Page'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormtimetracking_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  
   return $items;
 }
 
@@ -486,8 +495,10 @@ function _stormtimetracking_beforesave(&$node) {
 
   $node->timebegin = _timetostr($timebegin);
   $node->timeend = _timetostr($timeend);
-
-  if (!$node->duration) {
+  
+  $auto_duration = variable_get('stormtimetracking_auto_duration', TRUE);
+  
+  if (!$node->duration || $auto_duration) {
     $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
   }
   if ($node->timeend < $node->timebegin) {
@@ -543,6 +554,21 @@ function stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_set_breadcrumb($breadcrumb);
 
   return theme('stormtimetracking_view', $node, $teaser, $page);
+}
+
+// ADMIN SETTINGS
+function stormtimetracking_admin_settings() {
+  $form = array();
+  
+  $form['stormtimetracking_auto_duration'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Always automatically recalculate timetracking durations on saving timetracking.'),
+    '#default_value' => variable_get('stormtimetracking_auto_duration', TRUE),
+    '#description' => t('Unchecking this box will allow you to manually override timetracking durations.'),
+    '#size' => 5,
+  );
+  
+  return system_settings_form($form);
 }
 
 function stormtimetracking_views_api() {
