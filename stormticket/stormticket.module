@@ -477,20 +477,14 @@ function stormticket_update($node) {
   else {
     _stormticket_beforesave($node);
     db_query("UPDATE {stormticket} SET
-              organization_nid=%d, organization_title='%s',
-              project_nid=%d, project_title='%s',
-              task_nid=%d, task_title='%s', task_stepno='%s',
-              ticketcategory='%s', ticketstatus='%s', ticketpriority='%s',
-              datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
-              pricemode='%s', price=%f, currency='%s' 
-              WHERE vid = %d",
-              $node->organization_nid, $node->organization_title,
-              $node->project_nid, $node->project_title,
-              $node->task_nid, $node->task_title, $node->task_stepno,
-              $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-              $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-              $node->pricemode, $node->price, $node->currency,
-              $node->vid);
+              organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
+              task_nid=%d, task_title='%s', task_stepno='%s', ticketcategory='%s', ticketstatus='%s', 
+              ticketpriority='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f, pricemode='%s', 
+              price=%f, currency='%s' WHERE vid = %d",
+              $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+              $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, 
+              $node->ticketpriority, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, 
+              $node->price, $node->currency, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormticket_change', $node->nid, $node->title);
     }
