@@ -472,17 +472,23 @@ function stormtimetracking_insert($node) {
 function stormtimetracking_update($node) {
   _stormtimetracking_beforesave($node);
 
-  db_query("UPDATE {stormtimetracking} SET
-            organization_nid=%d, organization_title='%s',
-            project_nid=%d, project_title='%s',
-            task_nid=%d, task_title='%s', task_stepno='%s',
-            ticket_nid=%d, ticket_title='%s',
-            trackingdate=%d, timebegin='%s', timeend='%s', duration=%f, billable=%d WHERE vid = %d",
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno,
-            $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable, $node->vid);
+  // If this is a new revision, then it is actually an insert operation
+  if ($node->revision) {
+    stormtimetracking_insert($node);
+  }
+  else {
+    db_query("UPDATE {stormtimetracking} SET
+        organization_nid=%d, organization_title='%s',
+        project_nid=%d, project_title='%s',
+        task_nid=%d, task_title='%s', task_stepno='%s',
+        ticket_nid=%d, ticket_title='%s',
+        trackingdate=%d, timebegin='%s', timeend='%s', duration=%f, billable=%d WHERE vid = %d",
+        $node->organization_nid, $node->organization_title,
+        $node->project_nid, $node->project_title,
+        $node->task_nid, $node->task_title, $node->task_stepno,
+        $node->ticket_nid, $node->ticket_title,
+        $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable, $node->vid);
+  }
 }
 
 function _stormtimetracking_beforesave(&$node) {
