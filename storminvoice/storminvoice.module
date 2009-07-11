@@ -273,12 +273,12 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table, $account) 
 }
 
 // INDEX PAGE
-// Is this function called by anything?
-function storminvoice_storm_indexpage() {
+// Remove if not issues on commenting out
+/*function storminvoice_storm_indexpage() {
   $o = array();
   $o['storminvoice']['title'] =  l(t('Invoices'), 'storm/invoices');
   return $o;
-}
+}*/
 
 // LOAD ORGANISATION AND PROJECT DETAILS
 function storminvoice_stormorganization_change($organization_nid, $organization_title) {
@@ -794,7 +794,7 @@ function storminvoiceitem_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
       if(!$node->nid) {
-        $node->taxpercent = variable_get('storminvoice_default_taxpercent', 20);
+        $node->taxpercent = variable_get('storm_tax1_percent', 20);
       }
       break;
     case 'delete revision':
