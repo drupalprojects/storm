@@ -34,7 +34,7 @@ function storminvoice_schema() {
       'duedate'             => array('type' => 'int'),
       'paymentdate'         => array('type' => 'int'),
       'amount'              => array('type' => 'float'),
-      'tax'                 => array('type' => 'float'),
+      'tax1'                 => array('type' => 'float'),
       'total'               => array('type' => 'float'),
       'totalcustomercurr'   => array('type' => 'float'),
       'taxexempt'           => array('type' => 'int', 'size' => 'tiny'),
@@ -49,8 +49,12 @@ function storminvoice_schema() {
       'invoice_nid'         => array('type' => 'int'),
       'weight'              => array('type' => 'int'),
       'amount'              => array('type' => 'float'),
-      'taxpercent'          => array('type' => 'float'),
-      'tax'                 => array('type' => 'float'),
+      'tax1app'             => array('type' => 'int'),
+      'tax1percent'          => array('type' => 'float'),
+      'tax1'                 => array('type' => 'float'),
+      'tax2app'             => array('type' => 'int'),
+      'tax2percent'          => array('type' => 'float'),
+      'tax2'                 => array('type' => 'float'),
       'total'               => array('type' => 'float'),
       'src_nid'             => array('type' => 'int'),
       'src_vid'             => array('type' => 'int'),
@@ -113,6 +117,20 @@ function storminvoice_update_6102() {
   db_add_column($ret, 'storminvoiceitem', 'src_vid', 'int');
   variable_set('storm_tax1_percent', variable_get('storminvoice_default_taxpercent', 20));
   variable_del('storminvoice_default_taxpercent');
+  
+  return $ret;
+}
+
+function storminvoice_update_6103() {
+  $ret = array();
+  
+  db_change_field($ret, 'storminvoice', 'tax', 'tax1');
+  db_add_column($ret, 'storminvoiceitem', 'tax1app', 'int');
+  db_change_field($ret, 'storminvoiceitem', 'taxpercent', 'tax1percent');
+  db_change_field($ret, 'storminvoiceitem', 'tax', 'tax1');
+  db_add_column($ret, 'storminvoiceitem', 'tax2app', 'int');
+  db_add_column($ret, 'storminvoiceitem', 'tax2percent', 'float');
+  db_add_column($ret, 'storminvoiceitem', 'tax2', 'float');
   
   return $ret;
 }

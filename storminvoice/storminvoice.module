@@ -441,12 +441,12 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->amount,
   );
 
-  $form['group4']['tax'] = array(
+  $form['group4']['tax1'] = array(
     '#type' => 'textfield',
-    '#title' => t('Tax'),
+    '#title' => variable_get('storm_tax1_name', 'Tax 1'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
-    '#default_value' => $node->tax,
+    '#default_value' => $node->tax1,
   );
 
   $form['group4']['total'] = array(
@@ -479,26 +479,16 @@ function storminvoice_insert($node) {
   _storminvoice_beforesave($node);
 
   db_query("INSERT INTO {storminvoice}
-      (vid, nid,
-      number, reference,
-      organization_nid, organization_title,
-      project_nid, project_title,
-      amount, tax, total, totalcustomercurr,
+      (vid, nid, number, reference, organization_nid, organization_title, 
+      project_nid, project_title, amount, tax1, total, totalcustomercurr, 
       requestdate, duedate, paymentdate, taxexempt) VALUES
-      (%d, %d,
-      '%s', '%s',
-      %d, '%s',
-      %d, '%s',
-      %f, %f, %f, %f,
+      (%d, %d, '%s', '%s', %d, '%s', 
+      %d, '%s', %f, %f, %f, %f, 
       %d, %d, %d, %d)",
-      $node->vid, $node->nid,
-      $node->number, $node->reference,
-      $node->organization_nid, $node->organization_title,
-      $node->project_nid, $node->project_title,
-      $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+      $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
+      $node->project_nid, $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
       $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
 
-  $_REQUEST['destination'] = 'node/'. $node->nid .'/invoiceitems';
 }
 
 function storminvoice_update($node) {
@@ -509,16 +499,12 @@ function storminvoice_update($node) {
   }
   else {
     db_query("UPDATE {storminvoice} SET
-        number='%s', reference='%s',
-        organization_nid=%d, organization_title='%s',
-        project_nid=%d, project_title='%s',
-        amount=%f, tax=%f, total=%f, totalcustomercurr=%f,
-        requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
-        $node->number, $node->reference,
-        $node->organization_nid, $node->organization_title,
-        $node->project_nid, $node->project_title,
-        $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
-        $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+      number='%s', reference='%s', organization_nid=%d, organization_title='%s', project_nid=%d, 
+      project_title='%s', amount=%f, tax1=%f, total=%f, totalcustomercurr=%f,
+      requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
+      $node->number, $node->reference, $node->organization_nid, $node->organization_title, $node->project_nid, 
+      $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
   }
 }
 
@@ -528,8 +514,8 @@ function _storminvoice_beforesave(&$node) {
   if (is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
 
   $s = "SELECT n.title FROM {node} AS n 
-        INNER JOIN {stormorganization} AS o ON n.vid=o.vid
-        WHERE type='stormorganization' AND n.nid=%d";
+    INNER JOIN {stormorganization} AS o ON n.vid=o.vid
+    WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
@@ -738,18 +724,9 @@ function storminvoiceitem_insert($node) {
   _storminvoiceitem_beforesave($node);
 
   db_query("INSERT INTO {storminvoiceitem}
-           (vid, nid,
-           invoice_nid,
-           amount, taxpercent, tax, total,
-           weight) VALUES
-           (%d, %d,
-           %d,
-           %f, %f, %f, %f,
-           %d)",
-          $node->vid, $node->nid,
-          $node->invoice_nid,
-          $node->amount, $node->taxpercent, $node->tax, $node->total,
-          $node->weight);
+    (vid, nid, invoice_nid, amount, taxpercent, tax, total, weight) VALUES
+    (%d, %d, %d, %f, %f, %f, %f, %d)",
+    $node->vid, $node->nid, $node->invoice_nid, $node->amount, $node->taxpercent, $node->tax, $node->total, $node->weight);
   _storminvoiceitem_aftersave($node);
 }
 
@@ -761,13 +738,8 @@ function storminvoiceitem_update($node) {
   }
   else {
     db_query("UPDATE {storminvoiceitem} SET
-            invoice_nid=%d,
-            amount=%f, taxpercent=%f, tax=%f, total=%f,
-            weight=%d
-            WHERE vid = %d",
-            $node->invoice_nid,
-            $node->amount, $node->taxpercent, $node->tax, $node->total,
-            $node->weight, $node->vid);
+      invoice_nid=%d, amount=%f, taxpercent=%f, tax=%f, total=%f, weight=%d WHERE vid = %d",
+      $node->invoice_nid, $node->amount, $node->taxpercent, $node->tax, $node->total, $node->weight, $node->vid);
     _storminvoiceitem_aftersave($node);
   }
 }
