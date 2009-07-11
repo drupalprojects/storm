@@ -186,9 +186,9 @@ function stormtask_menu() {
     'file' => 'stormtask.admin.inc',
   );
   
-  $items['admin/storm/tasks'] = array(
-    'title' => t('Storm Tasks'),
-    'description' => t('Storm Tasks Administration Page'),
+  $items['admin/storm/task'] = array(
+    'title' => t('Storm Task'),
+    'description' => t('Storm Task Administration Page'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtask_admin_settings'),
     'access arguments' => array('access administration pages'),
@@ -206,7 +206,7 @@ function stormtask_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Enable Gantt Charts (experimental feature)'),
     '#default_value' => variable_get('stormtask_enable_ganttchart', False),
-    '#description' => t('First get jsgantt.zip from http://jsgantt.com and put jsgantt.js andf jsgantt.css in directory   <i>sites/all/libraries/jsgantt</i> then enable this checkbox.'),
+    //'#description' => t('First get jsgantt.zip from http://jsgantt.com and put jsgantt.js andf jsgantt.css in directory   <i>sites/all/libraries/jsgantt</i> then enable this checkbox.'),
   );
 
   /*$form['stormtask_jsgantt_location'] = array(
@@ -236,7 +236,7 @@ function stormtask_admin_settings() {
     '#type' => 'textfield',
     '#title' => t('Gantt chart color'),
     '#default_value' => variable_get('stormtask_jsgantt_color', '00CCFF'),
-    '#description' => t('Enter color for gant chart bars.'),
+    '#description' => t('Enter color for gantt chart bars.'),
     '#size' => 6,
   );
 
@@ -545,24 +545,23 @@ function stormtask_form(&$node) {
 function stormtask_form_alter(&$form, $form_state, $form_id) {
   if (module_exists('date_api')) {
     if ('stormtask_node_form' == $form_id) {
-	$node = $form['#node'];
-	$form['group4']['datebegin'] = array(
-	  '#type' => 'date_popup',
-	  '#title' => t('Date begin'),
-	  '#date_format' =>  'Y-m-d',
-	  '#default_value' => date('Y-m-d',$node->datebegin),
-	);
+      $node = $form['#node'];
+      $form['group4']['datebegin'] = array(
+        '#type' => 'date_popup',
+        '#title' => t('Date begin'),
+        '#date_format' =>  'Y-m-d',
+        '#default_value' => date('Y-m-d',$node->datebegin),
+      );
 
-	$form['group4']['dateend'] = array(
-	  '#type' => 'date_popup',
-	  '#title' => t('Date end'),
-	  '#date_format' =>  'Y-m-d',
-	  '#default_value' => date('Y-m-d',$node->dateend),
-	);
+      $form['group4']['dateend'] = array(
+        '#type' => 'date_popup',
+        '#title' => t('Date end'),
+        '#date_format' =>  'Y-m-d',
+        '#default_value' => date('Y-m-d',$node->dateend),
+      );
     }
   }
 }
-
 
 
 function stormtask_insert($node) {

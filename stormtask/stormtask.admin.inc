@@ -86,18 +86,15 @@ function stormtask_tasks($project) {
   
   // Display link to jsgantt library only if library is installed.
   $o_gantt ="";
-  $jsgantt_dir = variable_get('stormtask_jsgantt_location', 'sites/all/libraries/jsgantt');
+  //$jsgantt_dir = variable_get('stormtask_jsgantt_location', 'sites/all/libraries/jsgantt');
   $jsgantt_dir = drupal_get_path('module', 'stormtask'). '/jsgantt';
 
-  
   $dispOpt=variable_get('stormtask_jsgantt_options', array());
   if ($dispOpt['ShowStartDate']){$dispOpt['ShowStartDate']=1;}
   if ($dispOpt['ShowEndDate']){$dispOpt['ShowEndDate']=1;}
   if ($dispOpt['ShowDur']){$dispOpt['ShowDur']=1;}
 
-  //if(variable_get('stormtask_enable_ganttchart',0) && file_exists($jsgantt_dir .'/jsgantt.js')) {
-  if(file_exists($jsgantt_dir .'/jsgantt.js')) {
-
+  if(variable_get('stormtask_enable_ganttchart',0) && file_exists($jsgantt_dir .'/jsgantt.js')) {
   
     drupal_add_js($jsgantt_dir."/jsgantt.js");
     drupal_add_css($jsgantt_dir."/jsgantt.css");
