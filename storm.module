@@ -175,8 +175,8 @@ function storm_admin_settings() {
     '#default_value' => variable_get('storm_tax1_app', 'item'),
     '#description' => t('The method of application to use for Tax 1'),
     '#options' => array(
-      'item' => t('Apply to item amount'),
-      'none' => t('Do not apply tax'),
+      1 => t('Apply to item amount'),
+      0 => t('Do not apply tax'),
     ),
     '#weight' => $w++,
   );
@@ -210,9 +210,9 @@ function storm_admin_settings() {
     '#default_value' => variable_get('storm_tax2_app', 'none'),
     '#description' => t('The method of application to use for Tax 2'),
     '#options' => array(
-      'total' => t('Apply to total of item amount plus previous tax'),
-      'item' => t('Apply to item amount'),
-      'none' => t('Do not apply tax'),
+      2 => t('Apply to total of item amount plus previous tax'),
+      1 => t('Apply to item amount'),
+      0 => t('Do not apply tax'),
     ),
     '#weight' => $w++,
   );
