@@ -177,9 +177,9 @@ function stormtask_menu() {
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
   );
-  $items['storm/task'] = array(
-    'title' => t('Task'),
-    'description' => t('Storm Task'),
+  $items['storm/tasks'] = array(
+    'title' => t('Tasks'),
+    'description' => t('Storm Tasks'),
     'page callback' => 'stormtask_list',
     'access arguments' => array('Storm task: access'),
     'type' => MENU_NORMAL_ITEM,
