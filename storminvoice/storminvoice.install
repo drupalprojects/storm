@@ -124,10 +124,10 @@ function storminvoice_update_6102() {
 function storminvoice_update_6103() {
   $ret = array();
   
-  db_change_field($ret, 'storminvoice', 'tax', 'tax1');
+  db_change_field($ret, 'storminvoice', 'tax', 'tax1', array('type' => 'float'));
   db_add_column($ret, 'storminvoiceitem', 'tax1app', 'int');
-  db_change_field($ret, 'storminvoiceitem', 'taxpercent', 'tax1percent');
-  db_change_field($ret, 'storminvoiceitem', 'tax', 'tax1');
+  db_change_field($ret, 'storminvoiceitem', 'taxpercent', 'tax1percent', array('type' => 'float'));
+  db_change_field($ret, 'storminvoiceitem', 'tax', 'tax1', array('type' => 'float'));
   db_add_column($ret, 'storminvoiceitem', 'tax2app', 'int');
   db_add_column($ret, 'storminvoiceitem', 'tax2percent', 'float');
   db_add_column($ret, 'storminvoiceitem', 'tax2', 'float');
