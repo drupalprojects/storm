@@ -577,6 +577,28 @@ function stormtimetracking_admin_settings() {
   return system_settings_form($form);
 }
 
+// INVOICE AUTO ADD HANDLER
+function stormtimetracking_storminvoice_auto_add($node, $invoice = NULL) {
+  if (!module_exists('storminvoice') {
+    return
+  } else {
+    if (!$invoice) {
+      $new_invoice = array(
+        'title' => $node->title,
+      );
+      node_save($new_invoice);
+      
+      $invoice = $new_invoice->nid;
+    }
+    
+    $new_invoice_item = array(
+      'title' => $node->title,
+    );
+    node_save($new_invoice_item);
+  }
+}
+
+// VIEWS HANDLER
 function stormtimetracking_views_api() {
   return array(
     'api' => 2,
