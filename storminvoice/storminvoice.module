@@ -11,8 +11,9 @@
  * 5: Invoice create / edit form
  * 6: Invoice node manipulation functions
  * 7: Admin settings
- * 8: Views hook
- * 9: Storminvoiceitem legacy functions
+ * 8: Auto_add handler
+ * 9: Views hook
+ * 10: Storminvoiceitem legacy functions
  */
 
 // HOOKS
@@ -75,6 +76,13 @@ function storminvoice_menu() {
     'file' => 'storminvoice.admin.inc',
   );
 
+  $items['storm/invoice/auto_add/%node'] = array(
+    'page arguments' => array(3),
+    'page callback' => 'storminvoice_auto_add',
+    'access arguments' => array('Storm invoice: add'),
+    'type' => MENU_CALLBACK,
+  );
+  
   $items['storm/invoice/report/%node/%/%'] = array(
     'title' => t('Invoice'),
     'page arguments' => array(3, 4, 5),
@@ -612,6 +620,20 @@ function storminvoice_admin_settings() {
   
   return system_settings_form($form);
 }
+
+// AUTO_ADD HANDLER
+function storminvoice_auto_add($node) {
+  switch ($node->type) {
+    case 'stormticket':
+      stormticket_storminvoice_auto_add($node);
+      break;
+    default:
+      drupal_set_message(t('This type of node cannot be automatically added to an invoice'), 'error');
+      $_REQUEST['destination'] = 'node/'. $node->nid;
+  }
+  
+}
+
 
 // VIEWS HOOK
 function storminvoice_views_api() {
