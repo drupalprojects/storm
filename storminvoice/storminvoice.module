@@ -24,7 +24,6 @@ function storminvoice_help($path, $arg) {
       $o = '<p>'. t("Provides invoice support for Storm") .'</p>';
       break;
   }
-
   return $o;
 }
 
@@ -487,7 +486,6 @@ function storminvoice_insert($node) {
       $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
       $node->project_nid, $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
       $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
-
 }
 
 function storminvoice_update($node) {
