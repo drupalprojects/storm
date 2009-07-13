@@ -6,14 +6,13 @@
  *
  * 1: Hooks (help, perm, init, menu, theme, node_info)
  * 2: Access functions
- * 3: Index page function
- * 4: Load organization and project details
- * 5: Invoice create / edit form
- * 6: Invoice node manipulation functions
- * 7: Admin settings
- * 8: Auto_add handler
- * 9: Views hook
- * 10: Storminvoiceitem legacy functions
+ * 3: Load organization and project details
+ * 4: Invoice create / edit form
+ * 5: Invoice node manipulation functions
+ * 6:Admin settings
+ * 7: Auto_add handler
+ * 8: Views hook
+ * 9: Storminvoiceitem legacy functions
  */
 
 // HOOKS
@@ -279,14 +278,6 @@ function storminvoice_storm_rewrite_where_sql($query, $primary_table, $account) 
   $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
-
-// INDEX PAGE
-// Remove if not issues on commenting out
-/*function storminvoice_storm_indexpage() {
-  $o = array();
-  $o['storminvoice']['title'] =  l(t('Invoices'), 'storm/invoices');
-  return $o;
-}*/
 
 // LOAD ORGANISATION AND PROJECT DETAILS
 function storminvoice_stormorganization_change($organization_nid, $organization_title) {
@@ -627,13 +618,14 @@ function storminvoice_auto_add($node) {
     case 'stormticket':
       stormticket_storminvoice_auto_add($node);
       break;
+    case 'stormtimetracking':
+      stormtracking_storminvoice_auto_add($node);
+      break;
     default:
       drupal_set_message(t('This type of node cannot be automatically added to an invoice'), 'error');
       $_REQUEST['destination'] = 'node/'. $node->nid;
   }
-  
 }
-
 
 // VIEWS HOOK
 function storminvoice_views_api() {
