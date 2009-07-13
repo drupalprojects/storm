@@ -95,8 +95,9 @@ function theme_storm_view_item($label, $value) {
 // See 498108: Proposed to refactor creation of Storm Dashboard
 function theme_storm_dashboard() {
   $o = '<div id="stormdashboard">';
-  $o .= '<div class="stormdashboard">';
   $o .= '<dl class="stormdashboard">';
+  
+  $o .= '<div class="stormdashboard">';
   if (module_exists('stormorganization') && user_access('Storm organization: access')) {
     $o .= '<dt class="stormcomponent" id="stormorganizations">'. l(t('Organizations'), 'storm/organizations');
     $i = new stdClass();
@@ -156,7 +157,6 @@ function theme_storm_dashboard() {
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-
   if (module_exists('storminvoice') && user_access('Storm invoice: access')) {
     $o .= '<dt class="stormcomponent" id="storminvoices">'. l(t('Invoices'), 'storm/invoices');
     $i = new stdClass();
@@ -164,7 +164,6 @@ function theme_storm_dashboard() {
     $o .= storm_icon_add_node($i, $_GET);
     $o .= '</dt>';
   }
-
   if (module_exists('stormexpense') && user_access('Storm expense: access')) {
     $o .= '<dt class="stormcomponent" id="stormexpenses">'. l(t('Expenses'), 'storm/expenses');
     $i = new stdClass();
@@ -189,8 +188,9 @@ function theme_storm_dashboard() {
   if (user_access('access administration pages')) {
     $o .= '<dt class="stormcomponent" id="stormconfiguration">'. l(t('Configuration'), 'admin/storm') .'</dt>';
   }
-  $o .= '</dl>';
   $o .= '</div>';
+  
+  $o .= '</dl>';
   $o .= '</div>';
   return $o;
 }
