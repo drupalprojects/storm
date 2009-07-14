@@ -579,8 +579,8 @@ function stormtimetracking_admin_settings() {
 
 // INVOICE AUTO ADD HANDLER
 function stormtimetracking_storminvoice_auto_add($node, $invoice = NULL) {
-  if (!module_exists('storminvoice') {
-    return
+  if (!module_exists('storminvoice')) {
+    return;
   } else {
     if (!$invoice) {
       $new_invoice = array(
