@@ -137,7 +137,7 @@ function storminvoice_update_6103() {
   return $ret;
 }
 
-function storminvoice_update_6103() {
+function storminvoice_update_6104() {
   $ret = array();
 
   db_add_column($ret, 'storminvoice', 'src_nid', 'int');
