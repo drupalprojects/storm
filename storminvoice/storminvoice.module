@@ -479,13 +479,13 @@ function storminvoice_insert($node) {
   db_query("INSERT INTO {storminvoice}
       (vid, nid, number, reference, organization_nid, organization_title, 
       project_nid, project_title, amount, tax1, total, totalcustomercurr, 
-      requestdate, duedate, paymentdate, taxexempt) VALUES
+      requestdate, duedate, paymentdate, taxexempt, src_nid, src_vid) VALUES
       (%d, %d, '%s', '%s', %d, '%s', 
       %d, '%s', %f, %f, %f, %f, 
-      %d, %d, %d, %d)",
+      %d, %d, %d, %d, %d, %d)",
       $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
       $node->project_nid, $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
-      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt);
+      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->src_nid, $node->src_vid);
 }
 
 function storminvoice_update($node) {
@@ -617,7 +617,7 @@ function storminvoice_auto_add($node) {
       stormticket_storminvoice_auto_add($node);
       break;
     case 'stormtimetracking':
-      stormtracking_storminvoice_auto_add($node);
+      stormtimetracking_storminvoice_auto_add($node);
       break;
     default:
       drupal_set_message(t('This type of node cannot be automatically added to an invoice'), 'error');
