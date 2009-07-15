@@ -578,18 +578,15 @@ function stormtimetracking_admin_settings() {
 }
 
 // INVOICE AUTO ADD HANDLER
-function stormtimetracking_storminvoice_auto_add($nid, $invoice_nid = NULL) {
-  $node = node_load($nid);
-  
-  print 'DEBUG: stormtimetracking_storminvoice_auto_add ';
-  
+function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
+    
   if (!module_exists('storminvoice')) {
-    print 'DEBUG: if ';
+  
     //return;
   } else {
-    print 'DEBUG: else ';
+  
     if (!$invoice_nid) {
-      print 'DEBUG: if2 ';
+    
       $new_invoice = new StdClass;
       
       //Code copied with edits from node form
@@ -600,7 +597,7 @@ function stormtimetracking_storminvoice_auto_add($nid, $invoice_nid = NULL) {
       $date = getdate($new_invoice->requestdate);
       $new_invoice->number = (db_result(db_query($s, $new_invoice->requestdate)) + 1) .'/'. $date['year'];
 
-      $new_invoice->title = 'Invoice'. $node->title;
+      $new_invoice->title = $node->title;
       $new_invoice->type = 'storminvoice';
       //$new_invoice->reference
       $new_invoice->organization_nid = $node->organization_nid;
@@ -618,12 +615,11 @@ function stormtimetracking_storminvoice_auto_add($nid, $invoice_nid = NULL) {
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
       storminvoice_insert($new_invoice);
-      
-      
+        
       drupal_goto('node/'. $invoice_nid);
     }
     
-    //$new_invoice_item = new StdClass;
+    $new_invoice_item = new StdClass;
     
     //$new_invoice_item->title = $node->title,
     //node_save($new_invoice_item);
