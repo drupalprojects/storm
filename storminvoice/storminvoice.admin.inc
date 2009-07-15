@@ -344,7 +344,7 @@ function storminvoice_items($invoice) {
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax'),
+      'data' => t('Tax 1'),
       'style' => 'text-align: right;',
     ),
     array(
@@ -403,8 +403,8 @@ function storminvoice_items_form($form_id, $header, $invoiceitems, $invoice) {
       '#value' => $invoiceitem->amount,
     );
 
-    $form['invoiceitems']['invoiceitems'][$invoiceitem->nid]['invoiceitem_tax_'. $invoiceitem->nid] = array (
-      '#value' => $invoiceitem->tax,
+    $form['invoiceitems']['invoiceitems'][$invoiceitem->nid]['invoiceitem_tax1_'. $invoiceitem->nid] = array (
+      '#value' => $invoiceitem->tax1,
     );
 
     $form['invoiceitems']['invoiceitems'][$invoiceitem->nid]['invoiceitem_total_'. $invoiceitem->nid] = array (

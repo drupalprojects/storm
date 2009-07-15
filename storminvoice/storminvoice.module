@@ -708,7 +708,7 @@ function storminvoiceitem_form(&$node) {
     '#withnull' => 'true',
     '#title' => t('Tax percent'),
     '#size' => 15,
-    '#default_value' => $node->taxpercent,
+    '#default_value' => $node->tax1percent,
   );
 
   $form['group3']['tax'] = array(
@@ -716,7 +716,7 @@ function storminvoiceitem_form(&$node) {
     '#withnull' => 'true',
     '#title' => t('Tax'),
     '#size' => 15,
-    '#default_value' => $node->tax,
+    '#default_value' => $node->tax1,
     '#attributes' => array('readonly' => 'readonly'),
   );
 
@@ -736,9 +736,9 @@ function storminvoiceitem_insert($node) {
   _storminvoiceitem_beforesave($node);
 
   db_query("INSERT INTO {storminvoiceitem}
-    (vid, nid, invoice_nid, amount, taxpercent, tax, total, weight) VALUES
+    (vid, nid, invoice_nid, amount, tax1percent, tax1, total, weight) VALUES
     (%d, %d, %d, %f, %f, %f, %f, %d)",
-    $node->vid, $node->nid, $node->invoice_nid, $node->amount, $node->taxpercent, $node->tax, $node->total, $node->weight);
+    $node->vid, $node->nid, $node->invoice_nid, $node->amount, $node->tax1percent, $node->tax1, $node->total, $node->weight);
   _storminvoiceitem_aftersave($node);
 }
 
@@ -763,7 +763,7 @@ function _storminvoiceitem_beforesave(&$node) {
 }
 
 function _storminvoiceitem_aftersave(&$node) {
-  $s = "SELECT SUM(amount) tamount, SUM(tax) ttax, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
+  $s = "SELECT SUM(amount) tamount, SUM(tax1) ttax, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
   $r = db_query($s, $node->invoice_nid);
   $t = db_fetch_object($r);
 
