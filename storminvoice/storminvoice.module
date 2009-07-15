@@ -484,7 +484,7 @@ function storminvoice_insert($node) {
       %d, '%s', %f, %f, %f, %f, 
       %d, %d, %d, %d, %d, %d)",
       $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
-      $node->project_nid, $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+      $node->project_nid, $node->project_title, $node->amount, $node->tax1, $node->total, $node->totalcustomercurr,
       $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->src_nid, $node->src_vid);
 }
 
@@ -500,7 +500,7 @@ function storminvoice_update($node) {
       project_title='%s', amount=%f, tax1=%f, total=%f, totalcustomercurr=%f,
       requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
       $node->number, $node->reference, $node->organization_nid, $node->organization_title, $node->project_nid, 
-      $node->project_title, $node->amount, $node->tax, $node->total, $node->totalcustomercurr,
+      $node->project_title, $node->amount, $node->tax1, $node->total, $node->totalcustomercurr,
       $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
   }
 }
@@ -703,18 +703,18 @@ function storminvoiceitem_form(&$node) {
     '#default_value' => $node->amount,
   );
 
-  $form['group3']['taxpercent'] = array(
+  $form['group3']['tax1percent'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('Tax percent'),
+    '#title' => t('Tax 1 percent'),
     '#size' => 15,
     '#default_value' => $node->tax1percent,
   );
 
-  $form['group3']['tax'] = array(
+  $form['group3']['tax1'] = array(
     '#type' => 'textfield',
     '#withnull' => 'true',
-    '#title' => t('Tax'),
+    '#title' => t('Tax 1'),
     '#size' => 15,
     '#default_value' => $node->tax1,
     '#attributes' => array('readonly' => 'readonly'),
@@ -750,16 +750,16 @@ function storminvoiceitem_update($node) {
   }
   else {
     db_query("UPDATE {storminvoiceitem} SET
-      invoice_nid=%d, amount=%f, taxpercent=%f, tax=%f, total=%f, weight=%d WHERE vid = %d",
-      $node->invoice_nid, $node->amount, $node->taxpercent, $node->tax, $node->total, $node->weight, $node->vid);
+      invoice_nid=%d, amount=%f, tax1percent=%f, tax1=%f, total=%f, weight=%d WHERE vid = %d",
+      $node->invoice_nid, $node->amount, $node->tax1percent, $node->tax1, $node->total, $node->weight, $node->vid);
     _storminvoiceitem_aftersave($node);
   }
 }
 
 function _storminvoiceitem_beforesave(&$node) {
   // Update the tax based on tax percentage and item total, then total based on these. Totals update automatically on each save to keep consistency.
-  $node->tax = $node->amount * $node->taxpercent * .01;
-  $node->total = $node->amount + $node->tax;
+  $node->tax1 = $node->amount * $node->taxpercent * .01;
+  $node->total = $node->amount + $node->tax1;
 }
 
 function _storminvoiceitem_aftersave(&$node) {
@@ -769,7 +769,7 @@ function _storminvoiceitem_aftersave(&$node) {
 
   $invoice = node_load($node->invoice_nid);
   $invoice->amount = $t->tamount;
-  $invoice->tax = $t->ttax;
+  $invoice->tax1 = $t->ttax1;
   $invoice->total = $t->ttotal;
   storminvoice_update($invoice);
 }
