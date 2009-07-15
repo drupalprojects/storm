@@ -3,8 +3,12 @@
 
 /**
  * @file
+ *
+ * 1: Hooks
+ * 2: Access functions
  */
 
+// HOOKS
 function stormticket_help($path, $arg) {
   $o = '';
 
@@ -13,7 +17,6 @@ function stormticket_help($path, $arg) {
       $o = '<p>'. t("Provides ticket support for Storm") .'</p>';
       break;
   }
-
   return $o;
 }
 
@@ -44,6 +47,7 @@ function stormticket_init() {
   drupal_add_js($settings, 'setting');
 }
 
+// ACCESS FUNCTIONS
 function stormticket_access($op, $node, $account=NULL) {
   if (empty($account)) {
     global $user;
@@ -207,6 +211,7 @@ function stormticket_node_info() {
   );
 }
 
+// ORGANISATION / PROJECT / TASK UPDATE FUNCTIONS
 function stormticket_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormticket} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
@@ -223,6 +228,7 @@ function stormticket_stormtask_change($task_nid, $task_stepno, $task_title) {
   db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
 }
 
+// INVOICE CREATE / EDIT FORM
 function stormticket_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
@@ -443,6 +449,7 @@ function stormticket_form(&$node) {
   return $form;
 }
 
+// INSERT / UPDATE FUNCTIONS
 function stormticket_insert($node) {
   _stormticket_beforesave($node);
 
