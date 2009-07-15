@@ -38,6 +38,7 @@ function stormattribute_install() {
   );
 
   $attributes['Project category search'] = array(
+    '-' => 'all',
     'development' => 'development',
     'support' => 'support',
   );
@@ -896,12 +897,11 @@ function stormattribute_update_6() {
 
 function stormattribute_update_6107(){
   // Updated numbering to use Drupal standard format. See also http://api.drupal.org/api/function/hook_update_N/6
-
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('%s', '%s', '%s', %d, 1)";
-  db_query($s, "Project category search", "development", "development", 0);
-  db_query($s, "Project category search", "support", "support", 0);
-  
   $ret = array();
+
+  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'development', 'development', 0, 1)");
+  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'support', 'support', 0, 1)");
+    
   return $ret;
 }
 
@@ -930,4 +930,12 @@ function stormattribute_update_6108(){
   }
 
   return $ret;
+}
+
+function stormattribute_update_6109() {
+  $ret = array();
+
+  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
+
+  return $ret;  
 }
