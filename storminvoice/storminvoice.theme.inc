@@ -75,7 +75,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax'),
+      'data' => t('Tax 1'),
       'style' => 'text-align: right;',
     ),
     array(
@@ -95,7 +95,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => sprintf('%.2f', $totals_topay->tax),
+      'data' => sprintf('%.2f', $totals_topay->tax1),
       'style' => 'text-align: right;',
     ),
     array(
@@ -113,7 +113,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => sprintf('%.2f', $totals_paid->tax),
+      'data' => sprintf('%.2f', $totals_paid->tax1),
       'style' => 'text-align: right;',
     ),
     array(
@@ -131,7 +131,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => sprintf('%.2f', $totals->tax),
+      'data' => sprintf('%.2f', $totals->tax1),
       'style' => 'text-align: right;',
     ),
     array(
