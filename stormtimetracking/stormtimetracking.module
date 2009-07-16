@@ -579,12 +579,14 @@ function stormtimetracking_admin_settings() {
 
 // INVOICE AUTO ADD HANDLER
 function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
-    
   if (!module_exists('storminvoice')) {
-  
-    //return;
-  } else {
-  
+    drupal_set_message(t('This function should only be called from within Storm Invoice'));
+    return;
+  } 
+  else {
+    global $user;
+    $hours_per_day = 8;
+    
     if (!$invoice_nid) {
     
       $new_invoice = new StdClass;
@@ -598,6 +600,7 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice->number = (db_result(db_query($s, $new_invoice->requestdate)) + 1) .'/'. $date['year'];
 
       $new_invoice->title = $node->title;
+      $new_invoice->uid = $user->uid;
       $new_invoice->type = 'storminvoice';
       //$new_invoice->reference
       $new_invoice->organization_nid = $node->organization_nid;
@@ -614,16 +617,76 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
-      storminvoice_insert($new_invoice);
-        
-      drupal_goto('node/'. $invoice_nid);
     }
     
     $new_invoice_item = new StdClass;
-    
-    //$new_invoice_item->title = $node->title,
-    //node_save($new_invoice_item);
+    $new_invoice_item->uid = $user->uid;
+    $new_invoice_item->type = 'storminvoiceitem';
+
+    if ($node->ticket_nid) {
+      $parent_ticket = node_load($node->ticket_nid);
+      switch($parent_ticket->pricemode) {
+        case 'hourly':
+          $hourly_rate = $parent_ticket->price;
+          break;
+        case 'daily':
+          $hourly_rate = $parent_ticket->price / $hours_per_day;
+          break;
+        default:
+          drupal_set_message('Error whilst finding hourly rate from ticket', 'error');
+      }
+    }
+    elseif ($node->task_nid) {
+      $parent_task = node_load($node->task_nid);
+      switch($parent_task->pricemode) {
+        case 'hourly':
+          $hourly_rate = $parent_task->price;
+          break;
+        case 'daily':
+          $hourly_rate = $parent_task->price / $hours_per_day;
+          break;
+        default:
+          drupal_set_message('Error whilst finding hourly rate from task', 'error');
+      }
+    }
+    elseif ($node->project_nid) {
+      $parent_project = node_load($node->project_nid);
+      switch($parent_project->pricemode) {
+        case 'hourly':
+          $hourly_rate = $parent_project->price;
+          break;
+        case 'daily':
+          $hourly_rate = $parent_project->price / $hours_per_day;
+          break;
+        default:
+          drupal_set_message('Error whilst finding hourly rate from project', 'error');
+      }
+    }
+    else {
+      $parent_organization = node_load($node->organization_nid);
+      switch($parent_organization->pricemode) {
+        case 'hourly':
+          $hourly_rate = $parent_organization->price;
+          break;
+        case 'daily':
+          $hourly_rate = $parent_organization->price / $hours_per_day;
+          break;
+        default:
+          drupal_set_message('Error whilst finding hourly rate from organization', 'error');
+      }
+    }
+
+    $new_invoice_item->invoice_nid = $invoice_nid;
+    $new_invoice_item->title = $node->duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
+    $new_invoice_item->amount = $node->duration * $hourly_rate;
+    // Tax percent simply uses default at the moment
+    $new_invoice_item->tax1percent = variable_get('storminvoice_tax1_percent', 20);
+    //$new_invoice_item->tax1
+    //$new_invoice_item->total
+
+    node_save($new_invoice_item);
   }
+  return $invoice_nid;
 }
 
 // VIEWS HANDLER

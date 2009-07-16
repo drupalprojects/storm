@@ -85,7 +85,20 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $w = 0;
+  // Code to create invoice auto_add link
+  $v = '';
+  $v = '<strong>'. t('Invoice this item:') .'</strong>';
+  $v .= '<ul>';
+  $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/'. $node->nid) .'</li>';
+  $v .= '<li>'. t('Add to existing invoice') .'</li>';
+  $v .= '</ul>';
+  
+  $node->content['stormtimetracking']['links']['auto_invoice'] = array(
+    '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
+    '#suffix' => '</dt>',
+    '#value' => $v,
+    '#weight' => $w++,
+  );
 
   return $node;
 }

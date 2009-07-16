@@ -611,18 +611,21 @@ function storminvoice_admin_settings() {
 }
 
 // AUTO_ADD HANDLER
-function storminvoice_auto_add($node) {
+function storminvoice_auto_add($node, $invoice = NULL) {
   switch ($node->type) {
     case 'stormticket':
-      stormticket_storminvoice_auto_add($node);
+      $invoice_nid = stormticket_storminvoice_auto_add($node, $invoice);
       break;
     case 'stormtimetracking':
-      stormtimetracking_storminvoice_auto_add($node);
+      $invoice_nid = stormtimetracking_storminvoice_auto_add($node, $invoice);
       break;
     default:
       drupal_set_message(t('This type of node cannot be automatically added to an invoice'), 'error');
-      $_REQUEST['destination'] = 'node/'. $node->nid;
+      drupal_goto('node/'. $node->nid);
   }
+  
+  drupal_set_message('This invoice was created automatically from the selected '. $node->type .'.');
+  drupal_goto('node/'. $invoice_nid);
 }
 
 // VIEWS HOOK
@@ -758,12 +761,12 @@ function storminvoiceitem_update($node) {
 
 function _storminvoiceitem_beforesave(&$node) {
   // Update the tax based on tax percentage and item total, then total based on these. Totals update automatically on each save to keep consistency.
-  $node->tax1 = $node->amount * $node->taxpercent * .01;
+  $node->tax1 = $node->amount * $node->tax1percent * .01;
   $node->total = $node->amount + $node->tax1;
 }
 
 function _storminvoiceitem_aftersave(&$node) {
-  $s = "SELECT SUM(amount) tamount, SUM(tax1) ttax, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
+  $s = "SELECT SUM(amount) tamount, SUM(tax1) ttax1, SUM(total) ttotal FROM {storminvoiceitem} WHERE invoice_nid=%d";
   $r = db_query($s, $node->invoice_nid);
   $t = db_fetch_object($r);
 
