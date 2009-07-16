@@ -305,10 +305,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['storminvoice']['fields_2']['tax'] = array(
+  $node->content['storminvoice']['fields_2']['tax1'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
+    '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
     '#weight' => $w++,
   );
 
@@ -792,7 +792,7 @@ function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #4369
     $data = array (
       drupal_render($form['invoiceitems'][$key]['invoiceitem_title_'. $key]),
       array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_amount_'. $key])), 'align' => 'right'),
-      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax_'. $key])), 'align' => 'right'),
+      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax1_'. $key])), 'align' => 'right'),
       array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_total_'. $key])), 'align' => 'right'),
       drupal_render($form['invoiceitems'][$key]['invoiceitem_weight_'. $key]),
       array (
