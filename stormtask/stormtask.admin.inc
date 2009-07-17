@@ -95,64 +95,64 @@ function stormtask_tasks($project) {
   if ($dispOpt['ShowDur']){$dispOpt['ShowDur']=1;}
 
   if(variable_get('stormtask_enable_ganttchart',0) && file_exists($jsgantt_dir .'/jsgantt.js')) {
-  
     drupal_add_js($jsgantt_dir."/jsgantt.js");
     drupal_add_css($jsgantt_dir."/jsgantt.css");
 
     //version w/o xml file
-      $pMile = 0;
-      $pRes = "";
-      $pComp = 50;
-      $pGroup = 0;
-      $pParent = 0;
-      $pOpen = 1;
-      $js = "";
-      $pDepend = 0;
-      $pParent = 0;
+    $pMile = 0;
+    $pRes = "";
+    $pComp = 50;
+    $pGroup = 0;
+    $pParent = 0;
+    $pOpen = 1;
+    $js = "";
+    $pDepend = 0;
+    $pParent = 0;
+    
+    foreach($taskstree as $task ) {
+      $pID = $task->nid;
+      $pName = $task->title;
+      $pCaption = $pName;
+      $pLink = base_path()."node/".$task->nid;
+      $pStart = date("n/j/Y",$task->datebegin);
+      $pEnd = date("n/j/Y",$task->dateend);
+      $pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); //$task->taskstatus;
+      $pDepend = $task->parents[0];
+      //$pParent = $task->parents[0];
 
+      $pName = str_repeat('--', $task->depth) .' '. $pName;
+      $js .= "g.AddTaskItem(new JSGantt.TaskItem(".$pID.",'".$pName."','".$pStart."','".$pEnd."','".$pColor."','".$pLink."',".$pMile.",'".$pRes."',".$pComp.",".$pGroup.",".$pParent.",".$pOpen.",".$pDepend.",'".$pCaption."'));\n";
+    }
 
-      foreach($taskstree as $task ) {
-	$pID = $task->nid;
-	$pName = $task->title;
-	$pCaption = $pName;
-	$pLink = base_path()."node/".$task->nid;
-	$pStart = date("n/j/Y",$task->datebegin);
-	$pEnd = date("n/j/Y",$task->dateend);
-	$pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); //$task->taskstatus;
-	$pDepend = $task->parents[0];
-// 	$pParent = $task->parents[0];
-
-	$js .= "g.AddTaskItem(new JSGantt.TaskItem(".$pID.",'".$pName."','".$pStart."','".$pEnd."','".$pColor."','".$pLink."',".$pMile.",'".$pRes."',".$pComp.",".$pGroup.",".$pParent.",".$pOpen.",".$pDepend.",'".$pCaption."'));\n";
-      }
-
-      $o_gantt .="<div style='position:relative' class='gantt' id='GanttChartDIV'></div>
-    <script>
-      // here's all the html code neccessary to display the chart object
+    $o_gantt .= "<div style='position:relative' class='gantt' id='GanttChartDIV'></div>";
+    $o_gantt .= "<script>
+      // Here is all the html code neccessary to display the chart object
       // Future idea would be to allow XML file name to be passed in and chart tasks built from file.
       var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
-	    g.setShowRes(0); // Show/Hide Responsible (0/1)
-	    g.setShowComp(0); // Show/Hide % Complete(0/1)
-	    g.setShowDur('".$dispOpt['ShowDur']."'); // Show/Hide Duration (0/1)
-	    g.setShowStartDate('".$dispOpt['ShowStartDate']."'); // Show/Hide Start Date(0/1)
-	    g.setShowEndDate('".$dispOpt['ShowEndDate']."'); // Show/Hide End Date(0/1)
-//	    g.setFormatArr('day','week','month') 
-      g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+        g.setShowRes(0); // Show/Hide Responsible (0/1)
+        g.setShowComp(0); // Show/Hide % Complete(0/1)
+        g.setShowDur('".$dispOpt['ShowDur']."'); // Show/Hide Duration (0/1)
+        g.setShowStartDate('".$dispOpt['ShowStartDate']."'); // Show/Hide Start Date(0/1)
+        g.setShowEndDate('".$dispOpt['ShowEndDate']."'); // Show/Hide End Date(0/1)
+        //g.setFormatArr('day','week','month') 
+        g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
       if( g ) {
 // Parameters (pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes,  pComp, pGroup, pParent, pOpen)
 ".$js."
 
 // use the XML file parser 
-//	    JSGantt.parseXML('http://localhost/services/sites/default/files/project.xml',g)
+//    JSGantt.parseXML('http://localhost/services/sites/default/files/project.xml',g)
 
-	g.Draw();	
-	g.DrawDependencies();
+    g.Draw();
+    g.DrawDependencies();
       }
       else
       {
-	alert('not defined');
+    alert('not defined');
       }
     </script>";
   }
+  
   $o .= drupal_get_form('stormtask_tasks_form', $header, $taskstree, $project);
   $o .= $o_gantt;
   return $o;
