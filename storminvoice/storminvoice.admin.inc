@@ -587,19 +587,6 @@ function storminvoice_send_form_submit($form, &$form_state) {
 
 /**
  * Implementation of hook_mail().
- *
- * Constructs the email notification message when the site is out of date.
- *
- * @param $key
- *   Unique key to indicate what message to build, always 'storminvoice_sent'.
- * @param $message
- *   Reference to the message array being built.
- * @param $params
- *   Array of parameters to indicate what text to include in the message body.
- *
- * @see drupal_mail()
- * @see _update_cron_notify()
- * @see _update_message_text()
  */
 function storminvoice_mail($key, &$message, $params) {
 
