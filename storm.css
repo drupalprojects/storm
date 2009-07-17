@@ -261,3 +261,7 @@ div.stormcomponent div.print_pdf {
 background: transparent url(images/pdf.png) no-repeat top left;
 }
 
+div.gantt {
+  width: 100%;
+  overflow: hidden;
+}
