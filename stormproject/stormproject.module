@@ -455,7 +455,7 @@ function stormproject_update($node) {
 
 function _stormproject_beforesave(&$node) {
   if (is_array($node->datebegin)){
-      $node->datebegin = _storm_date_to_gsmtimestamp($node->datebegin);
+      $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }
   else {
       $node->datebegin = strtotime($node->datebegin);
