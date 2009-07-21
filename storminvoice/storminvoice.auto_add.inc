@@ -24,11 +24,20 @@ function storminvoice_auto_add($node, $invoice = NULL) {
   drupal_goto('node/'. $invoice_nid);
 }
 
-function storminvoice_auto_add_select($node) {
+function storminvoice_auto_add_select() {
+  $form['node'] = array(
+    '#title' => t('Node'),
+    '#type' => 'hidden',
+    '#value' => arg(4),
+  );
+    
   $form['invoice'] = array(
     '#title' => t('Invoice'),
     '#type' => 'select',
-    '#options' => array(485, 489),
+    '#options' => array(
+      485 => 485,
+      489 => 489,
+    ),
     '#description' => t('Please choose the invoice that you would like to add to'),
   );
   
@@ -41,5 +50,7 @@ function storminvoice_auto_add_select($node) {
 }
 
 function storminvoice_auto_add_select_submit($form_id, $form_state) {
-  storminvoice_auto_add($node, $form_state['values']['invoice']);
+  $node = node_load($form_state['values']['node']);
+  $invoice = $form_state['values']['invoice'];
+  storminvoice_auto_add($node, $invoice);
 }

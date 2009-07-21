@@ -82,9 +82,9 @@ function storminvoice_menu() {
     'file' => 'storminvoice.auto_add.inc',
   );
   
-  $items['storm/invoice/auto_add/existing/%node'] = array(
+  $items['storm/invoice/auto_add/existing/%'] = array(
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('storminvoice_auto_add_select', 4),
+    'page arguments' => array('storminvoice_auto_add_select'),
     'access arguments' => array('Storm invoice: add'),
     'type' => MENU_CALLBACK,
     'file' => 'storminvoice.auto_add.inc',
