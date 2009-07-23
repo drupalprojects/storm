@@ -108,5 +108,36 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   
   $w = 0;
 
+  $i = new stdClass();
+
+  if (module_exists('stormexpense') && user_access('Storm expense: access')) {
+    $v = l(t('Expenses'), 'storm/expenses/', array('query' => array('ticket_nid' => $node->nid)));
+    $i->type = 'stormexpense';
+    $params = $_GET;
+    $params['ticket_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+    $node->content['stormticket']['links']['expenses'] = array(
+      '#prefix' => '<dt id="stormexpenses" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => $v,
+      '#weight' => $w++,
+    );
+  }
+
+  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
+    $v = l(t('Timetracking'), 'storm/timetrackings/', array('query' => array('ticket_nid' => $node->nid)));
+    $i->type = 'stormtimetracking';
+    $params = $_GET;
+    $params['ticket_nid'] = $node->nid;
+    $v .= storm_icon_add_node($i, $params);
+
+    $node->content['stormticket']['links']['timetrackings'] = array(
+      '#prefix' => '<dt id="stormtimetrackings" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => $v,
+      '#weight' => $w++,
+    );
+  }
+  
   return $node;
 }
