@@ -3,7 +3,8 @@
 Version 6.x-1.x-dev:
 - Part of Feature 301301: (Timetracker -> Invoice): Added database columns for src
 - Part of Feature 311855: (Compound tax): Moved tax settings to Storm.module
-- Part of Feature 297775: (Gantt charts): Added setting for chart location
+- Feature 527768: Additional links on node view
+- Feature 297775: Gantt charts (added as experimental features - some tweaking may be required)
 - Bug #340954: Fixed use of revisions in some modules
 - Bug #477602: Add warning about remaining nodes on module disabling
 - Bug #510056: Domain key shown instead of domain value in ticket display
