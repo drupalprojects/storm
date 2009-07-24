@@ -541,6 +541,78 @@ function stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   return theme('stormexpense_view', $node, $teaser, $page);
 }
 
+// INVOICE AUTO ADD HANDLER
+function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
+  if (!module_exists('storminvoice')) {
+    drupal_set_message(t('This function should only be called from within Storm Invoice'));
+    return;
+  } 
+  else {
+    global $user;
+    
+    if (!$invoice_nid) {
+    
+      $new_invoice = new StdClass;
+      
+      //Code copied with edits from node form
+      $new_invoice->requestdate = time();
+      $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
+      $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
+        WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
+      $date = getdate($new_invoice->requestdate);
+      $new_invoice->number = (db_result(db_query($s, $new_invoice->requestdate)) + 1) .'/'. $date['year'];
+
+      $new_invoice->title = $node->title;
+      $new_invoice->uid = $user->uid;
+      $new_invoice->type = 'storminvoice';
+      //$new_invoice->reference
+      $new_invoice->organization_nid = $node->organization_nid;
+      $new_invoice->organization_title = $node->organization_title;
+      $new_invoice->project_nid = $node->project_nid;
+      $new_invoice->project_title = $node->project_title;
+      //$new_invoice->amount
+      //$new_invoice->tax
+      //$new_invoice->total
+      //$new_invoice->totalcustomercurr
+      //$new_invoice->taxexempt
+      $new_invoice->src_nid = $node->nid;
+      $new_invoice->src_vid = $node->vid;
+      
+      node_save($new_invoice);
+      $invoice_nid = $new_invoice->nid;
+    }
+    
+    $new_invoice_item = new StdClass;
+    $new_invoice_item->uid = $user->uid;
+    $new_invoice_item->type = 'storminvoiceitem';
+
+    if ($node->ticket_nid) {
+      $parent_ticket = node_load($node->ticket_nid);
+    }
+    elseif ($node->task_nid) {
+      $parent_task = node_load($node->task_nid);
+    }
+    elseif ($node->project_nid) {
+      $parent_project = node_load($node->project_nid);
+    }
+    else {
+      $parent_organization = node_load($node->organization_nid);
+    }
+
+    $new_invoice_item->invoice_nid = $invoice_nid;
+    $new_invoice_item->title = $node->title;
+    $new_invoice_item->amount = $node->amount;
+    // Tax percent simply uses default at the moment
+    $new_invoice_item->tax1percent = $node->tax / $node->amount * 100;
+    //$new_invoice_item->tax1
+    //$new_invoice_item->total
+
+    node_save($new_invoice_item);
+  }
+  return $invoice_nid;
+}
+
+
 function stormexpense_views_api() {
   return array(
     'api' => 2,

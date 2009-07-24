@@ -160,6 +160,21 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
+  // Code to create invoice auto_add link
+  $v = '';
+  $v .= '<strong>'. t('Invoice this item:') .'</strong>';
+  $v .= '<ul>';
+  $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
+  $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
+  $v .= '</ul>';
+  
+  $node->content['stormexpense']['links']['auto_invoice'] = array(
+    '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
+    '#suffix' => '</dt>',
+    '#value' => $v,
+    '#weight' => $w++,
+  );
+  
   return $node;
 }
 
