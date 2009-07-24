@@ -715,7 +715,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
     ORDER BY sta.weight";
     $s = stormtask_access_sql($s, $where);
     $s = db_rewrite_sql($s);
-    $args = array($project_nid) + $args;
+    $args = array_merge($args, array($project_nid));
     $r = db_query($s, $args);
     while ($task = db_fetch_object($r)) {
       $children[$project_nid][$task->parent_nid][] = $task->nid;
