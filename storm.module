@@ -9,9 +9,10 @@
  * 2: Dashboard
  * 3: Admin Settings
  * 4: Date / time manipulation
- * 5: Storm Icons
- * 6: SQL Functions
- * 7: Node form theming
+ * 5: Taxation functions
+ * 6: Storm Icons
+ * 7: SQL Functions
+ * 8: Node form theming
  */
 
 // HOOKS
@@ -111,7 +112,7 @@ function storm_dashboard() {
 // ADMIN SETTINGS FORM
 function storm_admin_settings() {
   $form = array();
-  $w = 0;
+  $w = -5;
 
   $form['storm_icons_path'] = array(
     '#type' => 'textfield',
@@ -121,24 +122,26 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
 
-  $form['yearsrange'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Years range in dates'),
-    '#collapsed' => false,
-    '#collapsible' => true,
-    '#weight' => $w++,
-  );
-  
   $form['storm_report_header'] = array(
     '#type' => 'textarea',
     '#title' => t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
     '#description' => t('The header that will appear on Storm reports'),
+    '#weight' => $w++,
+  );
+  
+  $form['yearsrange'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Years range in dates'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
   );
   
   $form['yearsrange']['group0'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
+    '#weight' => $w++,
   );
 
   $form['yearsrange']['group0']['storm_yearsrangebegin'] = array(
@@ -158,20 +161,14 @@ function storm_admin_settings() {
   $form['taxation'] = array(
     '#type' => 'fieldset',
     '#title' => t('Taxation defaults'),
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
     '#collapsible' => TRUE,
+    '#weight' => $w++,
   );
   
-  $form['taxation']['tax1'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Tax 1'),
-    '#collapsed' => FALSE,
-    '#collapsible' => TRUE,
-  );
-  
-  $form['taxation']['tax1']['status'] = array(
+  $form['taxation']['tax1app'] = array(
     '#type' => 'select',
-    '#title' => t('Application of Tax 1'),
+    '#title' => t('Tax 1: Application'),
     '#default_value' => variable_get('storm_tax1_app', 'item'),
     '#description' => t('The method of application to use for Tax 1'),
     '#options' => array(
@@ -181,32 +178,26 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax1']['name'] = array(
+  $form['taxation']['tax1name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Name of Tax 1'),
+    '#title' => t('Tax 1: Name'),
     '#default_value' => variable_get('storm_tax1_name', 'VAT'),
     '#description' => t('The name to use for Tax 1'),
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax1']['percentage'] = array(
+  $form['taxation']['tax1percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Default percentage'),
     '#default_value' => variable_get('storm_tax1_percent', 20),
     '#description' => t('Default percentage for Tax 1'),
     '#size' => 5,
+    '#weight' => $w++
   );
   
-  $form['taxation']['tax2'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Tax 2'),
-    '#collapsed' => FALSE,
-    '#collapsible' => TRUE,
-  );
-  
-  $form['taxation']['tax2']['status'] = array(
+  $form['taxation']['tax2app'] = array(
     '#type' => 'select',
-    '#title' => t('Application of Tax 2'),
+    '#title' => t('Tax 2: Application'),
     '#default_value' => variable_get('storm_tax2_app', 'none'),
     '#description' => t('The method of application to use for Tax 2'),
     '#options' => array(
@@ -217,20 +208,21 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax2']['name'] = array(
+  $form['taxation']['tax2name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Name of Tax 2'),
+    '#title' => t('Tax 2: Name'),
     '#default_value' => variable_get('storm_tax2_name', 'VAT'),
     '#description' => t('The name to use for Tax 2'),
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax2']['percentage'] = array(
+  $form['taxation']['tax2percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Default percentage'),
     '#default_value' => variable_get('storm_tax2_percent', 20),
     '#description' => t('Default percentage for Tax 2'),
     '#size' => 5,
+    '#weight' => $w++,
   );
 
   return system_settings_form($form);
@@ -465,6 +457,59 @@ function _storm_strtotime($timestr='') {
 function _timetostr($time=array()) {
   $timestr = str_pad($time['hour'], 2, "0", STR_PAD_LEFT) .':'. str_pad($time['minute'], 2, "0", STR_PAD_RIGHT);
   return $timestr;
+}
+
+// TAXATION MANIPULATION
+function storm_taxation($amount, $tax1app=-1, $tax1percent=-1, $tax1app=-1, $tax2percent=-1) {
+  // If values are not set, then use default values
+  if ($tax1app == -1) {
+    $tax1app = variable_get('storm_tax1_app', 'none');
+  }
+  if ($tax1percent == -1) {
+    $tax1percent = variable_get('storm_tax1_percent', '20');
+  }
+  if ($tax2app == -1) {
+    $tax2app = variable_get('storm_tax2_app', 'none');
+  }
+  if ($tax2percent == -1) {
+    $tax2percent = variable_get('storm_tax2_percent', '20');
+  }
+  
+  $results = new StdClass;
+  $results->amount = $amount;
+  
+  switch ($tax1app) {
+    case 0:
+      $results->tax1 = 0;
+      break;
+    case 1:
+      $results->tax1 = $amount * $tax1percent / 100;
+      break;
+    default:
+      // ERROR
+      drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
+  }
+  
+  $results->subtotal = $amount + $results->tax1;
+  
+  switch ($tax2app) {
+    case 0:
+      $results->tax2 = 0;
+      break;
+    case 1:
+      $results->tax2 = $amount * $tax2percent / 100;
+      break;
+    case 2:
+      $results->tax2 = $subtotal * $tax2percent / 100;
+      break;
+    default:
+      // ERROR
+      drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
+  }
+  
+  $results->total = $results->subtotal + $results->tax2;
+  
+  return $results;
 }
 
 // STORM ICON ADD / EDIT / LINK FUNCTIONS
