@@ -460,56 +460,51 @@ function _timetostr($time=array()) {
 }
 
 // TAXATION MANIPULATION
-function storm_taxation($amount, $tax1app=-1, $tax1percent=-1, $tax1app=-1, $tax2percent=-1) {
+function storm_taxation(&$node) {
   // If values are not set, then use default values
-  if ($tax1app == -1) {
-    $tax1app = variable_get('storm_tax1_app', 'none');
+  if (!$node->tax1app) {
+    $node->tax1app = variable_get('storm_tax1_app', 'none');
   }
-  if ($tax1percent == -1) {
-    $tax1percent = variable_get('storm_tax1_percent', '20');
+  if (!$node->tax1percent) {
+    $node->tax1percent = variable_get('storm_tax1_percent', '20');
   }
-  if ($tax2app == -1) {
-    $tax2app = variable_get('storm_tax2_app', 'none');
+  if (!$node->tax2app) {
+    $node->tax2app = variable_get('storm_tax2_app', 'none');
   }
-  if ($tax2percent == -1) {
-    $tax2percent = variable_get('storm_tax2_percent', '20');
+  if (!$node->tax2percent) {
+    $node->tax2percent = variable_get('storm_tax2_percent', '20');
   }
-  
-  $results = new StdClass;
-  $results->amount = $amount;
-  
-  switch ($tax1app) {
+    
+  switch ($node->tax1app) {
     case 0:
-      $results->tax1 = 0;
+      $node->tax1 = 0;
       break;
     case 1:
-      $results->tax1 = $amount * $tax1percent / 100;
+      $node->tax1 = $node->amount * $node->tax1percent / 100;
       break;
     default:
       // ERROR
       drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
   }
   
-  $results->subtotal = $amount + $results->tax1;
+  $node->subtotal = $node->amount + $node->tax1;
   
-  switch ($tax2app) {
+  switch ($node->tax2app) {
     case 0:
-      $results->tax2 = 0;
+      $node->tax2 = 0;
       break;
     case 1:
-      $results->tax2 = $amount * $tax2percent / 100;
+      $node->tax2 = $node->amount * $node->tax2percent / 100;
       break;
     case 2:
-      $results->tax2 = $subtotal * $tax2percent / 100;
+      $node->tax2 = $node->subtotal * $node->tax2percent / 100;
       break;
     default:
       // ERROR
       drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
   }
   
-  $results->total = $results->subtotal + $results->tax2;
-  
-  return $results;
+  $node->total = $node->subtotal + $node->tax2;
 }
 
 // STORM ICON ADD / EDIT / LINK FUNCTIONS
