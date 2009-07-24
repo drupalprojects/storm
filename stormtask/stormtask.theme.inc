@@ -127,65 +127,10 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $w = 0;
   $i = new stdClass();
 
-  if (module_exists('stormexpense') && user_access('Storm expense: access')) {
-    $v = l(t('Expenses'), 'storm/expenses/', array('query' => array('task_nid' => $node->nid)));
-    $i->type = 'stormexpense';
-    $params = $_GET;
-    $params['task_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormtask']['links']['expenses']  = array(
-      '#prefix' => '<dt id="stormexpenses" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
+  $node->content['stormtask']['links']['expenses'] = theme_storm_link('stormtask', 'stormexpense', $node->nid, $w++);
+  $node->content['stormtask']['links']['notes'] = theme_storm_link('stormtask', 'stormnote', $node->nid, $w++);
+  $node->content['stormtask']['links']['tickets'] = theme_storm_link('stormtask', 'stormticket', $node->nid, $w++);
+  $node->content['stormtask']['links']['timetrackings'] = theme_storm_link('stormtask', 'stormtimetracking', $node->nid, $w++);
   
-  if (module_exists('stormnote') && user_access('Storm note: access')) {
-    $v = l(t('Notes'), 'storm/notes/', array('query' => array('task_nid' => $node->nid)));
-    $i->type = 'stormnote';
-    $params = $_GET;
-    $params['task_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormtask']['links']['notes']  = array(
-      '#prefix' => '<dt id="stormnotes" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-  
-  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
-    $v = l(t('Tickets'), 'storm/tickets/', array('query' => array('task_nid' => $node->nid)));
-    $i->type = 'stormticket';
-    $params = $_GET;
-    $params['task_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormtask']['links']['tickets'] = array(
-      '#prefix' => '<dt id="stormtickets" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
-    $v = l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('task_nid' => $node->nid)));
-    $i->type = 'stormtimetracking';
-    $params = $_GET;
-    $params['task_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormtask']['links']['timetrackings'] = array(
-      '#prefix' => '<dt id="stormtimetrackings" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
   return $node;
 }
