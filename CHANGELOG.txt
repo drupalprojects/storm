@@ -4,7 +4,7 @@ Version 6.x-1.x-dev:
 - Part of Feature #301301: (Timetracker -> Invoice): Added database columns for src
 - Part of Feature #311855: (Compound tax): Moved tax settings to Storm.module
 - Bug #526926: Tasks filter by project returned empty list
-- Feature #527768: Additional links on node view
+- Feature #527768: Additional links on node view, refactor of links code.
 - Feature #297775: Gantt charts (added as experimental features - some tweaking may be required)
 - Bug #340954: Fixed use of revisions in some modules
 - Bug #477602: Add warning about remaining nodes on module disabling

@@ -145,124 +145,14 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
   $w = 0;
   $i = new stdClass();
-
-  if (module_exists('stormexpense') && user_access('Storm expense: access')) {
-    $v = l(t('Expenses'), 'storm/expenses/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormexpense';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-    $node->content['stormorganization']['links']['expenses'] = array(
-      '#prefix' => '<dt id="stormexpenses" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('storminvoice') && user_access('Storm invoice: access')) {
-    $v = l(t('Invoices'), 'storm/invoices/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'storminvoice';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-    $node->content['stormorganization']['links']['invoices'] = array(
-      '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormnote') && user_access('Storm note: access')) {
-    $v = l(t('Notes'), 'storm/notes/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormnote';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['notes'] = array(
-      '#prefix' => '<dt id="stormnotes" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormperson') && user_access('Storm person: access')) {
-    $v = l(t('People'), 'storm/people/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormperson';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['people'] = array(
-      '#prefix' => '<dt id="stormpeople" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormproject') && user_access('Storm project: access')) {
-    $v = l(t('Projects'), 'storm/projects/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormproject';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['projects'] = array(
-      '#prefix' => '<dt id="stormprojects" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormtask') && user_access('Storm task: access')) {
-    $v = l(t('Tasks'), 'storm/tasks/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormtask';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['tasks'] = array(
-      '#prefix' => '<dt id="stormtasks" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
-    $v = l(t('Tickets'), 'storm/tickets/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormticket';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['tickets'] = array(
-      '#prefix' => '<dt id="stormtickets" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
-  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
-    $v = l(t('Timetrackings'), 'storm/timetrackings/', array('query' => array('organization_nid' => $node->nid)));
-    $i->type = 'stormtimetracking';
-    $params = $_GET;
-    $params['organization_nid'] = $node->nid;
-    $v .= storm_icon_add_node($i, $params);
-
-    $node->content['stormorganization']['links']['timetrackings'] = array(
-      '#prefix' => '<dt id="stormtimetrackings" class="stormcomponent">',
-      '#suffix' => '</dt>',
-      '#value' => $v,
-      '#weight' => $w++,
-    );
-  }
-
+  
+  $node->content['stormorganization']['links']['expenses'] = theme_storm_link('stormorganization', 'stormexpense', $node->nid, $w++);
+  $node->content['stormorganization']['links']['invoices'] = theme_storm_link('stormorganization', 'storminvoice', $node->nid, $w++);
+  $node->content['stormorganization']['links']['notes'] = theme_storm_link('stormorganization', 'stormnote', $node->nid, $w++);
+  $node->content['stormorganization']['links']['people'] = theme_storm_link('stormorganization', 'stormperson', $node->nid, $w++);
+  $node->content['stormorganization']['links']['tasks'] = theme_storm_link('stormorganization', 'stormtask', $node->nid, $w++);
+  $node->content['stormorganization']['links']['tickets'] = theme_storm_link('stormorganization', 'stormticket', $node->nid, $w++);
+  $node->content['stormorganization']['links']['timetrackings'] = theme_storm_link('stormorganization', 'stormtimetracking', $node->nid, $w++);
+  
   return $node;
 }

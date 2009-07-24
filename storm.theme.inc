@@ -98,99 +98,191 @@ function theme_storm_dashboard() {
   $o .= '<dl class="stormdashboard">';
   
   $o .= '<div class="stormdashboard">';
-  if (module_exists('stormorganization') && user_access('Storm organization: access')) {
-    $o .= '<dt class="stormcomponent" id="stormorganizations">'. l(t('Organizations'), 'storm/organizations');
-    $i = new stdClass();
-    $i->type = 'stormorganization';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormperson') && user_access('Storm person: access')) {
-    $o .= '<dt class="stormcomponent" id="stormpeople">'. l(t('People'), 'storm/people');
-    $i = new stdClass();
-    $i->type = 'stormperson';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormteammember') && user_access('Storm teammember: access')) {
-    $o .= '<dt class="stormcomponent" id="stormteammembers">'. l(t('Team members'), 'storm/teammembers');
-    $i = new stdClass();
-    $i->type = 'stormteammember';
-    $o .= storm_icon_add('storm/teammembers/add', $i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormproject') && user_access('Storm project: access')) {
-    $o .= '<dt class="stormcomponent" id="stormprojects">'. l(t('Projects'), 'storm/projects');
-    $i = new stdClass();
-    $i->type = 'stormproject';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormtask') && user_access('Storm task: access')) {
-    $o .= '<dt class="stormcomponent" id="stormtasks">'. l(t('Tasks'), 'storm/tasks');
-    $i = new stdClass();
-    $i->type = 'stormtask';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormticket') && user_access('Storm ticket: access')) {
-    $o .= '<dt class="stormcomponent" id="stormtickets">'. l(t('Tickets'), 'storm/tickets');
-    $i = new stdClass();
-    $i->type = 'stormticket';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormtimetracking') && user_access('Storm timetracking: access')) {
-    $o .= '<dt class="stormcomponent" id="stormtimetrackings">'. l(t('Timetrackings'), 'storm/timetrackings');
-    $i = new stdClass();
-    $i->type = 'stormtimetracking';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
+  $o .= theme_storm_link('', 'stormorganization');
+  $o .= theme_storm_link('', 'stormperson');
+  $o .= theme_storm_link('', 'stormteammember');
+  $o .= theme_storm_link('', 'stormproject');
+  $o .= theme_storm_link('', 'stormtask');
+  $o .= theme_storm_link('', 'stormticket');
+  $o .= theme_storm_link('', 'stormtimetracking');
   $o .= '</div>';
 
   $o .= '<div class="stormdashboard">';
-  if (module_exists('stormnote') && user_access('Storm note: access')) {
-    $o .= '<dt class="stormcomponent" id="stormnotes">'. l(t('Notes'), 'storm/notes');
-    $i = new stdClass();
-    $i->type = 'stormnote';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('storminvoice') && user_access('Storm invoice: access')) {
-    $o .= '<dt class="stormcomponent" id="storminvoices">'. l(t('Invoices'), 'storm/invoices');
-    $i = new stdClass();
-    $i->type = 'storminvoice';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormexpense') && user_access('Storm expense: access')) {
-    $o .= '<dt class="stormcomponent" id="stormexpenses">'. l(t('Expenses'), 'storm/expenses');
-    $i = new stdClass();
-    $i->type = 'stormexpense';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormknowledgebase') && user_access('Storm knowledgebase: access')) {
-    $o .= '<dt class="stormcomponent" id="stormknowledgebase">'. l(t('Knowledge base'), 'storm/knowledgebase');
-    $i = new stdClass();
-    $i->type = 'stormknowledgebase';
-    $o .= storm_icon_add_node($i, $_GET);
-    $o .= '</dt>';
-  }
-  if (module_exists('stormattribute') && user_access('Storm attribute: access')) {
-    $o .= '<dt class="stormcomponent" id="stormattributes">'. l(t('Attributes'), 'storm/attributes');
-    $i = new stdClass();
-    $i->type = 'stormattribute';
-    $o .= storm_icon_add('storm/attributes/add', $i, $_GET);
-    $o .= '</dt>';
-  }
-  if (user_access('access administration pages')) {
-    $o .= '<dt class="stormcomponent" id="stormconfiguration">'. l(t('Configuration'), 'admin/storm') .'</dt>';
-  }
-  $o .= '</div>';
+  $o .= theme_storm_link('', 'stormnote');
+  $o .= theme_storm_link('', 'storminvoice');
+  $o .= theme_storm_link('', 'stormexpense');
+  $o .= theme_storm_link('', 'stormknowledgebase');
+  $o .= theme_storm_link('', 'stormattribute');
+  $o .= theme_storm_link('', 'stormconfiguration');
   
+  $o .= '</div>';
   $o .= '</dl>';
   $o .= '</div>';
   return $o;
+}
+
+function theme_storm_link($source_module='', $destination_module='', $node_nid=0, $weight=0) {
+  switch ($source_module) {
+ 
+   case "stormorganization":
+      $params_key = 'organization_nid';
+      break;
+
+    case "stormproject":
+      $params_key = 'project_nid';
+      break;
+
+    case "stormtask":
+      $params_key = 'task_nid';
+      break;
+
+    case "stormticket":
+      $params_key = 'ticket_nid';
+      break;
+  }
+
+  switch ($destination_module) {
+    case "stormattribute":
+      $user_access_check = 'Storm attribute: access';
+      $list_text = 'Attributes';
+      $list_path = 'storm/attributes/';
+      $add_icon_type = 'stormattribute';
+      $dt_id = 'stormattributes';
+      break;
+
+    case "stormconfiguration":
+      $user_access_check = 'access administration pages';
+      $list_text = 'Configuration';
+      $list_path = 'admin/storm';
+      $add_icon_type = '';
+      $dt_id = 'stormconfiguration';
+      break;
+
+    case "stormexpense":
+      $user_access_check = 'Storm expense: access';
+      $list_text = 'Expenses';
+      $list_path = 'storm/expenses/';
+      $add_icon_type = 'stormexpense';
+      $dt_id = 'stormexpenses';
+      break;
+
+    case "storminvoice":
+      $user_access_check = 'Storm invoice: access';
+      $list_text = 'Invoices';
+      $list_path = 'storm/invoices/';
+      $add_icon_type = 'storminvoice';
+      $dt_id = 'storminvoices';
+      break;
+
+    case "stormknowledgebase":
+      $user_access_check = 'Storm knowledgebase: access';
+      $list_text = 'Knowledge base';
+      $list_path = 'storm/knowledgebase/';
+      $add_icon_type = 'stormknowledgebase';
+      $dt_id = 'stormknowledgebase';
+      break;
+
+    case "stormnote":
+      $user_access_check = 'Storm note: access';
+      $list_text = 'Notes';
+      $list_path = 'storm/notes/';
+      $add_icon_type = 'stormnote';
+      $dt_id = 'stormnotes';
+      break;
+
+    case "stormorganization":
+      $user_access_check = 'Storm organization: access';
+      $list_text = 'Organizations';
+      $list_path = 'storm/organizations/';
+      $add_icon_type = 'stormorganization';
+      $dt_id = 'stormorganizations';
+      break;
+
+    case "stormperson":
+      $user_access_check = 'Storm person: access';
+      $list_text = 'People';
+      $list_path = 'storm/people/';
+      $add_icon_type = 'stormperson';
+      $dt_id = 'stormpeople';
+      break;
+
+    case "stormproject":
+      $user_access_check = 'Storm project: access';
+      $list_text = 'Projects';
+      $list_path = 'storm/projects/';
+      $add_icon_type = 'stormproject';
+      $dt_id = 'stormprojects';
+      break;
+
+    case "stormtask":
+      $user_access_check = 'Storm task: access';
+      $list_text = 'Tasks';
+      $list_path = 'storm/tasks/';
+      $add_icon_type = 'stormtask';
+      $dt_id = 'stormtasks';
+      break;
+
+    case "stormteammember":
+      $user_access_check = 'Storm teammember: access';
+      $list_text = 'Team members';
+      $list_path = 'storm/teammembers/';
+      $add_icon_type = 'stormteammember';
+      $dt_id = 'stormteammembers';
+      break;
+
+    case "stormticket":
+      $user_access_check = 'Storm ticket: access';
+      $list_text = 'Tickets';
+      $list_path = 'storm/tickets/';
+      $add_icon_type = 'stormticket';
+      $dt_id = 'stormtickets';
+      break;
+
+    case "stormtimetracking":
+      $user_access_check = 'Storm timetracking: access';
+      $list_text = 'Timetrackings';
+      $list_path = 'storm/timetrackings/';
+      $add_icon_type = 'stormtimetracking';
+      $node_links_key = 'timetrackings';
+      $dt_id = 'stormtimetrackings';
+
+      break;
+  }
+
+  if (($destination_module=='stormconfiguration' && user_access($user_access_check)) || (module_exists($destination_module) && user_access($user_access_check))) {
+    if ($node_nid == 0) {
+      $params = array();
+    }
+    else {
+      $params = array('query' => array($params_key => $node_nid));
+    }
+    $v = l(t($list_text), $list_path, $params);
+    
+    if (!$add_icon_type=='') {
+      $i->type = $add_icon_type;
+      if ($node_nid == 0) {
+        $params = $_GET;
+      }
+      else {
+        $params = $_GET;
+        $params[$params_key] = $node_nid;
+      }
+      $v .= storm_icon_add_node($i, $params);
+    }
+
+    if ($node_nid == 0) {
+      $r = '<dt id="'. $dt_id .'" class="stormcomponent">';
+      $r .= $v;
+      $r .= '</dt>';
+    }
+    else {
+      $r = array(
+        '#prefix' => '<dt id="'. $dt_id .'" class="stormcomponent">',
+        '#suffix' => '</dt>',
+        '#value' => $v,
+        '#weight' => $weight,
+      );
+    }
+    return $r;
+  }
 }
