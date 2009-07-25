@@ -146,7 +146,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $user_access_check = 'Storm attribute: access';
       $list_text = 'Attributes';
       $list_path = 'storm/attributes/';
-      $add_icon_type = 'stormattribute';
+      $add_icon_type = '';
       $dt_id = 'stormattributes';
       break;
 
