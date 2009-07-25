@@ -1,5 +1,5 @@
 <?php
-// $Id:
+// $Id$
 
 function stormnote_views_data() {
   $data['stormnote']['table']['group']  = 'Storm';
