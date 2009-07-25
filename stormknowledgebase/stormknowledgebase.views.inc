@@ -1,5 +1,5 @@
 <?php
-// $Id:
+// $Id$
 
 function stormknowledgebase_views_data() {
   $data['stormknowledgebase']['table']['group']  = 'Storm';
@@ -22,6 +22,12 @@ function stormknowledgebase_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
