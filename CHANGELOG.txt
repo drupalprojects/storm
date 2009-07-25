@@ -3,6 +3,7 @@
 Version 6.x-1.x-dev:
 - Part of Feature #301301: (Timetracker -> Invoice): Added database columns for src
 - Part of Feature #311855: (Compound tax): Moved tax settings to Storm.module
+- Feature #468294: Integration of Popups API
 - Feature #530080: Additional views functionality
 - Bug #526926: Tasks filter by project returned empty list
 - Feature #527768: Additional links on node view, refactor of links code.
