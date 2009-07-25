@@ -1,5 +1,5 @@
 <?php
-// $Id:
+// $Id$
 
 function stormproject_views_data() {
   $data['stormproject']['table']['group']  = 'Storm';
@@ -19,6 +19,12 @@ function stormproject_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
   );
   
   $data['stormproject']['organization_title'] = array(
@@ -29,6 +35,12 @@ function stormproject_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
@@ -86,6 +98,12 @@ function stormproject_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
   
   $data['stormproject']['price'] = array(
@@ -97,6 +115,12 @@ function stormproject_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
   );
   
   $data['stormproject']['currency'] = array(
@@ -107,6 +131,12 @@ function stormproject_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
@@ -149,6 +179,12 @@ function stormproject_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
   
   $data['stormproject']['duration'] = array(
@@ -159,6 +195,12 @@ function stormproject_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
     ),
   );
   

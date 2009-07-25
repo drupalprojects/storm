@@ -1,5 +1,5 @@
 <?php
-// $Id:
+// $Id$
 
 function stormperson_views_data() {
   $data['stormperson']['table']['group']  = 'Storm';
@@ -19,6 +19,12 @@ function stormperson_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
   );
   
   $data['stormperson']['organization_title'] = array(
@@ -29,6 +35,12 @@ function stormperson_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
@@ -41,6 +53,12 @@ function stormperson_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
   
   $data['stormperson']['fullname'] = array(
@@ -51,6 +69,12 @@ function stormperson_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
@@ -63,6 +87,12 @@ function stormperson_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
   
   $data['stormperson']['www'] = array(
@@ -73,6 +103,12 @@ function stormperson_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   
@@ -85,6 +121,12 @@ function stormperson_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
   );
   
   $data['stormperson']['im'] = array(
@@ -96,6 +138,12 @@ function stormperson_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
   
   $data['stormperson']['user_uid'] = array(
@@ -106,6 +154,12 @@ function stormperson_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
     ),
   );
   

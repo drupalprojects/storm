@@ -1,5 +1,5 @@
 <?php
-// $Id:
+// $Id$
 
 function stormticket_views_data() {
   $data['stormticket']['table']['group']  = 'Storm';
@@ -94,6 +94,12 @@ function stormticket_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
 
   $data['stormticket']['project_title'] = array(
@@ -105,6 +111,12 @@ function stormticket_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
 
   $data['stormticket']['task_title'] = array(
@@ -115,6 +127,12 @@ function stormticket_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
 
