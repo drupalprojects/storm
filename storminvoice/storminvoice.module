@@ -487,14 +487,17 @@ function storminvoice_insert($node) {
 
   db_query("INSERT INTO {storminvoice}
       (vid, nid, number, reference, organization_nid, organization_title, 
-      project_nid, project_title, amount, tax1, total, totalcustomercurr, 
-      requestdate, duedate, paymentdate, taxexempt, src_nid, src_vid) VALUES
+      project_nid, project_title, amount, tax1app, tax1percent, tax1, 
+      total, totalcustomercurr, requestdate, duedate, paymentdate, 
+      taxexempt, src_nid, src_vid) VALUES
       (%d, %d, '%s', '%s', %d, '%s', 
-      %d, '%s', %f, %f, %f, %f, 
-      %d, %d, %d, %d, %d, %d)",
+      %d, '%s', %f, %d, %f, %f, 
+      %f, %f, %d, %d, %d, 
+      %d, %d, %d)",
       $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
-      $node->project_nid, $node->project_title, $node->amount, $node->tax1, $node->total, $node->totalcustomercurr,
-      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->src_nid, $node->src_vid);
+      $node->project_nid, $node->project_title, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1,
+      $node->total, $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, 
+      $node->taxexempt, $node->src_nid, $node->src_vid);
 }
 
 function storminvoice_update($node) {
@@ -506,11 +509,11 @@ function storminvoice_update($node) {
   else {
     db_query("UPDATE {storminvoice} SET
       number='%s', reference='%s', organization_nid=%d, organization_title='%s', project_nid=%d, 
-      project_title='%s', amount=%f, tax1=%f, total=%f, totalcustomercurr=%f,
-      requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
+      project_title='%s', amount=%f, tax1app=%d, tax1percent=%f, tax1=%f, total=%f, 
+      totalcustomercurr=%f, requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
       $node->number, $node->reference, $node->organization_nid, $node->organization_title, $node->project_nid, 
-      $node->project_title, $node->amount, $node->tax1, $node->total, $node->totalcustomercurr,
-      $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+      $node->project_title, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1, $node->total, 
+      $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
   }
 }
 
@@ -751,9 +754,12 @@ function storminvoiceitem_update($node) {
 }
 
 function _storminvoiceitem_beforesave(&$node) {
-  // Update the tax based on tax percentage and item total, then total based on these. Totals update automatically on each save to keep consistency.
-  $node->tax1 = $node->amount * $node->tax1percent * .01;
-  $node->total = $node->amount + $node->tax1;
+  // Update taxes
+  // Whilst we change over to compound tax, we set a couple of variables
+  $node->tax1app = 1;
+  $node->tax2app = 0;
+  
+  storm_taxation($node);
 }
 
 function _storminvoiceitem_aftersave(&$node) {

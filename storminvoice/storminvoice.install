@@ -35,6 +35,7 @@ function storminvoice_schema() {
       'paymentdate'         => array('type' => 'int'),
       'amount'              => array('type' => 'float'),
       'tax1'                => array('type' => 'float'),
+      'tax2'                => array('type' => 'float'),
       'total'               => array('type' => 'float'),
       'totalcustomercurr'   => array('type' => 'float'),
       'taxexempt'           => array('type' => 'int', 'size' => 'tiny'),
@@ -142,6 +143,14 @@ function storminvoice_update_6104() {
 
   db_add_column($ret, 'storminvoice', 'src_nid', 'int');
   db_add_column($ret, 'storminvoice', 'src_vid', 'int');
+  
+  return $ret;
+}
+
+function storminvoice_update_6105() {
+  $ret = array();
+  
+  db_add_column($ret, 'storminvoice', 'tax2', 'float');
   
   return $ret;
 }
