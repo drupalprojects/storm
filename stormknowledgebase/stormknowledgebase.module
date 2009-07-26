@@ -10,7 +10,7 @@ function stormknowledgebase_help($path, $arg) {
 
   switch ($path) {
     case "admin/help#stormknowledgebase":
-      $o = '<p>'. t("Provides knowledgebase support for Storm", 'knowledgebase') .'</p>';
+      $o = '<p>'. t('Provides knowledgebase support for Storm') .'</p>';
       break;
   }
 
