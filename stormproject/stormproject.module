@@ -391,8 +391,8 @@ function stormproject_form(&$node) {
 
 
 function stormproject_form_alter(&$form, $form_state, $form_id) {
-  if (module_exists('date_api')) {
-    if ('stormproject_node_form' == $form_id) {
+  if (module_exists('date_api') && module_exists('date_popup')) {
+    if ($form_id == 'stormproject_node_form') {
       $node = $form['#node'];
       $form['group3']['datebegin'] = array(
         '#type' => 'date_popup',
