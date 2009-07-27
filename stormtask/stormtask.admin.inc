@@ -111,13 +111,13 @@ function stormtask_tasks($project) {
     
     foreach($taskstree as $task ) {
       $pID = $task->nid;
-      $pName = $task->title;
+      $pName = check_plain($task->title);
       $pCaption = $pName;
       $pLink = base_path()."node/".$task->nid;
       $pStart = date("n/j/Y",$task->datebegin);
       $pEnd = date("n/j/Y",$task->dateend);
       $pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); //$task->taskstatus;
-      $pDepend = $task->parents[0];
+      //$pDepend = $task->parents[0];
       //$pParent = $task->parents[0];
 
       $pName = str_repeat('--', $task->depth) .' '. $pName;
