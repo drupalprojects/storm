@@ -671,11 +671,11 @@ function theme_storminvoice_report_html($node, $language) {
   $amount = t('Amount', array(), $language);
   if ($language1) $amount .= '<br />'. t('Amount', array(), $language1);
 
-  $taxpercent = t('Tax %', array(), $language);
-  if ($language1) $taxpercent .= '<br />'. t('Tax %', array(), $language1);
+  $tax1percent = t('Tax %', array(), $language);
+  if ($language1) $tax1percent .= '<br />'. t('Tax %', array(), $language1);
 
-  $tax = t('Tax', array(), $language);
-  if ($language1) $tax .= '<br />'. t('Tax', array(), $language1);
+  $tax1 = t('Tax', array(), $language);
+  if ($language1) $tax1 .= '<br />'. t('Tax', array(), $language1);
 
   $total = t('Total', array(), $language);
   if ($language1) $total .= '<br />'. t('Total', array(), $language1);
@@ -688,10 +688,10 @@ function theme_storminvoice_report_html($node, $language) {
       'data' => $amount,
     ),
     array(
-      'data' => $taxpercent,
+      'data' => $tax1percent,
     ),
     array(
-      'data' => $tax,
+      'data' => $tax1,
     ),
     array(
       'data' => $total,
@@ -709,11 +709,11 @@ function theme_storminvoice_report_html($node, $language) {
         'style' => 'text-align: right;',
       ),
       array(
-        'data' => $i->taxpercent,
+        'data' => $i->tax1percent,
         'style' => 'text-align: right;',
       ),
       array(
-        'data' => sprintf('%.2f', $i->tax),
+        'data' => sprintf('%.2f', $i->tax1),
         'style' => 'text-align: right;',
       ),
       array(
