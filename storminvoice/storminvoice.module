@@ -509,10 +509,10 @@ function storminvoice_update($node) {
   else {
     db_query("UPDATE {storminvoice} SET
       number='%s', reference='%s', organization_nid=%d, organization_title='%s', project_nid=%d, 
-      project_title='%s', amount=%f, tax1app=%d, tax1percent=%f, tax1=%f, total=%f, 
+      project_title='%s', amount=%f, tax1=%f, tax2=%f, total=%f, 
       totalcustomercurr=%f, requestdate=%d, duedate=%d, paymentdate=%d, taxexempt=%d WHERE vid = %d",
       $node->number, $node->reference, $node->organization_nid, $node->organization_title, $node->project_nid, 
-      $node->project_title, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1, $node->total, 
+      $node->project_title, $node->amount, $node->tax1, $node->tax2, $node->total, 
       $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
   }
 }
