@@ -487,15 +487,15 @@ function storminvoice_insert($node) {
 
   db_query("INSERT INTO {storminvoice}
       (vid, nid, number, reference, organization_nid, organization_title, 
-      project_nid, project_title, amount, tax1app, tax1percent, tax1, 
+      project_nid, project_title, amount, tax1, tax2,
       total, totalcustomercurr, requestdate, duedate, paymentdate, 
       taxexempt, src_nid, src_vid) VALUES
       (%d, %d, '%s', '%s', %d, '%s', 
-      %d, '%s', %f, %d, %f, %f, 
+      %d, '%s', %f, %f, %f, 
       %f, %f, %d, %d, %d, 
       %d, %d, %d)",
       $node->vid, $node->nid, $node->number, $node->reference, $node->organization_nid, $node->organization_title,
-      $node->project_nid, $node->project_title, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1,
+      $node->project_nid, $node->project_title, $node->amount, $node->tax1, $node->tax2,
       $node->total, $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, 
       $node->taxexempt, $node->src_nid, $node->src_vid);
 }
