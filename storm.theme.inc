@@ -146,7 +146,8 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $user_access_check = 'Storm attribute: access';
       $list_text = 'Attributes';
       $list_path = 'storm/attributes/';
-      $add_icon_type = '';
+      $add_icon_type = 'stormattribute';
+      $add_path = 'storm/attributes/add';
       $dt_id = 'stormattributes';
       break;
 
@@ -155,6 +156,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Configuration';
       $list_path = 'admin/storm';
       $add_icon_type = '';
+      $add_path = '';
       $dt_id = 'stormconfiguration';
       break;
 
@@ -163,6 +165,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Expenses';
       $list_path = 'storm/expenses/';
       $add_icon_type = 'stormexpense';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormexpenses';
       break;
 
@@ -171,6 +174,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Invoices';
       $list_path = 'storm/invoices/';
       $add_icon_type = 'storminvoice';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'storminvoices';
       break;
 
@@ -179,6 +183,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Knowledge base';
       $list_path = 'storm/knowledgebase/';
       $add_icon_type = 'stormknowledgebase';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormknowledgebase';
       break;
 
@@ -187,6 +192,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Notes';
       $list_path = 'storm/notes/';
       $add_icon_type = 'stormnote';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormnotes';
       break;
 
@@ -195,6 +201,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Organizations';
       $list_path = 'storm/organizations/';
       $add_icon_type = 'stormorganization';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormorganizations';
       break;
 
@@ -203,6 +210,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'People';
       $list_path = 'storm/people/';
       $add_icon_type = 'stormperson';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormpeople';
       break;
 
@@ -211,6 +219,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Projects';
       $list_path = 'storm/projects/';
       $add_icon_type = 'stormproject';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormprojects';
       break;
 
@@ -219,6 +228,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Tasks';
       $list_path = 'storm/tasks/';
       $add_icon_type = 'stormtask';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtasks';
       break;
 
@@ -227,6 +237,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Team members';
       $list_path = 'storm/teammembers/';
       $add_icon_type = 'stormteammember';
+      $add_path = 'storm/teammembers/add';
       $dt_id = 'stormteammembers';
       break;
 
@@ -235,6 +246,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_text = 'Tickets';
       $list_path = 'storm/tickets/';
       $add_icon_type = 'stormticket';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtickets';
       break;
 
@@ -244,6 +256,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $list_path = 'storm/timetrackings/';
       $add_icon_type = 'stormtimetracking';
       $node_links_key = 'timetrackings';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtimetrackings';
 
       break;
@@ -267,7 +280,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
         $params = $_GET;
         $params[$params_key] = $node_nid;
       }
-      $v .= storm_icon_add_node($i, $params);
+      $v .= storm_icon_add($add_path, $i, $params);
     }
 
     if ($node_nid == 0) {
