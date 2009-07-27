@@ -621,7 +621,7 @@ function _stormtask_beforesave(&$node) {
   $node->project_title = $p->title;
 
   if (is_array($node->datebegin)){
-      $node->datebegin = _storm_date_to_gsmtimestamp($node->datebegin);
+      $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }
   else {
       $node->datebegin = strtotime($node->datebegin);
