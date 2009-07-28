@@ -110,8 +110,8 @@ function stormtimetracking_access_sql($sql, $where = array()) {
 function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$account->uid]) {
-    return $conds[$account->uid];
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
   }
 
   if (preg_match("/'storm_access'='storm_access'/", $query)) {
@@ -145,7 +145,7 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $acco
     }
   }
 
-  $conds[$account->uid] = $cond;
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 
