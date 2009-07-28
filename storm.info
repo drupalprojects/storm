@@ -1,7 +1,0 @@
-; $Id$
-name = Storm
-description = "Storm Project Management Application"
-core = 7.x
-package = Storm
-files[] = storm.module
-files[] = storm.theme.inc

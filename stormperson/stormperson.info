@@ -1,8 +1,0 @@
-; $Id
-name = Storm Person
-description = "SpeedTech Organizer and Resource Manager - Person"
-dependencies[] = storm 
-dependencies[] = stormattribute
-dependencies[] = stormorganization
-package = Storm
-core = 6.x

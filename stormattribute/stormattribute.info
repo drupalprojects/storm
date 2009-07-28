@@ -1,6 +1,0 @@
-; $Id$
-name = Storm Attribute
-description = "SpeedTech Organizer and Resource Manager - Attributes"
-dependencies[] = storm
-package = Storm
-core = 6.x
