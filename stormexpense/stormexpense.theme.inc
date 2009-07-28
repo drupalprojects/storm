@@ -36,7 +36,7 @@ function theme_stormexpense_list($header, $expenses, $totals) {
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => t('Tax'),
+      'data' => t('Tax 1'),
       'style' => 'text-align: center;',
     ),
     array(
@@ -52,7 +52,7 @@ function theme_stormexpense_list($header, $expenses, $totals) {
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => sprintf('%.2f', $totals->t_tax),
+      'data' => sprintf('%.2f', $totals->t_tax1),
       'style' => 'text-align: right;',
     ),
     array(
@@ -131,10 +131,10 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['stormexpense']['fields']['tax'] = array(
+  $node->content['stormexpense']['fields']['tax1'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax'), sprintf('%.2f', $node->tax)),
+    '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
     '#weight' => $w++,
   );
 

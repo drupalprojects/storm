@@ -92,7 +92,7 @@ function stormexpense_list() {
   $s  = "SELECT n.*,  sex.* FROM {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid
   WHERE n.status=1 AND n.type='stormexpense' ";
 
-  $s_totals = "SELECT SUM(amount) AS t_amount, SUM(tax) AS t_tax, SUM(total) AS t_total FROM
+  $s_totals = "SELECT SUM(amount) AS t_amount, SUM(tax1) AS t_tax, SUM(total) AS t_total FROM
   {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND n.type='stormexpense' ";
 
   $where = array();

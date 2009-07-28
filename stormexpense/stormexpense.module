@@ -410,11 +410,11 @@ function stormexpense_form(&$node) {
     '#default_value' => $node->amount,
   );
 
-  $form['group4']['tax'] = array(
+  $form['group4']['tax1'] = array(
     '#type' => 'textfield',
-    '#title' => t('Tax'),
+    '#title' => t('Tax 1'),
     '#size' => 15,
-    '#default_value' => $node->tax,
+    '#default_value' => $node->tax1,
   );
 
   $form['group4']['total'] = array(
@@ -438,6 +438,7 @@ function stormexpense_form(&$node) {
   return $form;
 }
 
+// NODE MANIPULATION FUNCTIONS
 function stormexpense_insert($node) {
   _stormexpense_beforesave($node);
 
@@ -448,7 +449,7 @@ function stormexpense_insert($node) {
             task_nid, task_title, task_stepno,
             ticket_nid, ticket_title,
             provider_nid, provider_title,
-            expensedate, amount, tax, total) VALUES
+            expensedate, amount, tax1, total) VALUES
             (%d, %d,
             %d, '%s',
             %d, '%s',
@@ -462,7 +463,7 @@ function stormexpense_insert($node) {
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
             $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->tax, $node->total);
+            $node->expensedate, $node->amount, $node->tax1, $node->total);
 }
 
 function stormexpense_update($node) {
@@ -478,20 +479,24 @@ function stormexpense_update($node) {
             task_nid=%d, task_title='%s', task_stepno='%s',
             ticket_nid=%d, ticket_title='%s',
             provider_nid=%d, provider_title='%s',
-            expensedate=%d, amount=%f, tax=%f, total=%f WHERE vid = %d",
+            expensedate=%d, amount=%f, tax1=%f, total=%f WHERE vid = %d",
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
             $node->task_nid, $node->task_title, $node->task_stepno,
             $node->ticket_nid, $node->ticket_title,
             $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->tax, $node->total, $node->vid);
+            $node->expensedate, $node->amount, $node->tax1, $node->total, $node->vid);
   }
 }
 
 function _stormexpense_beforesave(&$node) {
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
-  $node->total = $node->amount + $node->tax;
+  $node->tax1app = 1;
+  $node->tax1percent = $node->tax1 / $node->amount * 100;
+  $node->tax2app = 0;
+  
+  storm_taxation(&$node);
   
   $s = "SELECT n.title FROM {node} AS n
         INNER JOIN {stormorganization} AS o ON n.nid=o.nid
