@@ -443,27 +443,18 @@ function stormexpense_insert($node) {
   _stormexpense_beforesave($node);
 
   db_query("INSERT INTO {stormexpense}
-            (vid, nid,
-            organization_nid, organization_title,
-            project_nid, project_title,
-            task_nid, task_title, task_stepno,
-            ticket_nid, ticket_title,
-            provider_nid, provider_title,
-            expensedate, amount, tax1, total) VALUES
-            (%d, %d,
-            %d, '%s',
-            %d, '%s',
-            %d, '%s', '%s',
-            %d, '%s',
-            %d, '%s',
-            %d, %f, %f, %f)",
-            $node->vid, $node->nid,
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno,
-            $node->ticket_nid, $node->ticket_title,
-            $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->tax1, $node->total);
+    (vid, nid, organization_nid, organization_title, project_nid, project_title, 
+    task_nid, task_title, task_stepno, ticket_nid, ticket_title, 
+    provider_nid, provider_title, expensedate, amount, tax1app, tax1percent, 
+    tax1, subtotal, tax2app, tax2percent, tax2, total) VALUES
+    (%d, %d, %d, '%s', %d, '%s',
+    %d, '%s', '%s', %d, '%s',
+    %d, '%s', %d, %f, %d, %f, 
+    %f, %f, %d, %f, %f, %f)",
+    $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title, 
+    $node->task_nid, $node->task_title, $node->task_stepno, $node->ticket_nid, $node->ticket_title, 
+    $node->provider_nid, $node->provider_title, $node->expensedate, $node->amount, $node->tax1app, $node->tax1percent, 
+    $node->tax1, $node->subtotal, $node->tax2app, $node->tax2percent, $node->tax2, $node->total);
 }
 
 function stormexpense_update($node) {
@@ -474,18 +465,14 @@ function stormexpense_update($node) {
   }
   else {
     db_query("UPDATE {stormexpense} SET
-            organization_nid=%d, organization_title='%s',
-            project_nid=%d, project_title='%s',
-            task_nid=%d, task_title='%s', task_stepno='%s',
-            ticket_nid=%d, ticket_title='%s',
-            provider_nid=%d, provider_title='%s',
-            expensedate=%d, amount=%f, tax1=%f, total=%f WHERE vid = %d",
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno,
-            $node->ticket_nid, $node->ticket_title,
-            $node->provider_nid, $node->provider_title,
-            $node->expensedate, $node->amount, $node->tax1, $node->total, $node->vid);
+      organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
+      task_nid=%d, task_title='%s', task_stepno='%s', ticket_nid=%d, ticket_title='%s',
+      provider_nid=%d, provider_title='%s', expensedate=%d, amount=%f, tax1app=%d, tax1percent=%f, 
+      tax1=%f, subtotal=%f, tax2app=%d, tax2percent=%f, tax2=%f, total=%f WHERE vid = %d",
+      $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+      $node->task_nid, $node->task_title, $node->task_stepno, $node->ticket_nid, $node->ticket_title,
+      $node->provider_nid, $node->provider_title, $node->expensedate, $node->amount, $node->tax1app, $node->tax1percent, 
+      $node->tax1, $node->subtotal, $node->tax2app, $node->tax2percent, $node->$tax2, $node->total, $node->vid);
   }
 }
 
@@ -499,15 +486,15 @@ function _stormexpense_beforesave(&$node) {
   storm_taxation(&$node);
   
   $s = "SELECT n.title FROM {node} AS n
-        INNER JOIN {stormorganization} AS o ON n.nid=o.nid
-        WHERE type='stormorganization' AND n.nid=%d";
+    INNER JOIN {stormorganization} AS o ON n.nid=o.nid
+    WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
   $s = "SELECT n.title, p.organization_title 
-        FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-        WHERE type='stormproject' AND n.nid=%d";
+    FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
+    WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
