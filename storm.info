@@ -8,4 +8,6 @@ package = Storm
 
 ; Files registry
 files[] = storm.module
+files[] = storm.hooks.inc
+files[] = storm.settings.inc
 files[] = storm.theme.inc
