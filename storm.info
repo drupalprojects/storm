@@ -2,7 +2,7 @@
 
 ; Basic information
 name = Storm
-description = "Storm Project Management Application"
+description = "Project Management Application (base module - utility for other Storm modules)."
 core = 7.x
 package = Storm
 
