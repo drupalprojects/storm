@@ -1,5 +1,5 @@
 ; $Id$
 name = Storm
-description = "Storm (Project Management Application) base module"
+description = "Project Management Application (base module - utility for other Storm modules)."
 core = 6.x
 package = Storm
