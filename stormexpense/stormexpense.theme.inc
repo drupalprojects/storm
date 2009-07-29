@@ -33,15 +33,19 @@ function theme_stormexpense_list($header, $expenses, $totals) {
   $header = array(
     array(
       'data' => t('Amount'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Tax 1'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => t('Tax 2'),
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Total'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
   );
 
@@ -53,6 +57,10 @@ function theme_stormexpense_list($header, $expenses, $totals) {
     ),
     array(
       'data' => sprintf('%.2f', $totals->t_tax1),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals->t_tax2),
       'style' => 'text-align: right;',
     ),
     array(
@@ -131,19 +139,32 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => $w++,
   );
 
-  $node->content['stormexpense']['fields']['tax1'] = array(
-    '#prefix' => '<div class="tax">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
-    '#weight' => $w++,
-  );
+  if ($node->tax1) {
+    $node->content['stormexpense']['fields']['tax1'] = array(
+      '#prefix' => '<div class="tax">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
+      '#weight' => $w++,
+    );
+  }
 
-  $node->content['stormexpense']['fields']['total'] = array(
-    '#prefix' => '<div class="total">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
-    '#weight' => $w++,
-  );
+  if ($node->tax2) {
+    $node->content['stormexpense']['fields']['tax2'] = array(
+      '#prefix' => '<div class="tax">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', t('Tax 2'), sprintf('%.2f', $node->tax2)),
+      '#weight' => $w++,
+    );
+  }
+  
+  if ($node->tax1 || $node->tax2) {
+    $node->content['stormexpense']['fields']['total'] = array(
+      '#prefix' => '<div class="total">',
+      '#suffix' => '</div>',
+      '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
+      '#weight' => $w++,
+    );
+  }
 
   $node->content['stormexpense']['fields']['body'] = array(
     '#prefix' => '<div class="body">',

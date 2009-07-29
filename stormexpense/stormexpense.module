@@ -518,14 +518,14 @@ function stormexpense_update($node) {
       $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
       $node->task_nid, $node->task_title, $node->task_stepno, $node->ticket_nid, $node->ticket_title,
       $node->provider_nid, $node->provider_title, $node->expensedate, $node->amount, $node->tax1app, $node->tax1percent, 
-      $node->tax1, $node->subtotal, $node->tax2app, $node->tax2percent, $node->$tax2, $node->total, $node->vid);
+      $node->tax1, $node->subtotal, $node->tax2app, $node->tax2percent, $node->tax2, $node->total, $node->vid);
   }
 }
 
 function _stormexpense_beforesave(&$node) {
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
-  storm_taxation(&$node);
+  storm_taxation($node);
   
   $s = "SELECT n.title FROM {node} AS n
     INNER JOIN {stormorganization} AS o ON n.nid=o.nid
