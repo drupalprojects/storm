@@ -637,8 +637,12 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $new_invoice_item->title = $node->title;
     $new_invoice_item->amount = $node->amount;
     // Tax percent simply uses default at the moment
-    $new_invoice_item->tax1percent = $node->tax / $node->amount * 100;
-    //$new_invoice_item->tax1
+    $new_invoice_item->tax1app = $node->tax1app;
+    $new_invoice_item->tax1percent = $node->tax1percent;
+    $new_invoice_item->tax1;
+    $new_invoice_item->tax2app = $node->tax2app;
+    $new_invoice_item->tax2percent = $node->tax2percent;
+    $new_invoice_item->tax2;
     //$new_invoice_item->total
 
     node_save($new_invoice_item);
