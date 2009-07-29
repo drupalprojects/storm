@@ -4,7 +4,7 @@
 /**
  * @file
  * Defines the administration settings form for the Storm module
- *//
+ */
 function storm_admin_settings() {
   $form = array();
   $w = -5;

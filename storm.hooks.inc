@@ -66,6 +66,7 @@ function storm_permission() {
     'Storm: access dashboard' => array(
       'title' => t('Storm: access dashboard'),
       'description' => t('View Storm dashboard'),
+    ),
   );
 }
 
