@@ -283,20 +283,32 @@ function stormexpense_form(&$node) {
     $node->expensedate = time();
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
               ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+    
+    // Load tax defaults
+    $node->tax1app = variable_get('storm_tax1_app', 1);
+    $node->tax1percent = variable_get('storm_tax1_percent', 20);
+    $node->tax2app = variable_get('storm_tax2_app', 0);
+    $node->tax2percent = variable_get('storm_tax2_percent', 20);
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
               ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
+  // Transition to compound tax - allow for nodes which may have been saved in the past without a tax percentage
+  if ((arg(2) == 'edit') && ($node->tax1percent == NULL)) {
+    $node->tax1percent = $node->tax1 / $node->amount * 100;
+  }
+  
   $type = node_get_types('type', $node);
-
+  $w = -100;
+  
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => $w++,
   );
 
   $form['group1']['title'] = array(
@@ -309,7 +321,7 @@ function stormexpense_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -49,
+    '#weight' => $w++,
   );
 
   $s_org = stormorganization_access_sql($s_org);
@@ -380,7 +392,7 @@ function stormexpense_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -48,
+    '#weight' => $w++,
   );
 
   $form['group3']['expensedate'] = array(
@@ -396,33 +408,67 @@ function stormexpense_form(&$node) {
     '#default_value' => $node->provider_title,
     '#autocomplete_path' => 'storm/expenses/provider_autocomplete',
   );
-
+  
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -47,
+    '#weight' => $w++,
   );
-
+  
   $form['group4']['amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Amount'),
-    '#size' => 15,
     '#default_value' => $node->amount,
+    '#size' => 15,
+    '#weight' => $w++,
   );
 
-  $form['group4']['tax1'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Tax 1'),
-    '#size' => 15,
-    '#default_value' => $node->tax1,
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => $w++,
   );
 
-  $form['group4']['total'] = array(
+  
+  $form['group5']['tax1app'] = array(
+    '#type' => 'select',
+    '#title' => t('Tax 1 Application'),
+    '#options' => array(
+      1 => t('Apply to item amount'),
+      0 => t('Do not apply tax'),
+    ),
+    '#default_value' => $node->tax1app,
+  );
+  
+  $form['group5']['tax1percent'] = array(
     '#type' => 'textfield',
-    '#title' => t('Total'),
-    '#size' => 15,
-    '#default_value' => $node->total,
-    '#attributes' => array('readonly' => 'readonly'),
+    '#title' => t('Tax 1 Percentage'),
+    '#default_value' => $node->tax1percent,
+    '#size' => 20,
+  );
+  
+  $form['group5']['tax2app'] = array(
+    '#type' => 'select',
+    '#title' => t('Tax 2 Application'),
+    '#options' => array(
+      2 => t('Apply to total of item amount plus previous tax'),
+      1 => t('Apply to item amount'),
+      0 => t('Do not apply tax'),
+    ),
+    '#default_value' => $node->tax2app,
+  );
+  
+  $form['group5']['tax2percent'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tax 2 Percentage'),
+    '#default_value' => $node->tax2percent,
+    '#size' => 20,
+  );
+  
+  $form['taxnotes'] = array(
+    '#type' => 'markup',
+    '#value' => t('Totals will be calculated automatically according to your tax selections.'),
+    '#weight' => $w++,
   );
 
   if ($type->has_body) {
@@ -431,7 +477,7 @@ function stormexpense_form(&$node) {
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#required' => FALSE,
-      '#weight' => -46,
+      '#weight' => $w++,
     );
     $form['body_filter']['format'] = filter_form($node->format);
   }
@@ -479,10 +525,6 @@ function stormexpense_update($node) {
 function _stormexpense_beforesave(&$node) {
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
-  $node->tax1app = 1;
-  $node->tax1percent = $node->tax1 / $node->amount * 100;
-  $node->tax2app = 0;
-  
   storm_taxation(&$node);
   
   $s = "SELECT n.title FROM {node} AS n
