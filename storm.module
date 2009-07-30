@@ -181,7 +181,13 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['storm_tax1_name'] = array(
+  $form['taxation']['group0'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['group0']['storm_tax1_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Name'),
     '#default_value' => variable_get('storm_tax1_name', 'VAT'),
@@ -189,12 +195,12 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['storm_tax1_percent'] = array(
+  $form['taxation']['group0']['storm_tax1_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Default percentage'),
     '#default_value' => variable_get('storm_tax1_percent', 20),
     '#description' => t('Default percentage for Tax 1'),
-    '#size' => 5,
+    '#size' => 20,
     '#weight' => $w++
   );
   
@@ -211,20 +217,42 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['storm_tax2_name'] = array(
+  $form['taxation']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['group1']['storm_tax2_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Name'),
-    '#default_value' => variable_get('storm_tax2_name', 'VAT'),
+    '#default_value' => variable_get('storm_tax2_name', 'Tax 2 Name'),
     '#description' => t('The name to use for Tax 2'),
     '#weight' => $w++,
   );
   
-  $form['taxation']['storm_tax2_percent'] = array(
+  $form['taxation']['group1']['storm_tax2_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Default percentage'),
     '#default_value' => variable_get('storm_tax2_percent', 20),
     '#description' => t('Default percentage for Tax 2'),
-    '#size' => 5,
+    '#size' => 20,
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['storm_tax_display'] = array(
+   '#type' => 'checkbox',
+   '#title' => t('Display tax edit fields'),
+   '#default_value' => variable_get('storm_tax_display', TRUE),
+   '#description' => t('If disabled, all tax fields will use the default values and you will not be able to override them for any nodes until this setting is enabled again.'),
+   '#weight' => $w++,
+  );
+  
+  $form['taxation']['storm_tax2_display'] = array(
+   '#type' => 'checkbox',
+   '#title' => t('Display tax 2 edit fields'),
+   '#default_value' => variable_get('storm_tax2_display', TRUE),
+   '#description' => t('If disabled, tax 2 fields will use the default values and you will not be able to override them for any nodes until this setting is enabled again. This setting will be ignored unless the general "Display tax edit fields" setting is enabled above.'),
     '#weight' => $w++,
   );
 
