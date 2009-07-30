@@ -214,11 +214,11 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
   switch ($report) {
     case 'std':
       $header = array(
-        t('Organization', 'expense', array(), $language),
-        t('Project', 'expense', array(), $language),
-        t('Title', 'expense', array(), $language),
-        t('Date', 'expense', array(), $language),
-        t('Total', 'expense', array(), $language));
+        t('Organization', array(), $language),
+        t('Project', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
+        t('Total', array(), $language));
       $expenses_total = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
@@ -230,15 +230,15 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         );
         $expenses_total += $expense->total;
       }
-      $title  = '<h2>'. t('Expenses report', 'expense', array(), $language) .'</h2><br />';
+      $title  = '<h2>'. t('Expenses report', array(), $language) .'</h2><br />';
     break;
     case 'for_organization':
       $organization = node_load($_SESSION['stormexpense_list_filter']['organization_nid']);
       $header = array(
-        t('Project', 'expense', array(), $language),
-        t('Title', 'expense', array(), $language),
-        t('Date', 'expense', array(), $language),
-        t('Total', 'expense', array(), $language));
+        t('Project', array(), $language),
+        t('Title', array(), $language),
+        t('Date', array(), $language),
+        t('Total', array(), $language));
       $expenses_total = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
@@ -249,8 +249,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         );
         $expenses_total += $expense->total;
       }
-      $title  = '<h2>'. t('Expenses report', 'expense', array(), $language) .'</h2><br />';
-      $title .= t('Organization : @organization', 'expense', array('@organization' => $organization->fullname), $language) .'<br />';
+      $title  = '<h2>'. t('Expenses report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
     break;
     case 'for_organization_w_task':
       $organization = node_load($_SESSION['stormexpense_list_filter']['organization_nid']);
@@ -271,8 +271,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         );
         $expenses_total += $expense->total;
       }
-      $title  = '<h2>'. t('Expenses report', 'expense', array(), $language) .'</h2><br />';
-      $title .= t('Organization : @organization', 'expense', array('@organization' => $organization->fullname), $language) .'<br />';
+      $title  = '<h2>'. t('Expenses report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
     break;
     case 'for_project':
       $organization = node_load($_SESSION['stormexpense_list_filter']['organization_nid']);
@@ -293,11 +293,11 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         );
         $expenses_total += $expense->total;
       }
-      $title  = '<h2>'. t('Expenses report', 'expense', array(), $language) .'</h2><br />';
-      $title .= t('Organization : @organization', 'expense', array('@organization' => $organization->fullname), $language) .'<br />';
-      $title .= t('Project : @project', 'expense', array('@project' => $project->title), $language) .'<br />';
+      $title  = '<h2>'. t('Expenses report', array(), $language) .'</h2><br />';
+      $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
+      $title .= t('Project : @project', array('@project' => $project->title), $language) .'<br />';
     break;
   }
-  $footer = '<h3>'. t('Expenses total : %expenses_total', 'expense' , array('%expenses_total' => format_plural($expenses_total, '1', '@count', array(), $language)), $language) .'</h3>';
+  $footer = '<h3>'. t('Expenses total : %expenses_total' , array('%expenses_total' => format_plural($expenses_total, '1', '@count', array(), $language)), $language) .'</h3>';
   return theme('storm_list_report', $header, $rows, $title, $footer);
 }
