@@ -79,6 +79,10 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
+      'data' => t('Tax 2'),
+      'style' => 'text-align: right;',
+    ),
+    array(
       'data' => t('Total'),
       'style' => 'text-align: right;',
     ),
@@ -96,6 +100,10 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     ),
     array(
       'data' => sprintf('%.2f', $totals_topay->tax1),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals_topay->tax2),
       'style' => 'text-align: right;',
     ),
     array(
@@ -117,6 +125,10 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
+      'data' => sprintf('%.2f', $totals_paid->tax2),
+      'style' => 'text-align: right;',
+    ),
+    array(
       'data' => sprintf('%.2f', $totals_paid->total),
       'style' => 'text-align: right;',
     ),
@@ -132,6 +144,10 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     ),
     array(
       'data' => sprintf('%.2f', $totals->tax1),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals->tax2),
       'style' => 'text-align: right;',
     ),
     array(
@@ -173,7 +189,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Bodge fix to keep html and pdf invoices working. Without language, menu items default to /storm
-  if(!$node->language) { $node->language = 'en'; }
+  if(!$node->language) {
+    $node->language = 'en';
+  }
+  
   $node->content['storminvoice']['links']['print']['html'] = array(
     '#prefix' => '<div class="print_html">',
     '#suffix' => '</div>',
@@ -311,7 +330,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
     '#weight' => $w++,
   );
-
+  
+  $node->content['storminvoice']['fields_2']['tax2'] = array(
+    '#prefix' => '<div class="tax">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Tax 2'), sprintf('%.2f', $node->tax2)),
+    '#weight' => $w++,
+  );
+  
   $node->content['storminvoice']['fields_2']['total'] = array(
     '#prefix' => '<div class="total">',
     '#suffix' => '</div>',
@@ -671,11 +697,17 @@ function theme_storminvoice_report_html($node, $language) {
   $amount = t('Amount', array(), $language);
   if ($language1) $amount .= '<br />'. t('Amount', array(), $language1);
 
-  $tax1percent = t('Tax %', array(), $language);
-  if ($language1) $tax1percent .= '<br />'. t('Tax %', array(), $language1);
+  $tax1percent = t('Tax 1 %', array(), $language);
+  if ($language1) $tax1percent .= '<br />'. t('Tax 1 %', array(), $language1);
 
-  $tax1 = t('Tax', array(), $language);
-  if ($language1) $tax1 .= '<br />'. t('Tax', array(), $language1);
+  $tax1 = t('Tax 1', array(), $language);
+  if ($language1) $tax1 .= '<br />'. t('Tax 1', array(), $language1);
+  
+  $tax1percent = t('Tax 2 %', array(), $language);
+  if ($language1) $tax1percent .= '<br />'. t('Tax 2 %', array(), $language1);
+
+  $tax1 = t('Tax 2', array(), $language);
+  if ($language1) $tax1 .= '<br />'. t('Tax 2', array(), $language1);
 
   $total = t('Total', array(), $language);
   if ($language1) $total .= '<br />'. t('Total', array(), $language1);
@@ -692,6 +724,12 @@ function theme_storminvoice_report_html($node, $language) {
     ),
     array(
       'data' => $tax1,
+    ),
+    array(
+      'data' => $tax2percent,
+    ),
+    array(
+      'data' => $tax2,
     ),
     array(
       'data' => $total,
@@ -714,6 +752,10 @@ function theme_storminvoice_report_html($node, $language) {
       ),
       array(
         'data' => sprintf('%.2f', $i->tax1),
+        'style' => 'text-align: right;',
+      ),
+      array(
+        'data' => sprintf('%.2f', $i->tax2),
         'style' => 'text-align: right;',
       ),
       array(
@@ -740,7 +782,11 @@ function theme_storminvoice_report_html($node, $language) {
       'style' => 'text-align: center;',
     ),
     array(
-      'data' => sprintf('%.2f', $node->tax),
+      'data' => sprintf('%.2f', $node->tax1),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $node->tax2),
       'style' => 'text-align: right;',
     ),
     array(
@@ -751,6 +797,7 @@ function theme_storminvoice_report_html($node, $language) {
 
   $o .= '<div id="storminvoice_items">'. theme('table', $header, $rows) .'</div>';
 
+  // Specific to Italian invoices
   if ($node->taxexempt && $language1=='it') {
     $o .= '<div id="storminvoice_tax_exempt">';
     $o .= t('Tax exempt art. 7', array(), $language);
@@ -778,7 +825,7 @@ function theme_storminvoice_report_html($node, $language) {
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
 
-function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #436922
+function theme_storminvoice_items($form) {
   drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
 
   $header = array();
@@ -793,6 +840,7 @@ function theme_storminvoice_items($form) { // UNDO of commit 214250, issue #4369
       drupal_render($form['invoiceitems'][$key]['invoiceitem_title_'. $key]),
       array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_amount_'. $key])), 'align' => 'right'),
       array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax1_'. $key])), 'align' => 'right'),
+      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax2_'. $key])), 'align' => 'right'),
       array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_total_'. $key])), 'align' => 'right'),
       drupal_render($form['invoiceitems'][$key]['invoiceitem_weight_'. $key]),
       array (

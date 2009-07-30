@@ -58,6 +58,7 @@ function storminvoice_list() {
     ),
     array(
       'data' => t('Total'),
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => storm_icon_add_node($i, $_GET),
@@ -67,13 +68,13 @@ function storminvoice_list() {
 
   $s  = "SELECT n.title, sin.* FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' ";
 
-  $s_totals_topay = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(total) total FROM {storminvoice} sin
+  $s_totals_topay = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
   INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate=0";
 
-  $s_totals_paid = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(total) total FROM {storminvoice} sin
+  $s_totals_paid = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
   INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate<>0";
 
-  $s_totals = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(total) total FROM {storminvoice} sin
+  $s_totals = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
   INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice'";
 
   $where = array();
@@ -165,22 +166,24 @@ function storminvoice_list_filter() {
   $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
   $today = time();
   if (!$reqdatefrom) {
-    $reqdatefrom = array('day' => 1,
-                         'month' => 1,
-                         'year' => format_date($today, 'custom', 'Y'),
-                         'hour' => 0,
-                         'minute' => 0,
-                        );
+    $reqdatefrom = array(
+      'day' => 1,
+      'month' => 1,
+      'year' => format_date($today, 'custom', 'Y'),
+      'hour' => 0,
+      'minute' => 0,
+    );
     $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $reqdatefrom;
   }
 
   $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
   if (!$reqdateto) {
-    $reqdateto = array('day' => 31,
-                       'month' => 12,
-                       'year' => format_date($today, 'custom', 'Y'),
-                       'hour' => 23,
-                       'minute' => 59,
+    $reqdateto = array(
+      'day' => 31,
+      'month' => 12,
+      'year' => format_date($today, 'custom', 'Y'),
+      'hour' => 23,
+      'minute' => 59,
     );
     $_SESSION['storminvoice_list_filter']['reqdateto'] = $reqdateto;
   }
@@ -348,12 +351,16 @@ function storminvoice_items($invoice) {
       'style' => 'text-align: right;',
     ),
     array(
+      'data' => t('Tax 2'),
+      'style' => 'text-align: right;',
+    ),
+    array(
       'data' => t('Total'),
       'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Weight'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => storm_icon_add_node($i, $params),
@@ -833,5 +840,4 @@ function _storminvoice_report_file_pdf($node, $language) {
   variable_set('storminvoice_email_pdf_file_name', $filename);
 
   return $pdf->Output($dir.$filename, "S");
-  
 }
