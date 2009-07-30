@@ -29,7 +29,10 @@ function storm_help($path, $arg) {
 }
 
 function storm_perm() {
-  return array('Storm: access dashboard');
+  return array(
+    'Storm: access dashboard',
+    'Storm: access administration pages',
+  );
 }
 
 // Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
@@ -55,14 +58,14 @@ function storm_menu() {
     'description' => t('Storm Administration Page'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_NORMAL_ITEM,
   );
   
   $items['admin/storm/storm'] = array(
     'title' => t('Storm'),
     'description' => t('Storm Administration Page'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -100,
   );

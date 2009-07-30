@@ -152,7 +152,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       break;
 
     case "stormconfiguration":
-      $user_access_check = 'access administration pages';
+      $user_access_check = 'Storm: access administration pages';
       $list_text = 'Configuration';
       $list_path = 'admin/storm';
       $add_icon_type = '';

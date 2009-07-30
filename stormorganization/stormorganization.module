@@ -169,7 +169,7 @@ function stormorganization_menu() {
     'description' => t('Storm Organization Administration Page'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormorganization_admin_settings'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_LOCAL_TASK,
   );
 
