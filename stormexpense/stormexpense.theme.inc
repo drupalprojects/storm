@@ -36,11 +36,11 @@ function theme_stormexpense_list($header, $expenses, $totals) {
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 1'),
+      'data' => variable_get('storm_tax1_name', 'VAT'),
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 2'),
+      'data' => variable_get('storm_tax2_name', 'Tax 2'),
       'style' => 'text-align: right;',
     ),
     array(
@@ -143,7 +143,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormexpense']['fields']['tax1'] = array(
       '#prefix' => '<div class="tax">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
+      '#value' => theme('storm_view_item', variable_get('storm_tax1_name', 'VAT'), sprintf('%.2f', $node->tax1)),
       '#weight' => $w++,
     );
   }
@@ -152,7 +152,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['stormexpense']['fields']['tax2'] = array(
       '#prefix' => '<div class="tax">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', t('Tax 2'), sprintf('%.2f', $node->tax2)),
+      '#value' => theme('storm_view_item', variable_get('storm_tax2_name', 'Tax 2'), sprintf('%.2f', $node->tax2)),
       '#weight' => $w++,
     );
   }

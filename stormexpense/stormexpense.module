@@ -464,6 +464,14 @@ function stormexpense_form(&$node) {
     '#size' => 20,
   );
   
+  if (!variable_get('storm_tax_display', TRUE)) {
+    $form['group5']['#type'] = 'hidden';
+  }
+  if (!variable_get('storm_tax2_display', TRUE)) {
+    $form['group5']['tax2app']['#type'] = 'hidden';
+    $form['group5']['tax2percent']['#type'] = 'hidden';
+  }
+  
   $form['taxnotes'] = array(
     '#type' => 'markup',
     '#value' => t('Totals will be calculated automatically according to your tax selections.'),
