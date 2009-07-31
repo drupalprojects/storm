@@ -528,12 +528,12 @@ function theme_storminvoice_report_pdf($node, $language) {
   if ($language1) $o .= "\n". t('Amount', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = t('Tax %', array(), $language);
-  if ($language1) $o .= "\n". t('Tax %', array(), $language1);
+  $o = variable_get('storm_tax1_name', 'VAT');
+  if ($language1) $o .= "\n". variable_get('storm_tax1_name', 'VAT');
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = t('Tax', array(), $language);
-  if ($language1) $o .= "\n". t('Tax', array(), $language1);
+  $o = variable_get('storm_tax2_name', 'Tax 2');
+  if ($language1) $o .= "\n". variable_get('storm_tax2_name', 'Tax 2');
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
   $o = t('Total', array(), $language);
@@ -554,8 +554,8 @@ function theme_storminvoice_report_pdf($node, $language) {
     $pdf->setY($y);
     $pdf->setX(PDF_MARGIN_LEFT + $pageWidth * .4);
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->amount), 1, 0, 'R', $c);
-    $pdf->Cell($pageWidth * .15, $h, $i->taxpercent, 1, 0, 'R', $c);
-    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax), 1, 0, 'R', $c);
+    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax1), 1, 0, 'R', $c);
+    $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax2), 1, 0, 'R', $c);
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->total), 1, 1, 'R', $c);
     $c++;
   }
