@@ -12,7 +12,7 @@ function storminvoice_install() {
 }
 
 function storminvoice_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Invoice" and "Invoice item" have not been deleted on disabling Storm Invoice. Please note that they will now have reduced functionality, and will not be protected by Storm Invoice access controls.', 'warning'));
+  drupal_set_message(t('Warning: Nodes of type "Invoice" and "Invoice item" have not been deleted on disabling Storm Invoice. Please note that they will now have reduced functionality, and will not be protected by Storm Invoice access controls.'), 'warning');
 }
 
 function storminvoice_uninstall() {
