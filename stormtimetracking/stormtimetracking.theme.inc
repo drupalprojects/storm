@@ -86,25 +86,27 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Code to create invoice auto_add link
-  if ($node->billable) {
-    $v = '';
-    $v = '<strong>'. t('Invoice this item:') .'</strong>';
-    $v .= '<ul>';
-    $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
-    $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
-    $v .= '</ul>';
+  if (module_exists('storminvoice')) {
+    if ($node->billable) {
+      $v = '';
+      $v = '<strong>'. t('Invoice this item:') .'</strong>';
+      $v .= '<ul>';
+      $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
+      $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
+      $v .= '</ul>';
+    }
+    else {
+      $v ='';
+      $v .= '<strong>'. t('(This item has been marked unbillable so should not be invoiced.)');
+    }
+    
+    $node->content['stormtimetracking']['links']['auto_invoice'] = array(
+      '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => $v,
+      '#weight' => $w++,
+    );
   }
-  else {
-    $v ='';
-    $v .= '<strong>'. t('(This item has been marked unbillable so should not be invoiced.)');
-  }
-  
-  $node->content['stormtimetracking']['links']['auto_invoice'] = array(
-    '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
-    '#suffix' => '</dt>',
-    '#value' => $v,
-    '#weight' => $w++,
-  );
 
   return $node;
 }
