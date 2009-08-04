@@ -234,10 +234,37 @@ function stormtask_admin_settings() {
 
   $form['stormtask_jsgantt_color'] = array(
     '#type' => 'textfield',
-    '#title' => t('Gantt chart color'),
-    '#default_value' => variable_get('stormtask_jsgantt_color', '00CCFF'),
-    '#description' => t('Enter color for gantt chart bars.'),
+    '#title' => t('Gantt chart default color'),
+    '#default_value' => variable_get('stormtask_jsgantt_color', '666666'),
+    '#description' => t('Enter default color for gantt chart bars.'),
     '#size' => 6,
+  );
+  $form['stormtask_jsgantt_color_completed'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Gantt chart "completed" color'),
+    '#default_value' => variable_get('stormtask_jsgantt_color_completed', '0DFF24'),
+    '#description' => t('Enter "completed" color for gantt chart bars.'),
+    '#size' => 6,
+  );
+  $form['stormtask_jsgantt_color_in_progress'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Gantt chart "in progress" color'),
+    '#default_value' => variable_get('stormtask_jsgantt_color_in_progress', '00CCFF'),
+    '#description' => t('Enter "in progress" color for gantt chart bars.'),
+    '#size' => 6,
+  );
+  $form['stormtask_jsgantt_color_on_hold'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Gantt chart "on hold" color'),
+    '#default_value' => variable_get('stormtask_jsgantt_color_on_hold', 'FFF60D'),
+    '#description' => t('Enter "on hold" color for gantt chart bars.'),
+    '#size' => 6,
+  );
+  $form['stormtask_jsgantt_color_overdue'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Gantt chart "overdue" color'),
+    '#default_value' => variable_get('stormtask_jsgantt_color_overdue', 'FF0D0D'),
+    '#description' => t('Enter "overdue" color for gantt chart bars.'),    '#size' => 6,
   );
 
   return system_settings_form($form);

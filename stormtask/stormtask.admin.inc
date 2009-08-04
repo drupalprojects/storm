@@ -109,6 +109,11 @@ function stormtask_tasks($project) {
     $pDepend = 0;
     $pParent = 0;
     
+    $now = time();
+    $one_day = (24 * 60 * 60);
+    $pColor_default = variable_get('stormtask_jsgantt_color', '00CCFF');
+    $pColor_overdue = variable_get('stormtask_jsgantt_color_overdue', 'FF0D0D');
+
     foreach($taskstree as $task ) {
       $pID = $task->nid;
       $pName = check_plain($task->title);
@@ -120,7 +125,36 @@ function stormtask_tasks($project) {
       //$pDepend = $task->parents[0];
       //$pParent = $task->parents[0];
 
-      $pName = str_repeat('--', $task->depth) .' '. $pName;
+      // theme by task status
+      $pColor = variable_get('stormtask_jsgantt_color_' . str_replace(' ', '_', $task->taskstatus), $pColor_default);
+      $pComp = 0;
+      switch($task->taskstatus) {
+        case 'completed':
+          $pComp = 100;
+          break;
+          
+        case 'on hold':
+          $pComp = 50;
+          break;
+          
+        case 'in progress':
+          // percent complete as f($now), end date inclusive
+          if ($now > $task->datebegin && $task->dateend > $task->datebegin) {
+            $pComp = ($now - $task->datebegin) / ($task->dateend - $task->datebegin + $one_day);
+            $pComp = round(100 * $pComp, 2);
+          }
+          // highlight overdue tasks
+          if ($now > $task->dateend) {
+            $pColor = $pColor_overdue;
+          }
+          break;
+      }
+      
+      // show tasks with depth
+      if ($task->depth) {
+        $pName = str_repeat('--', $task->depth) .' '. $pName;
+      }
+      
       $js .= "g.AddTaskItem(new JSGantt.TaskItem(".$pID.",'".$pName."','".$pStart."','".$pEnd."','".$pColor."','".$pLink."',".$pMile.",'".$pRes."',".$pComp.",".$pGroup.",".$pParent.",".$pOpen.",".$pDepend.",'".$pCaption."'));\n";
     }
 
