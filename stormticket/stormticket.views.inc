@@ -84,7 +84,24 @@ function stormticket_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-
+  
+  $data['stormticket']['organization_nid'] = array(
+    'title' => t('Ticket Organization NID'),
+    'help' => 'Storm Ticket Organization NID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
   $data['stormticket']['organization_title'] = array(
     'title' => t('Ticket Organization'),
     'help' => t('Storm Ticket organization'),
@@ -102,6 +119,23 @@ function stormticket_views_data() {
     ),
   );
 
+  $data['stormticket']['project_nid'] = array(
+    'title' => t('Ticket Project NID'),
+    'help' => 'Storm Ticket Project NID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
   $data['stormticket']['project_title'] = array(
     'title' => t('Ticket Project'),
     'help' => t('Storm Ticket project'),
@@ -119,6 +153,23 @@ function stormticket_views_data() {
     ),
   );
 
+  $data['stormticket']['task_nid'] = array(
+    'title' => t('Ticket Task NID'),
+    'help' => 'Storm Ticket Task NID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
   $data['stormticket']['task_title'] = array(
     'title' => t('Ticket Task'),
     'help' => t('Storm Task title'),
