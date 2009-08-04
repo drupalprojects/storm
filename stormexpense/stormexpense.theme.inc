@@ -182,7 +182,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Code to create invoice auto_add link
-  if (module_exists('storminvoice')) {
+  if (module_exists('storminvoice') && user_access('Storm invoice: add')) {
     $v = '';
     $v .= '<strong>'. t('Invoice this item:') .'</strong>';
     $v .= '<ul>';
