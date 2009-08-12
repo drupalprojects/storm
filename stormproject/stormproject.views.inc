@@ -49,6 +49,8 @@ function stormproject_views_data() {
     'help' => 'Storm Project Status',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Project Status',
     ),
     'filter' => array(
       'handler' => 'stormattribute_handler_filter_attributes_domain',
@@ -64,6 +66,8 @@ function stormproject_views_data() {
     'help' => 'Storm Project Category',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Project Category',
     ),
     'filter' => array(
       'handler' => 'stormattribute_handler_filter_attributes_domain',
@@ -79,6 +83,8 @@ function stormproject_views_data() {
     'help' => 'Storm Project Priority',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Project Priority',
     ),
     'filter' => array(
       'handler' => 'stormattribute_handler_filter_attributes_domain',
@@ -213,6 +219,9 @@ function stormproject_views_handlers() {
       'path' => drupal_get_path('module', 'stormattribute'),
     ),
     'handlers' => array(
+      'stormattribute_handler_field_attributes_domain' => array(
+        'parent' => 'views_handler_field',
+      ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),

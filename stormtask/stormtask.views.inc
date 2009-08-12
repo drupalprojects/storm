@@ -134,6 +134,8 @@ function stormtask_views_data() {
     'help' => 'Storm Task Status',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Task Status',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -149,6 +151,8 @@ function stormtask_views_data() {
     'help' => 'Storm Task Category',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Task Category',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -164,6 +168,8 @@ function stormtask_views_data() {
     'help' => 'Storm Task Priority',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Task Priority',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -298,6 +304,9 @@ function stormtask_views_handlers() {
       'path' => drupal_get_path('module', 'stormattribute'),
     ),
     'handlers' => array(
+      'stormattribute_handler_field_attributes_domain' => array(
+        'parent' => 'views_handler_field',
+      ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
     ),
