@@ -369,7 +369,7 @@ function storminvoice_items($invoice) {
   );
 
   $where = array();
-  $s  = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} sit ON n.vid=sit.vid WHERE n.status=1 AND n.type='storminvoiceitem' ORDER BY sit.weight";
+  $s  = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} sit ON n.vid=sit.vid INNER JOIN {storminvoice} sin on sin.nid=sit.invoice_nid WHERE n.status=1 AND n.type='storminvoiceitem' ORDER BY sit.weight";
   $where[] = 'sit.invoice_nid='. $invoice->nid;
 
   $s = storminvoice_access_sql($s, $where);
