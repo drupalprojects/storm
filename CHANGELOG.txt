@@ -1,7 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- Part of Feature #301301: (Timetracker -> Invoice): Added database columns for src
+- Bug 547040: Unknown column 'sin.organization_nid'
+- Feature #301301: Timetracker -> Invoice
 - Bug #535120: Multiple php errors when viewing expense report
 - Feature #311855: Compound tax
 - Feature #468294: Integration of Popups API
