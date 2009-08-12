@@ -218,6 +218,8 @@ function stormorganization_views_data() {
     'title' => t('Organisation Currency'),
     'help' => 'Storm Organization Currency',
     'field' => array(
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Currency',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -292,6 +294,9 @@ function stormorganization_views_data() {
       'path' => drupal_get_path('module', 'stormattribute'),
     ),
     'handlers' => array(
+      'stormattribute_handler_field_attributes_domain' => array(
+        'parent' => 'views_handler_field',
+      ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),

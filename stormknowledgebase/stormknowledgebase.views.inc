@@ -43,7 +43,7 @@ function stormknowledgebase_views_handlers() {
     ),
     'handlers' => array(
       'stormattribute_handler_field_attributes_domain' => array(
-        'parent' => 'views_handler_filter_in_operator',
+        'parent' => 'views_handler_field',
       ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
