@@ -15,6 +15,8 @@ function stormknowledgebase_views_data() {
     'help' => 'Storm Knowledgebase Topic',
     'field' => array(
       'click sortable' => TRUE,
+      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'domain' => 'Knowledge base topic',
     ),
     'filter' => array(
       'handler' => 'stormattribute_handler_filter_attributes_domain',
@@ -40,6 +42,9 @@ function stormknowledgebase_views_handlers() {
       'path' => drupal_get_path('module', 'stormattribute'),
     ),
     'handlers' => array(
+      'stormattribute_handler_field_attributes_domain' => array(
+        'parent' => 'views_handler_filter_in_operator',
+      ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
