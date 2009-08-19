@@ -569,22 +569,18 @@ function storminvoice_send_form_submit($form, &$form_state) {
   $params['body'] .= "\n\n";
   $params['body'] .= "\n\n";
 
+  $node =  $form['#parameters'][3];
+  $language = $form['#parameters'][4];
+  $filedata = _storminvoice_report_file_pdf($node, $language);
+
   $pdffile = variable_get('storminvoice_email_pdf_file_path', '');
   $pdffile_name = variable_get('storminvoice_email_pdf_file_name', '');
   $pdffile_mime = file_get_mimetype($pdffile);
-
-  if($pdffile){
-    $params['body']  .= "--$trenner"."\n";
-    $params['body']  .= "Content-Type:$pdffile_mime; name='$pdffile_name'\n";
-    $params['body']  .= "Content-Disposition: attachment; filename='$pdffile_name'\n";
-    $params['body']  .= "Content-Transfer-Encoding: base64\n\n";
-
-    $node =  $form['#parameters'][3];
-    $language = $form['#parameters'][4];
-    $filedata = _storminvoice_report_file_pdf($node, $language);
-
-    $params['body']  .= chunk_split(base64_encode($filedata));
-  }
+  $params['body']  .= "--$trenner"."\n";
+  $params['body']  .= "Content-Type:$pdffile_mime; name='$pdffile_name'\n";
+  $params['body']  .= "Content-Disposition: attachment; filename='$pdffile_name'\n";
+  $params['body']  .= "Content-Transfer-Encoding: base64\n\n";
+  $params['body']  .= chunk_split(base64_encode($filedata));
   $params['body'] .= "--$trenner--";
 
   drupal_mail('storminvoice', 'invoice', $to, $language, $params, $from , True);
