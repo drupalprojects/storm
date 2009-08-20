@@ -6,8 +6,16 @@
  * Implementations of hooks (help, menu, permission, theme)
  */
 
-// TODO: haven't added init as hope to rid of it
 // TODO: move sql hooks from .module
+
+/**
+ * Implementation of hook_init
+ */
+// Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
+function storm_init() {
+  //drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
+}
 
 /**
  * Implementation of hook_help
@@ -28,16 +36,7 @@ function storm_help($path, $arg) {
  */
 function storm_menu() {
   $items = array();
-
-  $items['storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Dashboard'),
-    'page callback' => 'storm_dashboard',
-    'access arguments' => array('Storm: access dashboard'),
-    'parent' => '',
-    'type' => MENU_NORMAL_ITEM,
-  );
-
+  
   $items['admin/storm'] = array(
     'title' => t('Storm'),
     'description' => t('Storm Administration Page'),
@@ -56,18 +55,6 @@ function storm_menu() {
   );
   
   return $items;
-}
-
-/**
- * Implementation of hook_permission
- */
-function storm_permission() {
-  return array(
-    'Storm: access dashboard' => array(
-      'title' => t('Storm: access dashboard'),
-      'description' => t('View Storm dashboard'),
-    ),
-  );
 }
 
 /**
@@ -92,9 +79,6 @@ function storm_theme() {
     ),
     'storm_view_item' => array(
       'arguments' => array('label', 'value'),
-    ),
-    'storm_dashboard' => array(
-      'arguments' => array(),
     ),
   );
 }
