@@ -1,6 +1,10 @@
 ; $Id$
+
+; Basic information
 name = Storm Attribute
-description = "Allows setting of attributes (allowed field values) for use within Storm modules"
-dependencies[] = storm
-package = Storm
+description = "Provides attributes (allowed field values) for use within Storm modules"
 core = 6.x
+package = Storm
+
+; Dependencies
+dependencies[] = storm

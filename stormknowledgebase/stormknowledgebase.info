@@ -1,6 +1,11 @@
 ; $Id$
-name = Storm Knowledge base
-description = "Allows categorised storing of knowledge."
-dependencies[] = storm
-package = Storm
+
+; Basic information
+name = Storm Knowledge Base
+description = "Provides means of storing and categorising knowledge."
 core = 6.x
+package = Storm
+
+; Dependencies
+dependencies[] = storm
+dependencies[] = stormattribute
