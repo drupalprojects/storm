@@ -1,7 +1,8 @@
 /* $Id$ */
 
-Version 6.x-1.x-dev:
+Version 6.x-1.24:
 - Bug 547040: Unknown column 'sin.organization_nid'
+- Feature #539838: Additional views functionality
 - Feature #301301: Timetracker -> Invoice
 - Bug #535120: Multiple php errors when viewing expense report
 - Feature #311855: Compound tax
@@ -9,7 +10,8 @@ Version 6.x-1.x-dev:
 - Feature #530080: Additional views functionality
 - Bug #526926: Tasks filter by project returned empty list
 - Feature #527768: Additional links on node view, refactor of links code.
-- Feature #297775: Gantt charts (added as experimental features - some tweaking may be required)
+- Feature #297775: Gantt charts
+(added as experimental feature - some refinement is still needed)
 - Bug #340954: Fixed use of revisions in some modules
 - Bug #477602: Add warning about remaining nodes on module disabling
 - Bug #510056: Domain key shown instead of domain value in ticket display
