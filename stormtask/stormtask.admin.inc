@@ -37,7 +37,7 @@ function stormtask_tasks($project) {
     ),
     array(
       'data' => t('Duration'),
-      'style' => 'text-align: center;',
+      'style' => 'text-align: right;',
     ),
     array(
       'data' => t('Parent'),
