@@ -376,7 +376,7 @@ function theme_storminvoice_report($node, $report, $language) {
   }
 }
 
-function theme_storminvoice_report_pdf($node, $language) {
+function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
 
   // Performs simple check for existance of tcpdf library . If it doesn't exist,  revert to node display with message about tcpdf library.
@@ -583,7 +583,15 @@ function theme_storminvoice_report_pdf($node, $language) {
   $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number)) .'.pdf';
 
   //Close and output PDF document
-  $pdf->Output($filename, "I");
+  if ($output == 'screen') {
+    $pdf->Output($filename, "I");
+  }
+  else if ($output == 'email') {
+    $dir = file_directory_path().'/';
+    variable_set('storminvoice_email_pdf_file_path', $dir.$filename);
+    variable_set('storminvoice_email_pdf_file_name', $filename);
+    return $pdf->Output($dir.$filename, "S");
+  }
 }
 
 function theme_storminvoice_report_html($node, $language) {

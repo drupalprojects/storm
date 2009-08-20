@@ -142,7 +142,7 @@ function storminvoice_theme() {
     ),
     'storminvoice_report_pdf' => array(
       'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('node', 'language'),
+      'arguments' => array('node', 'language', array('output' => 'screen')),
     ),
     'storminvoice_items' => array(
       'file'      => 'storminvoice.theme.inc',
