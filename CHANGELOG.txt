@@ -1,7 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- No changes since 6.x-1.24.
+- Task #542030: Show all providers in expense providers autocomplete
 
 Version 6.x-1.24:
 - Bug 547040: Unknown column 'sin.organization_nid'
