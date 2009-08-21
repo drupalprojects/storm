@@ -115,17 +115,50 @@ function storm_dashboard() {
 // ADMIN SETTINGS FORM
 function storm_admin_settings() {
   $form = array();
-  $w = -5;
-
-  $form['storm_icons_path'] = array(
+  $w = -10;
+  
+  $form['icons'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Icons'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['icons']['storm_icons_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Icons directory'),
     '#default_value' => variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons'),
-    '#description' => t("The directory that contains the Storm's icons"),
+    '#description' => t("The directory that contains Storm's icons"),
     '#weight' => $w++,
   );
-
-  $form['storm_report_header'] = array(
+  
+  $form['lists'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Lists'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['lists']['storm_default_items_per_page'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default Items per Page'),
+    '#default_value' => variable_get('storm_default_items_per_page', 10),
+    '#description' => t('Default items per page when viewing lists'),
+    '#size' => 5,
+    '#weight' => $w++
+  );
+  
+  $form['reports'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Reports'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['reports']['storm_report_header'] = array(
     '#type' => 'textarea',
     '#title' => t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
