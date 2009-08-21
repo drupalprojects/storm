@@ -12,7 +12,7 @@ dependencies[] = storm
 ; Files registry
 files[] = stormattribute.install
 files[] = stormattribute.module
-files[] = stormattribute.hooks.inc ; Implementations of Drupal hooks
-files[] = stormattribute.theme.inc ; Theme functions
-files[] = stormattribute_handler_field_attributes_domain.inc ; Views handler
-files[] = stormattribute_handler_filter_attributes_domain.inc ; Views handler
+files[] = stormattribute.hooks.inc
+files[] = stormattribute.theme.inc
+files[] = stormattribute_handler_field_attributes_domain.inc
+files[] = stormattribute_handler_filter_attributes_domain.inc

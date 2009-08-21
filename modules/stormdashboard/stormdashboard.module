@@ -17,8 +17,8 @@ function stormdashboard_menu() {
   $items['storm'] = array(
     'title' => t('Storm'),
     'description' => t('Storm Dashboard'),
-    'page callback' => 'storm_dashboard',
-    'access arguments' => array('Storm: access dashboard'),
+    'page callback' => 'stormdashboard_dashboard',
+    'access arguments' => array('Storm Dashboard: Access'),
     'parent' => '',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -32,9 +32,9 @@ function stormdashboard_menu() {
  */
 function stormdashboard_permission() {
   return array(
-    'Storm: access dashboard' => array(
-      'title' => t('Storm: access dashboard'),
-      'description' => t('View Storm dashboard'),
+    'Storm Dashboard: Access' => array(
+      'title' => t('Storm Dashboard: Access'),
+      'description' => t('View Storm Dashboard'),
     ),
   );
 }

@@ -11,3 +11,4 @@ dependencies[] = storm
 
 ; Files registry
 files[] = stormdashboard.module
+files[] = stormdashboard.theme.inc

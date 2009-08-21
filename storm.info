@@ -7,7 +7,7 @@ core = 7.x
 package = Storm
 
 ; Dependencies
-;none
+dependencies[] = menu
 
 ; Files registry
 files[] = storm.module
