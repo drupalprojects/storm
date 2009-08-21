@@ -180,7 +180,7 @@ function stormexpense_list_filter() {
   $provider_title = $_SESSION['stormexpense_list_filter']['provider_title'];
 
   if (!$itemsperpage) {
-    $itemsperpage = 10;
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['stormexpense_list_filter']['itemsperpage'] = $itemsperpage;
   }
 
