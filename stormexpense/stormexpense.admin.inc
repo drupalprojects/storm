@@ -421,17 +421,18 @@ function stormexpense_list_report($report, $language) {
 }
 
 function stormexpense_autocomplete($string = '') {
+  // Autocomplete for providers textbox: shows any active organizations in Storm system which have been selected as providers.
   $matches = array();
   if ($string) {
-    $s = "SELECT provider_title FROM {stormexpense} sex WHERE LOWER(provider_title) LIKE LOWER('%s%%')";
-    $s = stormexpense_access_sql($s);
+    $s = "SELECT n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization' AND sor.isprovider=1 AND sor.isactive=1";
+    $where = array("LOWER(title) LIKE LOWER('%s%%')");
+    $s = stormorganization_access_sql($s, $where);
     $s = db_rewrite_sql($s);
     $result = db_query_range($s, $string, 0, 10);
     while ($pro = db_fetch_object($result)) {
-      $matches[$pro->provider_title] = check_plain($pro->provider_title);
+      $matches[$pro->title] = check_plain($pro->title);
     }
   }
 
   drupal_json($matches);
 }
-
