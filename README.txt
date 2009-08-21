@@ -62,3 +62,4 @@ Within Storm Invoice, you can create invoices between yourself and clients. A pr
 
 --Storm Expense--
 Storm Expense allows the recording of expenses attached to a specific task or project, including information such as whether it is billable.
+- Provider: This field will autocomplete with the name of any active organization who is listed as a provider using Storm Organization.
