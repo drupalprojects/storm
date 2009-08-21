@@ -84,17 +84,17 @@ function stormticket_list() {
   if ($_SESSION['stormticket_list_filter']['organization_nid']) {
     $where[] = 'sti.organization_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
-    $filterfields[] = 'Organization';
+    $filterfields[] = t('Organization');
   }
   if ($_SESSION['stormticket_list_filter']['project_nid']) {
     $where[] = 'sti.project_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['project_nid'];
-    $filterfields[] = 'Project';
+    $filterfields[] = t('Project');
   }
   if ($_SESSION['stormticket_list_filter']['task_nid']) {
     $where[] = 'sti.task_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
-    $filterfields[] = 'Task';
+    $filterfields[] = t('Task');
   }
   if ($_SESSION['stormticket_list_filter']['ticketcategory'] && $_SESSION['stormticket_list_filter']['ticketcategory'] != '-') {
     $category = split(',', $_SESSION['stormticket_list_filter']['ticketcategory']);
@@ -104,7 +104,7 @@ function stormticket_list() {
     foreach ($category as $key => $value) {
       $args[] = $value;
     }
-    $filterfields[] = 'Category';
+    $filterfields[] = t('Category');
   }
   if ($_SESSION['stormticket_list_filter']['ticketstatus'] && $_SESSION['stormticket_list_filter']['ticketstatus'] != '-') {
     $status = split(',', $_SESSION['stormticket_list_filter']['ticketstatus']);
@@ -114,7 +114,7 @@ function stormticket_list() {
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
-    $filterfields[] = 'Status';
+    $filterfields[] = t('Status');
   }
   if ($_SESSION['stormticket_list_filter']['ticketpriority'] && $_SESSION['stormticket_list_filter']['ticketpriority'] != '-') {
     $priority = split(',', $_SESSION['stormticket_list_filter']['ticketpriority']);
@@ -124,7 +124,7 @@ function stormticket_list() {
     foreach ($priority as $key => $value) {
       $args[] = $value;
     }
-    $filterfields[] = 'Priority';
+    $filterfields[] = t('Priority');
   }
 
   $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
@@ -135,7 +135,7 @@ function stormticket_list() {
     if ($datebeginfrom['year']>0 && $t>=0) {
       $where[] = 'sti.datebegin>=%d';
       $args[] = $t;
-      $filterfields[] = 'Date';
+      $filterfields[] = t('Date');
     }
   }
 
@@ -147,7 +147,7 @@ function stormticket_list() {
     if ($datebeginto['year']>0 && $t>=0) {
       $where[] = 'sti.datebegin<=%d';
       $args[] = $t;
-      $filterfields[] = 'Date';
+      $filterfields[] = t('Date');
     }
   }
 
@@ -159,7 +159,7 @@ function stormticket_list() {
     if ($dateendfrom['year']>0 && $t>=0) {
       $where[] = 'sti.dateend>=%d';
       $args[] = $t;
-      $filterfields[] = 'Date';
+      $filterfields[] = t('Date');
     }
   }
 
@@ -171,7 +171,7 @@ function stormticket_list() {
     if ($dateendto['year']>0 && $t>=0) {
       $where[] = 'sti.dateend<=%d';
       $args[] = $t;
-      $filterfields[] = 'Date';
+      $filterfields[] = t('Date');
     }
   }
 
@@ -182,12 +182,12 @@ function stormticket_list() {
   }
 
   if (count($filterfields)==0) {
-    $filterdesc = 'Not filtered';
+    $filterdesc = t('Not filtered');
   }
   else {
-    $filterdesc = 'Filtered by '. implode(", ", array_unique($filterfields));
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
-  $filterdesc .= ' | '. $_SESSION['stormticket_list_filter']['itemsperpage'] .' items per page';
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $_SESSION['stormticket_list_filter']['itemsperpage']));
 
   $o = drupal_get_form('stormticket_list_filter', $filterdesc);
 
@@ -248,7 +248,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t($filterdesc),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#theme' => 'stormticket_list_filter',
