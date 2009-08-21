@@ -16,22 +16,22 @@ function theme_stormdashboard_dashboard() {
   $o .= '<dl class="stormdashboard">';
   
   $o .= '<div class="stormdashboard">';
-  $o .= theme_storm_link('', 'stormorganization');
-  $o .= theme_storm_link('', 'stormperson');
-  $o .= theme_storm_link('', 'stormteammember');
-  $o .= theme_storm_link('', 'stormproject');
-  $o .= theme_storm_link('', 'stormtask');
-  $o .= theme_storm_link('', 'stormticket');
-  $o .= theme_storm_link('', 'stormtimetracking');
+  $o .= theme('storm_link', '', 'stormorganization');
+  $o .= theme('storm_link', '', 'stormperson');
+  $o .= theme('storm_link', '', 'stormteammember');
+  $o .= theme('storm_link', '', 'stormproject');
+  $o .= theme('storm_link', '', 'stormtask');
+  $o .= theme('storm_link', '', 'stormticket');
+  $o .= theme('storm_link', '', 'stormtimetracking');
   $o .= '</div>';
 
   $o .= '<div class="stormdashboard">';
-  $o .= theme_storm_link('', 'stormnote');
-  $o .= theme_storm_link('', 'storminvoice');
-  $o .= theme_storm_link('', 'stormexpense');
-  $o .= theme_storm_link('', 'stormknowledgebase');
-  $o .= theme_storm_link('', 'stormattribute');
-  $o .= theme_storm_link('', 'stormconfiguration');
+  $o .= theme('storm_link', '', 'stormnote');
+  $o .= theme('storm_link', '', 'storminvoice');
+  $o .= theme('storm_link', '', 'stormexpense');
+  $o .= theme('storm_link', '', 'stormknowledgebase');
+  $o .= theme('storm_link', '', 'stormattribute');
+  $o .= theme('storm_link', '', 'stormconfiguration');
   
   $o .= '</div>';
   $o .= '</dl>';
