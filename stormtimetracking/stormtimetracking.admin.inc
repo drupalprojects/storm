@@ -51,9 +51,7 @@ function stormtimetracking_list() {
     $_SESSION['stormtimetracking_list_filter']['project_nid'] = $ti->project_nid;
     $_SESSION['stormtimetracking_list_filter']['task_nid'] = $ti->task_nid;
   }
-
-  $o = drupal_get_form('stormtimetracking_list_filter');
-
+  
   $i = new stdClass();
   $i->type = 'stormtimetracking';
 
@@ -96,22 +94,27 @@ function stormtimetracking_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormtimetracking_list_filter']['organization_nid']) {
     $where[] = 'stt.organization_nid=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
+    $filterfields[] = t('Organization');
   }
   if ($_SESSION['stormtimetracking_list_filter']['project_nid']) {
     $where[] = 'stt.project_nid=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['project_nid'];
+    $filterfields[] = t('Project');
   }
   if ($_SESSION['stormtimetracking_list_filter']['task_nid']) {
     $where[] = 'stt.task_nid=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['task_nid'];
+    $filterfields[] = t('Task');
   }
   if ($_SESSION['stormtimetracking_list_filter']['ticket_nid']) {
     $where[] = 'stt.ticket_nid=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
+    $filterfields[] = t('Ticket');
   }
   if ($_SESSION['stormtimetracking_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
@@ -119,6 +122,7 @@ function stormtimetracking_list() {
     $datefrom['minute'] = 0;
     $where[] = 'stt.trackingdate>=%d';
     $args[] = _storm_datetime_to_gmtimestamp($datefrom);
+    $filterfields[] = t('Date');
   }
   if ($_SESSION['stormtimetracking_list_filter']['dateto']) {
     $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
@@ -126,21 +130,38 @@ function stormtimetracking_list() {
     $dateto['minute'] = 59;
     $where[] = 'stt.trackingdate<=%d';
     $args[] = _storm_datetime_to_gmtimestamp($dateto);
+    $filterfields[] = t('Date');
   }
   if ($_SESSION['stormtimetracking_list_filter']['billable']!='-' && $_SESSION['stormtimetracking_list_filter']['billable']!= NULL) {
     $where[] = 'stt.billable=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['billable'];
+    $filterfields[] = t('Billable');
   }
 
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = 10;
+    $_SESSION['stormtimetracking_list_filter']['itemsperpage'] =  $itemsperpage;
+  }
 
   if ($_SESSION['stormtimetracking_list_filter']['user']) {
     $trackinguser = user_load(array('name' => $_SESSION['stormtimetracking_list_filter']['user']));
     if (!$trackinguser->uid) $trackinguser->uid = -1;
     $where[] = 'n.uid=%d';
     $args[] = $trackinguser->uid;
+    $filterfields[] = t('User');
   }
 
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $_SESSION['stormtimetracking_list_filter']['itemsperpage']));
+  
+  $o = drupal_get_form('stormtimetracking_list_filter', $filterdesc);
+  
   $s = stormtimetracking_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
@@ -165,7 +186,7 @@ function stormtimetracking_list() {
   print theme('page', $o);
 }
 
-function stormtimetracking_list_filter() {
+function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormtimetracking_list_filter']['project_nid'];
   $task_nid = $_SESSION['stormtimetracking_list_filter']['task_nid'];
@@ -207,7 +228,7 @@ function stormtimetracking_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Filter'),
+        '#title' => $filterdesc,
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#theme' => 'stormtimetracking_list_filter',
