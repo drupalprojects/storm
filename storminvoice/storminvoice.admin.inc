@@ -115,8 +115,11 @@ function storminvoice_list() {
   }
 
   $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
-  if (!$itemsperpage) $itemsperpage = 10;
-
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+    $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
+  }
+    
   $tablesort = tablesort_sql($header);
 
   if ($tablesort == " ORDER BY  sin.number ASC") {
@@ -159,7 +162,7 @@ function storminvoice_list_filter() {
   $status = $_SESSION['storminvoice_list_filter']['status'];
   $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
-    $itemsperpage = 10;
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
   }
 
