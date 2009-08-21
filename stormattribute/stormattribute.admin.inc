@@ -170,7 +170,7 @@ function stormattribute_list_filter() {
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
-    $itemsperpage = 10;
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['stormattribute_list_filter']['itemsperpage'] = $itemsperpage;
   }
 
