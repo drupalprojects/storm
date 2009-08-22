@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #556224: Theming calls not handled properly
 - Feature #433294: Add filter status when lists are filtered (in progress)
 - Feature #547800: Add default length of lists
 - Task #542030: Show all providers in expense providers autocomplete
