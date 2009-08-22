@@ -127,10 +127,10 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $w = 0;
   $i = new stdClass();
 
-  $node->content['stormtask']['links']['expenses'] = theme_storm_link('stormtask', 'stormexpense', $node->nid, $w++);
-  $node->content['stormtask']['links']['notes'] = theme_storm_link('stormtask', 'stormnote', $node->nid, $w++);
-  $node->content['stormtask']['links']['tickets'] = theme_storm_link('stormtask', 'stormticket', $node->nid, $w++);
-  $node->content['stormtask']['links']['timetrackings'] = theme_storm_link('stormtask', 'stormtimetracking', $node->nid, $w++);
+  $node->content['stormtask']['links']['expenses'] = theme('storm_link', 'stormtask', 'stormexpense', $node->nid, $w++);
+  $node->content['stormtask']['links']['notes'] = theme('storm_link', 'stormtask', 'stormnote', $node->nid, $w++);
+  $node->content['stormtask']['links']['tickets'] = theme('storm_link', 'stormtask', 'stormticket', $node->nid, $w++);
+  $node->content['stormtask']['links']['timetrackings'] = theme('storm_link', 'stormtask', 'stormtimetracking', $node->nid, $w++);
   
   return $node;
 }

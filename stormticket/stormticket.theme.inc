@@ -110,8 +110,8 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
 
   $i = new stdClass();
   
-  $node->content['stormticket']['links']['expenses'] = theme_storm_link('stormticket', 'stormexpense', $node->nid, $w++);
-  $node->content['stormticket']['links']['timetrackings'] = theme_storm_link('stormticket', 'stormtimetracking', $node->nid, $w++);
+  $node->content['stormticket']['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, $w++);
+  $node->content['stormticket']['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, $w++);
   
   return $node;
 }

@@ -146,14 +146,14 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $w = 0;
   $i = new stdClass();
   
-  $node->content['stormorganization']['links']['expenses'] = theme_storm_link('stormorganization', 'stormexpense', $node->nid, $w++);
-  $node->content['stormorganization']['links']['invoices'] = theme_storm_link('stormorganization', 'storminvoice', $node->nid, $w++);
-  $node->content['stormorganization']['links']['notes'] = theme_storm_link('stormorganization', 'stormnote', $node->nid, $w++);
-  $node->content['stormorganization']['links']['people'] = theme_storm_link('stormorganization', 'stormperson', $node->nid, $w++);
-  $node->content['stormorganization']['links']['projects'] = theme_storm_link('stormorganization', 'stormproject', $node->nid, $w++);
-  $node->content['stormorganization']['links']['tasks'] = theme_storm_link('stormorganization', 'stormtask', $node->nid, $w++);
-  $node->content['stormorganization']['links']['tickets'] = theme_storm_link('stormorganization', 'stormticket', $node->nid, $w++);
-  $node->content['stormorganization']['links']['timetrackings'] = theme_storm_link('stormorganization', 'stormtimetracking', $node->nid, $w++);
+  $node->content['stormorganization']['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $w++);
+  $node->content['stormorganization']['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $w++);
+  $node->content['stormorganization']['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $w++);
+  $node->content['stormorganization']['links']['people'] = theme('storm_link', 'stormorganization', 'stormperson', $node->nid, $w++);
+  $node->content['stormorganization']['links']['projects'] = theme('storm_link', 'stormorganization', 'stormproject', $node->nid, $w++);
+  $node->content['stormorganization']['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $w++);
+  $node->content['stormorganization']['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $w++);
+  $node->content['stormorganization']['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $w++);
   
   return $node;
 }
