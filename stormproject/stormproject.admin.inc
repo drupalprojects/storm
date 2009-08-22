@@ -15,9 +15,7 @@ function stormproject_list() {
       $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];
     }
   }
-
-  $o = drupal_get_form('stormproject_list_filter');
-
+  
   $i = new stdClass();
   $i->type = 'stormproject';
 
@@ -52,14 +50,17 @@ function stormproject_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormproject_list_filter']['organization_nid']) {
     $where[] = 'spr.organization_nid=%d';
     $args[] = $_SESSION['stormproject_list_filter']['organization_nid'];
+    $filterfields[] = 'Organization';
   }
   if ($_SESSION['stormproject_list_filter']['projectcategory'] && $_SESSION['stormproject_list_filter']['projectcategory'] != '-') {
     $where[] = "spr.projectcategory='%s'";
     $args[] = $_SESSION['stormproject_list_filter']['projectcategory'];
+    $filterfields[] = 'Category';
   }
   if ($_SESSION['stormproject_list_filter']['projectstatus'] && $_SESSION['stormproject_list_filter']['projectstatus'] != '-') {
     $status = split(',', $_SESSION['stormproject_list_filter']['projectstatus']);
@@ -69,10 +70,12 @@ function stormproject_list() {
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
+    $filterfields[] = 'Status';
   }
   if ($_SESSION['stormproject_list_filter']['projectpriority'] && $_SESSION['stormproject_list_filter']['projectpriority'] != '-') {
     $where[] = "spr.projectpriority='%s'";
     $args[] = $_SESSION['stormproject_list_filter']['projectpriority'];
+    $filterfields[] = 'Priority';
   }
 
   $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
@@ -83,6 +86,7 @@ function stormproject_list() {
     if ($datebeginfrom['year']>0 && $t>=0) {
       $where[] = 'spr.datebegin>=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
@@ -94,6 +98,7 @@ function stormproject_list() {
     if ($datebeginto['year']>0 && $t>=0) {
       $where[] = 'spr.datebegin<=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
@@ -105,6 +110,7 @@ function stormproject_list() {
     if ($dateendfrom['year']>0 && $t>=0) {
       $where[] = 'spr.dateend>=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }      
   }
 
@@ -116,10 +122,24 @@ function stormproject_list() {
     if ($dateendto['year']>0 && $t>=0) {
       $where[] = 'spr.dateend<=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
+  
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormproject_list_filter', $filterdesc);
 
   $tablesort = tablesort_sql($header);
 
@@ -137,7 +157,7 @@ function stormproject_list() {
   print theme('page', $o);
 }
 
-function stormproject_list_filter() {
+function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
 
   $category_list = stormattribute_attributes_bydomain('project category search');
@@ -176,7 +196,7 @@ function stormproject_list_filter() {
 
   $form['filter'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Filter'),
+        '#title' => $filterdesc,
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
   );
