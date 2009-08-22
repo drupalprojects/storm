@@ -410,9 +410,7 @@ function stormtask_list() {
     $_SESSION['stormtask_list_filter']['organization_nid'] = $p->organization_nid;
 
   }
-
-  $o = drupal_get_form('stormtask_list_filter');
-
+  
   $i = new stdClass();
   $i->type = 'stormtask';
 
@@ -449,15 +447,18 @@ function stormtask_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   $s  = "SELECT n.*, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' ";
   if ($_SESSION['stormtask_list_filter']['organization_nid']) {
     $where[] = 'sta.organization_nid=%d';
     $args[] = $_SESSION['stormtask_list_filter']['organization_nid'];
+    $filterfields[] = 'Organization';
   }
   if ($_SESSION['stormtask_list_filter']['project_nid']) {
     $where[] = 'sta.project_nid=%d';
     $args[] = $_SESSION['stormtask_list_filter']['project_nid'];
+    $filterfields[] = 'Project';
   }
   if ($_SESSION['stormtask_list_filter']['taskcategory'] && $_SESSION['stormtask_list_filter']['taskcategory'] != '-') {
     $category = split(',', $_SESSION['stormtask_list_filter']['taskcategory']);
@@ -467,6 +468,7 @@ function stormtask_list() {
     foreach ($category as $key => $value) {
       $args[] = $value;
     }
+    $filterfields[] = 'Category';
   }
   if ($_SESSION['stormtask_list_filter']['taskstatus'] && $_SESSION['stormtask_list_filter']['taskstatus'] != '-') {
     $status = split(',', $_SESSION['stormtask_list_filter']['taskstatus']);
@@ -476,6 +478,7 @@ function stormtask_list() {
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
+    $filterfields[] = 'Status';
   }
   if ($_SESSION['stormtask_list_filter']['taskpriority'] && $_SESSION['stormtask_list_filter']['taskpriority'] != '-') {
     $priority = split(',', $_SESSION['stormtask_list_filter']['taskpriority']);
@@ -485,6 +488,7 @@ function stormtask_list() {
     foreach ($priority as $key => $value) {
       $args[] = $value;
     }
+    $filterfields[] = 'Priority';
   }
 
   $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
@@ -495,6 +499,7 @@ function stormtask_list() {
     if ($datebeginfrom['year']>0 && $t>=0) {
       $where[] = 'sta.datebegin>=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
@@ -506,6 +511,7 @@ function stormtask_list() {
     if ($datebeginto['year']>0 && $t>=0) {
       $where[] = 'sta.datebegin<=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
@@ -517,6 +523,7 @@ function stormtask_list() {
     if ($dateendfrom['year']>0 && $t>=0) {
       $where[] = 'sta.dateend>=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
@@ -528,11 +535,26 @@ function stormtask_list() {
     if ($dateendto['year']>0 && $t>=0) {
       $where[] = 'sta.dateend<=%d';
       $args[] = $t;
+      $filterfields[] = 'Date';
     }
   }
 
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
 
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormtask_list_filter', $filterdesc);
+  
+  
   $s = stormtask_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
@@ -549,7 +571,7 @@ function stormtask_list() {
   print theme('page', $o);
 }
 
-function stormtask_list_filter() {
+function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   $category_list = stormattribute_attributes_bydomain('Task category search');
   $taskcategory = $_SESSION['stormtask_list_filter']['taskcategory'];
   if (!$taskcategory) {
@@ -589,7 +611,7 @@ function stormtask_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
