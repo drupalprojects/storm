@@ -65,8 +65,6 @@ function stormteammember_list() {
     $_SESSION['stormteammember_list_filter']['person_title'] = $t->person_title;
   }
   
-  $o = drupal_get_form('stormteammember_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormteammember';
 
@@ -99,24 +97,45 @@ function stormteammember_list() {
 
   $s = "SELECT stm.* FROM {stormteammember} stm";
 
+  $filterfields = array();
+  
   if ($_SESSION['stormteammember_list_filter']['organization_nid']) {
     $where[] = 'stm.organization_nid='. $_SESSION['stormteammember_list_filter']['organization_nid'];
+    $filterfields[] = t('Organization');
   }
   if ($_SESSION['stormteammember_list_filter']['project_nid']) {
     $where[] = 'stm.project_nid='. $_SESSION['stormteammember_list_filter']['project_nid'];
+    $filterfields[] = t('Project');
   }
   if ($_SESSION['stormteammember_list_filter']['task_nid']) {
     $where[] = 'stm.task_nid='. $_SESSION['stormteammember_list_filter']['task_nid'];
+    $filterfields[] = t('Task');
   }
   if ($_SESSION['stormteammember_list_filter']['person_nid']) {
     $where[] = 'stm.person_nid='. $_SESSION['stormteammember_list_filter']['person_nid'];
+    $filterfields[] = t('Person');
   }
   if ($_SESSION['stormteammember_list_filter']['ticket_nid']) {
     $where[] = 'stm.ticket_nid='. $_SESSION['stormteammember_list_filter']['ticket_nid'];
+    $filterfields[] = t('Ticket');
   }
 
   $itemsperpage = $_SESSION['stormteammember_list_filter']['itemsperpage'];
-
+  if (!$itemsperpage) {
+    // This  serves to ensure that $itemsperpage is set to display on the fieldset description. It does not affect the actual number of items displayed.
+    $itemsperpage = variable_get('storm_default_items_per_page', 20);
+  }
+  
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormteammember_list_filter', $filterdesc);
+  
   $s = stormteammember_access_sql($s, $where);
   
   $tablesort = tablesort_sql($header);
@@ -134,7 +153,7 @@ function stormteammember_list() {
   print theme('page', $o);
 }
 
-function stormteammember_list_filter() {
+function stormteammember_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormteammember_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormteammember_list_filter']['project_nid'];
   $person_nid = $_SESSION['stormteammember_list_filter']['person_nid'];
@@ -150,7 +169,7 @@ function stormteammember_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#theme' => 'stormteammember_list_filter',
