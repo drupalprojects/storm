@@ -71,6 +71,9 @@ function storm_theme() {
     'dateext' => array(
       'arguments' => array('element'),
     ),
+    'storm_link' => array(
+      'arguments' => array(),
+    ),
     'storm_list_report' => array(
       'arguments' => array('header', 'rows', 'title', 'footer', 'headtitle'),
     ),
