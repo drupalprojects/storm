@@ -10,8 +10,6 @@ function stormknowledgebase_list() {
   $breadcrumb[] = l(t('Storm'), 'storm');
   drupal_set_breadcrumb($breadcrumb);
 
-  $o = drupal_get_form('stormknowledgebase_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormknowledgebase';
 
@@ -36,17 +34,33 @@ function stormknowledgebase_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormknowledgebase_list_filter']['topic'] && $_SESSION['stormknowledgebase_list_filter']['topic'] != '-') {
     $where[] = "skb.topic='%s'";
     $args[] = $_SESSION['stormknowledgebase_list_filter']['topic'];
+    $filterfields[] = 'Topic';
   }
+  $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    // Sets for fieldset label, doesn't affect actal filter.
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
+
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormknowledgebase_list_filter', $filterdesc);
 
   $s = stormknowledgebase_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
 
-  $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
 
   $notes = array();
@@ -59,7 +73,7 @@ function stormknowledgebase_list() {
   print theme('page', $o);
 }
 
-function stormknowledgebase_list_filter() {
+function stormknowledgebase_list_filter(&$form_state, $filterdesc = 'Filter') {
   $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
   $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
   if(!$topic) {
@@ -77,7 +91,7 @@ function stormknowledgebase_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => true,
     '#collapsed' => true,
   );
