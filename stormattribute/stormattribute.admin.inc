@@ -6,8 +6,6 @@
  */
 
 function stormattribute_list() {
-  $o = drupal_get_form('stormattribute_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormattribute';
 
@@ -44,26 +42,43 @@ function stormattribute_list() {
   $s = "SELECT * FROM {stormattribute}";
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormattribute_list_filter']['domain']) {
     $where[] = "domain='%s'";
     $args[] = $_SESSION['stormattribute_list_filter']['domain'];
+    $filterfields[] = t('Domain');
   }
 
   if ($_SESSION['stormattribute_list_filter']['akey']) {
     $where[] = "LOWER(akey) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['akey'];
+    $filterfields[] = t('Key');
   }
 
   if ($_SESSION['stormattribute_list_filter']['avalue']) {
     $where[] = "LOWER(avalue) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
+    $filterfields[] = t('Value');
   }
 
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
 
   $tablesort = tablesort_sql($header);
 
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormattribute_list_filter', $filterdesc);
+  
   $s = db_rewrite_sql($s, 'stormattribute', 'aid');
   $s = storm_rewrite_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL, $args);
@@ -161,7 +176,7 @@ function stormattribute_list_submit($form, &$form_state) {
   drupal_set_message(t('Attributes saved'));
 }
 
-function stormattribute_list_filter() {
+function stormattribute_list_filter(&$form_state, $filterdesc = 'Filter') {
   $domain = $_SESSION['stormattribute_list_filter']['domain'];
   $akey = $_SESSION['stormattribute_list_filter']['akey'];
   $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
@@ -176,7 +191,7 @@ function stormattribute_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
