@@ -15,8 +15,6 @@ function stormperson_list() {
     $_SESSION['stormperson_list_filter']['organization_nid'] = $_GET['organization_nid'];
   }
 
-  $o = drupal_get_form('stormperson_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormperson';
 
@@ -46,18 +44,35 @@ function stormperson_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' ";
   if ($_SESSION['stormperson_list_filter']['organization_nid']) {
     $where[] = 'spe.organization_nid=%d';
     $args[] = $_SESSION['stormperson_list_filter']['organization_nid'];
+    $filterfields[] = t('Organization');
   }
   if ($_SESSION['stormperson_list_filter']['name']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
     $args[] = $_SESSION['stormperson_list_filter']['name'];
+    $filterfields[] = t('Name');
   }
   $itemsperpage = $_SESSION['stormperson_list_filter']['itemsperpage'];
-
+  if (!$itemsperpage) {
+    // Sets $itemsperpage for fieldset label, but this section does not control storing of session variable.
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
+  
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormperson_list_filter', $filterdesc);
+  
   $s = stormperson_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
@@ -74,7 +89,7 @@ function stormperson_list() {
   print theme('page', $o);
 }
 
-function stormperson_list_filter() {
+function stormperson_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormperson_list_filter']['organization_nid'];
   $name = $_SESSION['stormperson_list_filter']['name'];
 
@@ -88,7 +103,7 @@ function stormperson_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
