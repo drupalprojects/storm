@@ -16,8 +16,6 @@ function stormorganization_list() {
     }
   }
 
-  $o = drupal_get_form('stormorganization_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormorganization';
 
@@ -42,14 +40,17 @@ function stormorganization_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormorganization_list_filter']['country']) {
     $where[] = "sor.country='%s'";
     $args[] = $_SESSION['stormorganization_list_filter']['country'];
+    $filterfields[] = t('Country');
   }
   if ($_SESSION['stormorganization_list_filter']['name']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
+    $filterfields[] = t('Name');
   }
 
   $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
@@ -60,6 +61,7 @@ function stormorganization_list() {
     else if ($iscustomer=='no') {
       $where[] = "sor.iscustomer=0";
     }
+    $filterfields[] = t('Customer');
   }
 
   $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
@@ -70,6 +72,7 @@ function stormorganization_list() {
     else if ($isprovider=='no') {
       $where[] = "sor.isprovider=0";
     }
+    $filterfields[] = t('Provider');
   }
 
   $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
@@ -80,9 +83,24 @@ function stormorganization_list() {
     else if ($isactive=='no') {
       $where[] = "sor.isactive=0";
     }
+    $filterfields[] = t('Active');
   }
 
   $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    // Sets value for fieldset label, does not affect filter itself.
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
+  
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormorganization_list_filter', $filterdesc);
 
   $s = stormorganization_access_sql($s, $where);
   $s = db_rewrite_sql($s);
@@ -99,7 +117,7 @@ function stormorganization_list() {
   print theme('page', $o);
 }
 
-function stormorganization_list_filter() {
+function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
   $country_list = stormattribute_attributes_bydomain('Country');
   $country = $_SESSION['stormproject_list_filter']['country'];
   if (!$country) {
@@ -125,7 +143,7 @@ function stormorganization_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#weight' => -20,
