@@ -38,8 +38,6 @@ function stormnote_list() {
     $_SESSION['stormnote_list_filter']['project_nid'] = $t->project_nid;
   }
 
-  $o = drupal_get_form('stormnote_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormnote';
 
@@ -75,25 +73,44 @@ function stormnote_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormnote_list_filter']['organization_nid']) {
     $where[] = 'sno.organization_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['organization_nid'];
+    $filterfields[] = 'Organization';
   }
   if ($_SESSION['stormnote_list_filter']['project_nid']) {
     $where[] = 'sno.project_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['project_nid'];
+    $filterfields[] = 'Project';
   }
   if ($_SESSION['stormnote_list_filter']['task_nid']) {
     $where[] = 'sno.task_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['task_nid'];
+    $filterfields[] = 'Task';
   }
   if ($_SESSION['stormnote_list_filter']['title']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormnote_list_filter']['title'];
+    $filterfields[] = 'Title';
   }
   $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    // This section only provides the value for the fieldset label, doesn't control  actual filter
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
 
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormnote_list_filter', $filterdesc);
+  
   $s = stormnote_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
@@ -110,7 +127,7 @@ function stormnote_list() {
   print theme('page', $o);
 }
 
-function stormnote_list_filter() {
+function stormnote_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormnote_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormnote_list_filter']['project_nid'];
   $task_nid = $_SESSION['stormnote_list_filter']['task_nid'];
@@ -126,7 +143,7 @@ function stormnote_list_filter() {
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
