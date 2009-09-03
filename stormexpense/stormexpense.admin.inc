@@ -52,8 +52,6 @@ function stormexpense_list() {
     $_SESSION['stormexpense_list_filter']['task_nid'] = $ti->task_nid;
   }
 
-  $o = drupal_get_form('stormexpense_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormexpense';
 
@@ -97,22 +95,27 @@ function stormexpense_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['stormexpense_list_filter']['organization_nid']) {
     $where[] = 'sex.organization_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['organization_nid'];
+    $filterfields[] = 'Organization';
   }
   if ($_SESSION['stormexpense_list_filter']['project_nid']) {
     $where[] = 'sex.project_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['project_nid'];
+    $filterfields[] = 'Project';
   }
   if ($_SESSION['stormexpense_list_filter']['task_nid']) {
     $where[] = 'sex.task_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['task_nid'];
+    $filterfields[] = 'Task';
   }
   if ($_SESSION['stormexpense_list_filter']['ticket_nid']) {
     $where[] = 'sex.ticket_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['ticket_nid'];
+    $filterfields[] = 'Ticket';
   }
   if ($_SESSION['stormexpense_list_filter']['datefrom']) {
     $datefrom = $_SESSION['stormexpense_list_filter']['datefrom'];
@@ -120,6 +123,7 @@ function stormexpense_list() {
     $datefrom['minute'] = 0;
     $where[] = 'sex.expensedate>=%d';
     $args[] = _storm_datetime_to_gmtimestamp($datefrom);
+    $filterfields[] = 'Date';
   }
   if ($_SESSION['stormexpense_list_filter']['dateto']) {
     $dateto = $_SESSION['stormexpense_list_filter']['dateto'];
@@ -127,24 +131,41 @@ function stormexpense_list() {
     $dateto['minute'] = 59;
     $where[] = 'sex.expensedate<=%d';
     $args[] = _storm_datetime_to_gmtimestamp($dateto);
+    $filterfields[] = 'Date';
   }
   if ($_SESSION['stormexpense_list_filter']['title']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormexpense_list_filter']['title'];
+    $filterfields[] = 'Title';
   }
   if ($_SESSION['stormexpense_list_filter']['provider_title']) {
     $where[] = "LOWER(sex.provider_title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormexpense_list_filter']['provider_title'];
+    $filterfields[] = 'Provider';
   }
 
   $itemsperpage = $_SESSION['stormexpense_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
+  }
 
   if ($_SESSION['stormexpense_list_filter']['user']) {
     $expenseuser = user_load(array('name' => $_SESSION['stormexpense_list_filter']['user']));
     if (!$expenseuser->uid) $expenseuser->uid =  -1;
     $where[] = 'n.uid=%d';
     $args[] = $expenseuser->uid;
+    $filterfields[] = 'User';
   }
+
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormexpense_list_filter', $filterdesc);
 
   $s = stormexpense_access_sql($s, $where);
   $s = db_rewrite_sql($s);
@@ -170,7 +191,7 @@ function stormexpense_list() {
   print theme('page', $o);
 }
 
-function stormexpense_list_filter() {
+function stormexpense_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['stormexpense_list_filter']['organization_nid'];
   $project_nid = $_SESSION['stormexpense_list_filter']['project_nid'];
   $task_nid = $_SESSION['stormexpense_list_filter']['task_nid'];
@@ -186,12 +207,13 @@ function stormexpense_list_filter() {
 
   $datefrom = $_SESSION['stormexpense_list_filter']['datefrom'];
   if (!$datefrom) {
-    $datefrom = array('day' => 1,
-                      'month' => format_date(time(), 'custom', 'n'),
-                      'year' => format_date(time(), 'custom', 'Y'),
-                      'hour' => 0,
-                      'minute' => 0,
-                      );
+    $datefrom = array(
+      'day' => 1,
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
+      'hour' => 0,
+      'minute' => 0,
+    );
     $_SESSION['stormexpense_list_filter']['datefrom'] = $datefrom;
   }
 
@@ -200,11 +222,11 @@ function stormexpense_list_filter() {
   $form = array();
 
   $form['filter'] = array(
-        '#type' => 'fieldset',
-        '#title' => ('Filter'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#theme' => 'stormexpense_list_filter',
+    '#type' => 'fieldset',
+    '#title' => $filterdesc,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#theme' => 'stormexpense_list_filter',
   );
 
   $form['filter']['group1'] = array(
