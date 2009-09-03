@@ -25,8 +25,6 @@ function storminvoice_list() {
     $_SESSION['storminvoice_list_filter']['organization_nid'] = $p->organization_nid;
   }
 
-  $o = drupal_get_form('storminvoice_list_filter');
-
   $i = new stdClass();
   $i->type = 'storminvoice';
 
@@ -79,24 +77,29 @@ function storminvoice_list() {
 
   $where = array();
   $args = array();
+  $filterfields = array();
 
   if ($_SESSION['storminvoice_list_filter']['organization_nid']) {
     $where[] = 'sin.organization_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['organization_nid'];
+    $filterfields[] = 'Organization';
   }
   if ($_SESSION['storminvoice_list_filter']['project_nid']) {
     $where[] = 'sin.project_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['project_nid'];
+    $filterfields[] = 'Project';
   }
   if ($_SESSION['storminvoice_list_filter']['reqdatefrom']) {
     $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
     $where[] = 'sin.requestdate>=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdatefrom);
+    $filterfields[] = 'Request Date';
   }
   if ($_SESSION['storminvoice_list_filter']['reqdateto']) {
     $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
     $where[] = 'sin.requestdate<=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdateto);
+    $filterfields[] = 'Request Date';
   }
 
   $status = $_SESSION['storminvoice_list_filter']['status'];
@@ -112,6 +115,7 @@ function storminvoice_list() {
     }
     $where[] = 'sin.requestdate<=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdateto);
+    $filterfields[] = 'Status';
   }
 
   $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
@@ -128,7 +132,17 @@ function storminvoice_list() {
   else if ($tablesort == " ORDER BY  sin.number DESC") {
     $tablesort = ' ORDER BY LPAD(sin.number, 10, "0") DESC';
   }
-
+  
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('storminvoice_list_filter', $filterdesc);
+  
   $s = storminvoice_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
@@ -156,7 +170,7 @@ function storminvoice_list() {
   print theme('page', $o);
 }
 
-function storminvoice_list_filter() {
+function storminvoice_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = $_SESSION['storminvoice_list_filter']['organization_nid'];
   $project_nid = $_SESSION['storminvoice_list_filter']['project_nid'];
   $status = $_SESSION['storminvoice_list_filter']['status'];
@@ -194,10 +208,10 @@ function storminvoice_list_filter() {
   $form = array();
 
   $form['filter'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Search'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
+    '#type' => 'fieldset',
+    '#title' => $filterdesc,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
 
   $form['filter']['group1'] = array(
