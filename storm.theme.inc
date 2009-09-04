@@ -285,7 +285,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
         $params = $_GET;
         $params[$params_key] = $node_nid;
       }
-      if (drupal_function_exists('storm_icon_add') {
+      if (drupal_function_exists('storm_icon_add')) {
         $v .= storm_icon_add($add_path, $i, $params);
       }
     }
