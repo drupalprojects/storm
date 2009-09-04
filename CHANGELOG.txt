@@ -4,6 +4,4 @@ This changelog will list the differences between the 7.x and 6.x branches, and t
 
 Version 7.x-1.x-dev:
 
-Initial port to Drupal 7.x:
-- Storm Dashboard moved into separate module.
-- Files separated into smaller .inc files, with more descriptive names.
+Initial port to Drupal 7.x

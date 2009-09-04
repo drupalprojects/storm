@@ -57,7 +57,7 @@ function storm_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   
-  $items['admin/storm/storm'] = array(
+  $items['admin/config/storm/storm'] = array(
     'title' => t('Storm'),
     'description' => t('Storm Administration Page'),
     'access arguments' => array('access administration pages'),
