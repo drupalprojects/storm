@@ -6,6 +6,39 @@
  * Provides theme functions for Storm modules
  */
 
+/**
+ * @function
+ * Theme function to create the Storm Dashboard
+ */
+// See 498108: Proposed to refactor creation of Storm Dashboard
+function theme_storm_dashboard() {
+  $o = '<div id="stormdashboard">';
+  $o .= '<dl class="stormdashboard">';
+  
+  $o .= '<div class="stormdashboard">';
+  $o .= theme('storm_link', '', 'stormorganization');
+  $o .= theme('storm_link', '', 'stormperson');
+  $o .= theme('storm_link', '', 'stormteammember');
+  $o .= theme('storm_link', '', 'stormproject');
+  $o .= theme('storm_link', '', 'stormtask');
+  $o .= theme('storm_link', '', 'stormticket');
+  $o .= theme('storm_link', '', 'stormtimetracking');
+  $o .= '</div>';
+
+  $o .= '<div class="stormdashboard">';
+  $o .= theme('storm_link', '', 'stormnote');
+  $o .= theme('storm_link', '', 'storminvoice');
+  $o .= theme('storm_link', '', 'stormexpense');
+  $o .= theme('storm_link', '', 'stormknowledgebase');
+  $o .= theme('storm_link', '', 'stormattribute');
+  $o .= theme('storm_link', '', 'stormconfiguration');
+  
+  $o .= '</div>';
+  $o .= '</dl>';
+  $o .= '</div>';
+  return $o;
+}
+ 
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
@@ -252,7 +285,9 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
         $params = $_GET;
         $params[$params_key] = $node_nid;
       }
-      $v .= storm_icon_add($add_path, $i, $params);
+      if (drupal_function_exists('storm_icon_add') {
+        $v .= storm_icon_add($add_path, $i, $params);
+      }
     }
 
     if ($node_nid == 0) {

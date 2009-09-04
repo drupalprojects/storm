@@ -6,6 +6,14 @@
  * Miscellaneous functions for the Storm module
  */
 
+/**
+ * @function
+ * Function to create dashboard (call to theme function)
+ */
+function storm_dashboard() {
+  drupal_set_title(t('Storm Dashboard'));
+  return theme('storm_dashboard');
+}
 
 // DATE / TIME MANIPULATION
 function storm_elements() {

@@ -37,6 +37,15 @@ function storm_help($path, $arg) {
 function storm_menu() {
   $items = array();
   
+  $items['storm'] = array(
+    'title' => t('Storm'),
+    'description' => t('Storm Dashboard'),
+    'page callback' => 'storm_dashboard',
+    'access arguments' => array('Storm: Access Dashboard'),
+    'parent' => '',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
   $items['admin/storm'] = array(
     'title' => t('Storm'),
     'description' => t('Storm Administration Page'),
@@ -58,6 +67,19 @@ function storm_menu() {
 }
 
 /**
+ * @function
+ * Implementation of hook_permission
+ */
+function storm_permission() {
+  return array(
+    'Storm: Access Dashboard' => array(
+      'title' => t('Storm: Access Dashboard'),
+      'description' => t('View Storm Dashboard'),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_theme
  */
 function storm_theme() {
@@ -70,6 +92,9 @@ function storm_theme() {
     ),
     'dateext' => array(
       'arguments' => array('element'),
+    ),
+    'storm_dashboard' => array(
+      'arguments' => array(),
     ),
     'storm_link' => array(
       'arguments' => array(),
