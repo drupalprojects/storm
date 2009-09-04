@@ -116,22 +116,24 @@ function stormattribute_list() {
   $where = array();
   $args = array();
 
-  if ($_SESSION['stormattribute_list_filter']['domain']) {
+  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
     $where[] = "domain='%s'";
     $args[] = $_SESSION['stormattribute_list_filter']['domain'];
   }
 
-  if ($_SESSION['stormattribute_list_filter']['akey']) {
+  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
     $where[] = "LOWER(akey) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['akey'];
   }
 
-  if ($_SESSION['stormattribute_list_filter']['avalue']) {
+  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
     $where[] = "LOWER(avalue) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
   }
 
-  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  if (isset($_SESSION['stormattribute_list_filter']['itemsperpage'])) {
+    $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  }
 
   $tablesort = tablesort_sql($header);
 
@@ -233,14 +235,41 @@ function stormattribute_list_submit($form, &$form_state) {
 }
 
 function stormattribute_list_filter() {
-  $domain = $_SESSION['stormattribute_list_filter']['domain'];
-  $akey = $_SESSION['stormattribute_list_filter']['akey'];
-  $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
-  $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
-  $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
+  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
+    $domain = $_SESSION['stormattribute_list_filter']['domain'];
+  }
+  else {
+    $domain = NULL;
+  }
+  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
+    $akey = $_SESSION['stormattribute_list_filter']['akey'];
+  }
+  else {
+    $akey = NULL;
+  }
+  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
+    $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
+  }
+  else {
+    $avalue = NULL;
+  }
+  if (isset($_SESSION['stormattribute_list_filter']['isactive'])) {
+    $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
+  }
+  else {
+    $isactive = NULL;
+  }
+  if (isset($_SESSION['stormattribute_list_filter']['isdefault'])) {
+    $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
+  }
+  else {
+    $isdefault = NULL;
+  }
 
-  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
+  if (isset($_SESSION['stormattribute_list_filter']['itemsperpage'])) {
+    $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  }
+  else {
     $itemsperpage = 10;
     $_SESSION['stormattribute_list_filter']['itemsperpage'] = $itemsperpage;
   }
