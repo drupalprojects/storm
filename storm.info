@@ -7,10 +7,3 @@ core = 7.x
 package = Storm
 
 ; Dependencies
-dependencies[] = menu
-
-; Files registry
-files[] = storm.module
-files[] = storm.hooks.inc
-files[] = storm.settings.inc
-files[] = storm.theme.inc
