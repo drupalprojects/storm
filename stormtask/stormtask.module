@@ -186,7 +186,7 @@ function stormtask_menu() {
     'file' => 'stormtask.admin.inc',
   );
   
-  $items['admin/storm/task'] = array(
+  $items['admin/settings/storm/task'] = array(
     'title' => t('Storm Task'),
     'description' => t('Storm Task Administration Page'),
     'page callback' => 'drupal_get_form',

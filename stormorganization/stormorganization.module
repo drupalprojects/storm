@@ -164,7 +164,7 @@ function stormorganization_menu() {
     'file' => 'stormorganization.admin.inc',
   );
   
-  $items['admin/storm/organization'] = array(
+  $items['admin/settings/storm/organization'] = array(
     'title' => t('Storm Organization'),
     'description' => t('Storm Organization Administration Page'),
     'page callback' => 'drupal_get_form',

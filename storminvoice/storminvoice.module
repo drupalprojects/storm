@@ -9,7 +9,7 @@
  * 3: Load organization and project details
  * 4: Invoice create / edit form
  * 5: Invoice node manipulation functions
- * 6:Admin settings
+ * 6: Admin settings
  * 7: Auto_add handler
  * 8: Views hook
  * 9: Storminvoiceitem legacy functions
@@ -110,7 +110,7 @@ function storminvoice_menu() {
     'file' => 'storminvoice.admin.inc',
   );
 
-  $items['admin/storm/invoice'] = array(
+  $items['admin/settings/storm/invoice'] = array(
     'title' => t('Storm Invoice'),
     'description' => t('Storm Invoice Administration Page'),
     'page callback' => 'drupal_get_form',
