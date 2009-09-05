@@ -89,7 +89,7 @@ function storm_theme() {
     ),
     'storm_link' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array(),
+      'arguments' => array('source_module', 'destination_module', 'node_nid', 'weight'),
     ),
     'storm_list_report' => array(
       'file'      => 'storm.theme.inc',
