@@ -1,4 +1,4 @@
-<?php
+<á?php
 // $Id$
 
 /**
@@ -36,82 +36,76 @@ function theme_stormticket_list($header, $tickets) {
 function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
   
-  $w = 0;
-  $node->content['stormticket'] = array(
-    '#prefix' => '<div id="stormticket" class="stormcomponent">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
+  $node->content['links'] = array(
+    '#prefix' => '<div class="stormlinks"><dl>',
+    '#suffix' => '</dl></div>',
+    '#weight' => -25,
   );
 
-  $node->content['stormticket']['fields'] = array(
-    '#prefix' => '<div id="fields">',
+  $node->content['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, 1);
+  $node->content['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, 5);
+
+  $node->content['group1'] = array(
+    '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $node->content['stormticket']['fields']['organization'] = array(
+  $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormticket']['fields']['project'] = array(
+  $node->content['group1']['project_nid'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormticket']['fields']['task'] = array(
+  $node->content['group1']['task_nid'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => $w++,
   );
 
-  $node->content['stormticket']['fields']['category'] = array(
+  $node->content['group2'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
+  );
+
+  $node->content['group2']['category'] = array(
     '#prefix' => '<div class="category">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Category'), stormattribute_value('Ticket category', $node->ticketcategory)),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
   
-  $node->content['stormticket']['fields']['status'] = array(
+  $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Status'), stormattribute_value('Ticket status', $node->ticketstatus)),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
-  $node->content['stormticket']['fields']['priority'] = array(
+  $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Priority'), stormattribute_value('Ticket priority', $node->ticketpriority)),
-    '#weight' => $w++,
+    '#weight' => 3,
   );
   
-  $node->content['stormticket']['fields']['body'] = array(
-    '#prefix' => '<div class="body">',
+  $node->content['body_field'] = array(
+    '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
 
-  $node->content['stormticket']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#value' => '&nbsp;',
-    '#weight' => $w++,
-  );
-  
-  $w = 0;
-
-  $i = new stdClass();
-  
-  $node->content['stormticket']['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, $w++);
-  $node->content['stormticket']['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, $w++);
-  
   return $node;
 }

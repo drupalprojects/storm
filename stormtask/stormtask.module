@@ -308,6 +308,17 @@ function stormtask_node_info() {
   );
 }
 
+function stormtask_content_extra_fields($type_name) {
+  if ($type_name == 'stormtask') {
+    return array(
+      'group1' => array('label' => 'Organization/Project/Task/Weight/Step Group', 'weight' => -20),
+      'group2' => array('label' => 'Category/Status/Priority Group', 'weight' => -19),
+      'group3' => array('label' => 'Date/Duration Group', 'weight' => -18),
+      'group4' => array('label' => 'Price Group', 'weight' => -17),
+    );
+  }
+}
+
 function stormtask_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormtask} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
@@ -372,7 +383,7 @@ function stormtask_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
   $s_org = stormorganization_access_sql($s_org);
@@ -428,13 +439,7 @@ function stormtask_form(&$node) {
     '#default_value' => $node->weight,
   );
 
-  $form['group2'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => -49,
-  );
-
-  $form['group2']['stepno'] = array(
+  $form['group1']['stepno'] = array(
     '#type' => 'textfield',
     '#title' => t('Step no.'),
     '#size' => 15,
@@ -442,21 +447,22 @@ function stormtask_form(&$node) {
     '#default_value' => $node->stepno,
   );
 
-  $form['group2']['title'] = array(
+  $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -18,
   );
 
-  $form['group3'] = array(
+  $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -48,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -17,
   );
 
   $taskcategory_list = stormattribute_attributes_bydomain('Task category');
-  $form['group3']['taskcategory'] = array(
+  $form['group2']['taskcategory'] = array(
     '#type' => 'select',
     '#title' => t('Category'),
     '#default_value' => $node->taskcategory,
@@ -464,7 +470,7 @@ function stormtask_form(&$node) {
   );
 
   $taskstatus_list = stormattribute_attributes_bydomain('Task status');
-  $form['group3']['taskstatus'] = array(
+  $form['group2']['taskstatus'] = array(
     '#type' => 'select',
     '#title' => t('Status'),
     '#default_value' => $node->taskstatus,
@@ -472,27 +478,27 @@ function stormtask_form(&$node) {
   );
 
   $taskpriority_list = stormattribute_attributes_bydomain('Task priority');
-  $form['group3']['taskpriority'] = array(
+  $form['group2']['taskpriority'] = array(
     '#type' => 'select',
     '#title' => t('Priority'),
     '#default_value' => $node->taskpriority,
     '#options' => $taskpriority_list['values'],
   );
 
-  $form['group4'] = array(
+  $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -47,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -16,
   );
 
-  $form['group4']['datebegin'] = array(
+  $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
     '#title' => t('Date begin'),
     '#withnull' => true,
     '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
   );
 
-  $form['group4']['dateend'] = array(
+  $form['group3']['dateend'] = array(
     '#type' => 'dateext',
     '#title' => t('Date end'),
     '#withnull' => true,
@@ -500,35 +506,35 @@ function stormtask_form(&$node) {
   );
 
   $durationunit_list = stormattribute_attributes_bydomain('Duration unit');
-  $form['group4']['durationunit'] = array(
+  $form['group3']['durationunit'] = array(
     '#type' => 'select',
     '#title' => t('Duration unit'),
     '#default_value' => $node->durationunit,
     '#options' => $durationunit_list['values'],
   );
 
-  $form['group4']['duration'] = array(
+  $form['group3']['duration'] = array(
     '#type' => 'textfield',
     '#title' => t('Duration'),
     '#size' => 20,
     '#default_value' => $node->duration,
   );
 
-  $form['group5'] = array(
+  $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -45,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
 
   $pricemode_list = stormattribute_attributes_bydomain('Price mode');
-  $form['group5']['pricemode'] = array(
+  $form['group4']['pricemode'] = array(
     '#type' => 'select',
     '#title' => t('Price mode'),
     '#default_value' => $node->pricemode,
     '#options' => $pricemode_list['values'],
   );
 
-  $form['group5']['price'] = array(
+  $form['group4']['price'] = array(
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
@@ -536,7 +542,7 @@ function stormtask_form(&$node) {
   );
 
   $currency_list = stormattribute_attributes_bydomain('Currency');
-  $form['group5']['currency'] = array(
+  $form['group4']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Price currency'),
     '#default_value' => $node->currency,
@@ -544,7 +550,7 @@ function stormtask_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -44;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
@@ -573,14 +579,14 @@ function stormtask_form_alter(&$form, $form_state, $form_id) {
   if (module_exists('date_api') && module_exists('date_popup')) {
     if ($form_id == 'stormtask_node_form') {
       $node = $form['#node'];
-      $form['group4']['datebegin'] = array(
+      $form['group3']['datebegin'] = array(
         '#type' => 'date_popup',
         '#title' => t('Date begin'),
         '#date_format' =>  'Y-m-d',
         '#default_value' => date('Y-m-d',$node->datebegin),
       );
 
-      $form['group4']['dateend'] = array(
+      $form['group3']['dateend'] = array(
         '#type' => 'date_popup',
         '#title' => t('Date end'),
         '#date_format' =>  'Y-m-d',

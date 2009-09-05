@@ -211,6 +211,17 @@ function stormticket_node_info() {
   );
 }
 
+function stormticket_content_extra_fields($type_name) {
+  if ($type_name == 'stormticket') {
+    return array(
+      'group1' => array('label' => 'Organization/Project/Task Group', 'weight' => -20),
+      'group2' => array('label' => 'Category/Status/Priority Group', 'weight' => -19),
+      'group3' => array('label' => 'Date/Duration Group', 'weight' => -18),
+      'group4' => array('label' => 'Price Group', 'weight' => -17),
+    );
+  }
+}
+
 // ORGANISATION / PROJECT / TASK UPDATE FUNCTIONS
 function stormticket_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormticket} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
@@ -281,7 +292,7 @@ function stormticket_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -20,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
   $s_org = stormorganization_access_sql($s_org);
@@ -331,7 +342,7 @@ function stormticket_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -19,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
   $category_list = stormattribute_attributes_bydomain('Ticket category');
@@ -363,13 +374,13 @@ function stormticket_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => 1,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -18,
   );
 
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => 2,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
   );
 
   $form['group3']['datebegin'] = array(
@@ -401,21 +412,22 @@ function stormticket_form(&$node) {
     '#default_value' => $node->duration,
   );
 
-  $form['group5'] = array(
+  $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => 3,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
 
   $pricemodes = stormattribute_attributes_bydomain('Price mode');
-  $form['group5']['pricemode'] = array(
+  $form['group4']['pricemode'] = array(
     '#type' => 'select',
     '#title' => t('Price mode'),
     '#default_value' => $node->pricemode,
     '#options' => array('-' => '-') + $pricemodes['values'],
   );
 
-  $form['group5']['price'] = array(
+  $form['group4']['price'] = array(
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
@@ -423,7 +435,7 @@ function stormticket_form(&$node) {
   );
 
   $currencies = stormattribute_attributes_bydomain('Currency');
-  $form['group5']['currency'] = array(
+  $form['group4']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Price currency'),
     '#default_value' => $node->currency,
@@ -431,7 +443,7 @@ function stormticket_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = 4;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
