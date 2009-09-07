@@ -31,83 +31,114 @@ function theme_stormorganization_list($header, $organizations) {
 
 function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-  unset($node->content['body']);
-
-  $w = 0;
-  $node->content['stormorganization'] = array(
-    '#prefix' => '<div id="stormorganization" class="stormcomponent">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
+  
+  $node->content['links'] = array(
+    '#prefix' => '<div class="stormlinks"><dl>',
+    '#suffix' => '</dl></div>',
+    '#weight' => -25,
   );
-
-  $node->content['stormorganization']['fields'] = array(
-    '#prefix' => '<div id="fields">',
+  
+  $node->content['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $w++);
+  $node->content['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $w++);
+  $node->content['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $w++);
+  $node->content['links']['people'] = theme('storm_link', 'stormorganization', 'stormperson', $node->nid, $w++);
+  $node->content['links']['projects'] = theme('storm_link', 'stormorganization', 'stormproject', $node->nid, $w++);
+  $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $w++);
+  $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $w++);
+  $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $w++);
+  
+  $node->content['group2'] = array(
+    '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
-
-  $w = 0;
-  $node->content['stormorganization']['fields'] ['fullname'] = array(
+  
+  $node->content['group2'] ['fullname'] = array(
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Fullname'), $node->fullname),
     '#weight' => $w++,
   );
 
-  $node->content['stormorganization']['fields'] ['country'] = array(
-    '#prefix' => '<div class="country">',
+  $node->content['group3'] = array(
+    '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Country'), $node->country),
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
-  $node->content['stormorganization']['fields'] ['provstate'] = array(
-    '#prefix' => '<div class="provstate">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Province / State'), $node->provstate),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormorganization']['fields'] ['city'] = array(
-    '#prefix' => '<div class="city">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('City'), $node->city),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormorganization']['fields'] ['zip'] = array(
-    '#prefix' => '<div class="zip">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Zip'), $node->zip),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormorganization']['fields'] ['address'] = array(
+  $node->content['group3']['address'] = array(
     '#prefix' => '<div class="address">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Address'), $node->address),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
-  $node->content['stormorganization']['fields'] ['www'] = array(
+  $node->content['group3']['city'] = array(
+    '#prefix' => '<div class="city">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('City'), $node->city),
+    '#weight' => 2,
+  );
+
+  $node->content['group3']['provstate'] = array(
+    '#prefix' => '<div class="provstate">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Province / State'), $node->provstate),
+    '#weight' => 3,
+  );
+
+  $node->content['group3'] ['country'] = array(
+    '#prefix' => '<div class="country">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Country'), $node->country),
+    '#weight' => 4,
+  );
+
+  $node->content['group3'] ['zip'] = array(
+    '#prefix' => '<div class="zip">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Zip'), $node->zip),
+    '#weight' => 5,
+  );
+
+  $node->content['group4'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
+  );
+
+  $node->content['group4']['phone'] = array(
+    '#prefix' => '<div class="phone">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Phone'), $node->phone),
+    '#weight' => 1,
+  );
+
+  $node->content['group4']['www'] = array(
     '#prefix' => '<div class="www">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('WWW'), l($node->www, 'http://'. $node->www, array('absolute' => TRUE))),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
-  $node->content['stormorganization']['fields'] ['email'] = array(
+  $node->content['group4']['email'] = array(
     '#prefix' => '<div class="email">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Email'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
-    '#weight' => $w++,
+    '#weight' => 3,
+  );
+  
+  $node->content['group5'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
 
-  $node->content['stormorganization']['fields'] ['currency'] = array(
+  $node->content['group5']['currency'] = array(
     '#prefix' => '<div class="currency">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Currency'), $node->currency),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
   $languages = language_list('language', TRUE);
@@ -116,44 +147,28 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     $languages_options[$language_code] = $language->name;
   }
 
-  $node->content['stormorganization']['fields'] ['language'] = array(
+  $node->content['group5']['language'] = array(
     '#prefix' => '<div class="language">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Language'), $languages_options[$node->orglanguage]),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
-  $node->content['stormorganization']['fields'] ['taxid'] = array(
+  $node->content['group5'] ['taxid'] = array(
     '#prefix' => '<div class="taxid">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Tax ID'), $node->taxid),
-    '#weight' => $w++,
+    '#weight' => 3,
   );
 
-  $node->content['stormorganization']['fields'] ['note'] = array(
-    '#prefix' => '<div class="note">',
+  $node->content['body_field'] = array(
+    '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Note'), $node->body),
-    '#weight' => $w++,
+    '#value' => theme('storm_view_item', t('Note'), $node->content['body']['#value']),
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
   );
-
-  $node->content['stormorganization']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
-  );
-
-  $w = 0;
-  $i = new stdClass();
   
-  $node->content['stormorganization']['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $w++);
-  $node->content['stormorganization']['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $w++);
-  $node->content['stormorganization']['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $w++);
-  $node->content['stormorganization']['links']['people'] = theme('storm_link', 'stormorganization', 'stormperson', $node->nid, $w++);
-  $node->content['stormorganization']['links']['projects'] = theme('storm_link', 'stormorganization', 'stormproject', $node->nid, $w++);
-  $node->content['stormorganization']['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $w++);
-  $node->content['stormorganization']['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $w++);
-  $node->content['stormorganization']['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $w++);
+  unset($node->content['body']);
   
   return $node;
 }

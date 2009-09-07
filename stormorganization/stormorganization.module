@@ -201,6 +201,18 @@ function stormorganization_node_info() {
   );
 }
 
+function stormorganization_content_extra_fields($type_name) {
+  if ($type_name == 'stormorganization') {
+    return array(
+      'group1' => array('label' => 'Customer/Provider/Active Group', 'weight' => -20),
+      'group2' => array('label' => 'Prefix/Fullname Group', 'weight' => -19),
+      'group3' => array('label' => 'Address Group', 'weight' => -18),
+      'group4' => array('label' => 'Phone/WWW/Email Group', 'weight' => -17),
+      'group5' => array('label' => 'Currency/Language/Tax ID Group', 'weight' => -16),
+    );
+  }
+}
+
 function stormorganization_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
@@ -216,85 +228,89 @@ function stormorganization_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => 1,
-  );
-
-  $form['group0'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => 2,
-  );
-
-  $form['group0']['iscustomer'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Customer'),
-    '#default_value' => $node->iscustomer,
-  );
-
-  $form['group0']['isprovider'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Provider'),
-    '#default_value' => $node->isprovider,
-  );
-
-  $form['group0']['isactive'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Active'),
-    '#default_value' => $node->isactive,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -18,
   );
 
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => 3,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $form['group1']['prefix'] = array(
+  $form['group1']['iscustomer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Customer'),
+    '#default_value' => $node->iscustomer,
+  );
+
+  $form['group1']['isprovider'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provider'),
+    '#default_value' => $node->isprovider,
+  );
+
+  $form['group1']['isactive'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Active'),
+    '#default_value' => $node->isactive,
+  );
+
+  $form['group2'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
+  );
+
+   $form['group2']['prefix'] = array(
     '#type' => 'textfield',
     '#title' => t('Prefix'),
     '#size' => 20,
     '#default_value' => $node->prefix,
   );
 
-  $form['group1']['fullname'] = array(
+  $form['group2']['fullname'] = array(
     '#type' => 'textfield',
     '#title' => t('Fullname'),
     '#size' => 40,
     '#default_value' => $node->fullname,
   );
 
-  $form['group2'] = array(
+  $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => 4,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
-
-  $country_list = stormattribute_attributes_bydomain('Country');
-  $form['group2']['country'] = array(
-    '#type' => 'select',
-    '#title' => t('Country'),
-    '#options' => $country_list['values'],
-    '#default_value' => $node->country,
-  );
-
-  $form['group2']['provstate'] = array(
+  
+  $form['group3']['address'] = array(
     '#type' => 'textfield',
-    '#title' => t('Province / State'),
-    '#size' => 20,
-    '#default_value' => $node->provstate,
+    '#title' => t('Address'),
+    '#default_value' => $node->address,
+    '#weight' => 1,
   );
 
-  $form['group2']['city'] = array(
+  $form['group3']['city'] = array(
     '#type' => 'textfield',
     '#title' => t('City'),
     '#size' => 20,
     '#default_value' => $node->city,
+    '#weight' => 2,
   );
 
-  $form['group3'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => 5,
+  $form['group3']['provstate'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Province / State'),
+    '#size' => 20,
+    '#default_value' => $node->provstate,
+    '#weight' => 3,
+  );
+
+  $country_list = stormattribute_attributes_bydomain('Country');
+  $form['group3']['country'] = array(
+    '#type' => 'select',
+    '#title' => t('Country'),
+    '#options' => $country_list['values'],
+    '#default_value' => $node->country,
+    '#weight' => 4,
   );
 
   $form['group3']['zip'] = array(
@@ -302,28 +318,43 @@ function stormorganization_form(&$node) {
     '#title' => t('Zip'),
     '#size' => 15,
     '#default_value' => $node->zip,
+    '#weight' => 5,
   );
 
-  $form['group3']['address'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Address'),
-    '#default_value' => $node->address,
+  $form['group4'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
 
-  $form['group3']['phone'] = array(
+  $form['group4']['phone'] = array(
     '#type' => 'textfield',
     '#title' => t('Phone'),
     '#default_value' => $node->phone,
   );
   
-  $form['group4'] = array(
+  $form['group4']['www'] = array(
+    '#type' => 'textfield',
+    '#title' => t('WWW'),
+    '#size' => 30,
+    '#default_value' => $node->www,
+  );
+
+  $form['group4']['email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email'),
+    '#size' => 30,
+    '#default_value' => $node->email,
+  );
+
+  $form['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => 6,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
 
   $currency_list = stormattribute_attributes_bydomain('Currency');
-  $form['group4']['currency'] = array(
+  $form['group5']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Currency'),
     '#options' => $currency_list['values'],
@@ -335,42 +366,22 @@ function stormorganization_form(&$node) {
   foreach ($languages as $language_code => $language) {
     $languages_options[$language_code] = $language->name;
   }
-  $form['group4']['orglanguage'] = array(
+  $form['group5']['orglanguage'] = array(
     '#type' => 'select',
     '#title' => t('Language'),
     '#options' => $languages_options,
     '#default_value' => $node->orglanguage,
   );
 
-  $form['group4']['taxid'] = array(
+  $form['group5']['taxid'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax ID'),
     '#size' => 20,
     '#default_value' => $node->taxid,
   );
-
-  $form['group5'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => 7,
-  );
-
-  $form['group5']['www'] = array(
-    '#type' => 'textfield',
-    '#title' => t('WWW'),
-    '#size' => 30,
-    '#default_value' => $node->www,
-  );
-
-  $form['group5']['email'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Email'),
-    '#size' => 30,
-    '#default_value' => $node->email,
-  );
-
+  
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = 8;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),

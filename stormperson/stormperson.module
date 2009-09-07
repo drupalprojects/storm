@@ -228,6 +228,17 @@ function stormperson_node_info() {
   );
 }
 
+function stormperson_content_extra_fields($type_name) {
+  if ($type_name == 'stormperson') {
+    return array(
+      'group1' => array('label' => 'Organization/Name/User Group', 'weight' => -20),
+      'group2' => array('label' => 'Prefix/Fullname Group', 'weight' => -19),
+      'group3' => array('label' => 'Email/WWW Group', 'weight' => -18),
+      'group4' => array('label' => 'Phone/IM Group', 'weight' => -17),
+    );
+  }
+}
+
 function stormperson_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormperson} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
@@ -256,7 +267,7 @@ function stormperson_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
@@ -277,12 +288,13 @@ function stormperson_form(&$node) {
     '#attributes' => array('onchange' => "stormperson_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
-  $form['group1']['title'] = array(
+  $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
     '#size' => 40,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -21,
   );
 
   $form['group1']['user_name'] = array(
@@ -296,7 +308,7 @@ function stormperson_form(&$node) {
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -49,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
   $form['group2']['prefix'] = array(
@@ -316,7 +328,7 @@ function stormperson_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -48,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
   $form['group3']['email'] = array(
@@ -336,7 +348,7 @@ function stormperson_form(&$node) {
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -47,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
 
   $form['group4']['phone'] = array(
@@ -354,12 +366,12 @@ function stormperson_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = -46;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
-      '#required' => FALSE
+      '#required' => ($type->min_word_count > 0)
     );
     $form['body_filter']['format'] = filter_form($node->format);
   }

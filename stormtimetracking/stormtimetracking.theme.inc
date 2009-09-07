@@ -35,54 +35,11 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
 
 function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-
-  $w = 0;
-  $node->content['stormtimetracking'] = array(
-    '#prefix' => '<div id="stormtimetracking" class="stormcomponent">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
-  );
-
-  $node->content['stormtimetracking']['fields'] = array(
-    '#prefix' => '<div id="fields">',
-    '#suffix' => '</div>',
-    '#weight' => $w++,
-  );
-
-  $node->content['stormtimetracking']['fields']['organization'] = array(
-    '#prefix' => '<div class="organization">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormtimetracking']['fields']['project'] = array(
-    '#prefix' => '<div class="project">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormtimetracking']['fields']['task'] = array(
-    '#prefix' => '<div class="task">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormtimetracking']['fields']['body'] = array(
-    '#prefix' => '<div class="body">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
-    '#weight' => $w++,
-  );
-  unset($node->content['body']);
-
-  $node->content['stormtimetracking']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#value' => '&nbsp;',
-    '#weight' => $w++,
+  
+  $node->content['links'] = array(
+    '#prefix' => '<div class="stormlinks"><dl>',
+    '#suffix' => '</dl></div>',
+    '#weight' => -25,
   );
 
   // Code to create invoice auto_add link
@@ -97,16 +54,59 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
     }
     else {
       $v ='';
-      $v .= '<strong>'. t('(This item has been marked unbillable so should not be invoiced.)');
+      $v .= '<strong>'. t('(This item has been marked unbillable so should not be invoiced.)') .'</strong>';
     }
     
-    $node->content['stormtimetracking']['links']['auto_invoice'] = array(
+    $node->content['links']['auto_invoice'] = array(
       '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => $v,
-      '#weight' => $w++,
+      '#weight' => 1,
     );
   }
+
+  $node->content['group1'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
+  );
+
+  $node->content['group1']['organization'] = array(
+    '#prefix' => '<div class="organization">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#weight' => 1,
+  );
+
+  $node->content['group1']['project'] = array(
+    '#prefix' => '<div class="project">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#weight' => 2,
+  );
+
+  $node->content['group1']['task'] = array(
+    '#prefix' => '<div class="task">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
+    '#weight' => 3,
+  );
+
+  $node->content['group1']['ticket'] = array(
+    '#prefix' => '<div class="ticket">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Ticket'), l($node->ticket_title, 'node/'. $node->ticket_nid)),
+    '#weight' => 4,
+  );
+  
+  $node->content['body_field'] = array(
+    '#prefix' => '<div class="stormbody">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
+  );
+  
+  unset($node->content['body']);
 
   return $node;
 }
