@@ -192,6 +192,14 @@ dt#stormconfiguration {
 background: transparent url(images/configuration.png) no-repeat top left;
 }
 
+dt.print_html {
+background: transparent url(images/html.png) no-repeat top left;
+}
+
+dt.print_pdf {
+background: transparent url(images/pdf.png) no-repeat top left;
+}
+
 div.stormcomponent {
 clear: both;
 }
@@ -286,4 +294,10 @@ div.stormlinks {
 
 div.stormbody div.value p {
   margin: 0;
+}
+
+div.storminvoiceitems {
+  clear: both;
+  float: left;
+  width: 100%;
 }
