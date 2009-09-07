@@ -162,6 +162,14 @@ function stormknowledgebase_node_info() {
   );
 }
 
+function stormknowledgebase_content_extra_fields($type_name) {
+  if ($type_name == 'stormknowledgebase') {
+    return array(
+      'group1' => array('label' => 'Topic', 'weight' => -20),
+    );
+  }
+}
+
 function stormknowledgebase_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
@@ -172,16 +180,30 @@ function stormknowledgebase_form(&$node) {
 
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
+  $form['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
+  );
+
+  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+  $form['group1']['topic'] = array(
+    '#type' => 'select',
+    '#title' => t('Topic'),
+    '#default_value' => $node->topic,
+    '#options' => $topic_list['values'],
+  );
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => 1,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -18,
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = 2;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
@@ -190,15 +212,6 @@ function stormknowledgebase_form(&$node) {
       '#required' => ($type->min_word_count > 0));
     $form['body_filter']['format'] = filter_form($node->format);
   }
-
-  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
-  $form['topic'] = array(
-    '#weight' => 3,
-    '#type' => 'select',
-    '#title' => t('Topic'),
-    '#default_value' => $node->topic,
-    '#options' => $topic_list['values'],
-  );
 
   return $form;
 }

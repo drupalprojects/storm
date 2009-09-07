@@ -187,6 +187,14 @@ function stormnote_node_info() {
   );
 }
 
+function stormnote_content_extra_fields($type_name) {
+  if ($type_name == 'stormnote') {
+    return array(
+      'group1' => array('label' => 'Organization/Project/Task Group', 'weight' => -20),
+    );
+  }
+}
+
 function stormnote_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormnote} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
@@ -249,7 +257,7 @@ function stormnote_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
   $s_org = stormorganization_access_sql($s_org);
@@ -302,11 +310,11 @@ function stormnote_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => 1,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -16,
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = 2;
+    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),

@@ -33,64 +33,48 @@ function theme_stormnote_list($header, $notes) {
 
 function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-
-  $w = 0;
-
-  $node->content['stormnote'] = array(
-    '#prefix' => '<div id="stormnote" class="stormcomponent">',
-    '#suffix' => '</div>',
+  
+  $node->content['links'] = array(
+    '#prefix' => '<div class="stormlinks"><dl>',
+    '#suffix' => '</dl></div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormnote']['fields'] = array(
-    '#prefix' => '<div id="fields">',
+  $node->content['group1'] = array(
+    '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
-
-  $node->content['stormnote']['fields']['title'] = array(
-    '#prefix' => '<div class="title">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Title'), $node->title),
-    '#weight' => $w++,
-  );
-
-  $node->content['stormnote']['fields']['organization'] = array(
+  
+  $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
-  $node->content['stormnote']['fields']['project'] = array(
+  $node->content['group1']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
-  $node->content['stormnote']['fields']['task'] = array(
+  $node->content['group1']['task'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->project_nid)),
-    '#weight' => $w++,
+    '#weight' => 3,
   );
 
-  $node->content['stormnote']['fields']['body'] = array(
-    '#prefix' => '<div class="body">',
+  $node->content['body_field'] = array(
+    '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
-
-  $node->content['stormnote']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#value' => '&nbsp;',
-    '#weight' => $w++,
-  );
-
+  
   return $node;
 }
 

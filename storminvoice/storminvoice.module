@@ -170,6 +170,17 @@ function storminvoice_node_info() {
   );
 }
 
+function storminvoice_content_extra_fields($type_name) {
+  if ($type_name == 'storminvoice') {
+    return array(
+      'group1' => array('label' => 'Number', 'weight' => -20),
+      'group2' => array('label' => 'Organization/Project/Reference Group', 'weight' => -19),
+      'group3' => array('label' => 'Date Group', 'weight' => -18),
+      'group4' => array('label' => 'Price Group', 'weight' => -17),
+    );
+  }
+}
+
 // ACCESS FUNCTIONS
 function storminvoice_access($op, $node, $account=NULL) {
   if (empty($account)) {
@@ -343,7 +354,7 @@ function storminvoice_form(&$node) {
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -50,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
   $form['group1']['number'] = array(
@@ -354,17 +365,18 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->number,
   );
 
-  $form['group1']['title'] = array(
+  $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -16,
   );
 
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -48,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
   $s_org = stormorganization_access_sql($s_org);
@@ -410,7 +422,7 @@ function storminvoice_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -47,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
   $form['group3']['requestdate'] = array(
@@ -437,7 +449,7 @@ function storminvoice_form(&$node) {
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => -46,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
   );
 
   $form['group4']['amount'] = array(
