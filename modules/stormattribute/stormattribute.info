@@ -8,11 +8,3 @@ package = Storm
 
 ; Dependencies
 dependencies[] = storm
-
-; Files registry
-files[] = stormattribute.install
-files[] = stormattribute.module
-files[] = stormattribute.hooks.inc
-files[] = stormattribute.theme.inc
-files[] = stormattribute_handler_field_attributes_domain.inc
-files[] = stormattribute_handler_filter_attributes_domain.inc

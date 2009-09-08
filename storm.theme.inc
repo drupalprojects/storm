@@ -103,7 +103,7 @@ function theme_storm_report($header, $content, $title, $footer, $headtitle='') {
   $o .= '</head>';
   $o .= '<body>';
   $o .= '<table class="storm_report_header"><tr>';
-  $myorg = node_load(variable_get('storm_organization_nid', 0));
+  $myorg = node_load(variable_get('storm_organization_nid'));
   $o .= '<td class="storm_report_myorganization">';
   $o .= '<div class="site_name">'. variable_get('site_name', '') .'</div>';
   $o .= '<div class="site_slogan">'. variable_get('site_slogan', '') .'</div>';
