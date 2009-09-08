@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #343818: Title field gets displayed below body (field ordering when CCK enabled)
+- Bug #526900: Formatting error using Chrome / Safari browsers
 - Task #555250: Move admin settings to /admin/settings/storm/...
 - Bug #556224: Theming calls not handled properly
 - Feature #433294: Add filter status when lists are filtered
