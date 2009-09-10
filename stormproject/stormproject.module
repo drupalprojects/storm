@@ -24,12 +24,18 @@ function stormproject_perm() {
     'Storm project: delete all',
     'Storm project: delete own',
     'Storm project: delete of user organization',
+    'Storm project: delete when project manager',
+    'Storm project: delete when assigned to project',
     'Storm project: edit all',
     'Storm project: edit own',
     'Storm project: edit of user organization',
+    'Storm project: edit when project manager',
+    'Storm project: edit when assigned to project',
     'Storm project: view all',
     'Storm project: view own',
     'Storm project: view of user organization',
+    'Storm project: view when project manager',
+    'Storm project: view when assigned to project',
   );
 }
 
