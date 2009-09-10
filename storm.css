@@ -104,19 +104,7 @@ tr.formgroup {
   border: none !important;
 }
 
-form.stormcomponent_node_form fieldset.menu-item-form,
-form.stormcomponent_node_form fieldset.book-outline-form,
-form.stormcomponent_node_form fieldset.path,
-form.stormcomponent_node_form fieldset.revision_information,
-form.stormcomponent_node_form fieldset.comment_settings,
-form.stormcomponent_node_form fieldset.author,
-form.stormcomponent_node_form fieldset.options,
 form.stormcomponent_node_form #edit-preview {
-display: none;
-}
-
-form.storminvoiceitem_node_form div.attachments,
-form.stormtimetracking_node_form div.attachments {
 display: none;
 }
 
@@ -267,11 +255,6 @@ background: transparent url(images/html.png) no-repeat top left;
 
 div.stormcomponent div.print_pdf {
 background: transparent url(images/pdf.png) no-repeat top left;
-}
-
-div.gantt {
-  width: 100%;
-  overflow: hidden;
 }
 
 div.stormfields, div.field, div.stormbody {
