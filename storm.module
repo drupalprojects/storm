@@ -113,6 +113,7 @@ function storm_theme() {
 // FUNCTION TO CREATE STORM DASHBOARD
 function storm_dashboard() {
   drupal_set_title(t('Storm Dashboard'));
+  drupal_add_css(drupal_get_path('module', 'storm'), 'storm-dashboard.css');
   return theme('storm_dashboard');
 }
 

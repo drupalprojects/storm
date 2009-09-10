@@ -104,15 +104,6 @@ form.stormcomponent_node_form #edit-preview {
 display: none;
 }
 
-#stormdashboard {
-width: 100%
-}
-
-div.stormdashboard {
-float: left;
-width: 50%;
-}
-
 dt.stormcomponent {
 padding-left: 40px;
 padding-top: 10px;
