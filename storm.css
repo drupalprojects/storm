@@ -295,9 +295,3 @@ div.stormlinks {
 div.stormbody div.value p {
   margin: 0;
 }
-
-div.storminvoiceitems {
-  clear: both;
-  float: left;
-  width: 100%;
-}
