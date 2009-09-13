@@ -97,7 +97,7 @@ function stormtask_tasks($project) {
   if(variable_get('stormtask_enable_ganttchart',0) && file_exists($jsgantt_dir .'/jsgantt.js')) {
     drupal_add_js($jsgantt_dir."/jsgantt.js");
     drupal_add_css($jsgantt_dir."/jsgantt.css");
-    drupal_add_css(drupal_get_path('module', 'stormtask') . 'stormtask-gantt.css');
+    drupal_add_css(drupal_get_path('module', 'stormtask') . '/stormtask-gantt.css');
     
     //version w/o xml file
     $pMile = 0;
