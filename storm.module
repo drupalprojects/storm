@@ -28,6 +28,10 @@ function storm_help($path, $arg) {
   return $output;
 }
 
+/**
+ * @function
+ * Implementation of hook_perm
+ */
 function storm_perm() {
   return array(
     'Storm: access dashboard',
@@ -41,6 +45,10 @@ function storm_init() {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 }
 
+/**
+ * @function
+ * Implementation of hook_menu
+ */
 function storm_menu() {
   $items = array();
 
