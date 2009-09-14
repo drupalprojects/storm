@@ -720,6 +720,10 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
 
     node_save($new_invoice_item);
   }
+  
+  // Mark timetracking as billed.
+  db_query("UPDATE {stormtimetracking} SET billed=%d WHERE vid=%d", 1, $node->vid);
+  
   return $invoice_nid;
 }
 
