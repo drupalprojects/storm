@@ -211,9 +211,31 @@ function stormtimetracking_views_data() {
     ),
   );
   
+  $data['stormtimetracking']['billing_duration'] = array(
+    'title' => t('Timetracking Billing Duration'),
+    'help' => 'Storm Timetracking Billing Duration',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
   $data['stormtimetracking']['billable'] = array(
     'title' => t('Timetracking Billable'),
     'help' => 'Storm Timetracking Billable',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  
+  $data['stormtimetracking']['billed'] = array(
+    'title' => t('Timetracking Billed'),
+    'help' => 'Storm Timetracking Billed',
     'field' => array(
       'click sortable' => TRUE,
     ),

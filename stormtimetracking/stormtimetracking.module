@@ -219,8 +219,9 @@ function stormtimetracking_content_extra_fields($type_name) {
   if ($type_name == 'stormtimetracking') {
     return array(
       'group1' => array('label' => 'Organization/Project/Task/Ticket Group', 'weight' => -20),
-      'group2' => array('label' => 'Date/Duration Group', 'weight' => -19),
-      'group3' => array('label' => 'Billable', 'weight' => -18),
+      'group2' => array('label' => 'Date', 'weight' => -19),
+      'group3' => array('label' => 'Time / Duration Group', 'weight' => -18),
+      'group4' => array('label' => 'Billable / Billed Group', 'weight' => -17),
     );
   }
 }
@@ -308,7 +309,7 @@ function stormtimetracking_form(&$node) {
     }
   }
   $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+    ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
 
   $type = node_get_types('type', $node);
 
@@ -406,8 +407,14 @@ function stormtimetracking_form(&$node) {
     '#title' => t('Date'),
     '#default_value' => _storm_gmtimestamp_to_date($node->trackingdate),
   );
-
-  $form['group2']['timebegin'] = array(
+  
+  $form['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
+  );
+  
+  $form['group3']['timebegin'] = array(
     '#type' => 'textfield',
     '#title' => t('Time begin'),
     '#size' => 5,
@@ -416,7 +423,7 @@ function stormtimetracking_form(&$node) {
     '#weight' => 1,
   );
 
-  $form['group2']['timeend'] = array(
+  $form['group3']['timeend'] = array(
     '#type' => 'textfield',
     '#title' => t('Time end'),
     '#size' => 5,
@@ -424,31 +431,50 @@ function stormtimetracking_form(&$node) {
     '#default_value' => $node->timeend,
     '#weight' => 2,
   );
-
+  
   $duration = $node->duration;
   if ($duration) $duration = sprintf("%01.2f", $node->duration);
-  $form['group2']['duration'] = array(
+  $form['group3']['duration'] = array(
     '#type' => 'textfield',
     '#title' => t('Duration (h)'),
     '#default_value' => $duration,
     '#size' => 10,
     '#maxlength' => 5,
     '#weight' => 3,
+    '#disabled' => TRUE,
   );
-
-  $form['group3'] = array(
+  
+  $billing_duration = $node->billing_duration;
+  if ($billing_duration) $billing_duration = sprintf("%01.2f", $node->billing_duration);
+  $form['group3']['billing_duration'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Billing duration (h)'),
+    '#default_value' => $billing_duration,
+    '#size' => 10,
+    '#maxlength' => 5,
+    '#weight' => 4,
+  );
+    
+  $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
   );
 
-  $form['group3']['billable'] = array(
+  $form['group4']['billable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billable'),
     '#default_value' => $node->billable,
     '#weight' => 1,
   );
-
+  
+  $form['group4']['billed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Billed'),
+    '#default_value' => $node->billed,
+    '#weight' => 2,
+  );
+  
   if ($type->has_body) {
     $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
@@ -466,25 +492,19 @@ function stormtimetracking_form(&$node) {
 function stormtimetracking_insert($node) {
   _stormtimetracking_beforesave($node);
 
-  db_query("INSERT INTO {stormtimetracking}
-            (vid, nid,
-            organization_nid, organization_title,
-            project_nid, project_title,
-            task_nid, task_title, task_stepno,
-            ticket_nid, ticket_title,
-            trackingdate, timebegin, timeend, duration, billable) VALUES
-            (%d, %d,
-            %d, '%s',
-            %d, '%s',
-            %d, '%s', '%s',
-            %d, '%s',
-            %d, '%s', '%s', %f, %d)",
-            $node->vid, $node->nid,
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno,
-            $node->ticket_nid, $node->ticket_title,
-            $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable);
+  db_query("INSERT INTO {stormtimetracking} 
+    (vid, nid,
+    organization_nid, organization_title, project_nid, project_title,
+    task_nid, task_title, task_stepno, ticket_nid, ticket_title,
+    trackingdate, timebegin, timeend, duration, billing_duration, billable, billed) VALUES
+    (%d, %d,
+    %d, '%s', %d, '%s',
+    %d, '%s', '%s', %d, '%s',
+    %d, '%s', '%s', %f, %f, %d, %d)",
+    $node->vid, $node->nid,
+    $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+    $node->task_nid, $node->task_title, $node->task_stepno, $node->ticket_nid, $node->ticket_title,
+    $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billing_duration, $node->billable, $node->billed);
 }
 
 function stormtimetracking_update($node) {
@@ -496,16 +516,14 @@ function stormtimetracking_update($node) {
   }
   else {
     db_query("UPDATE {stormtimetracking} SET
-        organization_nid=%d, organization_title='%s',
-        project_nid=%d, project_title='%s',
-        task_nid=%d, task_title='%s', task_stepno='%s',
-        ticket_nid=%d, ticket_title='%s',
-        trackingdate=%d, timebegin='%s', timeend='%s', duration=%f, billable=%d WHERE vid = %d",
-        $node->organization_nid, $node->organization_title,
-        $node->project_nid, $node->project_title,
-        $node->task_nid, $node->task_title, $node->task_stepno,
-        $node->ticket_nid, $node->ticket_title,
-        $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billable, $node->vid);
+      organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
+      task_nid=%d, task_title='%s', task_stepno='%s', ticket_nid=%d, ticket_title='%s',
+      trackingdate=%d, timebegin='%s', timeend='%s', duration=%f, billing_duration=%f,
+      billable=%d, billed=%d WHERE vid = %d",
+      $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+      $node->task_nid, $node->task_title, $node->task_stepno, $node->ticket_nid, $node->ticket_title,
+      $node->trackingdate, $node->timebegin, $node->timeend, $node->duration, $node->billing_duration,
+      $node->billable, $node->billed, $node->vid);
   }
 }
 
@@ -520,23 +538,21 @@ function _stormtimetracking_beforesave(&$node) {
   $node->timebegin = _timetostr($timebegin);
   $node->timeend = _timetostr($timeend);
   
-  $auto_duration = variable_get('stormtimetracking_auto_duration', TRUE);
-  
-  if (!$node->duration || $auto_duration) {
-    $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
-  }
+  $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
   if ($node->timeend < $node->timebegin) {
     $node->duration += 24;
   }
 
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
-        WHERE type='stormorganization' AND n.nid=%d";
+  if (variable_get('stormtimetracking_auto_duration', TRUE)) {
+    $node->billing_duration = $node->duration;
+  }
+
+  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid WHERE type='stormorganization' AND n.nid=%d";
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-        WHERE type='stormproject' AND n.nid=%d";
+  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
@@ -586,9 +602,9 @@ function stormtimetracking_admin_settings() {
   
   $form['stormtimetracking_auto_duration'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Always automatically recalculate timetracking durations on saving timetracking.'),
+    '#title' => t('Always set billing duration to duration value.'),
     '#default_value' => variable_get('stormtimetracking_auto_duration', TRUE),
-    '#description' => t('Unchecking this box will allow you to manually override timetracking durations.'),
+    '#description' => t('When checked, Storm will set the billing duration equal to the duration each time the node is saved. The duration is always calculated from the start and end times.'),
     '#size' => 5,
   );
   
@@ -695,8 +711,8 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
     }
 
     $new_invoice_item->invoice_nid = $invoice_nid;
-    $new_invoice_item->title = $node->duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
-    $new_invoice_item->amount = $node->duration * $hourly_rate;
+    $new_invoice_item->title = $node->billing_duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
+    $new_invoice_item->amount = $node->billing_duration * $hourly_rate;
     // Tax percent simply uses default at the moment
     $new_invoice_item->tax1percent = variable_get('storminvoice_tax1_percent', 20);
     //$new_invoice_item->tax1

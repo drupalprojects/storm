@@ -5,7 +5,7 @@
  * @file
  */
 
-function theme_stormtimetracking_list($header, $timetrackings, $duration) {
+function theme_stormtimetracking_list($header, $timetrackings, $billing_duration) {
   $rows = array();
   foreach ($timetrackings as $timetracking) {
     $n = new stdClass();
@@ -21,7 +21,7 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
       l($timetracking->project_title, 'node/'. $timetracking->project_nid),
       l($timetracking->title, 'node/'. $timetracking->nid),
       format_date($timetracking->trackingdate, 'small'),
-      array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
+      array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
@@ -29,7 +29,7 @@ function theme_stormtimetracking_list($header, $timetrackings, $duration) {
     );
   }
   $o = theme('table', $header, $rows);
-  $o .= '<span style="font-weight: bold;">'. t('Total duration') .' : '. sprintf('%.2f', $duration) .'</span> (hours)';
+  $o .= '<span style="font-weight: bold;">'. t('Total duration') .' : '. sprintf('%.2f', $billing_duration) .'</span> (hours)';
   return $o;
 }
 
@@ -44,7 +44,7 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
 
   // Code to create invoice auto_add link
   if (module_exists('storminvoice') && user_access('Storm invoice: add')) {
-    if ($node->billable) {
+    if ($node->billable && !$node->billed) {
       $v = '';
       $v = '<strong>'. t('Invoice this item:') .'</strong>';
       $v .= '<ul>';
@@ -52,9 +52,13 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
       $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
       $v .= '</ul>';
     }
+    elseif ($node->billed) {
+      $v = '';
+      $v .= '<strong>'. t('Item already billed.') .'</strong>';
+    }
     else {
-      $v ='';
-      $v .= '<strong>'. t('(This item has been marked unbillable so should not be invoiced.)') .'</strong>';
+      $v = '';
+      $v .= '<strong>'. t('Item marked unbillable.') .'</strong>';
     }
     
     $node->content['links']['auto_invoice'] = array(
@@ -130,17 +134,17 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
         t('Project', array(), $language),
         t('Title', array(), $language),
         t('Date', array(), $language),
-        t('Duration (hours)', array(), $language));
-      $total_duration = 0;
+        t('Billing duration (hours)', array(), $language));
+      $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->organization_title,
           $timetracking->project_title,
           $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
+          array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
-        $total_duration += $timetracking->duration;
+        $total_billing_duration += $timetracking->billing_duration;
       }
       $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
     break;
@@ -150,16 +154,16 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
         t('Project', array(), $language),
         t('Title', array(), $language),
         t('Date', array(), $language),
-        t('Duration (hours)', array(), $language));
-      $total_duration = 0;
+        t('Billing duration (hours)', array(), $language));
+      $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->project_title,
           $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
+          array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
-        $total_duration += $timetracking->duration;
+        $total_billing_duration += $timetracking->billing_duration;
       }
       $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
       $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
@@ -171,17 +175,17 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
         t('Task', array(), $language),
         t('Title', array(), $language),
         t('Date', array(), $language),
-        t('Duration (hours)', array(), $language));
-      $total_duration = 0;
+        t('Billing duration (hours)', array(), $language));
+      $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->project_title,
           $timetracking->task_title,
           $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
+          array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
-        $total_duration += $timetracking->duration;
+        $total_billing_duration += $timetracking->billing_duration;
       }
       $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
       $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
@@ -195,21 +199,21 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
         t('Title', array(), $language),
         t('Date', array(), $language),
         t('Duration (hours)', array(), $language));
-      $total_duration = 0;
+      $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
           $timetracking->task_title,
           $timetracking->title,
           format_date($timetracking->trackingdate, 'small'),
-          array('data' => sprintf('%.2f', $timetracking->duration), 'align' => 'right'),
+          array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
-        $total_duration += $timetracking->duration;
+        $total_billing_duration += $timetracking->billing_duration;
       }
       $title  = '<h2>'. t('Timetrackings report', array(), $language) .'</h2><br />';
       $title .= t('Organization : @organization', array('@organization' => $organization->fullname), $language) .'<br />';
       $title .= t('Project : @project', array('@project' => $project->title), $language) .'<br />';
     break;
   }
-  $footer = '<h3>'. t('Total duration : %total_duration', array('%total_duration' => format_plural($total_duration, '1 hour', '@count hours', array(), $language)), $language) .'</h3>';
+  $footer = '<h3>'. t('Total billing duration : %total_billing_duration', array('%total_billing_duration' => format_plural($total_billing_duration, '1 hour', '@count hours', array(), $language)), $language) .'</h3>';
   return theme('storm_list_report', $header, $rows, $title, $footer);
 }
