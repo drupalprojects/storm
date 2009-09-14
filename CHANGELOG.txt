@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #560832: Record invoice status on timetracking
+- Feature #346131: Online timer (note change to duration -> billing_duration setting)
 - Bug #343818: Title field gets displayed below body (field ordering when CCK enabled)
 - Bug #526900: Formatting error using Chrome / Safari browsers
 - Task #555250: Move admin settings to /admin/settings/storm/...
