@@ -616,8 +616,13 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
   if (!module_exists('storminvoice')) {
     drupal_set_message(t('This function should only be called from within Storm Invoice'));
     return;
-  } 
-  else {
+  } elseif ($node->billed) {
+    drupal_set_message(t('This timetracking has already been billed!'));
+    return;
+  } elseif (!$node->billable) {
+    drupal_set_message(t('This timetracking is marked unbillable!'));
+    return;
+  } else {
     global $user;
     $hours_per_day = 8;
     
