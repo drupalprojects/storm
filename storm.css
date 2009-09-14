@@ -100,10 +100,6 @@ tr.formgroup {
   border: none !important;
 }
 
-form.stormcomponent_node_form #edit-preview {
-display: none;
-}
-
 dt.stormcomponent {
 padding-left: 40px;
 padding-top: 10px;

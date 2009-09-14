@@ -268,6 +268,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
+  // To allow for node preview without PHP error:
+  if (is_array($node->requestdate)) {
+    $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
+  }
+  
   $node->content['group3']['requestdate'] = array(
     '#prefix' => '<div class="requestdate">',
     '#suffix' => '</div>',
@@ -275,6 +280,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 1,
   );
 
+  // To allow for node preview without PHP error:
+  if (is_array($node->duedate)) {
+    $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
+  }
+  
   $node->content['group3']['duedate'] = array(
     '#prefix' => '<div class="duedate">',
     '#suffix' => '</div>',
@@ -283,6 +293,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   if($node->paymentdate) {
+    // To allow for node preview without PHP error:
+    if (is_array($node->paymentdate)) {
+      $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
+    }
+    
     $node->content['group3']['paymentdate'] = array(
       '#prefix' => '<div class="paymentdate">',
       '#suffix' => '</div>',

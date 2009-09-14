@@ -494,6 +494,7 @@ function _storm_gmtimestamp_to_datetime($timestamp, $timezone=NULL) {
 
 function _storm_gmtimestamp_to_date($timestamp, $timezone=NULL) {
   if ($timestamp) {
+    if (is_array($timestamp)) return $timestamp;
     $date = array(
       'day' => format_date($timestamp, 'custom', 'j', $timezone),
       'month' => format_date($timestamp, 'custom', 'n', $timezone),

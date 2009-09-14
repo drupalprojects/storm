@@ -139,6 +139,11 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
+  // To allow for node preview without PHP error:
+  if (is_array($node->expensedate)) {
+    $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
+  }
+  
   $node->content['group2']['expensedate'] = array(
     '#prefix' => '<div class="expensedate">',
     '#suffix' => '</div>',
