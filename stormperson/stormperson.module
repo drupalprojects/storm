@@ -424,7 +424,7 @@ function stormperson_update($node) {
     _stormperson_aftersave($node);
 
     if ($node->title != $node->title_old) {
-      module_invoke_all('stormperson_change', $node->nid, $node->stepno, $node->title);
+      module_invoke_all('stormperson_change', $node->nid, $node->title);
     }
   }
 }

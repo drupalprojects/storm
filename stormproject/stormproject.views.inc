@@ -11,8 +11,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['organization_nid'] = array(
-    'title' => t('Project Node ID'),
-    'help' => 'Storm Project Node ID',
+    'title' => t('Project Organization Node ID'),
+    'help' => 'Storm Project Organization Node ID',
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -207,6 +207,74 @@ function stormproject_views_data() {
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['stormproject']['manager_nid'] = array(
+    'title' => t('Project Manager Node ID'),
+    'help' => 'Storm Project Manager Node ID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['stormproject']['manager_title'] = array(
+    'title' => t('Project Manager Title'),
+    'help' => 'Storm Project Manager Title',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+  
+  $data['stormproject']['assigned_nid'] = array(
+    'title' => t('Project Assigned Node ID'),
+    'help' => 'Storm Project Assigned Node ID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['stormproject']['organization_title'] = array(
+    'title' => t('Project Assigned Title'),
+    'help' => 'Storm Project Assigned Title',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
   

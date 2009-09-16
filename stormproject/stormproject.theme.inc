@@ -87,6 +87,26 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 3,
   );
 
+  $node->content['group5'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
+  
+  $node->content['group5']['manager'] = array(
+    '#prefix' => '<div class="manager">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Project Manager'), l($node->manager_title, 'node/'. $node->manager_nid)),
+    '#weight' => 1,
+  );
+  
+  $node->content['group5']['assigned'] = array(
+    '#prefix' => '<div class="assigned">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
+    '#weight' => 2,
+  );
+  
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',

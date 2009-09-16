@@ -222,6 +222,7 @@ function stormproject_content_extra_fields($type_name) {
       'group2' => array('label' => 'Category/Status/Priority Group', 'weight' => -19),
       'group3' => array('label' => 'Date/Duration Group', 'weight' => -18),
       'group4' => array('label' => 'Price Group', 'weight' => -17),
+      'group5' => array('label' => 'Manager / Assigned to Group', 'weight' => -16),
     );
   }
 }
@@ -229,6 +230,13 @@ function stormproject_content_extra_fields($type_name) {
 function stormproject_stormorganization_change($organization_nid, $organization_title) {
   $s = "UPDATE {stormproject} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
   db_query($s, $organization_title, $organization_nid, $organization_title);
+}
+
+function stormproject_stormperson_change($person_nid, $person_title) {
+  $s = "UPDATE {stormproject} SET manager_title='%s' WHERE manager_nid=%d AND manager_title <> '%s'";
+  db_query($s, $person_title, $person_nid, $person_title);
+  $s = "UPDATE {stormproject} SET assigned_title='%s' WHERE assigned_nid=%d AND assigned_title <> '%s'";
+  db_query($s, $person_title, $person_nid, $person_title);
 }
 
 function stormproject_form(&$node) {
@@ -291,7 +299,7 @@ function stormproject_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -18,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -21,
   );
 
   $form['group2'] = array(
@@ -327,7 +335,7 @@ function stormproject_form(&$node) {
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
   $form['group3']['datebegin'] = array(
@@ -362,7 +370,7 @@ function stormproject_form(&$node) {
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
 
   $pricemode_list = stormattribute_attributes_bydomain('Price mode');
@@ -387,7 +395,38 @@ function stormproject_form(&$node) {
     '#default_value' => $node->currency,
     '#options' => $currency_list['values'],
   );
-
+  
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
+  
+  $s_per = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormperson' ORDER BY n.title";
+  $s_per = stormperson_access_sql($s_per);
+  $s_per = db_rewrite_sql($s_per);
+  $r = db_query($s_per);
+  $people = array();
+  while ($person = db_fetch_object($r)) {
+    $people[$person->nid] = $person->title;
+    if (!$node->person_nid) $node->person_nid = $person->nid;
+  }
+  $form['group5']['manager_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Project Manager'),
+    '#options' => $people,
+    '#default_value' => $node->manager_nid,
+    '#process' => array('storm_dependent_select_process'),
+  );
+  
+  $form['group5']['assigned_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#options' => $people,
+    '#default_value' => $node->assigned_nid,
+    '#process' => array('storm_dependent_select_process'),
+  );
+  
   if ($type->has_body) {
     $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
     $form['body_filter']['body'] = array(
@@ -438,16 +477,25 @@ function stormproject_insert($node) {
 
   $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
   $r = db_query($s, $node->organization_nid);
-  $o = db_fetch_object($r);
-
+  $organization = db_fetch_object($r);
+  
+  $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
+  $r = db_query($s, $node->manager_nid);
+  $manager = db_fetch_object($r);
+  
+  $r = db_query($s, $node->assigned_nid);
+  $assigned = db_fetch_object($r);
+  
   db_query("INSERT INTO {stormproject}
-          (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
-          projectpriority, pricemode, price, currency, datebegin, dateend, durationunit, duration)
-          VALUES
-          (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d, '%s', %f)",
-          $node->vid, $node->nid, $node->organization_nid, $o->title, $node->projectcategory,
-          $node->projectstatus, $node->projectpriority, $node->pricemode, 
-          $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration);
+    (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
+    projectpriority, pricemode, price, currency, datebegin, dateend, durationunit, duration,
+    manager_nid, manager_title, assigned_nid, assigned_title)
+    VALUES
+    (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d, '%s', %f, %d, '%s', %d, '%s')",
+    $node->vid, $node->nid, $node->organization_nid, $organization->title, $node->projectcategory,
+    $node->projectstatus, $node->projectpriority, $node->pricemode, 
+    $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
+    $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title);
 }
 
 function stormproject_update($node) {
@@ -460,14 +508,24 @@ function stormproject_update($node) {
   else {
     $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
     $r = db_query($s, $node->organization_nid);
-    $o = db_fetch_object($r);
-
+    $organization = db_fetch_object($r);
+    
+    $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
+    $r = db_query($s, $node->manager_nid);
+    $manager = db_fetch_object($r);
+    
+    $r = db_query($s, $node->assigned_nid);
+    $assigned = db_fetch_object($r);
+    
     db_query("UPDATE {stormproject} SET
-        organization_nid=%d, organization_title='%s',
-        projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s', 
-        price=%f, currency='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f WHERE vid = %d",
-        $node->organization_nid, $o->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
-        $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->vid);
+      organization_nid=%d, organization_title='%s',
+      projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s', 
+      price=%f, currency='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
+      manager_nid=%d, manager_title='%s', assigned_nid=%d, assigned_title='%s' WHERE vid = %d",
+      $node->organization_nid, $organization->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
+      $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
+      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, $node->vid);
+    
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);
     }
