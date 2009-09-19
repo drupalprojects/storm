@@ -148,8 +148,8 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table, $acco
 function stormorganization_menu() {
   $items = array();
   $items['storm/organizations'] = array(
-    'title' => t('Organizations'),
-    'description' => t('Storm Organizations'),
+    'title' => 'Organizations',
+    'description' => 'Storm Organizations',
     'page callback' => 'stormorganization_list',
     'access arguments' => array('Storm organization: access'),
     'file' => 'stormorganization.admin.inc',
@@ -165,8 +165,8 @@ function stormorganization_menu() {
   );
   
   $items['admin/settings/storm/organization'] = array(
-    'title' => t('Storm Organization'),
-    'description' => t('Storm Organization Administration Page'),
+    'title' => 'Storm Organization',
+    'description' => 'Storm Organization Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormorganization_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),

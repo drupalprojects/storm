@@ -152,8 +152,8 @@ function stormnote_menu() {
   $items = array();
 
   $items['storm/notes'] = array(
-    'title' => t('Notes'),
-    'description' => t('Storm notes'),
+    'title' => 'Notes',
+    'description' => 'Storm notes',
     'page callback' => 'stormnote_list',
     'access arguments' => array('Storm note: access'),
     'type' => MENU_NORMAL_ITEM,

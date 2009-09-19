@@ -489,7 +489,7 @@ function storminvoice_send_form(&$form_state, $path = NULL, $node = NULL, $langu
 
   $form['message']['instructions'] = array(
     '#type' => 'item',
-    '#value' => t(variable_get('storminvoice_email_pdf_instructions', '<p>From here you can send PDF file of invoice as attachment to your client</p><p><b>NOTE:</b> You can change subject and cover note of email. If <i>Bcc</i> field is checked you will also get copy of email.</p>')),
+    '#value' => variable_get('storminvoice_email_pdf_instructions', t('<p>From here you can send PDF file of invoice as attachment to your client</p><p><b>NOTE:</b> You can change subject and cover note of email. If <i>Bcc</i> field is checked you will also get copy of email.</p>')),
   );
   $form['message']['yemail'] = array(
     '#type' => 'textfield',
@@ -531,13 +531,13 @@ function storminvoice_send_form(&$form_state, $path = NULL, $node = NULL, $langu
   $form['message']['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Message Subject'),
-    '#value' => t(variable_get('storminvoice_cover_note_subject', '')),
+    '#value' => variable_get('storminvoice_cover_note_subject', ''),
     '#description' => t('Enter subject for email.'),
   );
   $form['message']['body'] = array(
     '#type' => 'textarea',
     '#title' => t('Message Body'),
-    '#value' => t(variable_get('storminvoice_cover_note', '')),
+    '#value' => variable_get('storminvoice_cover_note', ''),
     '#description' => 'Cover Note',
     '#cols' => 50,
     '#rows' => 10,
@@ -602,7 +602,7 @@ function storminvoice_send_form_submit($form, &$form_state) {
 
   drupal_mail('storminvoice', 'invoice', $to, $language, $params, $from , True);
 
-  drupal_set_message(t(variable_get('storminvoice_sent', 'You have sent invoice to !email.'),array('!email' => $to )));
+  drupal_set_message(variable_get('storminvoice_sent', t('You have sent invoice to !email.', array('!email' => $to ))));
 }
 
 /**

@@ -57,7 +57,7 @@ function storminvoice_menu() {
   $items = array();
 
   $items['storm/project_invoices_js/%/%'] = array(
-    'title' => t('Tasks'),
+    'title' => 'Tasks',
     'page callback' => '_storminvoice_project_invoices_js',
     'page arguments' => array(2, 3),
     'access arguments' => array('Storm invoice: access'),
@@ -66,8 +66,8 @@ function storminvoice_menu() {
   );
 
   $items['storm/invoices'] = array(
-    'title' => t('Invoices'),
-    'description' => t('Storm invoices'),
+    'title' => 'Invoices',
+    'description' => 'Storm invoices',
     'page callback' => 'storminvoice_list',
     'access arguments' => array('Storm invoice: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -91,9 +91,9 @@ function storminvoice_menu() {
   );
   
   $items['storm/invoice/report/%node/%/%'] = array(
-    'title' => t('Invoice'),
+    'title' => 'Invoice',
     'page arguments' => array(3, 4, 5),
-    'description' => t('Storm Invoice'),
+    'description' => 'Storm Invoice',
     'page callback' => 'storminvoice_report',
     'access arguments' => array('Storm invoice: access'),
     'type' => MENU_CALLBACK,
@@ -101,9 +101,9 @@ function storminvoice_menu() {
   );
   
   $items['storm/invoice/report/%node/email/%'] = array(
-    'title' => t('Send Invoice by Email'),
+    'title' => 'Send Invoice by Email',
     'page arguments' => array(3, 5),
-    'description' => t('Storm Invoice'),
+    'description' => 'Storm Invoice',
     'page callback' => 'storminvoice_send_page',
     'access arguments' => array('Storm invoice: access'),
     'type' => MENU_CALLBACK,
@@ -111,8 +111,8 @@ function storminvoice_menu() {
   );
 
   $items['admin/settings/storm/invoice'] = array(
-    'title' => t('Storm Invoice'),
-    'description' => t('Storm Invoice Administration Page'),
+    'title' => 'Storm Invoice',
+    'description' => 'Storm Invoice Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storminvoice_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),

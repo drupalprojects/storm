@@ -179,8 +179,8 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 function stormperson_menu() {
   $items['storm/people'] = array(
-    'title' => t('People'),
-    'description' => t('Storm people'),
+    'title' => 'People',
+    'description' => 'Storm people',
     'page callback' => 'stormperson_list',
     'access arguments' => array('Storm person: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -188,7 +188,7 @@ function stormperson_menu() {
   );
 
   $items['storm/organization_people_js/%'] = array(
-    'title' => t('People'),
+    'title' => 'People',
     'page callback' => '_stormperson_organization_people_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm person: access'),

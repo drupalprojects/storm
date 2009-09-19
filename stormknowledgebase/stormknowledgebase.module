@@ -127,12 +127,12 @@ function stormknowledgebase_menu() {
   $items = array();
 
   $items['storm/knowledgebase'] = array(
-            'title' => t('Knowledge base'),
-            'description' => t('Storm Knowledge base'),
-            'page callback' => 'stormknowledgebase_list',
-            'access arguments' => array('Storm knowledgebase: access'),
-            'type' => MENU_NORMAL_ITEM,
-            'file' => 'stormknowledgebase.admin.inc',
+    'title' => 'Knowledge base',
+    'description' => 'Storm Knowledge base',
+    'page callback' => 'stormknowledgebase_list',
+    'access arguments' => array('Storm knowledgebase: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'stormknowledgebase.admin.inc',
   );
 
   return $items;

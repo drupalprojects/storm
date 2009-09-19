@@ -505,7 +505,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->MultiCell($w, 0, $o, 1, 'L', 1, 1);
 
   $pdf->SetFont("times", "B", 10);
-  $o = t($mycurrency, array(), $language) .' '. sprintf('%.2f', $node->total);
+  $o = $mycurrency .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= "\n". $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr);
   }
