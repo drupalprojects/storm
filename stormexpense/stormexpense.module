@@ -152,8 +152,8 @@ function stormexpense_menu() {
   $items = array();
 
   $items['storm/expenses'] = array(
-    'title' => t('Expenses'),
-    'description' => t('Storm expenses'),
+    'title' => 'Expenses',
+    'description' => 'Storm expenses',
     'page callback' => 'stormexpense_list',
     'access arguments' => array('Storm expense: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -161,9 +161,9 @@ function stormexpense_menu() {
   );
 
   $items['storm/expenses/report/%/%'] = array(
-    'title' => t('Expenses'),
+    'title' => 'Expenses',
+    'description' => 'Storm expenses',
     'page arguments' => array(3, 4),
-    'description' => t('Storm expenses'),
     'page callback' => 'stormexpense_list_report',
     'access arguments' => array('Storm expense: access'),
     'type' => MENU_CALLBACK,
