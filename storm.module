@@ -53,8 +53,8 @@ function storm_menu() {
   $items = array();
 
   $items['storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Dashboard'),
+    'title' => 'Storm',
+    'description' => 'Storm Dashboard',
     'page callback' => 'storm_dashboard',
     'access arguments' => array('Storm: access dashboard'),
     'parent' => '',
@@ -62,8 +62,8 @@ function storm_menu() {
   );
 
   $items['admin/settings/storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Administration Page'),
+    'title' => 'Storm',
+    'description' => 'Storm Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
@@ -71,8 +71,8 @@ function storm_menu() {
   );
   
   $items['admin/settings/storm/storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Administration Page'),
+    'title' => 'Storm',
+    'description' => 'Storm Administration Page',
     'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -100,
