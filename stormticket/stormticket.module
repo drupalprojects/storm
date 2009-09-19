@@ -165,24 +165,25 @@ function stormticket_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 function stormticket_menu() {
   $items = array();
-
+  
   $items['storm/tickets'] = array(
-    'title' => t('Tickets'),
-    'description' => t('Storm Tickets'),
+    'title' => 'Tickets',
+    'description' => 'Storm Tickets',
     'page callback' => 'stormticket_list',
     'access arguments' => array('Storm ticket: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormticket.admin.inc',
   );
-
+  
   $items['storm/task_tickets_js/%/%/%'] = array(
-    'title' => t('Tickets'),
+    'title' => 'Tickets',
     'page callback' => '_stormticket_task_tickets_js',
     'page arguments' => array(2, 3, 4),
     'access arguments' => array('Storm ticket: access'),
     'file' => 'stormticket.admin.inc',
     'type' => MENU_CALLBACK,
   );
+  
   return $items;
 }
 

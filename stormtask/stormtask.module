@@ -160,7 +160,7 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 function stormtask_menu() {
   $items['node/%node/tasks'] = array(
-    'title' => t('Tasks'),
+    'title' => 'Tasks',
     'page callback' => 'stormtask_tasks',
     'page arguments' => array(1),
     'access callback' => '_stormtask_tasks_access',
@@ -170,7 +170,7 @@ function stormtask_menu() {
     'weight' => 4
   );
   $items['storm/project_tasks_js/%'] = array(
-    'title' => t('Tasks'),
+    'title' => 'Tasks',
     'page callback' => '_stormtask_project_tasks_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm task: access'),
@@ -178,8 +178,8 @@ function stormtask_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['storm/tasks'] = array(
-    'title' => t('Tasks'),
-    'description' => t('Storm Tasks'),
+    'title' => 'Tasks',
+    'description' => 'Storm Tasks',
     'page callback' => 'stormtask_list',
     'access arguments' => array('Storm task: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -187,8 +187,8 @@ function stormtask_menu() {
   );
   
   $items['admin/settings/storm/task'] = array(
-    'title' => t('Storm Task'),
-    'description' => t('Storm Task Administration Page'),
+    'title' => 'Storm Task',
+    'description' => 'Storm Task Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtask_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),

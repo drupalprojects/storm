@@ -151,29 +151,29 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $acco
 
 function stormtimetracking_menu() {
   $items = array();
-
+  
   $items['storm/timetrackings'] = array(
-    'title' => t('Timetrackings'),
-    'description' => t('Storm Timetrackings'),
+    'title' => 'Timetrackings',
+    'description' => 'Storm Timetrackings',
     'page callback' => 'stormtimetracking_list',
     'access arguments' => array('Storm timetracking: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormtimetracking.admin.inc',
   );
-
+  
   $items['storm/timetrackings/report/%/%'] = array(
-    'title' => t('Timetrackings'),
+    'title' => 'Timetrackings',
+    'description' => 'Storm Timetrackings',
     'page arguments' => array(3, 4),
-    'description' => t('Storm Timetrackings'),
     'page callback' => 'stormtimetracking_list_report',
     'access arguments' => array('Storm timetracking: access'),
     'type' => MENU_CALLBACK,
     'file' => 'stormtimetracking.admin.inc',
   );
-
+  
   $items['admin/settings/storm/timetracking'] = array(
-    'title' => t('Storm Timetracking'),
-    'description' => t('Storm Timetracking Administration Page'),
+    'title' => 'Storm Timetracking',
+    'description' => 'Storm Timetracking Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtimetracking_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),

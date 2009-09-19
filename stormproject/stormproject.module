@@ -170,8 +170,8 @@ function stormproject_menu() {
   $items = array();
 
   $items['storm/projects'] = array(
-    'title' => t('Projects'),
-    'description' => t('Storm Projects'),
+    'title' => 'Projects',
+    'description' => 'Storm Projects',
     'page callback' => 'stormproject_list',
     'access arguments' => array('Storm project: access'),
     'file' => 'stormproject.admin.inc',
@@ -179,7 +179,7 @@ function stormproject_menu() {
   );
 
   $items['storm/organization_projects_js/%'] = array(
-    'title' => t('Projects'),
+    'title' => 'Projects',
     'page callback' => '_stormproject_organization_projects_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm project: access'),
