@@ -215,8 +215,8 @@ function stormorganization_content_extra_fields($type_name) {
 
 function stormorganization_form(&$node) {
   $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Organizations'), 'storm/organizations');
+  $breadcrumb[] = l('Storm', 'storm');
+  $breadcrumb[] = l('Organizations', 'storm/organizations');
   drupal_set_breadcrumb($breadcrumb);
 
   $type = node_get_types('type', $node);
