@@ -445,17 +445,15 @@ function stormproject_form(&$node) {
   $form['group5']['manager_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project Manager'),
-    '#options' => $people,
+    '#options' => array(0 => '-') + $people,
     '#default_value' => $node->manager_nid,
-    '#process' => array('storm_dependent_select_process'),
   );
   
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
-    '#options' => $people,
+    '#options' => array(0 => '-') + $people,
     '#default_value' => $node->assigned_nid,
-    '#process' => array('storm_dependent_select_process'),
   );
   
   if ($type->has_body) {
