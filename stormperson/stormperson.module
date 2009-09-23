@@ -53,12 +53,15 @@ function stormperson_perm() {
     'Storm person: delete all',
     'Storm person: delete own',
     'Storm person: delete of user organization',
+    'Storm person: delete when linked to own user account',
     'Storm person: edit all',
     'Storm person: edit own',
     'Storm person: edit of user organization',
+    'Storm person: edit when linked to own user account',
     'Storm person: view all',
     'Storm person: view own',
     'Storm person: view of user organization',
+    'Storm person: view when linked to own user account',
   );
 }
 
@@ -84,6 +87,9 @@ function stormperson_access($op, $node, $account=NULL) {
     else if (user_access('Storm person: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
+    else if (user_access('Storm person: delete when linked to own user account') && ($account->uid == $node->user_uid)) {
+      return TRUE;
+    }
   }
 
   if ($op == 'update') {
@@ -96,6 +102,9 @@ function stormperson_access($op, $node, $account=NULL) {
     else if (user_access('Storm person: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
+    else if (user_access('Storm person: edit when linked to own user account') && ($account->uid == $node->user_uid)) {
+      return TRUE;
+    }
   }
 
   if ($op == 'view') {
@@ -106,6 +115,9 @@ function stormperson_access($op, $node, $account=NULL) {
       return TRUE;
     }
     else if (user_access('Storm person: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+      return TRUE;
+    }
+    else if (user_access('Storm person: view when linked to own user account') && ($account->uid == $node->user_uid)) {
       return TRUE;
     }
   }
@@ -127,6 +139,10 @@ function stormperson_access_sql($sql, $where = array()) {
   if (user_access('Storm person: view of user organization')) {
     if (!empty($cond)) $cond .= ' OR ';
     $cond .= 'spe.organization_nid='. $user->stormorganization_nid;
+  }
+  if (user_access('Storm person: view when linked to own user account')) {
+    if (!empty($cond)) $cond .= ' OR ';
+    $cond .= 'spe.user_uid='. $user->uid;
   }
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
@@ -165,6 +181,13 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
       }
       $cond .= ' spe1.organization_nid='. $account->stormorganization_nid;
     }
+    if (user_access('Storm person: view when linked to own user account', $account)) {
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      $cond .= ' spe1.user_uid='. $account->uid;
+    }
+    
     if ($cond) {
       $cond = " WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";
     }
