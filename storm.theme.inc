@@ -100,7 +100,7 @@ function theme_storm_dashboard() {
   $o .= '<div class="stormdashboard">';
   $o .= theme('storm_link', '', 'stormorganization');
   $o .= theme('storm_link', '', 'stormperson');
-  $o .= theme('storm_link', '', 'stormteammember');
+  $o .= theme('storm_link', '', 'stormteam');
   $o .= theme('storm_link', '', 'stormproject');
   $o .= theme('storm_link', '', 'stormtask');
   $o .= theme('storm_link', '', 'stormticket');
