@@ -314,14 +314,7 @@ function stormnote_form(&$node) {
   );
 
   if ($type->has_body) {
-    $form['body_filter']['#weight'] = module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0;
-    $form['body_filter']['body'] = array(
-      '#type' => 'textarea',
-      '#title' => check_plain($type->body_label),
-      '#default_value' => $node->body,
-      '#rows' => 20,
-      '#required' => ($type->min_word_count > 0));
-    $form['body_filter']['format'] = filter_form($node->format);
+    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
 
   return $form;
