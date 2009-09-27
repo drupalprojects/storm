@@ -4,11 +4,7 @@
 /**
  * @file
  * Functionality for the Storm Team module
- * Organized into the following sections: Hooks, 
- */
-
-/**
- * Functions
+ * Organized into the following sections: General hooks, node specific hooks, page generation.
  * - General hooks: (help), menu, perm, theme, views_api
  * - Node specific hooks: node_info, content_extra_fields, access, access_sql, storm_rewrite_where_sql, form, load, view, _beforesave, insert, update, delete, nodeapi
  * - Page generation: list, list_filter, list_filter_filter, list_filter_reset, autocomplete, autocomplete_combo
@@ -170,8 +166,26 @@ function stormteam_access($op, $node, $account = NULL) {
  * Function to add node access rules onto database queries
  */
 function stormteam_access_sql($sql, $where = array()) {
-  // TO BE COMPLETED
-  return $sql;
+  if (user_access('Storm Team: view all')) {
+    $where[] = "'storm_access'='storm_access'";
+    return storm_rewrite_sql($sql, $where);
+  }
+  
+  global $user;
+  
+  $cond = '';
+  if (user_access('Storm Team: view own')) {
+    $cond .= 'n.uid='. $user->uid;
+  }
+  if (user_access('Storm Team: view belonged')) {    
+    if (!empty($cond)) $cond .= ' OR ';
+    $cond .= "ste.members LIKE 'i:". $user->uid .";'";
+  }
+  if (empty($cond)) $cond = '0=1';
+  $where[] = $cond;
+
+  $where[] = "'storm_access'='storm_access'";
+  return storm_rewrite_sql($sql, $where);
 }
 
 /**
@@ -180,8 +194,38 @@ function stormteam_access_sql($sql, $where = array()) {
  */
 function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
-  // TO BE COMPLETED
-  $cond = '';
+
+  if ($conds[$primary_table][$account->uid]) {
+    return $conds[$primary_table][$account->uid];
+  }
+
+  if (preg_match("/'storm_access'='storm_access'/", $query)) {
+    $cond = '';
+  }
+  else {
+    if (user_access('Storm Team: view all', $account)) {
+      return '';
+    }
+
+    $cond = '';
+    if (user_access('Storm Team: view own', $account)) {
+      $cond .= " ${primary_table}.uid=". $account->uid;
+    }
+    if (user_access('Storm Team: view belonged', $account)) {
+      if ($cond) {
+        $cond .= ' OR ';
+      }
+      $cond .= "ste.members LIKE 'i:". $user->uid .";'";
+    }
+    if ($cond) {
+      $cond = " WHEN 'stormteam' THEN (SELECT IF($cond,1,0) FROM {stormteam} sti1 WHERE sti1.vid=${primary_table}.vid) ";
+    }
+    else {
+      $cond = " WHEN 'stormteam' THEN 0 ";
+    }
+  }
+
+  $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
 

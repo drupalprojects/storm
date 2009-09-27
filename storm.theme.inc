@@ -232,13 +232,13 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $dt_id = 'stormtasks';
       break;
 
-    case "stormteammember":
-      $user_access_check = 'Storm teammember: access';
-      $list_text = 'Team members';
-      $list_path = 'storm/teammembers/';
+    case "stormteam":
+      $user_access_check = 'Storm Team: access';
+      $list_text = 'Teams';
+      $list_path = 'storm/teams/';
       $add_icon_type = 'stormteammember';
-      $add_path = 'storm/teammembers/add';
-      $dt_id = 'stormteammembers';
+      $add_path = 'node/add/storm'. $destination_module;
+      $dt_id = 'stormteams';
       break;
 
     case "stormticket":
