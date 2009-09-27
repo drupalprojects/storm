@@ -236,20 +236,6 @@ function stormteam_form(&$node) {
     $i++;
   }
   
-  /*$form['group1']['add_more'] = array(
-    '#type' => 'button',
-    '#value' => t('Add more Team Members'),
-    '#description' => t('Click here to add space for more Team Members'),
-    '#weight' => 2,
-    '#ahah' => array(
-      'path' => 'admin/settings/stringoverrides/js',
-      'wrapper' => 'stringoverrides-wrapper',
-      'method' => 'replace',
-      'effect' => 'fade',
-      'progress' => 'none',
-    ),
-  );*/
-  
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
