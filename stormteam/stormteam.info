@@ -1,0 +1,8 @@
+; $Id$
+
+name = Storm Team
+description = "Allows recording of teams made up of Storm Organizations and Storm People."
+core = 6.x
+package = Storm
+
+dependencies[] = stormperson
