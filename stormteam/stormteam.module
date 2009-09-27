@@ -139,13 +139,27 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm Team: view own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm Team: view belonged') && 0) { // TO BE COMPLETED
+      } else if (user_access('Storm Team: view belonged') && array_key_exists($account->uid, $node->members_array)) {
         return TRUE;
       }
       break;
     case 'update':
+      if (user_access('Storm Team: edit all')) {
+        return TRUE;
+      } else if (user_access('Storm Team: edit own') && ($account->uid == $node->uid)) {
+        return TRUE;
+      } else if (user_access('Storm Team: edit belonged') && array_key_exists($account->uid, $node->members_array)) {
+        return TRUE;
+      }
       break;
     case 'delete':
+      if (user_access('Storm Team: delete all')) {
+        return TRUE;
+      } else if (user_access('Storm Team: delete own') && ($account->uid == $node->uid)) {
+        return TRUE;
+      } else if (user_access('Storm Team: delete belonged') && array_key_exists($account->uid, $node->members_array)) {
+        return TRUE;
+      }
       break;
   }
   return FALSE;
