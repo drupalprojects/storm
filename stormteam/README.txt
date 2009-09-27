@@ -1,1 +1,0 @@
-See http://drupal.org/node/380008 .

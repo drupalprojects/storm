@@ -210,12 +210,9 @@ function stormteam_form(&$node) {
   $i = 1;
   $variable = 'members_array_'. $i;
   
-  print_r($node);
-  
   // Add rows for existing team members
   if (isset($node->members_array) && is_array($node->members_array)) {
     foreach ($node->members_array as $node->$variable => $name) {
-      $variable = 'members_array_'. $i;
       $form['group1'][$variable] = array(
         '#type' => 'select',
         '#title' => 'Team Member '. $i,
@@ -223,6 +220,7 @@ function stormteam_form(&$node) {
         '#default_value' => $node->$variable,
       );
       $i++;
+      $variable = 'members_array_'. $i;
     }
   }
   
