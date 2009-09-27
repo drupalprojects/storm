@@ -208,6 +208,7 @@ function stormteam_form(&$node) {
   }
   
   $i = 1;
+  $variable = 'members_array_'. $i;
   
   print_r($node);
   
