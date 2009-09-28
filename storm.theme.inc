@@ -236,8 +236,8 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $user_access_check = 'Storm Team: access';
       $list_text = 'Teams';
       $list_path = 'storm/teams/';
-      $add_icon_type = 'stormteammember';
-      $add_path = 'node/add/storm'. $destination_module;
+      $add_icon_type = 'stormteam';
+      $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormteams';
       break;
 
