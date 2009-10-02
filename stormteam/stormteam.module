@@ -179,7 +179,7 @@ function stormteam_access_sql($sql, $where = array()) {
   }
   if (user_access('Storm team: view belonged')) {    
     if (!empty($cond)) $cond .= ' OR ';
-    $cond .= "ste.members LIKE 'i:". $user->uid .";'";
+    $cond .= "ste.members LIKE 'i:". $user->stormperson_nid .";'";
   }
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
@@ -215,7 +215,7 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
       if ($cond) {
         $cond .= ' OR ';
       }
-      $cond .= "ste.members LIKE 'i:". $user->uid .";'";
+      $cond .= "ste.members LIKE 'i:". $user->stormperson_nid .";'";
     }
     if ($cond) {
       $cond = " WHEN 'stormteam' THEN (SELECT IF($cond,1,0) FROM {stormteam} sti1 WHERE sti1.vid=${primary_table}.vid) ";
