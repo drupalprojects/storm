@@ -28,7 +28,7 @@ function stormteam_menu() {
     'title' => t('Teams'),
     'description' => t('Storm Teams'),
     'page callback' => 'stormteam_list',
-    'access arguments' => array('Storm Team: access'),
+    'access arguments' => array('Storm team: access'),
     'type' => MENU_NORMAL_ITEM,
   );
   
@@ -45,17 +45,17 @@ function stormteam_menu() {
  */
 function stormteam_perm() {
   return array(
-    'Storm Team: access',
-    'Storm Team: add',
-    'Storm Team: view all',
-    'Storm Team: view own',
-    'Storm Team: view belonged',
-    'Storm Team: edit all',
-    'Storm Team: edit own',
-    'Storm Team: edit belonged',
-    'Storm Team: delete all',
-    'Storm Team: delete own',
-    'Storm Team: delete belonged',
+    'Storm team: access',
+    'Storm team: add',
+    'Storm team: view all',
+    'Storm team: view own',
+    'Storm team: view belonged',
+    'Storm team: edit all',
+    'Storm team: edit own',
+    'Storm team: edit belonged',
+    'Storm team: delete all',
+    'Storm team: delete own',
+    'Storm team: delete belonged',
   );
 }
 
@@ -129,31 +129,31 @@ function stormteam_access($op, $node, $account = NULL) {
   
   switch ($op) {
     case 'create':
-      return user_access('Storm Team: add');
+      return user_access('Storm team: add');
     case 'view':
-      if (user_access('Storm Team: view all')) {
+      if (user_access('Storm team: view all')) {
         return TRUE;
-      } else if (user_access('Storm Team: view own') && ($account->uid == $node->uid)) {
+      } else if (user_access('Storm team: view own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm Team: view belonged') && array_key_exists($account->uid, $node->members_array)) {
+      } else if (user_access('Storm team: view belonged') && array_key_exists($account->uid, $node->members_array)) {
         return TRUE;
       }
       break;
     case 'update':
-      if (user_access('Storm Team: edit all')) {
+      if (user_access('Storm team: edit all')) {
         return TRUE;
-      } else if (user_access('Storm Team: edit own') && ($account->uid == $node->uid)) {
+      } else if (user_access('Storm team: edit own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm Team: edit belonged') && array_key_exists($account->uid, $node->members_array)) {
+      } else if (user_access('Storm team: edit belonged') && array_key_exists($account->uid, $node->members_array)) {
         return TRUE;
       }
       break;
     case 'delete':
-      if (user_access('Storm Team: delete all')) {
+      if (user_access('Storm team: delete all')) {
         return TRUE;
-      } else if (user_access('Storm Team: delete own') && ($account->uid == $node->uid)) {
+      } else if (user_access('Storm team: delete own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm Team: delete belonged') && array_key_exists($account->uid, $node->members_array)) {
+      } else if (user_access('Storm team: delete belonged') && array_key_exists($account->uid, $node->members_array)) {
         return TRUE;
       }
       break;
@@ -166,7 +166,7 @@ function stormteam_access($op, $node, $account = NULL) {
  * Function to add node access rules onto database queries
  */
 function stormteam_access_sql($sql, $where = array()) {
-  if (user_access('Storm Team: view all')) {
+  if (user_access('Storm team: view all')) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
@@ -174,10 +174,10 @@ function stormteam_access_sql($sql, $where = array()) {
   global $user;
   
   $cond = '';
-  if (user_access('Storm Team: view own')) {
+  if (user_access('Storm team: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('Storm Team: view belonged')) {    
+  if (user_access('Storm team: view belonged')) {    
     if (!empty($cond)) $cond .= ' OR ';
     $cond .= "ste.members LIKE 'i:". $user->uid .";'";
   }
@@ -203,15 +203,15 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
     $cond = '';
   }
   else {
-    if (user_access('Storm Team: view all', $account)) {
+    if (user_access('Storm team: view all', $account)) {
       return '';
     }
 
     $cond = '';
-    if (user_access('Storm Team: view own', $account)) {
+    if (user_access('Storm team: view own', $account)) {
       $cond .= " ${primary_table}.uid=". $account->uid;
     }
-    if (user_access('Storm Team: view belonged', $account)) {
+    if (user_access('Storm team: view belonged', $account)) {
       if ($cond) {
         $cond .= ' OR ';
       }
