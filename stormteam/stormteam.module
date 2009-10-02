@@ -255,15 +255,29 @@ function stormteam_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
   
+  $options = array(0 => '-');
+  
   $s_per = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormperson' ORDER BY n.title";
   $s_per = stormperson_access_sql($s_per);
   $s_per = db_rewrite_sql($s_per);
-  $r = db_query($s_per);
+  $r_per = db_query($s_per);
   $people = array();
   while ($person = db_fetch_object($r)) {
     $people[$person->nid] = $person->title;
-    if (!$node->person_nid) $node->person_nid = $person->nid;
   }
+  
+  $options = $options + array(-1 => '-PEOPLE-') + $people;
+  
+  $s_org = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormorganization' ORDER BY n.title";
+  $s_org = stormorganization_access_sql($s_org);
+  $s_org = db_rewrite_sql($s_org);
+  $r_org = db_query($s_org);
+  $organizations = array();
+  while ($organization = db_fetch_object($r_org)) {
+    $organizations[$organization->nid] = $organization->title;
+  }
+  
+  $options = $options + array(-1 => '-ORGANIZATIONS-') + $organizations;
   
   $i = 1;
   $variable = 'members_array_'. $i;
@@ -274,7 +288,7 @@ function stormteam_form(&$node) {
       $form['group1'][$variable] = array(
         '#type' => 'select',
         '#title' => 'Team Member '. $i,
-        '#options' => array(0 => '-') + $people,
+        '#options' => $options,
         '#default_value' => $node->$variable,
       );
       $i++;
