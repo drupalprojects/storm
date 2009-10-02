@@ -68,7 +68,7 @@ function stormproject_access($op, $node, $account=NULL) {
     global $user;
     $account = $user;
   }
-  
+    
   if (is_numeric($node)) {
     $node = node_load($node);
   }
@@ -84,9 +84,11 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: delete if project manager') && ($account->uid == $node->manager_nid)) {
+    } else if (user_access('Storm project: delete if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project') && ($account->uid == $node->assigned_nid)) {
+    } else if (user_access('Storm project: delete if assigned to project' && ($account->stormperson_nid == $node->assigned_nid))) {
+      return TRUE;
+    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account))) {
       return TRUE;
     }
   }
@@ -98,9 +100,11 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if project manager') && ($account->uid == $node->manager_nid)) {
+    } else if (user_access('Storm project: edit if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && ($account->uid == $node->assigned_nid)) {
+    } else if (user_access('Storm project: edit if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
+      return TRUE;
+    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account)) {
       return TRUE;
     }
   }
@@ -112,9 +116,11 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if project manager') && ($account->uid == $node->manager_nid)) {
+    } else if (user_access('Storm project: view if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && ($account->uid == $node->assigned_nid)) {
+    } else if (user_access('Storm project: view if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
+      return TRUE;
+    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account)) {
       return TRUE;
     }
   }
@@ -139,11 +145,11 @@ function stormproject_access_sql($sql, $where = array()) {
   }
   if (user_access('Storm project: view if project manager')) {
     if (!empty($cond)) $cond .= ' OR ';
-    $cond .= 'spr.manager_nid='. $user->uid;
+    $cond .= 'spr.manager_nid='. $user->stormperson_nid;
   }
   if (user_access('Storm project: view if assigned to project')) {
     if (!empty($cond)) $cond .= ' OR ';
-    $cond .= 'spr.assigned_nid='. $user->uid;
+    $cond .= 'spr.assigned_nid='. $user->stormperson_nid; // NEED TO ALSO CHECK FOR MEMBERSHIP IN TEAM
   }
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
@@ -433,26 +439,45 @@ function stormproject_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
   
-  $s_per = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormperson' ORDER BY n.title";
-  $s_per = stormperson_access_sql($s_per);
-  $s_per = db_rewrite_sql($s_per);
-  $r = db_query($s_per);
-  $people = array();
-  while ($person = db_fetch_object($r)) {
-    $people[$person->nid] = $person->title;
-    if (!$node->person_nid) $node->person_nid = $person->nid;
+  $options = array(0 => '-');
+  
+  if (module_exists('stormperson')) {
+    $s_per = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormperson' ORDER BY n.title";
+    $s_per = stormperson_access_sql($s_per);
+    $s_per = db_rewrite_sql($s_per);
+    $r_per = db_query($s_per);
+    $people = array();
+    while ($person = db_fetch_object($r_per)) {
+      $people[$person->nid] = $person->title;
+    }
+    
+    $options = $options + array(-1 => '-PEOPLE-') + $people;
   }
+  
   $form['group5']['manager_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project Manager'),
-    '#options' => array(0 => '-') + $people,
+    '#options' => $options,
     '#default_value' => $node->manager_nid,
   );
+  
+  if (module_exists('stormteam')) {
+    $s_team = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormteam' ORDER BY n.title";
+    $s_team = stormteam_access_sql($s_team);
+    $s_team = db_rewrite_sql($s_team);
+    $r_team = db_query($s_team);
+    $teams = array();
+    while ($team = db_fetch_object($r_team)) {
+      $teams[$team->nid] = $team->title;
+    }
+    
+    $options = $options + array(-2 => '-TEAMS-') + $teams;
+  }
   
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
-    '#options' => array(0 => '-') + $people,
+    '#options' => $options,
     '#default_value' => $node->assigned_nid,
   );
   
