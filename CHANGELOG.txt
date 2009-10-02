@@ -1,6 +1,10 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #380008: Storm Team module replaced Storm Teammember module.
+- Bug #377680: Support for node preview (part)
+- Task #588014: Simplification to implementation of hook_form
+- Feature #577914: Permissions for person linked to own user account
 - Fixed bugs in handling of translatable strings
 - Feature #560832: Record invoice status on timetracking
 - Feature #346131: Online timer (note change to duration -> billing_duration setting)
