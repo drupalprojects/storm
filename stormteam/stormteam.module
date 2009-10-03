@@ -135,7 +135,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: view own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node, $account)) {
+      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+        return TRUE;
+      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
         return TRUE;
       }
       break;
@@ -144,7 +146,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: edit own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node, $account)) {
+      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+        return TRUE;
+      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
         return TRUE;
       }
       break;
@@ -153,7 +157,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: delete own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node, $account)) {
+      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+        return TRUE;
+      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
         return TRUE;
       }
       break;
@@ -635,16 +641,9 @@ function stormteam_autocomplete_combo($string = '') {
  * @function
  * Function to return whether a user is present in a Storm team based on team $node and user $account
  */
-function stormteam_user_belongs_to_team($node, $account = NULL) {
-  if (empty($account)) {
-    global $user;
-    $account = $user;
-  }
-  
-  if (is_numeric($node)) $node = node_load($node);
-    
-  // Check for person nid in the team members array
-  return array_key_exists($account->stormperson_nid, $node->members_array);
+function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
+  // Check for person_or_organization_nid in the team members array and return TRUE / FALSE
+  return array_key_exists($person_or_organization_nid, $node->members_array);
 }
 
 /**
@@ -657,11 +656,12 @@ function stormteam_user_return_teams($account = NULL) {
     $account = $user;
   }
   
-  $s = "SELECT nid FROM {stormteam} WHERE members LIKE '%s'";
-  $r = db_query($s, 'i:'. $account->uid .';');
+  $s = "SELECT nid FROM {stormteam} WHERE members LIKE 'i:%s;' OR members LIKE 'i:%s;'";
+  $r = db_query($s, $account->uid, $account->organization_nid);
   $teams = array();
   while ($team = db_fetch_object($r)) {
     $teams[] = $team->nid;
   }
+
   return $teams;
 }
