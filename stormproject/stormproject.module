@@ -149,8 +149,18 @@ function stormproject_access_sql($sql, $where = array()) {
   }
   if (user_access('Storm project: view if assigned to project')) {
     if (!empty($cond)) $cond .= ' OR ';
-    $cond .= 'spr.assigned_nid='. $user->stormperson_nid; // NEED TO ALSO CHECK FOR MEMBERSHIP IN TEAM
+    $cond .= 'spr.assigned_nid='. $user->stormperson_nid;
+    
+    if (module_exists('stormteam')) {
+      // Load teams that the account belongs to
+      $belonged_teams = stormteam_user_return_teams($account);
+      // Allow access if any of those teams is the one in question
+      foreach ($belonged_teams as $belonged_team) {
+        $cond .= ' OR spr.assigned_nid = '. $belonged_team;
+      }
+    }
   }
+  
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
 

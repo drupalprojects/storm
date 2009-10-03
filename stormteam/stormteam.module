@@ -646,3 +646,22 @@ function stormteam_user_belongs_to_team($node, $account = NULL) {
   // Check for person nid in the team members array
   return array_key_exists($account->stormperson_nid, $node->members_array);
 }
+
+/**
+* @function
+* Function to return the teams that a user is a member of
+*/
+function stormteam_user_return_teams($account = NULL) {
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+  
+  $s = "SELECT nid FROM {stormteam} WHERE members LIKE '%s'";
+  $r = db_query($s, 'i:'. $account->uid .';');
+  $teams = array();
+  while ($team = db_fetch_object($r)) {
+    $teams[] = $team->nid;
+  }
+  return $teams;
+}
