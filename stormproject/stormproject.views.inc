@@ -220,7 +220,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_equality',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
@@ -254,14 +254,14 @@ function stormproject_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_equality',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
     ),
   );
   
-  $data['stormproject']['organization_title'] = array(
+  $data['stormproject']['assigned_title'] = array(
     'title' => t('Project Assigned Title'),
     'help' => 'Storm Project Assigned Title',
     'field' => array(
