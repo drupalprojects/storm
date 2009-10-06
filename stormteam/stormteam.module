@@ -642,8 +642,14 @@ function stormteam_autocomplete_combo($string = '') {
  * Function to return whether a user is present in a Storm team based on team $node and user $account
  */
 function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
+  $team = node_load($team);
+  
   // Check for person_or_organization_nid in the team members array and return TRUE / FALSE
-  return array_key_exists($person_or_organization_nid, $node->members_array);
+  if (is_array($node->members_array)) {
+    return array_key_exists($person_or_organization_nid, $node->members_array);
+  } else {
+    return FALSE;
+  }
 }
 
 /**

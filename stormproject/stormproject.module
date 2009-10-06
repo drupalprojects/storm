@@ -88,9 +88,9 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: delete if assigned to project' && ($account->stormperson_nid == $node->assigned_nid))) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->person_nid))) {
+    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->organization_nid))) {
+    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
       return TRUE;
     }
   }
@@ -106,9 +106,9 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: edit if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->person_nid)) {
+    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->organization_nid)) {
+    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
@@ -124,9 +124,9 @@ function stormproject_access($op, $node, $account=NULL) {
       return TRUE;
     } else if (user_access('Storm project: view if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->person_nid)) {
+    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->organization_nid)) {
+    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
