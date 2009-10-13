@@ -642,7 +642,7 @@ function stormteam_autocomplete_combo($string = '') {
  * Function to return whether a user is present in a Storm team based on team $node and user $account
  */
 function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
-  $team = node_load($team);
+  $node = node_load($team);
   
   // Check for person_or_organization_nid in the team members array and return TRUE / FALSE
   if (is_array($node->members_array)) {
@@ -662,8 +662,8 @@ function stormteam_user_return_teams($account = NULL) {
     $account = $user;
   }
   
-  $s = "SELECT nid FROM {stormteam} WHERE members LIKE 'i:%s;' OR members LIKE 'i:%s;'";
-  $r = db_query($s, $account->uid, $account->organization_nid);
+  $s = "SELECT nid FROM {stormteam} WHERE members LIKE '%i:%s;%' OR members LIKE '%i:%s;%'";
+  $r = db_query($s, $account->person_nid, $account->organization_nid);
   $teams = array();
   while ($team = db_fetch_object($r)) {
     $teams[] = $team->nid;
