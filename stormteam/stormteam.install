@@ -12,6 +12,7 @@
  */
 function stormteam_install() {
   drupal_install_schema('stormteam');
+  variable_set('node_options_stormteam', array('status'));
 }
 
 /**
