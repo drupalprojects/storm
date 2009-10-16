@@ -76,6 +76,7 @@ function stormattribute_theme() {
   return array(
     'stormattribute_list' => array(
       'arguments' => array('form'),
+      'file' => 'stormattribute.theme.inc',
     ),
   );
 }
