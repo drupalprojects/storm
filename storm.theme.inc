@@ -233,7 +233,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       break;
 
     case "stormteam":
-      $user_access_check = 'Storm Team: access';
+      $user_access_check = 'Storm team: access';
       $list_text = 'Teams';
       $list_path = 'storm/teams/';
       $add_icon_type = 'stormteam';

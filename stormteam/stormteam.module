@@ -221,16 +221,16 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
       if ($cond) {
         $cond .= ' OR ';
       }
-      $cond .= "ste.members LIKE 'i:". $user->stormperson_nid .";'";
+      $cond .= "ste1.members LIKE '%i:". $user->stormperson_nid .";%'";
     }
     if ($cond) {
-      $cond = " WHEN 'stormteam' THEN (SELECT IF($cond,1,0) FROM {stormteam} sti1 WHERE sti1.vid=${primary_table}.vid) ";
+      $cond = " WHEN 'stormteam' THEN (SELECT IF($cond,1,0) FROM {stormteam} ste1 WHERE ste1.vid=${primary_table}.vid) ";
     }
     else {
       $cond = " WHEN 'stormteam' THEN 0 ";
     }
   }
-
+  
   $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
@@ -470,7 +470,7 @@ function stormteam_list() {
     ),
   );
   
-  $s = "SELECT n.nid, n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {node_revisions} as nre ON n.vid = nre.vid 
+  $s = "SELECT n.nid, n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid 
     WHERE n.status=1 AND n.type='stormteam'";
   
   $where = array();
