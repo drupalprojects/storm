@@ -458,7 +458,7 @@ function stormproject_form(&$node) {
   $options = array(0 => '-');
   
   if (module_exists('stormperson')) {
-    $s_per = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormperson' ORDER BY n.title";
+    $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
     $s_per = stormperson_access_sql($s_per);
     $s_per = db_rewrite_sql($s_per);
     $r_per = db_query($s_per);
