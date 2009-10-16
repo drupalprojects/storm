@@ -135,9 +135,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: view own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
+      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
@@ -146,9 +146,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: edit own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
+      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
@@ -157,9 +157,9 @@ function stormteam_access($op, $node, $account = NULL) {
         return TRUE;
       } else if (user_access('Storm team: delete own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node, $account->person_nid)) {
+      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node, $account->organization_nid)) {
+      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
@@ -185,7 +185,7 @@ function stormteam_access_sql($sql, $where = array()) {
   }
   if (user_access('Storm team: view belonged')) {    
     if (!empty($cond)) $cond .= ' OR ';
-    $cond .= "ste.members LIKE 'i:". $user->stormperson_nid .";'";
+    $cond .= "ste.members LIKE '%i:". $user->stormperson_nid .";%'";
   }
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
