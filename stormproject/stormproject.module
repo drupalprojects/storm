@@ -546,8 +546,7 @@ function stormproject_insert($node) {
   $r = db_query($s, $node->manager_nid);
   $manager = db_fetch_object($r);
   
-  $r = db_query($s, $node->assigned_nid);
-  $assigned = db_fetch_object($r);
+  $assigned = node_load($node->assigned_nid);
   
   db_query("INSERT INTO {stormproject}
     (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
@@ -577,8 +576,7 @@ function stormproject_update($node) {
     $r = db_query($s, $node->manager_nid);
     $manager = db_fetch_object($r);
     
-    $r = db_query($s, $node->assigned_nid);
-    $assigned = db_fetch_object($r);
+  $assigned = node_load($node->assigned_nid);
     
     db_query("UPDATE {stormproject} SET
       organization_nid=%d, organization_title='%s',
