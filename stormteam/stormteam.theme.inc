@@ -29,8 +29,11 @@ function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
   // Add links to each team member title
   if (isset($node->members_array) && is_array($node->members_array)) {
     foreach ($node->members_array as $nid => $name) {
-      $node->members_array[$nid] = l($name, 'node/'. $nid);
+      $member = node_load($nid);
+      if (($member->type == 'stormperson' && stormperson_access('view', $nid)) || ($member->type == 'stormorganization' && stormorganization_access('view', $nid))) {
+        $node->members_array[$nid] = l($name, 'node/'. $nid);
     }
+  }
     
     $node->content['group1']['members'] = array(
       '#prefix' => '<div class="members">',
