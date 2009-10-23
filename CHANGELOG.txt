@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #529024: RTL support
+- Task #600680: Spanish translation
 - Task #380008: Storm Team module replaced Storm Teammember module.
 - Bug #377680: Support for node preview (part)
 - Task #588014: Simplification to implementation of hook_form
