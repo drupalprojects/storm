@@ -600,10 +600,6 @@ function storm_icon_delete_node($node, $params=array()) {
 function storm_icon_add($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround
   $af = $type .'_access';
   if (!$af('create', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
@@ -613,10 +609,6 @@ function storm_icon_add($path, $item, $params=array()) {
 function storm_icon_edit($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround  
   $af = $type .'_access';
   if (!$af('update', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
@@ -626,10 +618,6 @@ function storm_icon_edit($path, $item, $params=array()) {
 function storm_icon_delete($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround  
   $af = $type .'_access';
   if (!$af('delete', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');

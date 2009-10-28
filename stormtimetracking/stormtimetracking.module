@@ -649,12 +649,10 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
+    } else {
+      $new_invoice = node_load($invoice_nid);
     }
     
-    $new_invoice_item = new StdClass;
-    $new_invoice_item->uid = $user->uid;
-    $new_invoice_item->type = 'storminvoiceitem';
-
     if ($node->ticket_nid) {
       $parent_ticket = node_load($node->ticket_nid);
       switch($parent_ticket->pricemode) {
@@ -707,16 +705,18 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
           drupal_set_message('Error whilst finding hourly rate from organization', 'error');
       }
     }
-
-    $new_invoice_item->invoice_nid = $invoice_nid;
-    $new_invoice_item->title = $node->billing_duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
-    $new_invoice_item->amount = $node->billing_duration * $hourly_rate;
+    
+    $count = count($new_invoice->items);
+    
+    $new_invoice->items[$count]->description = $node->billing_duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
+    $new_invoice->items[$count]->amount = $node->billing_duration * $hourly_rate;
     // Tax percent simply uses default at the moment
-    $new_invoice_item->tax1percent = variable_get('storminvoice_tax1_percent', 20);
-    //$new_invoice_item->tax1
-    //$new_invoice_item->total
-
-    node_save($new_invoice_item);
+    $new_invoice->items[$count]->tax1percent = variable_get('storminvoice_tax1_percent', 20);
+    //$new_invoice_item->items[$count]->tax1
+    //$new_invoice_item->items[$count]->total
+    
+    storm_taxation($new_invoice->items[$count]);
+    storminvoice_update($new_invoice);
   }
   
   // Mark timetracking as billed.

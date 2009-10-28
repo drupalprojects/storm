@@ -1,6 +1,7 @@
 /* $Id$ */
 
-Version 6.x-1.x-dev:
+Version 6.x-1.25:
+- Storm invoice items become a field of Storm invoices (Security Advisory)
 - Feature #529024: RTL support
 - Task #600680: Spanish translation
 - Task #380008: Storm Team module replaced Storm Teammember module.

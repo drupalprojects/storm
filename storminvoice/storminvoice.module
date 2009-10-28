@@ -144,10 +144,6 @@ function storminvoice_theme() {
       'file'      => 'storminvoice.theme.inc',
       'arguments' => array('node', 'language', array('output' => 'screen')),
     ),
-    'storminvoice_items' => array(
-      'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('form'),
-    ),
   );
 }
 
@@ -160,13 +156,6 @@ function storminvoice_node_info() {
       'title_label' => t("Description"),
       'has_body' => false,
     ),
-    'storminvoiceitem' => array(
-      'name' => t('Invoice item'),
-      'module' => 'storminvoiceitem',
-      'description' => t("An invoice item for Storm."),
-      'title_label' => t("Description"),
-      'has_body' => false,
-    ),
   );
 }
 
@@ -176,7 +165,9 @@ function storminvoice_content_extra_fields($type_name) {
       'group1' => array('label' => 'Number', 'weight' => -20),
       'group2' => array('label' => 'Organization/Project/Reference Group', 'weight' => -19),
       'group3' => array('label' => 'Date Group', 'weight' => -18),
-      'group4' => array('label' => 'Price Group', 'weight' => -17),
+      // Title (description) - weight -17
+      'group4' => array('label' => 'Invoice Items', 'weight' => -16),
+      'group5' => array('label' => 'Price Group', 'weight' => -15),
     );
   }
 }
@@ -370,7 +361,7 @@ function storminvoice_form(&$node) {
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -16,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -17,
   );
 
   $form['group2'] = array(
@@ -445,14 +436,128 @@ function storminvoice_form(&$node) {
     '#title' => t('Payment date'),
     '#default_value' => _storm_gmtimestamp_to_date($node->paymentdate),
   );
-
+  
   $form['group4'] = array(
     '#type' => 'markup',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
+  );
+  
+  $count = count($node->items);
+  for ($k = $count; $k <= $count + 2; $k++) {
+    //$node->items[$k] = stdclass;
+    $node->items[$k]->tax1app = variable_get('storm_tax1_app', 1);
+    $node->items[$k]->tax1percent = variable_get('storm_tax1_percent', 20);
+    $node->items[$k]->tax2app = variable_get('storm_tax2_app', 0);
+    $node->items[$k]->tax2percent = variable_get('storm_tax2_percent', 20);
+    $node->items[$k]->new_item = TRUE;
+  }
+  
+  $i = 0;
+  foreach ($node->items as $item) {
+    $form['group4'][$i] = array(
+      '#type' => 'fieldset',
+      '#title' => isset($node->items[$i]->new_item) ? 'New Item' : 'Item '. ($i + 1),
+      '#collapsible' => TRUE,
+      '#collapsed' => isset($node->items[$i]->new_item) ? TRUE : FALSE,
+      '#weight' => $i,
+    );
+    
+    $form['group4'][$i]['first'] = array(
+      '#type' => 'markup',
+      '#theme' => 'storm_form_group',
+      '#weight' => 1,
+    );
+    
+    $form['group4'][$i]['first']['items_'. $i .'_description'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Item description',
+      '#default_value' => $node->items[$i]->description,
+      '#size' => 80,
+    );  
+    
+    $form['group4'][$i]['first']['items_'. $i .'_weight'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $node->items[$i]->weight,
+    );
+    
+    $form['group4'][$i]['first']['items_'. $i .'_amount'] = array(
+      '#type' => 'textfield',
+      '#withnull' => 'true',
+      '#title' => t('Amount'),
+      '#size' => 15,
+      '#default_value' => $node->items[$i]->amount,
+    );
+
+    $form['group4'][$i]['tax1'] = array(
+      '#type' => 'markup',
+      '#theme' => 'storm_form_group',
+      '#weight' => 2,
+    );
+
+    $form['group4'][$i]['tax1']['items_'. $i .'_tax1app'] = array(
+      '#type' => 'select',
+      '#title' => t('@tax1 Application', array('@tax1' => variable_get('storm_tax1_name', 'Tax 1'))),
+      '#options' => array(
+        1 => t('Apply to item amount'),
+        0 => t('Do not apply tax'),
+      ),
+      '#default_value' => $node->items[$i]->tax1app,
+    );
+    
+    $form['group4'][$i]['tax1']['items_'. $i .'_tax1percent'] = array(
+      '#type' => 'textfield',
+      '#title' => t('@tax1 Percentage', array('@tax1' => variable_get('storm_tax1_name', 'Tax 1'))),
+      '#default_value' => $node->items[$i]->tax1percent,
+      '#size' => 20,
+    );
+    
+    $form['group4'][$i]['tax2'] = array(
+      '#type' => 'markup',
+      '#theme' => 'storm_form_group',
+      '#weight' => 3,
+    );
+    
+    $form['group4'][$i]['tax2']['items_'. $i .'_tax2app'] = array(
+      '#type' => 'select',
+      '#title' => t('@tax2 Application', array('@tax2' => variable_get('storm_tax2_name', 'Tax 2'))),
+      '#options' => array(
+        2 => t('Apply to total of item amount plus previous tax'),
+        1 => t('Apply to item amount'),
+        0 => t('Do not apply tax'),
+      ),
+      '#default_value' => $node->items[$i]->tax2app,
+    );
+
+    $form['group4'][$i]['tax2']['items_'. $i .'_tax2percent'] = array(
+      '#type' => 'textfield',
+      '#title' => t('@tax2 Percentage', array('@tax2' => variable_get('storm_tax2_name', 'Tax 2'))),
+      '#default_value' => $node->items[$i]->tax2percent,
+      '#size' => 20,
+    );
+
+    if (!variable_get('storm_tax_display', TRUE)) {
+      $form['group4'][$i]['tax1'] = 'hidden';
+      $form['group4'][$i]['tax2'] = 'hidden';
+    }
+    if (!variable_get('storm_tax2_display', TRUE)) {
+      $form['group4'][$i]['tax2'] = 'hidden';
+    }
+    
+    $form['group4'][$i]['items_'. $i .'_total'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $node->items[$i]->total,
+    );
+    
+    $i++;
+  } // foreach
+  
+  $form['group5'] = array(
+    '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -15,
   );
 
-  $form['group4']['amount'] = array(
+  $form['group5']['amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Amount'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
@@ -460,7 +565,7 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->amount,
   );
 
-  $form['group4']['tax1'] = array(
+  $form['group5']['tax1'] = array(
     '#type' => 'textfield',
     '#title' => variable_get('storm_tax1_name', 'Tax 1'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
@@ -468,7 +573,7 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->tax1,
   );
 
-  $form['group4']['tax2'] = array(
+  $form['group5']['tax2'] = array(
     '#type' => 'textfield',
     '#title' => variable_get('storm_tax2_name', 'Tax 2'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
@@ -476,7 +581,7 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->tax2,
   );
 
-  $form['group4']['total'] = array(
+  $form['group5']['total'] = array(
     '#type' => 'textfield',
     '#title' => t('Total'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
@@ -485,16 +590,16 @@ function storminvoice_form(&$node) {
   );
 
   if (!variable_get('storm_tax_display', TRUE)) {
-    $form['group4']['tax1']['#type'] = 'hidden';
-    $form['group4']['tax2']['#type'] = 'hidden';
-    $form['group4']['total']['#type'] = 'hidden';
+    $form['group5']['tax1']['#type'] = 'hidden';
+    $form['group5']['tax2']['#type'] = 'hidden';
+    $form['group5']['total']['#type'] = 'hidden';
   }
   
   if (!variable_get('storm_tax2_display', TRUE)) {
-    $form['group4']['tax2']['#type'] = 'hidden';
+    $form['group5']['tax2']['#type'] = 'hidden';
   }
   
-  $form['group4']['totalcustomercurr'] = array(
+  $form['group5']['totalcustomercurr'] = array(
     '#type' => 'textfield',
     '#title' => t('Total in customer currency'),
     '#size' => 15,
@@ -521,6 +626,11 @@ function storminvoice_insert($node) {
       $node->project_nid, $node->project_title, $node->amount, $node->tax1, $node->tax2,
       $node->total, $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, 
       $node->taxexempt, $node->src_nid, $node->src_vid);
+  
+  // Insert invoice items
+  _storminvoice_insert_items($node);
+  
+  _storminvoice_aftersave($node);
 }
 
 function storminvoice_update($node) {
@@ -537,6 +647,12 @@ function storminvoice_update($node) {
       $node->number, $node->reference, $node->organization_nid, $node->organization_title, $node->project_nid, 
       $node->project_title, $node->amount, $node->tax1, $node->tax2, $node->total, 
       $node->totalcustomercurr, $node->requestdate, $node->duedate, $node->paymentdate, $node->taxexempt, $node->vid);
+      
+    // Update invoice items
+    db_query("DELETE from {storminvoice_items} WHERE invoice_vid = ". $node->vid);
+    _storminvoice_insert_items($node);
+    
+    _storminvoice_aftersave($node);
   }
 }
 
@@ -562,6 +678,67 @@ function _storminvoice_beforesave(&$node) {
   if (!$node->totalcustomercurr) {
     $node->totalcustomercurr = $node->total;
   }
+  
+  // Parse invoice items
+  //from linear to array/object combination
+  $j = 0;
+  $variable = 'items_'. $j . '_description';
+  while (isset($node->$variable) && $node->$variable != '') {
+    $node->items[$j]->description = $node->$variable;
+    $variable = 'items_'. $j .'_amount';
+    $node->items[$j]->amount = $node->$variable;
+    $variable = 'items_'. $j .'_tax1app';
+    $node->items[$j]->tax1app = $node->$variable;
+    $variable = 'items_'. $j .'_tax1percent';
+    $node->items[$j]->tax1percent = $node->$variable;
+    $variable = 'items_'. $j .'_tax2app';
+    $node->items[$j]->tax2app = $node->$variable;
+    $variable = 'items_'. $j .'_tax2percent';
+    $node->items[$j]->tax2percent = $node->$variable;
+  
+    // Update taxes
+    storm_taxation($node->items[$j]);
+    
+    $j++;
+    $variable = 'items_'. $j .'_description';
+  }
+}
+
+function _storminvoice_insert_items($node) {
+  $j = 0;
+  while (is_object($node->items[$j])) {
+    db_query("INSERT INTO {storminvoice_items}
+      (invoice_nid, invoice_vid, amount, description,
+      tax1app, tax1percent, tax1, 
+      tax2app, tax2percent, tax2, 
+      total, weight) VALUES
+      (%d, %d, %f, '%s',
+      %d, %f, %f,
+      %d, %f, %f,
+      %f, %d)",
+      $node->nid, $node->vid, $node->items[$j]->amount, $node->items[$j]->description,
+      $node->items[$j]->tax1app, $node->items[$j]->tax1percent, $node->items[$j]->tax1,
+      $node->items[$j]->tax2app, $node->items[$j]->tax2percent, $node->items[$j]->tax2,
+      $node->items[$j]->total, $node->items[$j]->weight);
+    $j++;
+  }
+}
+
+function _storminvoice_aftersave($node) {
+  // Updates totals
+  $s = "SELECT SUM(amount) tamount, SUM(tax1) ttax1, SUM(tax2) ttax2, SUM(total) ttotal 
+    FROM {storminvoice_items} WHERE invoice_vid=%d";
+  $r = db_query($s, $node->vid);
+  $t = db_fetch_object($r);
+  
+  $node->amount = $t->tamount;
+  $node->tax1 = $t->ttax1;
+  $node->tax2 = $t->ttax2;
+  $node->total = $t->ttotal;
+  
+  db_query("UPDATE {storminvoice} SET
+    amount=%f, tax1=%f, tax2=%f, total=%f, totalcustomercurr=%f WHERE vid = %d",
+    $node->amount, $node->tax1, $node->tax2, $node->total, $node->totalcustomercurr, $node->vid);
 }
 
 function storminvoice_nodeapi(&$node, $op, $teaser, $page) {
@@ -569,17 +746,26 @@ function storminvoice_nodeapi(&$node, $op, $teaser, $page) {
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
       db_query('DELETE FROM {storminvoice} WHERE vid = %d', $node->vid);
+      db_query('DELETE FROM {storminvoice_items} WHERE invoice_vid = %d', $node->vid);
       break;
   }
 }
 
 function storminvoice_delete($node) {
-  db_query('DELETE FROM {storminvoiceitem} WHERE invoice_nid = %d', $node->nid);
   db_query('DELETE FROM {storminvoice} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {storminvoice_items} WHERE invoice_nid = %d', $node->nid);
 }
 
 function storminvoice_load($node) {
   $additions = db_fetch_object(db_query('SELECT * FROM {storminvoice} WHERE vid = %d', $node->vid));
+  
+  // Load invoice items
+  $result = db_query('SELECT * FROM {storminvoice_items} WHERE invoice_vid = %d', $node->vid);
+  $additions->items = array();
+  while ($item = db_fetch_object($result)) {
+    $additions->items[] = $item;
+  }
+  
   return $additions;
 }
 
@@ -653,249 +839,10 @@ function storminvoice_views_api() {
   );
 }
 
-// STORM INVOICE ITEM LEGACY FUNCTIONS
-// Intention is to combine these into storminvoice node manipulation functions
-function storminvoiceitem_form(&$node) {
-
-  if (arg(1)=='add') {
-    if (array_key_exists('invoice_nid', $_GET) && !$node->invoice_nid) {
-      $node->invoice_nid = $_GET['invoice_nid'];
-    }
-    else {
-      drupal_set_message(t("It's impossible to create an item without an invoice. You need to select an invoice before."));
-      drupal_goto('storm/invoices');
-    }
-    
-    // Load tax defaults
-    $node->tax1app = variable_get('storm_tax1_app', 1);
-    $node->tax1percent = variable_get('storm_tax1_percent', 20);
-    $node->tax2app = variable_get('storm_tax2_app', 0);
-    $node->tax2percent = variable_get('storm_tax2_percent', 20);
-
-  }
-
-  $node_invoice = node_load($node->invoice_nid);
-  $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
-  $breadcrumb[] = l(t('Invoice : '. $node_invoice->title), 'node/'. $node_invoice->nid);
-  drupal_set_breadcrumb($breadcrumb);
-
-  $type = node_get_types('type', $node);
-  $w = -50;
-
-  $form['#attributes']['class'] = 'stormcomponent_node_form';
-
-  $form['group1'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => $w++,
-  );
-
-  $form['group1']['invoice_nid'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $node->invoice_nid,
-  );
-
-  $form['group2'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => $w++,
-  );
-
-  $form['group2']['title'] = array(
-    '#type' => 'textfield',
-    '#title' => check_plain($type->title_label),
-    '#required' => TRUE,
-    '#default_value' => $node->title,
-    '#size' => 80,
-  );
-
-  // Hidden so that field is passed through form, but users do not need to set it - better to set on invoice.
-  $form['group2']['weight'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $node->weight,
-  );
-
-  $form['group3'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => $w++,
-  );
-
-  $form['group3']['amount'] = array(
-    '#type' => 'textfield',
-    '#withnull' => 'true',
-    '#title' => t('Amount'),
-    '#size' => 15,
-    '#default_value' => $node->amount,
-  );
-
-  $form['group4'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => $w++,
-  );
-
-  $form['group4']['tax1app'] = array(
-    '#type' => 'select',
-    '#title' => t('Tax 1 Application'),
-    '#options' => array(
-      1 => t('Apply to item amount'),
-      0 => t('Do not apply tax'),
-    ),
-    '#default_value' => $node->tax1app,
-  );
-  
-  $form['group4']['tax1percent'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Tax 1 Percentage'),
-    '#default_value' => $node->tax1percent,
-    '#size' => 20,
-  );
-  
-  $form['group5'] = array(
-    '#type' => 'markup',
-    '#theme' => 'storm_form_group',
-    '#weight' => $w++,
-  );
-  
-  $form['group5']['tax2app'] = array(
-    '#type' => 'select',
-    '#title' => t('Tax 2 Application'),
-    '#options' => array(
-      2 => t('Apply to total of item amount plus previous tax'),
-      1 => t('Apply to item amount'),
-      0 => t('Do not apply tax'),
-    ),
-    '#default_value' => $node->tax2app,
-  );
-
-  $form['group5']['tax2percent'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Tax 2 Percentage'),
-    '#default_value' => $node->tax2percent,
-  );
-
-  if (!variable_get('storm_tax_display', TRUE)) {
-    $form['group4']['#type'] = 'hidden';
-    $form['group5']['#type'] = 'hidden';
-  }
-  if (!variable_get('storm_tax2_display', TRUE)) {
-    $form['group5']['#type'] = 'hidden';
-  }
-    
-  $form['total'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $node->total,
-  );
-
-  $form['taxnotes'] = array(
-    '#type' => 'markup',
-    '#value' => t('Totals will be calculated automatically according to your tax selections.'),
-    '#weight' => $w++,
-  );
-
-  return $form;
-}
-
-function storminvoiceitem_insert($node) {
-  _storminvoiceitem_beforesave($node);
-
-  db_query("INSERT INTO {storminvoiceitem}
-    (vid, nid, invoice_nid, amount, tax1app, tax1percent, tax1, 
-    tax2app, tax2percent, tax2, total, weight) VALUES
-    (%d, %d, %d, %f, %d, %f, %f, 
-    %d, %f, %f, %f, %d)",
-    $node->vid, $node->nid, $node->invoice_nid, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1, 
-    $node->tax2app, $node->tax2percent, $node->tax2, $node->total, $node->weight);
-  _storminvoiceitem_aftersave($node);
-}
-
-function storminvoiceitem_update($node) {
-  _storminvoiceitem_beforesave($node);
-
-  if ($node->revision) {
-    storminvoiceitem_insert($node);
-  }
-  else {
-    db_query("UPDATE {storminvoiceitem} SET
-      invoice_nid=%d, amount=%f, tax1app=%d, tax1percent=%f, tax1=%f, 
-      tax2app=%d, tax2percent=%f, tax2=%f, total=%f, weight=%d WHERE vid = %d",
-      $node->invoice_nid, $node->amount, $node->tax1app, $node->tax1percent, $node->tax1, 
-      $node->tax2app, $node->tax2percent, $node->tax2, $node->total, $node->weight, $node->vid);
-    _storminvoiceitem_aftersave($node);
-  }
-}
-
-function _storminvoiceitem_beforesave(&$node) {
-  // Update taxes
-  storm_taxation($node);
-}
-
-function _storminvoiceitem_aftersave(&$node) {
-  $s = "SELECT SUM(amount) tamount, SUM(tax1) ttax1, SUM(tax2) ttax2, SUM(total) ttotal 
-    FROM {storminvoiceitem} WHERE invoice_nid=%d";
-  $r = db_query($s, $node->invoice_nid);
-  $t = db_fetch_object($r);
-
-  $invoice = node_load($node->invoice_nid);
-  $invoice->amount = $t->tamount;
-  $invoice->tax1 = $t->ttax1;
-  $invoice->tax2 = $t->ttax2;
-  $invoice->total = $t->ttotal;
-  storminvoice_update($invoice);
-}
-
-function storminvoiceitem_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if(!$node->nid) {
-        $node->taxpercent = variable_get('storm_tax1_percent', 20);
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {storminvoiceitem} WHERE vid = %d', $node->vid);
-      break;
-  }
-}
-
-function storminvoiceitem_delete($node) {
-  // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {storminvoiceitem} WHERE nid = %d', $node->nid);
-  _storminvoiceitem_aftersave($node);
-}
-
-function storminvoiceitem_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {storminvoiceitem} WHERE vid = %d', $node->vid));
-  $additions->stepno_old = $node->stepno;
-  $additions->title_old = $node->title;
-  return $additions;
-}
-
-function storminvoiceitem_validate(&$node) {
-  if (($node->nid == $node->parent_nid) && $node->parent_nid) {
-    form_set_error('parent_nid', t('Impossible to assign itself as parent.'));
-  }
-}
-
-function storminvoiceitem_view($node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
-  return $node;
-}
-
-function _storminvoiceitem_invoiceitems_access($node=NULL) {
-  if ($node == NULL) return FALSE;
-  if ($node->type == 'storminvoice' && user_access('Storm invoice: access')) return TRUE;
-  return FALSE;
-}
-
-function storminvoiceitem_getitems($invoice_nid) {
-  $s = "SELECT n.*, sit.* FROM {node} AS n INNER JOIN {storminvoiceitem} AS sit ON n.vid=sit.vid WHERE
-  n.status=1 AND n.type='storminvoiceitem' AND sit.invoice_nid = %d";
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $invoice_nid);
+// Helper function to return items for a particular invoice. Called from within the theme functions
+function storminvoice_getitems($invoice_vid) {
+  $s = "SELECT sit.* FROM {storminvoice_items} AS sit WHERE sit.invoice_vid = %d";
+  $r = db_query($s, $invoice_vid);
 
   $items = array();
   while ($i = db_fetch_object($r)) {

@@ -213,12 +213,6 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => $w++,
     );
   }
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#submit' => array('storminvoice_items_submit'),
-    '#value' => t('Save item ordering'),
-  );
   
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
@@ -304,42 +298,82 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Status'), $status),
     '#weight' => 4,
   );
-  require_once(drupal_get_path('module', 'storminvoice') .'/storminvoice.admin.inc');
-  $node->content['storminvoice']['items'] = array(
-    '#prefix' => '<div class="storminvoiceitems" id="items">',
-    '#value' => storminvoice_items($node),
-    '#suffix' => '</div>',
-    '#weight' => $w++,
+  
+  // Processing for invoice items.
+  $header = array(
+    array(
+      'data' => t('Item'),
+    ),
+    array(
+      'data' => t('Amount'),
+      //'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => t('Tax 1'),
+      //'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => t('Tax 2'),
+      //'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => t('Total'),
+      //'style' => 'text-align: right;',
+    ),
   );
+  
+  $where = array();
+  $s  = "SELECT sit.description, sit.amount, sit.tax1, sit.tax2, sit.total FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight";
+  $r = db_query($s, $node->vid);
 
+  $invoice_items = array();
+  while ($invoice_item = db_fetch_object($r)) {
+    $invoice_items[] = $invoice_item;
+  }
+  
+  foreach ($invoice_items as $key => $invoice_item) {
+    // PHP4 compatibility - for D7 change this to use the original array by reference
+    $invoice_items[$key]->amount = sprintf("%.2f", $invoice_item->amount);
+    $invoice_items[$key]->tax1 = sprintf("%.2f", $invoice_item->tax1);
+    $invoice_items[$key]->tax2 = sprintf("%.2f", $invoice_item->tax2);
+    $invoice_items[$key]->total = sprintf("%.2f", $invoice_item->total);
+  }
+  
   $node->content['group4'] = array(
     '#prefix' => '<div class="stormfields">',
+    '#value' => theme('table', $header, $invoice_items),
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
+  
+  $node->content['group5'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
 
-  $node->content['group4']['amount'] = array(
+  $node->content['group5']['amount'] = array(
     '#prefix' => '<div class="amount">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Amount'), sprintf('%.2f', $node->amount)),
     '#weight' => 1,
   );
 
-  $node->content['group4']['tax1'] = array(
+  $node->content['group5']['tax1'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
     '#weight' => 2,
   );
   
-  $node->content['group4']['tax2'] = array(
+  $node->content['group5']['tax2'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Tax 2'), sprintf('%.2f', $node->tax2)),
     '#weight' => 3,
   );
   
-  $node->content['group4']['total'] = array(
+  $node->content['group5']['total'] = array(
     '#prefix' => '<div class="total">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
@@ -542,7 +576,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 1);
 
   $pdf->SetFont("times", "N", 10);
-  $items = storminvoiceitem_getitems($node->nid);
+  $items = storminvoice_getitems($node->vid);
   $rows = array();
   $pdf->setFillColor(245, 245, 245);
   $c = 0;
@@ -550,7 +584,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     if ($c==2) $c=0;
     $y = $pdf->getY();
     $h = $pdf->getY();
-    $pdf->MultiCell($pageWidth * .4, 0, $i->title, 1, 'L', $c, 1);
+    $pdf->MultiCell($pageWidth * .4, 0, $i->description, 1, 'L', $c, 1);
     $h = $pdf->getY() - $h;
     $pdf->setY($y);
     $pdf->setX(PDF_MARGIN_LEFT + $pageWidth * .4);
@@ -732,12 +766,12 @@ function theme_storminvoice_report_html($node, $language) {
       'data' => $total,
     ),
   );
-  $items = storminvoiceitem_getitems($node->nid);
+  $items = storminvoice_getitems($node->vid);
   $rows = array();
   foreach ($items as $i) {
     $rows[] = array(
       array(
-        'data' => $i->title,
+        'data' => $i->description,
       ),
       array(
         'data' => sprintf('%.2f', $i->amount),
@@ -812,35 +846,4 @@ function theme_storminvoice_report_html($node, $language) {
   }
 
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
-}
-
-function theme_storminvoice_items($form) {
-  drupal_add_tabledrag('invoiceitems', 'order', 'sibling', 'invoiceitem-weight'); 
-
-  $header = array();
-  $row = array();
-
-  $header = $form['header']['#value'];
-  unset($form['header']);
-
-  foreach (element_children($form['invoiceitems']) as $key) {
-    $form['invoiceitems'][$key]['invoiceitem_weight_'. $key]['#attributes']['class'] = 'invoiceitem-weight';
-    $data = array (
-      drupal_render($form['invoiceitems'][$key]['invoiceitem_title_'. $key]),
-      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_amount_'. $key])), 'align' => 'right'),
-      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax1_'. $key])), 'align' => 'right'),
-      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_tax2_'. $key])), 'align' => 'right'),
-      array('data' => sprintf('%.2f', drupal_render($form['invoiceitems'][$key]['invoiceitem_total_'. $key])), 'align' => 'right'),
-      drupal_render($form['invoiceitems'][$key]['invoiceitem_weight_'. $key]),
-      array (
-        'data' => drupal_render($form['invoiceitems'][$key]['invoiceitem_operations_'. $key]),
-        'class' => 'storm_list_operations',
-      ),
-    );
-    $row['data'] = $data;
-    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
-    $rows[] = $row;
-  }
-  $o = theme('table', $header, $rows, array('id' => 'invoiceitems'));
-  return $o;
 }
