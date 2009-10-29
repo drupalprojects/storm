@@ -327,16 +327,18 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $r = db_query($s, $node->vid);
 
   $invoice_items = array();
-  while ($invoice_item = db_fetch_object($r)) {
-    $invoice_items[] = $invoice_item;
+  $i = 0;
+  while ($invoice_item = db_fetch_array($r)) {
+    $invoice_items[$i] = $invoice_item;
+    $i++;
   }
   
-  foreach ($invoice_items as $key => $invoice_item) {
+  foreach ($invoice_items as $key => $inv_item) {
     // PHP4 compatibility - for D7 change this to use the original array by reference
-    $invoice_items[$key]->amount = sprintf("%.2f", $invoice_item->amount);
-    $invoice_items[$key]->tax1 = sprintf("%.2f", $invoice_item->tax1);
-    $invoice_items[$key]->tax2 = sprintf("%.2f", $invoice_item->tax2);
-    $invoice_items[$key]->total = sprintf("%.2f", $invoice_item->total);
+    $invoice_items[$key]['amount'] = sprintf("%.2f", $inv_item->amount);
+    $invoice_items[$key]['tax1'] = sprintf("%.2f", $inv_item->tax1);
+    $invoice_items[$key]['tax2'] = sprintf("%.2f", $inv_item->tax2);
+    $invoice_items[$key]['total'] = sprintf("%.2f", $inv_item->total);
   }
   
   $node->content['group4'] = array(
