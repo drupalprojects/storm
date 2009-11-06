@@ -90,7 +90,7 @@ function stormtimetracking_list() {
   $s = "SELECT n.*,  stt.* FROM {node} n INNER JOIN {stormtimetracking} stt ON n.vid=stt.vid
   WHERE n.status=1 AND n.type='stormtimetracking' ";
 
-  $s_duration = "SELECT SUM(duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.nid=stt.nid WHERE n.status=1 AND n.type='stormtimetracking' ";
+  $s_duration = "SELECT SUM(billing_duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.vid=stt.vid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
   $where = array();
   $args = array();
@@ -171,7 +171,7 @@ function stormtimetracking_list() {
   $s_duration = stormtimetracking_access_sql($s_duration, $where);
   $s_duration = db_rewrite_sql($s_duration);
   $duration = db_result(db_query($s_duration, $args));
-
+  
   $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
   $_SESSION['stormtimetracking_list_filter']['args'] = $args;
 
