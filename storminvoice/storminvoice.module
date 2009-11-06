@@ -536,11 +536,11 @@ function storminvoice_form(&$node) {
     );
 
     if (!variable_get('storm_tax_display', TRUE)) {
-      $form['group4'][$i]['tax1'] = 'hidden';
-      $form['group4'][$i]['tax2'] = 'hidden';
+      $form['group4'][$i]['tax1']['#type'] = 'hidden';
+      $form['group4'][$i]['tax2']['#type'] = 'hidden';
     }
     if (!variable_get('storm_tax2_display', TRUE)) {
-      $form['group4'][$i]['tax2'] = 'hidden';
+      $form['group4'][$i]['tax2']['#type'] = 'hidden';
     }
     
     $form['group4'][$i]['items_'. $i .'_total'] = array(
