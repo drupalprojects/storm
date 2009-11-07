@@ -8,7 +8,7 @@
 function stormperson_help($path, $arg) {
   $o = '';
 
-  switch ($help) {
+  switch ($path) {
     case "admin/help#stormperson":
       $o = '<p>'. t("Provides person support for Storm") .'</p>';
       break;
