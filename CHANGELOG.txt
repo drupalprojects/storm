@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #597050 by homoludens, Magnity | jurgenhaas: Fixed Changing project-organization relationship causes problem
 - Bug #618658: Total durations not adding up
 - Bug #620420: Fatal error when trying to edit an invoice
 - Bug #617624: Amounts not showing on invoices
