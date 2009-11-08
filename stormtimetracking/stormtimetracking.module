@@ -247,6 +247,21 @@ function stormtimetracking_stormticket_change($ticket_nid, $ticket_title) {
   db_query($s, $ticket_title, $ticket_nid, $ticket_title);
 }
 
+function stormtimetracking_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
+  $s = "UPDATE {stormtimetracking} SET organization_nid=%d, organization_title='%s' WHERE project_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid);
+}
+
+function stormtimetracking_stormtask_change_hierarchy($task_nid, $organization_nid, $organization_title, $project_nid, $project_title) {
+  $s = "UPDATE {stormtimetracking} SET organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s' WHERE task_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid);
+}
+
+function stormtimetracking_stormticket_change_hierarchy($ticket_nid, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid, $task_title) {
+  $s = "UPDATE {stormtimetracking} SET organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s', task_nid=%d, task_title='%s' WHERE ticket_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid, $task_title, $ticket_nid);
+}
+
 function stormtimetracking_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');

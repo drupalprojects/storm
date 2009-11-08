@@ -347,6 +347,11 @@ function stormproject_form(&$node) {
     '#process' => array('storm_dependent_select_process'),
   );
 
+  $form['group1']['organization_nid_old'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $node->organization_nid,
+  );
+  
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -563,20 +568,26 @@ function stormproject_insert($node) {
 function stormproject_update($node) {
   _stormproject_beforesave($node);
 
+  // this code needs to run whether or not revisions are being used
+  $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
+  $r = db_query($s, $node->organization_nid);
+  $organization = db_fetch_object($r);
+  
+  // If the project has been moved to a different organization, all nodes that reference the project should be updated.
+  if ($node->organization_nid != $node->organization_nid_old) {
+    module_invoke_all('stormproject_change_hierarchy', $node->nid, $node->organization_nid, $organization->title);
+  }
+  
   // if this is a new node or we're adding a new revision,
   if ($node->revision) {
     stormproject_insert($node);
   }
   else {
-    $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
-    $r = db_query($s, $node->organization_nid);
-    $organization = db_fetch_object($r);
-    
     $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
     $r = db_query($s, $node->manager_nid);
     $manager = db_fetch_object($r);
     
-  $assigned = node_load($node->assigned_nid);
+    $assigned = node_load($node->assigned_nid);
     
     db_query("UPDATE {stormproject} SET
       organization_nid=%d, organization_title='%s',
@@ -585,7 +596,8 @@ function stormproject_update($node) {
       manager_nid=%d, manager_title='%s', assigned_nid=%d, assigned_title='%s' WHERE vid = %d",
       $node->organization_nid, $organization->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
       $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, $node->vid);
+      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, $node->vid
+    );
     
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);

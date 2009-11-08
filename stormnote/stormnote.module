@@ -211,6 +211,16 @@ function stormnote_stormtask_change($task_nid, $task_title, $task_stepno) {
   db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
 }
 
+function stormnote_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
+  $s = "UPDATE {stormnote} SET organization_nid=%d, organization_title='%s' WHERE project_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid);
+}
+
+function stormnote_stormtask_change_hierarchy($task_nid, $organization_nid, $organization_title, $project_nid, $project_title) {
+  $s = "UPDATE {stormnote} SET organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s' WHERE task_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid);
+}
+
 function stormnote_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
