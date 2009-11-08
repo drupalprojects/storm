@@ -16,10 +16,6 @@ margin-top: 0px;
 margin-bottom: 5px;
 }
 
-table.stormtimetracking_block tr td {
-width: auto;
-}
-
 tbody {
 border:none !important;
 }
@@ -99,34 +95,13 @@ font-weight: bold;
 color: #ffffff;
 }
 
+form.stormcomponent_node_form #edit-preview {
+  display: none;
+}
+
 tr.formgroup {
   background-color: #ffffff !important;
   border: none !important;
-}
-
-form.stormcomponent_node_form fieldset.menu-item-form,
-form.stormcomponent_node_form fieldset.book-outline-form,
-form.stormcomponent_node_form fieldset.path,
-form.stormcomponent_node_form fieldset.revision_information,
-form.stormcomponent_node_form fieldset.comment_settings,
-form.stormcomponent_node_form fieldset.author,
-form.stormcomponent_node_form fieldset.options,
-form.stormcomponent_node_form #edit-preview {
-display: none;
-}
-
-form.storminvoiceitem_node_form div.attachments,
-form.stormtimetracking_node_form div.attachments {
-display: none;
-}
-
-#stormdashboard {
-width: 100%
-}
-
-div.stormdashboard {
-float: left;
-width: 50%;
 }
 
 dt.stormcomponent {
@@ -160,8 +135,8 @@ dt#stormpeople {
 background: transparent url(images/people.png) no-repeat top left;
 }
 
-dt#stormteammembers {
-background: transparent url(images/teammembers.png) no-repeat top left;
+dt#stormteams {
+background: transparent url(images/teams.png) no-repeat top left;
 }
 
 dt#stormknowledgebase {
@@ -192,76 +167,34 @@ dt#stormconfiguration {
 background: transparent url(images/configuration.png) no-repeat top left;
 }
 
-div.stormcomponent {
-clear: both;
-}
-
-div.stormcomponent #fields {
-float: left;
-width: 70%;
-}
-
-div.stormcomponent #fields div.label{
-float: left;
-width: 150px;
-text-align: right;
-clear: left;
-font-weight: bold;
-}
-
-div.stormcomponent #fields div.value {
-float: left;
-margin-left: 4px;
-}
-
-div.stormcomponent #fields div.value p {
-margin: 0;
-}
-
-div.stormcomponent #links {
-float: right;
-width: 30%;
-}
-
-div.stormcomponent #links div {
-padding-left: 34px;
-height: 34px;
-padding-top: 6px;
-}
-
-div.stormcomponent div.projects {
-background: transparent url(images/projects.png) no-repeat top left;
-}
-
-div.stormcomponent div.people {
-background: transparent url(images/people.png) no-repeat top left;
-}
-
-div.stormcomponent div.tickets {
-background: transparent url(images/tickets.png) no-repeat top left;
-}
-
-div.stormcomponent div.invoices {
-background: transparent url(images/invoices.png) no-repeat top left;
-}
-
-div.stormcomponent div.notes {
-background: transparent url(images/notes.png) no-repeat top left;
-}
-
-div.stormcomponent div.timetrackings {
-background: transparent url(images/timetrackings.png) no-repeat top left;
-}
-
-div.stormcomponent div.print_html {
+dt.print_html {
 background: transparent url(images/html.png) no-repeat top left;
 }
 
-div.stormcomponent div.print_pdf {
+dt.print_pdf {
 background: transparent url(images/pdf.png) no-repeat top left;
 }
 
-div.gantt {
-  width: 100%;
-  overflow: hidden;
+div.stormfields, div.field, div.stormbody {
+  float: left;
+  width: 70%;
+}
+
+div.stormfields div.label, div.stormbody div.label, div.field div.field-label-inline-first {
+  float: left;
+  width: 150px;
+  text-align: right;
+  clear: left;
+  font-weight: bold;
+}
+
+/* Used on node view by most storm modules */
+div.stormlinks {
+  float:right;
+  width: 30%;
+}
+
+/* Used on node view for all storm modules */
+div.stormbody div.value p {
+  margin: 0;
 }

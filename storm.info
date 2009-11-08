@@ -1,8 +1,9 @@
 ; $Id$
 
 ; Basic information
-name = Storm API
-description = "Provides settings and internal functionality for Storm modules. Required for all Storm modules."
+name = Storm
+description = "Project Management Application (base module - utility for other Storm modules)."
+
 core = 7.x
 package = Storm
 

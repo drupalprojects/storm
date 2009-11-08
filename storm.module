@@ -3,20 +3,19 @@
 
 /**
  * @file
- * Main functions file for the Storm module.
- * Contents: implementation of hooks, admin settings,  other functions.
+ * Main module file for the Storm module.
+ * Basic Storm module provides a dashboard to access other Storm modules from and some API functions.
+ * 1: Hooks (help, perm,  init, menu, theme)
+ * 2: Dashboard
+ * 3: Admin Settings
+ * 4: Date / time manipulation
+ * 5: Taxation functions
+ * 6: Storm Icons
+ * 7: SQL Functions
+ * 8: Node form theming
  */
 
-/**
- * @function
- * Implementation of hook_init
- */
-// Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
-function storm_init() {
-  //drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-}
-
+// HOOKS
 /**
  * @function
  * Implementation of hook_help
@@ -25,11 +24,39 @@ function storm_help($path, $arg) {
   $output = '';
 
   switch ($path) {
-    case 'admin/help#storm':
-      $output = '<p>'.  t('Provides a complete project management environment') .'</p>';
+    case "admin/help#storm":
+      $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
       break;
   }
+
   return $output;
+}
+
+/**
+ * @function
+ * Implementation of hook_permission
+ */
+function storm_permission() {
+  return array(
+    'Storm: access dashboard' => array(
+      'title' => t('Access Storm dashboard'),
+      'description' => t('View Storm dashboard'),
+    ),
+    'Storm: access administration pages' => array(
+      'title' => t('Access Storm administration pages'),
+      'description' => t('Perform maintenance tasks for the Storm module'),
+    ),
+  );
+}
+
+/**
+ * @function
+ * Implementation of hook_init
+ */
+// Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
+function storm_init() {
+  drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 }
 
 /**
@@ -38,29 +65,29 @@ function storm_help($path, $arg) {
  */
 function storm_menu() {
   $items = array();
-  
+
   $items['storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Dashboard'),
+    'title' => 'Storm',
+    'description' => 'Storm Dashboard',
     'page callback' => 'storm_dashboard',
-    'access arguments' => array('Storm: Access Dashboard'),
+    'access arguments' => array('Storm: access dashboard'),
     'parent' => '',
     'type' => MENU_NORMAL_ITEM,
   );
-  
-  $items['admin/storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Administration Page'),
+
+  $items['admin/settings/storm'] = array(
+    'title' => 'Storm',
+    'description' => 'Storm Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_NORMAL_ITEM,
   );
   
-  $items['admin/config/storm/storm'] = array(
-    'title' => t('Storm'),
-    'description' => t('Storm Administration Page'),
-    'access arguments' => array('access administration pages'),
+  $items['admin/settings/storm/storm'] = array(
+    'title' => 'Storm',
+    'description' => 'Storm Administration Page',
+    'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -100,
   );
@@ -70,75 +97,107 @@ function storm_menu() {
 
 /**
  * @function
- * Implementation of hook_permission
- */
-function storm_permission() {
-  return array(
-    'Storm: Access Dashboard' => array(
-      'title' => t('Storm: Access Dashboard'),
-      'description' => t('View Storm Dashboard'),
-    ),
-  );
-}
-
-/**
- * @function
  * Implementation of hook_theme
  */
 function storm_theme() {
   return array(
     'storm_form_group' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('header', 'form'),
-      'file' => 'storm.theme.inc',
     ),
     'datetime' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('element'),
-      'file' => 'storm.theme.inc',
     ),
     'dateext' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('element'),
-      'file' => 'storm.theme.inc',
-    ),
-    'storm_dashboard' => array(
-      'arguments' => array(),
-      'file' => 'storm.theme.inc',
     ),
     'storm_link' => array(
-      'arguments' => array(),
-      'file' => 'storm.theme.inc',
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('source_module', 'destination_module', 'node_nid', 'weight'),
     ),
     'storm_list_report' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('header', 'rows', 'title', 'footer', 'headtitle'),
-      'file' => 'storm.theme.inc',
     ),
     'storm_report' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('header', 'content', 'title', 'footer'),
-      'file' => 'storm.theme.inc',
     ),
     'storm_view_item' => array(
+      'file'      => 'storm.theme.inc',
       'arguments' => array('label', 'value'),
-      'file' => 'storm.theme.inc',
+    ),
+    'storm_dashboard' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array(),
     ),
   );
 }
 
+// FUNCTION TO CREATE STORM DASHBOARD
+/**
+ * @function
+ * Function to create dashboard (call to theme function)
+ */
+function storm_dashboard() {
+  drupal_set_title(t('Storm Dashboard'));
+  drupal_add_css(drupal_get_path('module', 'storm'). '/storm-dashboard.css');
+  return theme('storm_dashboard');
+}
+
+// ADMIN SETTINGS FORM
 /**
  * @function
  * Defines the administration settings form for the Storm module
  */
 function storm_admin_settings() {
   $form = array();
-  $w = -5;
-
-  $form['storm_icons_path'] = array(
+  $w = -10;
+  
+  $form['icons'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Icons'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['icons']['storm_icons_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Icons directory'),
     '#default_value' => variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons'),
-    '#description' => t("The directory that contains the Storm's icons"),
+    '#description' => t("The directory that contains Storm's icons"),
     '#weight' => $w++,
   );
-
-  $form['storm_report_header'] = array(
+  
+  $form['lists'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Lists'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['lists']['storm_default_items_per_page'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default Items per Page'),
+    '#default_value' => variable_get('storm_default_items_per_page', 10),
+    '#description' => t('Default items per page when viewing lists'),
+    '#size' => 5,
+    '#weight' => $w++
+  );
+  
+  $form['reports'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Reports'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#weight' => $w++,
+  );
+  
+  $form['reports']['storm_report_header'] = array(
     '#type' => 'textarea',
     '#title' => t('Report header'),
     '#default_value' => variable_get('storm_report_header', ''),
@@ -182,10 +241,10 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax1app'] = array(
+  $form['taxation']['storm_tax1_app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 1: Application'),
-    '#default_value' => variable_get('storm_tax1_app', 'item'),
+    '#default_value' => variable_get('storm_tax1_app', 1),
     '#description' => t('The method of application to use for Tax 1'),
     '#options' => array(
       1 => t('Apply to item amount'),
@@ -194,7 +253,13 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax1name'] = array(
+  $form['taxation']['group0'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['group0']['storm_tax1_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Name'),
     '#default_value' => variable_get('storm_tax1_name', 'VAT'),
@@ -202,19 +267,19 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax1percent'] = array(
+  $form['taxation']['group0']['storm_tax1_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Default percentage'),
     '#default_value' => variable_get('storm_tax1_percent', 20),
     '#description' => t('Default percentage for Tax 1'),
-    '#size' => 5,
+    '#size' => 20,
     '#weight' => $w++
   );
   
-  $form['taxation']['tax2app'] = array(
+  $form['taxation']['storm_tax2_app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 2: Application'),
-    '#default_value' => variable_get('storm_tax2_app', 'none'),
+    '#default_value' => variable_get('storm_tax2_app', 0),
     '#description' => t('The method of application to use for Tax 2'),
     '#options' => array(
       2 => t('Apply to total of item amount plus previous tax'),
@@ -224,33 +289,46 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax2name'] = array(
+  $form['taxation']['group1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['group1']['storm_tax2_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Name'),
-    '#default_value' => variable_get('storm_tax2_name', 'VAT'),
+    '#default_value' => variable_get('storm_tax2_name', 'Tax 2 Name'),
     '#description' => t('The name to use for Tax 2'),
     '#weight' => $w++,
   );
   
-  $form['taxation']['tax2percent'] = array(
+  $form['taxation']['group1']['storm_tax2_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Default percentage'),
     '#default_value' => variable_get('storm_tax2_percent', 20),
     '#description' => t('Default percentage for Tax 2'),
-    '#size' => 5,
+    '#size' => 20,
+    '#weight' => $w++,
+  );
+  
+  $form['taxation']['storm_tax_display'] = array(
+   '#type' => 'checkbox',
+   '#title' => t('Display tax edit fields'),
+   '#default_value' => variable_get('storm_tax_display', TRUE),
+   '#description' => t('If disabled, all tax fields will use the default values and you will not be able to override them for any nodes until this setting is enabled again.'),
+   '#weight' => $w++,
+  );
+  
+  $form['taxation']['storm_tax2_display'] = array(
+   '#type' => 'checkbox',
+   '#title' => t('Display tax 2 edit fields'),
+   '#default_value' => variable_get('storm_tax2_display', TRUE),
+   '#description' => t('If disabled, tax 2 fields will use the default values and you will not be able to override them for any nodes until this setting is enabled again. This setting will be ignored unless the general "Display tax edit fields" setting is enabled above.'),
     '#weight' => $w++,
   );
 
   return system_settings_form($form);
-}
-
-/**
- * @function
- * Function to create dashboard (call to theme function)
- */
-function storm_dashboard() {
-  drupal_set_title('Storm Dashboard');
-  return theme('storm_dashboard');
 }
 
 // DATE / TIME MANIPULATION
@@ -260,12 +338,11 @@ function storm_elements() {
     '#process' => array('storm_datetime_expand'),
     '#element_validate' => array('storm_datetime_validate' => array()),
     '#default_value' => array(
-      // time() chanced to REQUEST_TIME for D7 (performance improvement)
-      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
-      'hour' => format_date(REQUEST_TIME, 'custom', 'H'),
-      'minute' => format_date(REQUEST_TIME, 'custom', 'i'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
+      'hour' => format_date(time(), 'custom', 'H'),
+      'minute' => format_date(time(), 'custom', 'i'),
     ),
   );
   $type['dateext'] = array(
@@ -273,10 +350,9 @@ function storm_elements() {
     '#process' => array('storm_dateext_expand'),
     '#element_validate' => array('storm_dateext_validate' => array()),
     '#default_value' => array(
-      // time() changed to REQUEST_TIME for D7 (performance improvment)
-      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
     ),
   );
   return $type;
@@ -285,12 +361,11 @@ function storm_elements() {
 function storm_datetime_expand($element) {
   if (empty($element['#value'])) {
     $element['#value'] = array(
-      // time() changed to REQUEST_TIME for D7 (performance improvement)
-      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
-      'hour' => format_date(REQUEST_TIME, 'custom', 'H'),
-      'minute' => format_date(REQUEST_TIME, 'custom', 'i'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
+      'hour' => format_date(time(), 'custom', 'H'),
+      'minute' => format_date(time(), 'custom', 'i'),
     );
   }
 
@@ -347,10 +422,9 @@ function storm_datetime_validate($form) {
 function storm_dateext_expand($element) {
   if (empty($element['#value']) && !$element['#withnull']) {
     $element['#value'] = array(
-      // time() changed to REQUEST_TIME for D7 (performance improvement)
-      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
+      'day' => format_date(time(), 'custom', 'j'),
+      'month' => format_date(time(), 'custom', 'n'),
+      'year' => format_date(time(), 'custom', 'Y'),
     );
   }
 
@@ -488,6 +562,7 @@ function _timetostr($time=array()) {
   return $timestr;
 }
 
+// TAXATION MANIPULATION
 /**
  * @function
  * Calculates taxation for Storm nodes
@@ -555,10 +630,6 @@ function storm_icon_delete_node($node, $params=array()) {
 function storm_icon_add($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround
   $af = $type .'_access';
   if (!$af('create', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
@@ -568,10 +639,6 @@ function storm_icon_add($path, $item, $params=array()) {
 function storm_icon_edit($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround  
   $af = $type .'_access';
   if (!$af('update', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
@@ -581,10 +648,6 @@ function storm_icon_edit($path, $item, $params=array()) {
 function storm_icon_delete($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
-  // Work around during 436922
-  if ($type=="storminvoiceitem") {
-    $type = "storminvoice";
-  } // End workaround  
   $af = $type .'_access';
   if (!$af('delete', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');

@@ -18,7 +18,7 @@ function theme_storm_dashboard() {
   $o .= '<div class="stormdashboard">';
   $o .= theme('storm_link', '', 'stormorganization');
   $o .= theme('storm_link', '', 'stormperson');
-  $o .= theme('storm_link', '', 'stormteammember');
+  $o .= theme('storm_link', '', 'stormteam');
   $o .= theme('storm_link', '', 'stormproject');
   $o .= theme('storm_link', '', 'stormtask');
   $o .= theme('storm_link', '', 'stormticket');
@@ -38,7 +38,7 @@ function theme_storm_dashboard() {
   $o .= '</div>';
   return $o;
 }
- 
+
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
@@ -47,7 +47,7 @@ function theme_storm_form_group($form) {
     array_push($row, drupal_render($form[$key]));
   }
   $rows[] = array('data' => $row, 'class' => 'formgroup');
-  $output = theme('table', array(), $rows, array('class' => 'formgroup'));
+  $output .= theme('table', array(), $rows, array('class' => 'formgroup'));
   return $output;
 }
 
@@ -103,7 +103,7 @@ function theme_storm_report($header, $content, $title, $footer, $headtitle='') {
   $o .= '</head>';
   $o .= '<body>';
   $o .= '<table class="storm_report_header"><tr>';
-  $myorg = node_load(variable_get('storm_organization_nid'));
+  $myorg = node_load(variable_get('storm_organization_nid', 0));
   $o .= '<td class="storm_report_myorganization">';
   $o .= '<div class="site_name">'. variable_get('site_name', '') .'</div>';
   $o .= '<div class="site_slogan">'. variable_get('site_slogan', '') .'</div>';
@@ -122,7 +122,7 @@ function theme_storm_report($header, $content, $title, $footer, $headtitle='') {
 }
 
 function theme_storm_view_item($label, $value) {
-  $o = '<div class="label"><span class="label">'. t($label) .' : </span></div><div class="value">'. $value .'</div>';
+  $o = '<div class="label"><span class="label">' . $label . ':&nbsp;</span></div><div class="value">' . $value . '&nbsp;</div>';
   return $o;
 }
 
@@ -157,9 +157,9 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       break;
 
     case "stormconfiguration":
-      $user_access_check = 'access administration pages';
+      $user_access_check = 'Storm: access administration pages';
       $list_text = 'Configuration';
-      $list_path = 'admin/storm';
+      $list_path = 'admin/settings/storm';
       $add_icon_type = '';
       $add_path = '';
       $dt_id = 'stormconfiguration';
@@ -237,13 +237,13 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $dt_id = 'stormtasks';
       break;
 
-    case "stormteammember":
-      $user_access_check = 'Storm teammember: access';
-      $list_text = 'Team members';
-      $list_path = 'storm/teammembers/';
-      $add_icon_type = 'stormteammember';
-      $add_path = 'storm/teammembers/add';
-      $dt_id = 'stormteammembers';
+    case "stormteam":
+      $user_access_check = 'Storm team: access';
+      $list_text = 'Teams';
+      $list_path = 'storm/teams/';
+      $add_icon_type = 'stormteam';
+      $add_path = 'node/add/'. $destination_module;
+      $dt_id = 'stormteams';
       break;
 
     case "stormticket":
@@ -285,9 +285,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
         $params = $_GET;
         $params[$params_key] = $node_nid;
       }
-      if (drupal_function_exists('storm_icon_add')) {
-        $v .= storm_icon_add($add_path, $i, $params);
-      }
+      $v .= storm_icon_add($add_path, $i, $params);
     }
 
     if ($node_nid == 0) {
