@@ -1,0 +1,16 @@
+; $Id$
+name = Storm Ticket
+description = "Allows creation of tickets for Storm Projects and Tasks"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormorganization
+dependencies[] = stormproject
+dependencies[] = stormtask
+package = Storm
+core = 7.x
+
+files[] = stormticket.admin.inc
+files[] = stormticket.install
+files[] = stormticket.module
+files[] = stormticket.theme.inc
+files[] = stormticket.views.inc

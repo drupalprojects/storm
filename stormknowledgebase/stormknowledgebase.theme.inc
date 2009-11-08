@@ -29,42 +29,34 @@ function theme_stormknowledgebase_list($header, $kbs) {
 
 function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node = node_prepare($node, $teaser);
-
-  $w = 0;
-  $node->content['stormknowledgebase'] = array(
-    '#prefix' => '<div id="stormknowledgebase" class="stormcomponent">',
-    '#suffix' => '</div>',
+  
+  $node->content['links'] = array(
+    '#prefix' => '<div class="stormlinks"><dl>',
+    '#suffix' => '</dl></div>',
     '#weight' => $w++,
   );
 
-  $node->content['stormknowledgebase']['fields'] = array(
-    '#prefix' => '<div id="fields">',
+  $node->content['group1'] = array(
+    '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $node->content['stormknowledgebase']['fields']['topic'] = array(
+  $node->content['group1']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Topic'), stormattribute_value('Knowledge base topic', $node->topic)),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
-  $node->content['stormknowledgebase']['fields']['body'] = array(
-    '#prefix' => '<div class="body">',
+  $node->content['body_field'] = array(
+    '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
-    '#weight' => $w++,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
-
-  $node->content['stormknowledgebase']['links'] = array(
-    '#prefix' => '<div id="links">',
-    '#suffix' => '</div>',
-    '#value' => '&nbsp;',
-    '#weight' => $w++,
-  );
-
+  
   return $node;
 }
 

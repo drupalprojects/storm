@@ -3,157 +3,9 @@
 
 /**
  * @file
- * Provides functions for the Storm Attribute module
  */
 
-/**
- * @function
- * Implementation of hook_menu
- */
-function stormattribute_menu() {
-  $items = array();
-  
-  $items['storm/attributes'] = array(
-    'title' => t('Attributes'),
-    'description' => t('Storm Attributes'),
-    'page callback' => 'stormattribute_list',
-    'access arguments' => array('Storm attribute: access'),
-    'type' => MENU_NORMAL_ITEM);
-  
-  $items['storm/attributes/add'] = array(
-    'title' => t('Add a new attribute'),
-    'description' => t('Storm Attributes'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('stormattribute_add'),
-    'access arguments' => array('Storm attribute: add'),
-    'type' => MENU_CALLBACK);
-  
-  $items['storm/attributes/edit/%'] = array(
-    'title' => t('Edit an attribute'),
-    'description' => t('Storm Attributes'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('stormattribute_edit', 3),
-    'access arguments' => array('Storm attribute: edit'),
-    'type' => MENU_CALLBACK);
-  
-  $items['storm/attributes/delete/%'] = array(
-    'title' => t('Delete an attribute'),
-    'description' => t('Storm Attributes'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('stormattribute_delete', 3),
-    'access arguments' => array('Storm attribute: delete'),
-    'type' => MENU_CALLBACK);
-  
-  $items['storm/attributes/domain/autocomplete'] = array(
-    'title' => t('List of attributes'),
-    'description' => t('Storm Attributes'),
-    'page callback' => '_stormattribute_domain_autocomplete',
-    'page arguments' => array(4),
-    'access arguments' => array('Storm attribute: access'),
-    'type' => MENU_CALLBACK);
-  
-  return $items;
-}
-
-/**
- * @function
- * Implementation of hook_permission
- */
-function stormattribute_permission() {
-  return array(
-    'Storm attribute: access',
-    'Storm attribute: add',
-    'Storm attribute: edit',
-    'Storm attribute: delete',
-  );
-}
-
-/**
- * @function
- * Implementation of hook_theme
- */
-function stormattribute_theme() {
-  return array(
-    'stormattribute_list' => array(
-      'arguments' => array('form'),
-      'file' => 'stormattribute.theme.inc',
-    ),
-  );
-}
-
-/**
- * @function
- * Function to to aid accessing attributes
- */
-function stormattribute_access($op, $item=NULL, $account=NULL) {
-  if (empty($account)) {
-    global $user;
-    $account = $user;
-  }
-
-  if ($op == 'create') {
-    return user_access('Storm attribute: add');
-  }
-
-  if ($op == 'delete') {
-    return user_access('Storm attribute: delete');
-  }
-
-  if ($op == 'update') {
-    return user_access('Storm attribute: edit');
-  }
-  
-  return FALSE;
-}
-
-/**
- * @function
- * Function to return key, value and defaults for particular attribute domain (keyed array)
- */
-function stormattribute_attributes_bydomain($domain) {
-  static $attributes_cache = array();
-  $attributes = array();
-
-  if (array_key_exists($domain, $attributes_cache)) return $attributes_cache[$domain];
-
-  $s = "SELECT * FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s') AND isactive=1 ORDER BY weight, avalue";
-  $r = db_query($s, $domain);
-  $attributes['values'] = array();
-  while ($attribute = db_fetch_object($r)) {
-    $attributes['values'][$attribute->akey] = t($attribute->avalue);
-    if($attribute->isdefault) $attributes['default'] = $attribute->akey;
-  }
-  if(is_array($attributes['values']) && !array_key_exists('default', $attributes)) {
-    $v = array_flip($attributes['values']);
-    $attributes['default'] = array_shift($v);
-  }
-
-  $attributes_cache[$domain] = $attributes;
-  return $attributes;
-}
-
-/**
- * @function
- * Function to return particular attribute value, based on domain and key.
- */
-function stormattribute_value($domain, $key) {
-  $attributes_array = stormattribute_attributes_bydomain($domain);
-  $attributes = $attributes_array['values'];
-  if (array_key_exists($key, $attributes)) {
-    return $attributes[$key];
-  }
-  
-  return $key;
-}
-
-
-/**
- * @function
- * Displays list of Storm attributes.
- */
 function stormattribute_list() {
-  $o = drupal_get_form('stormattribute_list_filter');
-
   $i = new stdClass();
   $i->type = 'stormattribute';
 
@@ -190,29 +42,44 @@ function stormattribute_list() {
   $s = "SELECT * FROM {stormattribute}";
   $where = array();
   $args = array();
+  $filterfields = array();
 
-  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
+  if ($_SESSION['stormattribute_list_filter']['domain']) {
     $where[] = "domain='%s'";
     $args[] = $_SESSION['stormattribute_list_filter']['domain'];
+    $filterfields[] = t('Domain');
   }
 
-  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
+  if ($_SESSION['stormattribute_list_filter']['akey']) {
     $where[] = "LOWER(akey) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['akey'];
+    $filterfields[] = t('Key');
   }
 
-  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
+  if ($_SESSION['stormattribute_list_filter']['avalue']) {
     $where[] = "LOWER(avalue) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
+    $filterfields[] = t('Value');
   }
 
-  if (isset($_SESSION['stormattribute_list_filter']['itemsperpage'])) {
-    $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
   }
 
   $tablesort = tablesort_sql($header);
 
-  $s = db_rewrite_sql($s, 'stormattribute', 'aid'); // # NEEDS UPDATE FOR D7
+  if (count($filterfields) == 0) {
+    $filterdesc = t('Not filtered');
+  }
+  else {
+    $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
+  }
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
+  
+  $o = drupal_get_form('stormattribute_list_filter', $filterdesc);
+  
+  $s = db_rewrite_sql($s, 'stormattribute', 'aid');
   $s = storm_rewrite_sql($s, $where) . $tablesort;
   $r = pager_query($s, $itemsperpage, 0, NULL, $args);
 
@@ -309,49 +176,22 @@ function stormattribute_list_submit($form, &$form_state) {
   drupal_set_message(t('Attributes saved'));
 }
 
-function stormattribute_list_filter() {
-  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
-    $domain = $_SESSION['stormattribute_list_filter']['domain'];
-  }
-  else {
-    $domain = NULL;
-  }
-  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
-    $akey = $_SESSION['stormattribute_list_filter']['akey'];
-  }
-  else {
-    $akey = NULL;
-  }
-  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
-    $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
-  }
-  else {
-    $avalue = NULL;
-  }
-  if (isset($_SESSION['stormattribute_list_filter']['isactive'])) {
-    $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
-  }
-  else {
-    $isactive = NULL;
-  }
-  if (isset($_SESSION['stormattribute_list_filter']['isdefault'])) {
-    $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
-  }
-  else {
-    $isdefault = NULL;
-  }
+function stormattribute_list_filter(&$form_state, $filterdesc = 'Filter') {
+  $domain = $_SESSION['stormattribute_list_filter']['domain'];
+  $akey = $_SESSION['stormattribute_list_filter']['akey'];
+  $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
+  $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
+  $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
 
-  if (isset($_SESSION['stormattribute_list_filter']['itemsperpage'])) {
-    $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
-  }
-  else {
-    $itemsperpage = 10;
+  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
+  if (!$itemsperpage) {
+    $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['stormattribute_list_filter']['itemsperpage'] = $itemsperpage;
   }
 
   $form['filter'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Filter'),
+    '#title' => $filterdesc,
    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -688,7 +528,7 @@ function _stormattribute_domain_autocomplete($string = '') {
   $matches = array();
   if ($string) {
     $s = "SELECT DISTINCT(domain) AS domain FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s%%')";
-    $s = db_rewrite_sql($s, 'stormattribute', 'aid'); // # NEEDS UPDATE FOR D7
+    $s = db_rewrite_sql($s, 'stormattribute', 'aid');
     $result = db_query($s, $string);
     while ($a = db_fetch_object($result)) {
       $matches[$a->domain] = check_plain($a->domain);
@@ -704,5 +544,7 @@ function _stormattribute_domain_autocomplete($string = '') {
   }
 
   $matches = array_slice($matches, 0, 10);
+
   drupal_json($matches);
 }
+

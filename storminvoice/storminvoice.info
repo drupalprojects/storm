@@ -1,0 +1,16 @@
+; $Id$
+name = Storm Invoice
+description = "Allows invoices to be created based on organizations and projects."
+dependencies[] = storm
+dependencies[] = stormattribute
+dependencies[] = stormorganization
+dependencies[] = stormproject
+package = Storm
+core = 7.x
+
+files[] = storminvoice.admin.inc
+files[] = storminvoice.auto_add.inc
+files[] = storminvoice.install
+files[] = storminvoice.module
+files[] = storminvoice.theme.inc
+files[] = storminvoice.views.inc

@@ -1,0 +1,18 @@
+; $Id$
+
+; Basic information
+name = Storm Attribute
+description = "Provides attributes (allowed field values) for use within Storm modules"
+core = 7.x
+package = Storm
+
+; Dependencies
+dependencies[] = storm
+
+; Files registry
+files[] = stormattribute.admin.inc
+files[] = stormattribute.install
+files[] = stormattribute.module
+files[] = stormattribute.theme.inc
+files[] = stormattribute_handler_field_attributes_domain.inc
+files[] = stormattribute_handler_filter_attributes_domain.inc

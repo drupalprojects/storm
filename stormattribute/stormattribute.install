@@ -425,13 +425,13 @@ function stormattribute_install() {
     'paid' => 'Paid',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      $fields = array('domain' => $domain, 'akey' => $key, 'avalue' => $value, 'weight' => $weight);
+      db_insert('stormattribute')->fields($fields)->execute();
       $weight++;
     }
     $prevdomain = $domain;

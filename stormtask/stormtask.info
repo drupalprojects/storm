@@ -1,0 +1,15 @@
+; $Id$
+name = Storm Task
+description = "Allows recording of tasks for Storm Organizations and Projects"
+dependencies[] = storm 
+dependencies[] = stormattribute
+dependencies[] = stormorganization
+dependencies[] = stormproject
+package = Storm
+core = 7.x
+
+files[] = stormtask.admin.inc
+files[] = stormtask.install
+files[] = stormtask.module
+files[] = stormtask.theme.inc
+files[] = stormtask.views.inc
