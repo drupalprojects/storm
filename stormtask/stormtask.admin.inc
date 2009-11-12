@@ -10,7 +10,7 @@ function stormtask_tasks($project) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Projects'), 'storm/projects');
-  $breadcrumb[] = l(t('Project : '. $project->title), 'node/'. $project->nid);
+  $breadcrumb[] = l(t('Project : !project', array('!project' => $project->title)), 'node/'. $project->nid);
   drupal_set_breadcrumb($breadcrumb);
 
   $i = new stdClass();

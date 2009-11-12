@@ -523,7 +523,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->MultiCell($w, 0, $node->reference?$node->reference:'-' , 1, 'L', 0, 1, PDF_MARGIN_LEFT + $pageWidth*.5 + $w*3);
   $h = $pdf->getY() - $h;
   $pdf->MultiCell($w-2, $h, $node->number, 1, 'L', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $pdf->getY() - $h);
-  $pdf->MultiCell($w-3, $h, t($mycurrency, array(), $language), 1, 'L', 0, 0);
+  $pdf->MultiCell($w-3, $h, $mycurrency, 1, 'L', 0, 0);
   $pdf->MultiCell($w+5, $h, format_date($node->requestdate, 'custom', 'Y-m-d'), 1, 'L', 0, 1);
 
   $pdf->SetFont("times", "B", 10);
@@ -548,7 +548,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->MultiCell($w*2 - 5, 12, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
   $pdf->SetFont("times", "N", 10);
   $pdf->MultiCell($w + 5, 12, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 'L', 0, 0);
-  $pdf->MultiCell($w, 12, t(variable_get('storminvoice_payment_terms', ''), array(), $language), 1, 'L', 0, 1);
+  $pdf->MultiCell($w, 12, variable_get('storminvoice_payment_terms', ''), 1, 'L', 0, 1);
 
   $y = $pdf->getY();
   if($destY > $y) $y = $destY;
@@ -608,7 +608,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->SetFont("times", "B", 10);
   $pdf->Cell($pageWidth, 5, t('Payment', array(), $language), 'B', 0, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth, 0, t(variable_get('storminvoice_payment_modes', ''), array(), $language),0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY(), true, 0, true);
+  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' , 0, 1, PDF_MARGIN_LEFT, $pdf->getY(), true, 0, true);
 
   if ($status=='paid') {
     $y = $pdf->getY() + 10;
@@ -704,7 +704,7 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td>'. $node->number .'</td>';
-  $o .= '<td>'. t($mycurrency, array(), $language) .'</td>';
+  $o .= '<td>'. $mycurrency .'</td>';
   $o .= '<td>'. format_date($node->requestdate, 'custom', 'Y-m-d') .'</td>';
   $o .= '<td>'. $node->reference .'</td>';
   $o .= '</tr>';
@@ -724,14 +724,14 @@ function theme_storminvoice_report_html($node, $language) {
   $o .= '</tr>';
   $o .= '<tr>';
   $o .= '<td style="text-align: center; font-weight: bold;" colspan="2">';
-  $o .= t($mycurrency, array(), $language) .' '. sprintf('%.2f', $node->total);
+  $o .= $mycurrency .' '. sprintf('%.2f', $node->total);
   if ($organization->currency != $myorg->currency) {
     $o .= '<br />';
     $o .= '('. $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr) .')';
   }
   $o .= '</td>';
   $o .= '<td>'. format_date($node->duedate, 'custom', 'Y-m-d') .'</td>';
-  $o .= '<td>'. t(variable_get('storminvoice_payment_terms', ''), array(), $language) .'</td>';
+  $o .= '<td>'. variable_get('storminvoice_payment_terms', '') .'</td>';
   $o .= '</tr>';
   $o .= '</table></div>';
   $o .= '</div>';
@@ -836,7 +836,7 @@ function theme_storminvoice_report_html($node, $language) {
   if ($language1) $o .= '<br />'. t('Payment', array(), $language1);
   $o .= '</td></tr>';
   $o .= '<tr><td>';
-  $o .= t(variable_get('storminvoice_payment_modes', ''), array(), $language);
+  $o .= variable_get('storminvoice_payment_modes', '');
   $o .= '</td></tr>';
   $o .= '</table></div>';
 

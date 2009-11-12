@@ -800,7 +800,7 @@ function storminvoice_admin_settings() {
   $form['storminvoice_cover_note_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Cover note subject'),
-    '#default_value' => t(variable_get('storminvoice_cover_note_subject', 'Invoice from !site'), array('!site' => variable_get('site_name', 'STORM'))),
+    '#default_value' => variable_get('storminvoice_cover_note_subject', t('Invoice from !site', array('!site' => variable_get('site_name', 'STORM')))),
     '#description' => t('Default subject for cover note'),
     '#size' => 50,
   );

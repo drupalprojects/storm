@@ -16,7 +16,7 @@ function theme_storm_dashboard() {
   $o .= '<dl class="stormdashboard">';
   
   $o .= '<div class="stormdashboard">';
-  $o .= theme('storm_link', '', 'stormorganization');
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormorganization'));
   $o .= theme('storm_link', '', 'stormperson');
   $o .= theme('storm_link', '', 'stormteam');
   $o .= theme('storm_link', '', 'stormproject');
@@ -126,7 +126,33 @@ function theme_storm_view_item($label, $value) {
   return $o;
 }
 
-function theme_storm_link($source_module='', $destination_module='', $node_nid=0, $weight=0) {
+function theme_storm_link($args = array()) {
+  if (isset($args['source_module'])) {
+    $source_module = $args['source_module'];
+  } else {
+    $source_module = '';
+  }
+  if (isset($args['destination_module'])) {
+    $destination_module = $args['destination_module'];
+  } else {
+    $destination_module = '';
+  }
+  if (isset($args['node_nid'])) {
+    $node_nid = $args['node_nid'];
+  } else {
+    $node_nid = 0;
+  }
+  if (isset($args['weight'])) {
+    $weight = $args['weight'];
+  } else {
+    $weight = 0;
+  }
+  
+  dvm($source_module);
+  dvm($destination_module);
+  dvm($node_nid);
+  dvm($weight);
+  
   switch ($source_module) {
  
    case "stormorganization":
@@ -274,7 +300,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     else {
       $params = array('query' => array($params_key => $node_nid));
     }
-    $v = l(t($list_text), $list_path, $params);
+    $v = l($list_text, $list_path, $params);
     
     if (!$add_icon_type=='') {
       $i->type = $add_icon_type;
