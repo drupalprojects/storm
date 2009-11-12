@@ -258,6 +258,7 @@ function stormexpense_stormtask_change_hierarchy($task_nid, $organization_nid, $
 function stormexpense_stormticket_change_hierarchy($ticket_nid, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid, $task_title) {
   $s = "UPDATE {stormexpense} SET organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s', task_nid=%d, task_title='%s' WHERE ticket_nid=%d";
   db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid, $task_title, $ticket_nid);
+}
 
 function stormexpense_form(&$node) {
   $breadcrumb = array();
