@@ -240,6 +240,16 @@ function stormticket_stormtask_change($task_nid, $task_stepno, $task_title) {
   db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
 }
 
+function stormticket_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
+  $s = "UPDATE {stormticket} SET organization_nid=%d, organization_title='%s' WHERE project_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid);
+}
+
+function stormticket_stormtask_change_hierarchy($task_nid, $organization_nid, $organization_title, $project_nid, $project_title) {
+  $s = "UPDATE {stormticket} SET organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s' WHERE task_nid=%d";
+  db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid);
+}
+
 // INVOICE CREATE / EDIT FORM
 function stormticket_form(&$node) {
   $breadcrumb = array();
@@ -329,7 +339,7 @@ function stormticket_form(&$node) {
     '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
   );
-
+  
   $tree = _stormtask_get_tree($node->project_nid);
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
@@ -339,7 +349,12 @@ function stormticket_form(&$node) {
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),
   );
-
+  
+  $form['group1']['task_nid_old'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $node->task_nid,
+  );
+  
   $form['group2'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -460,26 +475,17 @@ function stormticket_insert($node) {
   _stormticket_beforesave($node);
 
   db_query("INSERT INTO {stormticket}
-            (vid, nid,
-            organization_nid, organization_title,
-            project_nid, project_title,
-            task_nid, task_title, task_stepno,
-            ticketcategory, ticketstatus, ticketpriority,
-            datebegin, dateend, durationunit, duration, pricemode, price, currency)
-           VALUES
-           (%d, %d,
-            %d, '%s',
-            %d, '%s',
-            %d, '%s', '%s',
-            '%s', '%s', '%s',
-            %d, %d, '%s', %f, '%s', %f, '%s')",
-          $node->vid, $node->nid,
-          $node->organization_nid, $node->organization_title,
-          $node->project_nid, $node->project_title,
-          $node->task_nid, $node->task_title, $node->task_stepno,
-          $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-          $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-          $node->pricemode, $node->price, $node->currency);
+    (vid, nid, organization_nid, organization_title, project_nid, project_title,
+    task_nid, task_title, task_stepno, ticketcategory, ticketstatus, ticketpriority, 
+    datebegin, dateend, durationunit, duration, pricemode, price, currency)
+    VALUES
+    (%d, %d, %d, '%s', %d, '%s',
+    %d, '%s', '%s', '%s', '%s', '%s',
+    %d, %d, '%s', %f, '%s', %f, '%s')",
+    $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+    $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
+    $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, $node->price, $node->currency
+  );
 }
 
 function stormticket_update($node) {
@@ -490,14 +496,16 @@ function stormticket_update($node) {
   else {
     _stormticket_beforesave($node);
     db_query("UPDATE {stormticket} SET
-              organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
-              task_nid=%d, task_title='%s', task_stepno='%s', ticketcategory='%s', ticketstatus='%s', 
-              ticketpriority='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f, pricemode='%s', 
-              price=%f, currency='%s' WHERE vid = %d",
-              $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
-              $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, 
-              $node->ticketpriority, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, 
-              $node->price, $node->currency, $node->vid);
+      organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
+      task_nid=%d, task_title='%s', task_stepno='%s', ticketcategory='%s', ticketstatus='%s', 
+      ticketpriority='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f, pricemode='%s', 
+      price=%f, currency='%s' WHERE vid = %d",
+      $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
+      $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, 
+      $node->ticketpriority, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, 
+      $node->price, $node->currency, $node->vid
+    );
+    
     if ($node->title != $node->title_old) {
       module_invoke_all('stormticket_change', $node->nid, $node->title);
     }
