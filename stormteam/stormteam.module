@@ -25,8 +25,8 @@ function stormteam_menu() {
   $items = array();
   
   $items['storm/teams'] = array(
-    'title' => t('Teams'),
-    'description' => t('Storm Teams'),
+    'title' => 'Teams',
+    'description' => 'Storm Teams',
     'page callback' => 'stormteam_list',
     'access arguments' => array('Storm team: access'),
     'type' => MENU_NORMAL_ITEM,

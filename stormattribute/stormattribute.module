@@ -31,7 +31,7 @@ function stormattribute_perm() {
 function stormattribute_menu() {
   
   $items['storm/attributes'] = array(
-    'title' => Attributes,
+    'title' => 'Attributes',
     'description' => 'Storm Attributes',
     'page callback' => 'stormattribute_list',
     'access arguments' => array('Storm attribute: access'),

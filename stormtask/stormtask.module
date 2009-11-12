@@ -341,7 +341,7 @@ function stormtask_form(&$node) {
   if (array_key_exists('project_nid', $_GET)) {
     $breadcrumb[] = l(t('Projects'), 'storm/projects');
     $project = node_load($_GET['project_nid']);
-    $breadcrumb[] = l(t('Project : '. $project->title), 'node/'. $project->nid);
+    $breadcrumb[] = l(t('Project : !project', array('!project' => $project->title)), 'node/'. $project->nid);
     $breadcrumb[] = l(t('Tasks'), 'node/'. $project->nid .'/tasks');
   }
   else {
