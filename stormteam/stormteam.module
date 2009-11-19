@@ -663,7 +663,7 @@ function stormteam_user_return_teams($account = NULL) {
   }
   
   $s = "SELECT ste.nid FROM {stormteam} ste WHERE (ste.members LIKE '%%i:%d;%%' OR ste.members LIKE '%%i:%d;%%')";
-  $r = db_query($s, $account->person_nid, $account->organization_nid);
+  $r = db_query($s, $account->stormperson_nid, $account->stormorganization_nid);
   $teams = array();
   while ($team = db_fetch_object($r)) {
     $teams[] = $team->nid;
