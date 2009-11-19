@@ -708,7 +708,7 @@ function stormtask_nodeapi(&$node, $op, $teaser, $page) {
         $node->pricemode = $pricemode_list['default'];
 
         $currency_list = stormattribute_attributes_bydomain('Currency');
-        $node->currency = $pricemode_list['currency'];
+        $node->currency = $currency_list['default'];
       }
       break;
     case 'delete revision':
