@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #617212 by Magnity | deggertsen: Fixed Unable to view projects in views without organization permissions.
 - Bug #628792 by Magnity | billshankley: Fixed Project titles visible for non-assigned teams.
 - Bug #586418 by kieran_delaney: Fixed Attributes Filter by Active/Default not working.
 - Bug #623376 by Magnity: Fixed Currency default being ignored on Create Organisation, Project, Task and Ticket pages.
