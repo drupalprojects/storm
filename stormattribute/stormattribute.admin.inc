@@ -62,6 +62,18 @@ function stormattribute_list() {
     $filterfields[] = t('Value');
   }
 
+  if (isset($_SESSION['stormattribute_list_filter']['isactive']) && ($_SESSION['stormattribute_list_filter']['isactive'] != '-')) {
+    $where[] = "isactive = %d";
+    $args[] = $_SESSION['stormattribute_list_filter']['isactive'];
+    $filterfields[] = t('Active');
+  }
+  
+  if (isset($_SESSION['stormattribute_list_filter']['isdefault']) && ($_SESSION['stormattribute_list_filter']['isdefault'] != '-')) {
+    $where[] = "isdefault = %d";
+    $args[] = $_SESSION['stormattribute_list_filter']['isdefault'];
+    $filterfields[] = t('Default');
+  }
+  
   $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
