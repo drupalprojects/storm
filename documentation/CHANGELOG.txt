@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #586418 by kieran_delaney: Fixed Attributes Filter by Active/Default not working.
 - Bug #623376 by Magnity: Fixed Currency default being ignored on Create Organisation, Project, Task and Ticket pages.
 - Bug #597050 by homoludens, Magnity | jurgenhaas: Fixed Changing project-organization relationship causes problem
 - Bug #618658: Total durations not adding up
