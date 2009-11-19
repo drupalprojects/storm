@@ -185,7 +185,7 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
     $cond = '';
   }
   else {
-    if (user_access('Storm organization: view all', $account)) {
+    if (user_access('Storm project: view all', $account)) {
       return '';
     }
 
@@ -203,9 +203,18 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
       if ($cond) $cond .= ' OR ';
       $cond .= 'spr1.manager_nid='. $account->uid;
     }
-    if (user_access('Storm project: view if assigned to')) {
+    if (user_access('Storm project: view if assigned to project')) {
       if ($cond) $cond .= ' OR ';
       $cond .= 'spr1.assigned_nid='. $account->uid;
+      
+      if (module_exists('stormteam')) {
+        // Load teams that the account belongs to
+        $belonged_teams = stormteam_user_return_teams($account);
+        // Allow access if any of those teams is the one in question
+        foreach ($belonged_teams as $belonged_team) {
+          $cond .= ' OR spr1.assigned_nid = '. $belonged_team;
+        }
+      }
     }
     if ($cond) {
       $cond = " WHEN 'stormproject' THEN (SELECT IF($cond,1,0) FROM {stormproject} spr1 WHERE spr1.vid=${primary_table}.vid) ";
