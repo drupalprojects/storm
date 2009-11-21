@@ -700,7 +700,8 @@ function _storminvoice_beforesave(&$node) {
     $node->items[$j]->tax2app = $node->$variable;
     $variable = 'items_'. $j .'_tax2percent';
     $node->items[$j]->tax2percent = $node->$variable;
-  
+    $node->items[$j]->weight = $j;
+    
     // Update taxes
     storm_taxation($node->items[$j]);
     
