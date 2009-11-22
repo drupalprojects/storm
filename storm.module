@@ -56,7 +56,10 @@ function storm_permission() {
 // Note #370120. It is intended to move these calls to pages which specifically need them rather than on hook_init.
 function storm_init() {
   drupal_add_js(drupal_get_path('module', 'storm') .'/storm.js', 'module', 'header', FALSE);
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
+  drupal_add_css(
+    drupal_get_path('module', 'storm') .'/storm.css', 
+    array('type' => 'file')
+  );
 }
 
 /**
@@ -659,7 +662,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
   $icon = storm_icon($icon, $title);
   $attributes ['title'] = $title;
 
-  $query = '';
+  $query = array();
 
   if (array_key_exists('q', $params)) {
     $destination = $params['q'];
@@ -692,7 +695,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
       unset($params['order']);
       $c++;
     }
-    $query .= 'destination='. urlencode($destination);
+    $query['destination'] = urlencode($destination);
   }
 
   foreach ($params as $key => $value) {

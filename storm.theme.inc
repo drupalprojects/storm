@@ -17,21 +17,21 @@ function theme_storm_dashboard() {
   
   $o .= '<div class="stormdashboard">';
   $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormorganization'));
-  $o .= theme('storm_link', '', 'stormperson');
-  $o .= theme('storm_link', '', 'stormteam');
-  $o .= theme('storm_link', '', 'stormproject');
-  $o .= theme('storm_link', '', 'stormtask');
-  $o .= theme('storm_link', '', 'stormticket');
-  $o .= theme('storm_link', '', 'stormtimetracking');
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormperson'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormteam'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormproject'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormtask'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormticket'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormtimetracking'));
   $o .= '</div>';
 
   $o .= '<div class="stormdashboard">';
-  $o .= theme('storm_link', '', 'stormnote');
-  $o .= theme('storm_link', '', 'storminvoice');
-  $o .= theme('storm_link', '', 'stormexpense');
-  $o .= theme('storm_link', '', 'stormknowledgebase');
-  $o .= theme('storm_link', '', 'stormattribute');
-  $o .= theme('storm_link', '', 'stormconfiguration');
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormnote'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'storminvoice'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormexpense'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormknowledgebase'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormattribute'));
+  $o .= theme('storm_link', array('source_module' => '', 'destination_module' => 'stormconfiguration'));
   
   $o .= '</div>';
   $o .= '</dl>';
@@ -148,11 +148,6 @@ function theme_storm_link($args = array()) {
     $weight = 0;
   }
   
-  dvm($source_module);
-  dvm($destination_module);
-  dvm($node_nid);
-  dvm($weight);
-  
   switch ($source_module) {
  
    case "stormorganization":
@@ -176,7 +171,7 @@ function theme_storm_link($args = array()) {
     case "stormattribute":
       $user_access_check = 'Storm attribute: access';
       $list_text = 'Attributes';
-      $list_path = 'storm/attributes/';
+      $list_path = 'storm/attributes';
       $add_icon_type = 'stormattribute';
       $add_path = 'storm/attributes/add';
       $dt_id = 'stormattributes';
@@ -194,7 +189,7 @@ function theme_storm_link($args = array()) {
     case "stormexpense":
       $user_access_check = 'Storm expense: access';
       $list_text = 'Expenses';
-      $list_path = 'storm/expenses/';
+      $list_path = 'storm/expenses';
       $add_icon_type = 'stormexpense';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormexpenses';
@@ -203,7 +198,7 @@ function theme_storm_link($args = array()) {
     case "storminvoice":
       $user_access_check = 'Storm invoice: access';
       $list_text = 'Invoices';
-      $list_path = 'storm/invoices/';
+      $list_path = 'storm/invoices';
       $add_icon_type = 'storminvoice';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'storminvoices';
@@ -212,7 +207,7 @@ function theme_storm_link($args = array()) {
     case "stormknowledgebase":
       $user_access_check = 'Storm knowledgebase: access';
       $list_text = 'Knowledge base';
-      $list_path = 'storm/knowledgebase/';
+      $list_path = 'storm/knowledgebase';
       $add_icon_type = 'stormknowledgebase';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormknowledgebase';
@@ -221,7 +216,7 @@ function theme_storm_link($args = array()) {
     case "stormnote":
       $user_access_check = 'Storm note: access';
       $list_text = 'Notes';
-      $list_path = 'storm/notes/';
+      $list_path = 'storm/notes';
       $add_icon_type = 'stormnote';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormnotes';
@@ -230,7 +225,7 @@ function theme_storm_link($args = array()) {
     case "stormorganization":
       $user_access_check = 'Storm organization: access';
       $list_text = 'Organizations';
-      $list_path = 'storm/organizations/';
+      $list_path = 'storm/organizations';
       $add_icon_type = 'stormorganization';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormorganizations';
@@ -239,7 +234,7 @@ function theme_storm_link($args = array()) {
     case "stormperson":
       $user_access_check = 'Storm person: access';
       $list_text = 'People';
-      $list_path = 'storm/people/';
+      $list_path = 'storm/people';
       $add_icon_type = 'stormperson';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormpeople';
@@ -248,7 +243,7 @@ function theme_storm_link($args = array()) {
     case "stormproject":
       $user_access_check = 'Storm project: access';
       $list_text = 'Projects';
-      $list_path = 'storm/projects/';
+      $list_path = 'storm/projects';
       $add_icon_type = 'stormproject';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormprojects';
@@ -257,7 +252,7 @@ function theme_storm_link($args = array()) {
     case "stormtask":
       $user_access_check = 'Storm task: access';
       $list_text = 'Tasks';
-      $list_path = 'storm/tasks/';
+      $list_path = 'storm/tasks';
       $add_icon_type = 'stormtask';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtasks';
@@ -266,7 +261,7 @@ function theme_storm_link($args = array()) {
     case "stormteam":
       $user_access_check = 'Storm team: access';
       $list_text = 'Teams';
-      $list_path = 'storm/teams/';
+      $list_path = 'storm/teams';
       $add_icon_type = 'stormteam';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormteams';
@@ -275,7 +270,7 @@ function theme_storm_link($args = array()) {
     case "stormticket":
       $user_access_check = 'Storm ticket: access';
       $list_text = 'Tickets';
-      $list_path = 'storm/tickets/';
+      $list_path = 'storm/tickets';
       $add_icon_type = 'stormticket';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtickets';
@@ -284,7 +279,7 @@ function theme_storm_link($args = array()) {
     case "stormtimetracking":
       $user_access_check = 'Storm timetracking: access';
       $list_text = 'Timetrackings';
-      $list_path = 'storm/timetrackings/';
+      $list_path = 'storm/timetrackings';
       $add_icon_type = 'stormtimetracking';
       $node_links_key = 'timetrackings';
       $add_path = 'node/add/'. $destination_module;
