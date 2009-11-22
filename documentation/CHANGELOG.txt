@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- Bug #637558 by Magnity: Fixed Workflow is creating duplicate nodes with Tickets.
+
 Version 6.x-1.27:
 - Task #637748 by Magnity: Changed Help text for tcpdf download.
 - Bug #638002 by recrit | Magnity: Fixed Storminvoice item ordering.
