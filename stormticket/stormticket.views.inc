@@ -5,8 +5,8 @@ function stormticket_views_data() {
   $data['stormticket']['table']['group']  = 'Storm';
   $data['stormticket']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'vid',
-      'field' => 'vid',
+      'left_field' => 'nid',
+      'field' => 'nid',
     ),
   );
   
