@@ -36,7 +36,8 @@ function stormtask_perm() {
 function stormtask_init() {
   $settings = array(
     'storm' => array(
-      'project_tasks_url' => url('storm/project_tasks_js/')
+      // D7STORM TODO: call to url triggered error so disabled
+      //'project_tasks_url' => url('storm/project_tasks_js/')
     ),
   );
   drupal_add_js($settings, 'setting');

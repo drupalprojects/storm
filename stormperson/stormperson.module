@@ -38,7 +38,8 @@ function stormperson_init() {
 
   $settings = array(
     'storm' => array(
-      'organization_people_url' => url('storm/organization_people_js/')
+      // D7STORM TODO: call to url triggered error so disabled
+      //'organization_people_url' => url('storm/organization_people_js/')
     ),
   );
   drupal_add_js($settings, 'setting');

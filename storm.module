@@ -800,13 +800,20 @@ function storm_form_alter(&$form, $form_state, $form_id) {
   }
 
   if ($form_id == $form['type']['#value'] .'_node_form') {
-    $class = $form['#attributes']['class'];
+    if (isset($form['#attributes']['class'])) {
+      $class = $form['#attributes']['class'];
+    }
+    else {
+      $class = NULL;
+    }
     if ($class) $class .= ' ';
     $class .= $form_id;
     $form['#attributes']['class'] = $class;
     foreach ($form as $key => $elem) {
-      if (is_array($elem) && $elem['#type']=='fieldset') {
-        $class = $elem['#attributes']['class'];
+      if (is_array($elem) && isset($elem['#type']) && $elem['#type']=='fieldset') {
+        if (isset($elem['#attributes'])) {
+          $class = $elem['#attributes']['class'];
+        }
         if ($class) $class .= ' ';
         $class .= $key;
         $form[$key]['#attributes']['class'] = $class;

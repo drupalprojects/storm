@@ -46,7 +46,8 @@ function storminvoice_perm() {
 function storminvoice_init() {
   $settings = array(
     'storm' => array(
-      'project_invoices_url' => url('storm/project_invoices_js/')
+      // D7STORM TODO: call to url triggered error so disabled.
+      //'project_invoices_url' => url('storm/project_invoices_js/')
     ),
   );
   drupal_add_js($settings, 'setting');

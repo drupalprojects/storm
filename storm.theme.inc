@@ -40,8 +40,11 @@ function theme_storm_dashboard() {
 }
 
 function theme_storm_form_group($form) {
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-
+  drupal_add_css(
+    drupal_get_path('module', 'storm') .'/storm.css', 
+    array('type' => 'file')
+  );
+  
   $row = array();
   foreach (element_children($form) as $key) {
     array_push($row, drupal_render($form[$key]));

@@ -54,7 +54,8 @@ function stormproject_perm() {
 function stormproject_init() {
   $settings = array(
     'storm' => array(
-      'organization_projects_url' => url('storm/organization_projects_js/')
+      // D7STORM TODO: call to url triggered error so disabled
+      //'organization_projects_url' => url('storm/organization_projects_js/')
     ),
   );
   drupal_add_js($settings, 'setting');

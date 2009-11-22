@@ -41,7 +41,8 @@ function stormticket_init() {
 
   $settings = array(
     'storm' => array(
-      'task_tickets_url' => url('storm/task_tickets_js/')
+      // D7STORM TODO: call to url triggered error so disabled
+      //'task_tickets_url' => url('storm/task_tickets_js/')
     ),
   );
   drupal_add_js($settings, 'setting');

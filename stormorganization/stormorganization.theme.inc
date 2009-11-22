@@ -5,7 +5,10 @@
  * @file
  */
 
-function theme_stormorganization_list($header, $organizations) {
+function theme_stormorganization_list($variables) {
+  $header = $variables['header'];
+  $organizations = $variables['organizations'];
+  
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
   $rows = array();

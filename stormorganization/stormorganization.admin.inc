@@ -36,24 +36,35 @@ function stormorganization_list() {
     ),
   );
 
-  $s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization'";
+  $s = db_select('node', 'n');
+  $s->innerJoin('stormorganization', 'sor', 'n.vid=sor.vid');
+  $s->fields('n');
+  $s->fields('sor');
+  $s->condition(db_and()->condition('n.status', 1)->condition('n.type', 'stormorganization'));
+  
+  //$s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization'";
 
   $where = array();
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormorganization_list_filter']['country']) {
+  if (isset($_SESSION['stormorganization_list_filter']['country'])) {
     $where[] = "sor.country='%s'";
     $args[] = $_SESSION['stormorganization_list_filter']['country'];
     $filterfields[] = t('Country');
   }
-  if ($_SESSION['stormorganization_list_filter']['name']) {
+  if (isset($_SESSION['stormorganization_list_filter']['name'])) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
     $filterfields[] = t('Name');
   }
 
-  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
+  if (isset($_SESSION['stormorganization_list_filter']['iscustomer'])) {
+    $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
+  }
+  else {
+    $iscustomer = NULL;
+  }
   if ($iscustomer && $iscustomer!='-') {
     if ($iscustomer=='yes') {
       $where[] = "sor.iscustomer=1";
@@ -64,7 +75,12 @@ function stormorganization_list() {
     $filterfields[] = t('Customer');
   }
 
-  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  if (isset($_SESSION['stormorganization_list_filter']['isprovider'])) {
+    $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  }
+  else {
+    $isprovider = NULL;
+  }
   if ($isprovider && $isprovider!='-') {
     if ($isprovider=='yes') {
       $where[] = "sor.isprovider=1";
@@ -75,7 +91,12 @@ function stormorganization_list() {
     $filterfields[] = t('Provider');
   }
 
-  $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
+  if (isset($_SESSION['stormorganization_list_filter']['isactive'])) {
+    $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
+  }
+  else {
+    $isactive = NULL;
+  }
   if ($isactive && $isactive!='-') {
     if ($isactive=='yes') {
       $where[] = "sor.isactive=1";
@@ -86,8 +107,10 @@ function stormorganization_list() {
     $filterfields[] = t('Active');
   }
 
-  $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
+  if (isset($_SESSION['stormorganization_list_filter']['itemsperpage'])) {
+    $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
+  }
+  else {
     // Sets value for fieldset label, does not affect filter itself.
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
   }
@@ -102,19 +125,26 @@ function stormorganization_list() {
   
   $o = drupal_get_form('stormorganization_list_filter', $filterdesc);
 
-  $s = stormorganization_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
-
-  $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+  // D7STORM TODO: CREATE NODE ACCESS TAGS
+  //$s->addTag('stormorganization_access');
+  //$s = stormorganization_access_sql($s, $where);
+  //$s->addTag('node_access');
+  
+  $s = $s
+    ->extend('TableSort')
+    ->orderByHeader($header);
+    
+  $s->range(0, $itemsperpage);
+  $r = $s->execute();
+  
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($r as $organization) {
     $organizations[] = $organization;
   }
 
-  $o .= theme('stormorganization_list', $header, $organizations);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('stormorganization_list', array('header' => $header, 'organizations' => $organizations));
+  $o .= theme('pager', array('tags' => NULL, 'limit' => $itemsperpage));
+  return $o;
 }
 
 function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
@@ -125,9 +155,24 @@ function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
     $_SESSION['stormproject_list_filter']['country'] = $country;
   }
 
-  $name = $_SESSION['stormorganization_list_filter']['name'];
-  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
-  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  if (isset($_SESSION['stormorganization_list_filter']['name'])) {
+    $name = $_SESSION['stormorganization_list_filter']['name'];
+  }
+  else {
+    $name = NULL;
+  }
+  if (isset($_SESSION['stormorganization_list_filter']['iscustomer'])) {
+    $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
+  }
+  else {
+    $iscustomer = NULL;
+  }
+  if (isset($_SESSION['stormorganization_list_filter']['isprovider'])) {
+    $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
+  }
+  else {
+    $isprovider = NULL;
+  }
   $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
   if (!$isactive) {
     $isactive = 'yes';
