@@ -11,7 +11,7 @@ function stormperson_install() {
 }
 
 function stormperson_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Person" have not been deleted on disabling Storm Person. Please note that they will now have reduced functionality, and will not be protected by Storm Person access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Person" have not been deleted on disabling Storm Person. Please note that they will now have reduced functionality, and will not be protected by Storm Person access controls.'), 'warning');
 }
 
 function stormperson_uninstall() {

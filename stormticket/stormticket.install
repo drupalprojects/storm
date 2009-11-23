@@ -11,7 +11,7 @@ function stormticket_install() {
 }
 
 function stormticket_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Ticket" have not been deleted on disabling Storm Ticket. Please note that they will now have reduced functionality, and will not be protected by Storm Ticket access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Ticket" have not been deleted on disabling Storm Ticket. Please note that they will now have reduced functionality, and will not be protected by Storm Ticket access controls.'), 'warning');
 }
 
 function stormticket_uninstall() {

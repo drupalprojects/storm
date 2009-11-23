@@ -17,6 +17,14 @@ function stormteam_install() {
 
 /**
  * @function
+ * Implementation of hook_disable
+ */
+function stormorganization_disable() {
+  drupal_set_message(t('Nodes of type "Team" have not been deleted on disabling Storm Team. Please note that they will now have reduced functionality, and will not be protected by Storm Team access controls.'), 'warning');
+}
+
+/**
+ * @function
  * Implementation of hook_uninstall
  */
 function stormteam_uninstall() {

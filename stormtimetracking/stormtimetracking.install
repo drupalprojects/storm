@@ -11,7 +11,7 @@ function stormtimetracking_install() {
 }
 
 function stormtimetracking_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Timetracking" have not been deleted on disabling Storm Timetracking. Please note that they will now have reduced functionality, and will not be protected by Storm Timetracking access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Timetracking" have not been deleted on disabling Storm Timetracking. Please note that they will now have reduced functionality, and will not be protected by Storm Timetracking access controls.'), 'warning');
 }
 
 function stormtimetracking_uninstall() {
