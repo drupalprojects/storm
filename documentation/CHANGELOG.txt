@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #622732 by alberto56: Fixed It's possible to create a task whose internal logic is not respected.
 - Bug #637558 by Magnity: Fixed Workflow is creating duplicate nodes with Tickets.
 
 Version 6.x-1.27:
