@@ -347,13 +347,13 @@ function stormtask_form(&$node) {
   else {
     $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
   }
-
+  
   drupal_set_breadcrumb($breadcrumb);
-
+  
   if (arg(1)=='add') {
     $node->datebegin = time();
     $node->dateend = time();
-
+    
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
     }
@@ -361,12 +361,16 @@ function stormtask_form(&$node) {
       $node->project_nid = $_GET['project_nid'];
       $p = node_load($node->project_nid);
       $node->organization_nid = $p->organization_nid;
+      if (!stormorganization_access($node->organization_nid)) {
+        drupal_set_message(t("You cannot add task for this project, as you do not have access to view the organization's profile"));
+        drupal_goto('node/'. $node->project_nid);
+      }
     }
-
+    
     if (array_key_exists('parent_nid', $_GET) && !$node->parent_nid) {
       $node->parent_nid = $_GET['parent_nid'];
     }
-
+    
     if ($_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
     }
@@ -374,7 +378,7 @@ function stormtask_form(&$node) {
       $node->project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
