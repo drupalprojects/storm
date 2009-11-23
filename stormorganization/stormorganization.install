@@ -11,7 +11,7 @@ function stormorganization_install() {
 }
 
 function stormorganization_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Organization" have not been deleted on disabling Storm Organization. Please note that they will now have reduced functionality, and will not be protected by Storm Organization access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Organization" have not been deleted on disabling Storm Organization. Please note that they will now have reduced functionality, and will not be protected by Storm Organization access controls.'), 'warning');
 }
 
 function stormorganization_uninstall() {

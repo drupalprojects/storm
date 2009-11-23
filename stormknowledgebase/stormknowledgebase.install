@@ -11,7 +11,7 @@ function stormknowledgebase_install() {
 }
 
 function stormknowledgebase_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Knowledgebase" have not been deleted on disabling Storm Knowledgebase. Please note that they will now have reduced functionality, and will not be protected by Storm Knowledgebase access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Knowledgebase" have not been deleted on disabling Storm Knowledgebase. Please note that they will now have reduced functionality, and will not be protected by Storm Knowledgebase access controls.'), 'warning');
 }
 
 function stormknowledgebase_uninstall() {

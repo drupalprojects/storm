@@ -11,7 +11,7 @@ function stormtask_install() {
 }
 
 function stormtask_disable() {
-  drupal_set_message(t('Warning: Nodes of type "Task" have not been deleted on disabling Storm Task. Please note that they will now have reduced functionality, and will not be protected by Storm Task access controls.', 'warning'));
+  drupal_set_message(t('Nodes of type "Task" have not been deleted on disabling Storm Task. Please note that they will now have reduced functionality, and will not be protected by Storm Task access controls.'), 'warning');
 }
 
 function stormtask_uninstall() {
