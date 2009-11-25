@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #642814 by dbt102: Fixed error msg.
 - Bug #637498 by Magnity: Fixed Errors on disabling some modules.
 - Bug #622732 by alberto56: Fixed It's possible to create a task whose internal logic is not respected.
 - Bug #637558 by Magnity: Fixed Workflow is creating duplicate nodes with Tickets.
