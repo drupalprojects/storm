@@ -17,19 +17,52 @@ function stormexpense_help($path, $arg) {
   return $o;
 }
 
-function stormexpense_perm() {
+function stormexpense_permission() {
   return array(
-    'Storm expense: access',
-    'Storm expense: add',
-    'Storm expense: delete all',
-    'Storm expense: delete own',
-    'Storm expense: delete of user organization',
-    'Storm expense: edit all',
-    'Storm expense: edit own',
-    'Storm expense: edit of user organization',
-    'Storm expense: view all',
-    'Storm expense: view own',
-    'Storm expense: view of user organization',
+    'Storm expense: access' => array(
+      'title' => t('Access Storm Expense listings'),
+      'description' => t('Access Storm Expense listings page at /storm/expenses'),
+    ),
+    'Storm expense: add' => array(
+      'title' => t('Create Expense'),
+      'description' => t('Add Storm Expense nodes to the system'),
+    ),
+    'Storm expense: delete all' => array(
+      'title' => t('Delete any expense'),
+      'description' => t('Delete any Storm Expense node'),
+    ),
+    'Storm expense: delete own' => array(
+      'title' => t('Delete own expenses'),
+      'description' => t('Delete those Storm Expense nodes created by oneself'),
+    ),
+    'Storm expense: delete of user organization' => array(
+      'title' => t('Delete expenses of own user organization'),
+      'description' => t("Delete those Storm Expense nodes created by one's own user organization"),
+    ),
+    'Storm expense: edit all' => array(
+      'title' => t('Edit any expense'),
+      'description' => t('Edit any Storm Expense node'),
+    ),
+    'Storm expense: edit own' => array(
+      'title' => t('Edit own expenses'),
+      'description' => t('Edit those Storm Expense nodes created by oneself'),
+    ),
+    'Storm expense: edit of user organization' => array(
+      'title' => t('Edit expenses of own user organization'),
+      'description' => t("Edit those Storm Expense nodes created by one's own user organization"),
+    ),
+    'Storm expense: view all' => array(
+      'title' => t('View any expense'),
+      'description' => t('View any Storm Expense node'),
+    ),
+    'Storm expense: view own' => array(
+      'title' => t('View own expenses'),
+      'description' => t('View those Storm Expense nodes created by oneself'),
+    ),
+    'Storm expense: view of user organization' => array(
+      'title' => t('View expenses of own user organization'),
+      'description' => t("View those Storm Expense nodes created by one's own user organization"),
+    ),
   );
 }
 
