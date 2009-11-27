@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #643440 by jalama | Magnity: Added Allow setting default for billable checkbox.
 - Bug #642814 by dbt102: Fixed error msg.
 - Bug #637498 by Magnity: Fixed Errors on disabling some modules.
 - Bug #622732 by alberto56: Fixed It's possible to create a task whose internal logic is not respected.
