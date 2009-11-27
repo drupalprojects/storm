@@ -173,6 +173,8 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
  *   The node object that contains the invoice.
  */
 function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
+  // Adds CSS for generic Storm node view
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
   // Adds CSS for Storm Invoice node view
   drupal_add_css(drupal_get_path('module', 'storminvoice') . '/storminvoice-nodeview.css');  
   

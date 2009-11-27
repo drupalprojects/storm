@@ -11,6 +11,8 @@
  * Theme function for the Storm Team node view
  */
 function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
+  
   $node = node_prepare($node, $teaser);
   $type = node_get_types('type', $node);
     
