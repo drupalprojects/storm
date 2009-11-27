@@ -322,6 +322,7 @@ function stormtimetracking_form(&$node) {
     if ($timeend['hour'] && $timebegin['hour']) {
       $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
     }
+    $node->billable = variable_get('stormtimetracking_billing_default', FALSE);
   }
   $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
     ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
@@ -613,6 +614,14 @@ function stormtimetracking_admin_settings() {
     '#title' => t('Always set billing duration to duration value.'),
     '#default_value' => variable_get('stormtimetracking_auto_duration', TRUE),
     '#description' => t('When checked, Storm will set the billing duration equal to the duration each time the node is saved. The duration is always calculated from the start and end times.'),
+    '#size' => 5,
+  );
+  
+  $form['stormtimetracking_billing_default'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Default Value for billable field.'),
+    '#default_value' => variable_get('stormtimetracking_billing_default', FALSE),
+    '#description' => t('When checked, Storm will set the timetracking to billable by default'),
     '#size' => 5,
   );
   
