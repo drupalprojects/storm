@@ -33,6 +33,8 @@ function theme_stormproject_list($header, $projects) {
 }
 
 function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+  
   $node = node_prepare($node, $teaser);
   
   $node->content['links'] = array(

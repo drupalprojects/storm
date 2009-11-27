@@ -30,6 +30,8 @@ function theme_stormorganization_list($header, $organizations) {
 }
 
 function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+  
   $node = node_prepare($node, $teaser);
   
   $node->content['links'] = array(
