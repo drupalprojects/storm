@@ -19,14 +19,38 @@ function stormknowledgebase_help($path, $arg) {
 
 function stormknowledgebase_permission() {
   return array(
-    'Storm knowledgebase: access',
-    'Storm knowledgebase: add',
-    'Storm knowledgebase: delete all',
-    'Storm knowledgebase: delete own',
-    'Storm knowledgebase: edit all',
-    'Storm knowledgebase: edit own',
-    'Storm knowledgebase: view all',
-    'Storm knowledgebase: view own',
+    'Storm knowledgebase: access' => array(
+      'title' => t('Access Knowledgebase'),
+      'description' => t('Access Storm Knowledgebase listings at /storm/knowledgebase'),
+    ),
+    'Storm knowledgebase: add' => array(
+      'title' => t('Create Knowledgebase content'),
+      'description' => t('Create Storm Knowledgebase content'),
+    ),
+    'Storm knowledgebase: delete all' => array(
+      'title' => t('Delete any Knowledgebase content'),
+      'description' => t('Delete any Knowledgebase content, regardless of author'),
+    ),
+    'Storm knowledgebase: delete own' => array(
+      'title' => t('Delete own Knowledgebase content'),
+      'description' => t('Delete Knowledgebase content, created by the user'),
+    ),
+    'Storm knowledgebase: edit all' => array(
+      'title' => t('Edit any Knowledgebase content'),
+      'description' => t('Edit any Knowledgebase content, regardless of author'),
+    ),
+    'Storm knowledgebase: edit own' => array(
+      'title' => t('Edit own Knowledgebase content'),
+      'description' => t('Edit Knowledgebase content, created by the user'),
+    ),
+    'Storm knowledgebase: view all' => array(
+      'title' => t('View any Knowledgebase content'),
+      'description' => t('View any Knowledgebase content, regardless of author'),
+    ),
+    'Storm knowledgebase: view own' => array(
+      'title' => t('View own Knowledgebase content'),
+      'description' => t('View Knowledgebase content, created by the user'),
+    ),
   );
 }
 
