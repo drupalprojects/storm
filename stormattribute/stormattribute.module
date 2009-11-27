@@ -24,10 +24,22 @@ function stormattribute_help($path, $arg) {
  */
 function stormattribute_permission() {
   return array(
-    'Storm attribute: access',
-    'Storm attribute: add',
-    'Storm attribute: edit',
-    'Storm attribute: delete',
+    'Storm attribute: access' => array(
+      'title' => t('Access Attributes'),
+      'description' => t('Access the page listing Storm Attributes at /storm/attributes'),
+    ),
+    'Storm attribute: add' => array(
+      'title' => t('Create Attribute'),
+      'description' => t('Add Storm Attribute to the system'),
+    ),
+    'Storm attribute: edit' => array(
+      'title' => t('Edit Attributes'),
+      'description' => t('Edit Storm Attributes'),
+    ),
+    'Storm attribute: delete' => array(
+      'title' => t('Delete Attributes'),
+      'description' => t('Delete Storm Attributes'),
+    ),
   );
 }
 
