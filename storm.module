@@ -798,7 +798,7 @@ function storm_form_alter(&$form, &$form_state, $form_id) {
     return;
   }
 
-  if ($form_id == $form['type']['#value'] .'_node_form') {
+  if (!empty($form['#node_edit_form'])) {
     if (isset($form['#attributes']['class'])) {
       $class = $form['#attributes']['class'];
     }
