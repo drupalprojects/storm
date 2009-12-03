@@ -13,7 +13,7 @@
  * 6: Storm Icons
  * 7: SQL Functions
  * 8: Node form theming
- */
+*/
 
 // HOOKS
 /**
@@ -22,13 +22,13 @@
  */
 function storm_help($path, $arg) {
   $output = '';
-
+  
   switch ($path) {
     case "admin/help#storm":
       $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
       break;
   }
-
+  
   return $output;
 }
 
@@ -40,11 +40,9 @@ function storm_permission() {
   return array(
     'Storm: access dashboard' => array(
       'title' => t('Access Storm dashboard'),
-      'description' => t('View Storm dashboard'),
     ),
     'Storm: access administration pages' => array(
       'title' => t('Access Storm administration pages'),
-      'description' => t('Perform maintenance tasks for the Storm module'),
     ),
   );
 }
@@ -74,7 +72,7 @@ function storm_menu() {
     'description' => 'Storm Dashboard',
     'page callback' => 'storm_dashboard',
     'access arguments' => array('Storm: access dashboard'),
-    'parent' => '',
+
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -139,7 +137,7 @@ function storm_theme() {
   );
 }
 
-// FUNCTION TO CREATE STORM DASHBOARD
+
 /**
  * @function
  * Function to create dashboard (call to theme function)
@@ -150,7 +148,7 @@ function storm_dashboard() {
   return theme('storm_dashboard');
 }
 
-// ADMIN SETTINGS FORM
+
 /**
  * @function
  * Defines the administration settings form for the Storm module
@@ -566,6 +564,7 @@ function _timetostr($time=array()) {
 }
 
 // TAXATION MANIPULATION
+
 /**
  * @function
  * Calculates taxation for Storm nodes
@@ -794,7 +793,7 @@ function storm_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
 }
 
 // FUNCTION TO ADD STORM CLASSES TO NODE FORM
-function storm_form_alter(&$form, $form_state, $form_id) {
+function storm_form_alter(&$form, &$form_state, $form_id) {
   if (!isset($form['type'])) {
     return;
   }
@@ -811,12 +810,7 @@ function storm_form_alter(&$form, $form_state, $form_id) {
     $form['#attributes']['class'] = $class;
     foreach ($form as $key => $elem) {
       if (is_array($elem) && isset($elem['#type']) && $elem['#type']=='fieldset') {
-        if (isset($elem['#attributes'])) {
-          $class = $elem['#attributes']['class'];
-        }
-        if ($class) $class .= ' ';
-        $class .= $key;
-        $form[$key]['#attributes']['class'] = $class;
+        $form[$key]['#attributes']['class'][] = $class;
       }
     }
   }
