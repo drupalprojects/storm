@@ -72,7 +72,6 @@ function storm_menu() {
     'description' => 'Storm Dashboard',
     'page callback' => 'storm_dashboard',
     'access arguments' => array('Storm: access dashboard'),
-
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -154,6 +153,7 @@ function storm_dashboard() {
  * Defines the administration settings form for the Storm module
  */
 function storm_admin_settings() {
+  // D7 TODO: Sort out calls to storm_form_group
   $form = array();
   $w = -10;
   
@@ -216,7 +216,7 @@ function storm_admin_settings() {
   
   $form['yearsrange']['group0'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+    //'#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
 
@@ -256,7 +256,7 @@ function storm_admin_settings() {
   
   $form['taxation']['group0'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+    //'#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
   
@@ -292,7 +292,7 @@ function storm_admin_settings() {
   
   $form['taxation']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+    //'#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
   
@@ -563,7 +563,6 @@ function _timetostr($time=array()) {
   return $timestr;
 }
 
-// TAXATION MANIPULATION
 
 /**
  * @function
