@@ -21,15 +21,12 @@ function stormknowledgebase_permission() {
   return array(
     'Storm knowledgebase: access' => array(
       'title' => t('Access Knowledgebase'),
-      'description' => t('Access Storm Knowledgebase listings at /storm/knowledgebase'),
     ),
     'Storm knowledgebase: add' => array(
       'title' => t('Create Knowledgebase content'),
-      'description' => t('Create Storm Knowledgebase content'),
     ),
     'Storm knowledgebase: delete all' => array(
       'title' => t('Delete any Knowledgebase content'),
-      'description' => t('Delete any Knowledgebase content, regardless of author'),
     ),
     'Storm knowledgebase: delete own' => array(
       'title' => t('Delete own Knowledgebase content'),
@@ -37,7 +34,6 @@ function stormknowledgebase_permission() {
     ),
     'Storm knowledgebase: edit all' => array(
       'title' => t('Edit any Knowledgebase content'),
-      'description' => t('Edit any Knowledgebase content, regardless of author'),
     ),
     'Storm knowledgebase: edit own' => array(
       'title' => t('Edit own Knowledgebase content'),
@@ -45,7 +41,6 @@ function stormknowledgebase_permission() {
     ),
     'Storm knowledgebase: view all' => array(
       'title' => t('View any Knowledgebase content'),
-      'description' => t('View any Knowledgebase content, regardless of author'),
     ),
     'Storm knowledgebase: view own' => array(
       'title' => t('View own Knowledgebase content'),
@@ -179,8 +174,8 @@ function stormknowledgebase_node_info() {
   return array(
     'stormknowledgebase' => array(
       'name' => t('Knowledge base'),
-      'module' => 'stormknowledgebase',
-      'description' => t("A knowledge base for Storm."),
+      'base' => 'stormknowledgebase',
+      'description' => t('A knowledgebase article for Storm.'),
       'has_body' => true,
     )
   );
@@ -194,14 +189,16 @@ function stormknowledgebase_content_extra_fields($type_name) {
   }
 }
 
-function stormknowledgebase_form(&$node) {
+function stormknowledgebase_form($node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Knowledge base'), 'storm/knowledgebase');
   drupal_set_breadcrumb($breadcrumb);
 
-  $type = node_get_types('type', $node);
-
+  $type = node_type_get_name($node);
+  
+  $form = array();
+  
   $form['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
