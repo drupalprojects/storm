@@ -195,7 +195,7 @@ function stormknowledgebase_form($node) {
   $breadcrumb[] = l(t('Knowledge base'), 'storm/knowledgebase');
   drupal_set_breadcrumb($breadcrumb);
 
-  $type = node_type_get_name($node);
+  $type = node_type_get_type($node);
   
   $form = array();
   
