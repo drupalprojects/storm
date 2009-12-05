@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #652034 by VladSavitsky | Magnity: Added Let using comma in floats to set Duration.
 - by Magnity: Improved install.txt
 - Feature #643440 by jalama | Magnity: Added Allow setting default for billable checkbox.
 - Bug #642814 by dbt102: Fixed error msg.
