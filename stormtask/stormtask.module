@@ -667,20 +667,24 @@ function _stormtask_beforesave(&$node) {
   $r = db_query($s, $node->organization_nid);
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
-
+  
   $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
-
+  
+  // Allow use of comma when inputting numerical values - str_replace with period decimal
+  $node->duration = str_replace(',', '.', $node->duration);
+  $node->price = str_replace(',', '.', $node->price);
+  
   if (is_array($node->datebegin)){
       $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }
   else {
       $node->datebegin = strtotime($node->datebegin);
   }
- 
+  
   if (is_array($node->dateend)){
       $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
   }

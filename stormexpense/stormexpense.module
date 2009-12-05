@@ -544,6 +544,11 @@ function stormexpense_update($node) {
 }
 
 function _stormexpense_beforesave(&$node) {
+  // Allow use of comma when inputting numerical values - str_replace with period decimal
+  $node->amount = str_replace(',', '.', $node->amount);
+  $node->tax1percent = str_replace(',', '.', $node->tax1percent);
+  $node->tax2percent = str_replace(',', '.', $node->tax2percent);
+  
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
   storm_taxation($node);

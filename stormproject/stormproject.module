@@ -615,6 +615,10 @@ function stormproject_update($node) {
 }
 
 function _stormproject_beforesave(&$node) {
+  // Allow use of comma when inputting numerical values - str_replace with period decimal
+  $node->duration = str_replace(',', '.', $node->duration);
+  $node->price = str_replace(',', '.', $node->price);
+  
   if (is_array($node->datebegin)){
       $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }

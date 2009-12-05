@@ -662,6 +662,13 @@ function storminvoice_update($node) {
 }
 
 function _storminvoice_beforesave(&$node) {
+  // Allow use of comma when inputting numerical values - str_replace with period decimal
+  $node->amount = str_replace(',', '.', $node->amount);
+  $node->tax1 = str_replace(',', '.', $node->tax1);
+  $node->tax2 = str_replace(',', '.', $node->tax2);
+  $node->total = str_replace(',', '.', $node->total);
+  $node->totalcustomercurr = str_replace(',', '.', $node->totalcustomercurr);
+  
   if (is_array($node->requestdate)) $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
   if (is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
   if (is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
@@ -691,7 +698,7 @@ function _storminvoice_beforesave(&$node) {
   while (isset($node->$variable) && $node->$variable != '') {
     $node->items[$j]->description = $node->$variable;
     $variable = 'items_'. $j .'_amount';
-    $node->items[$j]->amount = $node->$variable;
+    $node->items[$j]->amount = str_replace(',', '.', $node->$variable);
     $variable = 'items_'. $j .'_tax1app';
     $node->items[$j]->tax1app = $node->$variable;
     $variable = 'items_'. $j .'_tax1percent';

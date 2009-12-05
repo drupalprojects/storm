@@ -550,7 +550,11 @@ function _stormticket_beforesave(&$node) {
   $ta = db_fetch_object($r);
   $node->task_title = $ta->title;
   $node->task_stepno = $ta->stepno;
-
+  
+  // Allow use of comma when inputting numerical values - str_replace with period decimal
+  $node->duration = str_replace(',', '.', $node->duration);
+  $node->price = str_replace(',', '.', $node->price);
+  
   if (is_array($node->datebegin)) $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   if (is_array($node->dateend)) $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
 }
