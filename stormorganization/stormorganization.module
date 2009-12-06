@@ -468,8 +468,9 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 
 function stormorganization_admin_settings() {
   $form = array();
-
-  $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  
+  // D7 TODO
+  /*$s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   $s = stormorganization_access_sql($s);
   $s = db_rewrite_sql($s);
   $r = db_query($s);
@@ -493,7 +494,7 @@ function stormorganization_admin_settings() {
       '#title' => t('Host Organization'),
       '#value' => t('There are no Storm Organizations in the system. ').'<br />'.l('Create a Storm Organization', 'node/add/stormorganization'),
     );
-  }
+  }*/
   return system_settings_form($form);
 }
 
