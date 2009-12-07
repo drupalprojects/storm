@@ -282,15 +282,15 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       }
       $v .= storm_icon_add($add_path, $i, $params);
     }
-
+    
     if ($node_nid == 0) {
-      $r = '<dt id="'. $dt_id .'" class="stormcomponent">';
+      $r = variable_get('storm_icons_display', TRUE) ? '<dt id="'. $dt_id .'" class="stormcomponent">' : '<dt class="stormcomponent">';
       $r .= $v;
       $r .= '</dt>';
     }
     else {
       $r = array(
-        '#prefix' => '<dt id="'. $dt_id .'" class="stormcomponent">',
+        '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="'. $dt_id .'" class="stormcomponent">' : '<dt class="stormcomponent">',
         '#suffix' => '</dt>',
         '#value' => $v,
         '#weight' => $weight,
