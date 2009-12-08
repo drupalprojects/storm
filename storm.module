@@ -547,16 +547,16 @@ function _timetostr($time=array()) {
 // TAXATION MANIPULATION
 function storm_taxation(&$node) {
   // If values are not set, then use default values
-  if (!$node->tax1app) {
+  if (!isset($node->tax1app)) {
     $node->tax1app = variable_get('storm_tax1_app', 'none');
   }
-  if (!$node->tax1percent) {
+  if (!isset($node->tax1percent)) {
     $node->tax1percent = variable_get('storm_tax1_percent', '20');
   }
-  if (!$node->tax2app) {
+  if (!isset($node->tax2app)) {
     $node->tax2app = variable_get('storm_tax2_app', 'none');
   }
-  if (!$node->tax2percent) {
+  if (!isset($node->tax2percent)) {
     $node->tax2percent = variable_get('storm_tax2_percent', '20');
   }
     
