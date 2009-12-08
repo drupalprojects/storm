@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #629892 by amv101 | Magnity: Added enable / disable icons.
 - Feature #652034 by VladSavitsky | Magnity: Added Let using comma in floats to set Duration.
 - by Magnity: Improved install.txt
 - Feature #643440 by jalama | Magnity: Added Allow setting default for billable checkbox.
