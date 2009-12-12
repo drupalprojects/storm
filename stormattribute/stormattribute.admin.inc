@@ -204,7 +204,7 @@ function stormattribute_list_filter(&$form_state, $filterdesc = 'Filter') {
   $form['filter'] = array(
     '#type' => 'fieldset',
     '#title' => $filterdesc,
-   '#collapsible' => TRUE,
+    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
 
