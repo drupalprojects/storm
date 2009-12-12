@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #654510 by jurgenhaas, Magnity | FrankT: Fixed Translatability.
 - Bug #654042 by alberto56 | Magnity: Fixed storm_taxation() doesn't distinguish between zero and not set.
 - Feature #629892 by amv101 | Magnity: Added enable / disable icons.
 - Feature #652034 by VladSavitsky | Magnity: Added Let using comma in floats to set Duration.
