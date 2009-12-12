@@ -143,7 +143,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
 
   switch ($destination_module) {
     case "stormattribute":
-      $user_access_check = 'Storm attribute: access';
+      $user_access_check = 'Storm: access administration pages';
       $list_text = t('Attributes');
       $list_path = 'storm/attributes/';
       $add_icon_type = 'stormattribute';
