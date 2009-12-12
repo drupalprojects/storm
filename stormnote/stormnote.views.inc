@@ -5,8 +5,8 @@ function stormnote_views_data() {
   $data['stormnote']['table']['group']  = 'Storm';
   $data['stormnote']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
   

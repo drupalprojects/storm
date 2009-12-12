@@ -5,8 +5,8 @@ function stormknowledgebase_views_data() {
   $data['stormknowledgebase']['table']['group']  = 'Storm';
   $data['stormknowledgebase']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
   
