@@ -5,8 +5,8 @@ function stormorganization_views_data() {
   $data['stormorganization']['table']['group']  = 'Storm';
   $data['stormorganization']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
   

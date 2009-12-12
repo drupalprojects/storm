@@ -5,8 +5,8 @@ function stormexpense_views_data() {
   $data['stormexpense']['table']['group']  = 'Storm';
   $data['stormexpense']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
 

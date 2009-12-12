@@ -5,8 +5,8 @@ function stormtimetracking_views_data() {
   $data['stormtimetracking']['table']['group']  = 'Storm';
   $data['stormtimetracking']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
   

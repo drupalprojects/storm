@@ -5,8 +5,8 @@ function stormtask_views_data() {
   $data['stormtask']['table']['group']  = 'Storm';
   $data['stormtask']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
   
