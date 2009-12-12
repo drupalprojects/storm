@@ -18,30 +18,6 @@ function stormattribute_help($path, $arg) {
   return $output;
 }
 
-/**
- * @function
- * Implementation of hook_permission
- */
-function stormattribute_permission() {
-  return array(
-    'Storm attribute: access' => array(
-      'title' => t('Access Attributes'),
-      'description' => t('Access the page listing Storm Attributes at /storm/attributes'),
-    ),
-    'Storm attribute: add' => array(
-      'title' => t('Create Attribute'),
-      'description' => t('Add Storm Attribute to the system'),
-    ),
-    'Storm attribute: edit' => array(
-      'title' => t('Edit Attributes'),
-      'description' => t('Edit Storm Attributes'),
-    ),
-    'Storm attribute: delete' => array(
-      'title' => t('Delete Attributes'),
-      'description' => t('Delete Storm Attributes'),
-    ),
-  );
-}
 
 /**
  * @function
@@ -54,7 +30,7 @@ function stormattribute_menu() {
     'title' => 'Attributes',
     'description' => 'Storm Attributes',
     'page callback' => 'stormattribute_list',
-    'access arguments' => array('Storm attribute: access'),
+    'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_NORMAL_ITEM);
   
@@ -63,7 +39,7 @@ function stormattribute_menu() {
     'description' => 'Storm Attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormattribute_add'),
-    'access arguments' => array('Storm attribute: add'),
+    'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
   
@@ -72,7 +48,7 @@ function stormattribute_menu() {
     'description' => 'Storm Attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormattribute_edit', 3),
-    'access arguments' => array('Storm attribute: edit'),
+    'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
   
@@ -81,7 +57,7 @@ function stormattribute_menu() {
     'description' => 'Storm Attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormattribute_delete', 3),
-    'access arguments' => array('Storm attribute: delete'),
+    'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
   
@@ -90,7 +66,7 @@ function stormattribute_menu() {
     'description' => 'Storm Attributes',
     'page callback' => '_stormattribute_domain_autocomplete',
     'page arguments' => array(4),
-    'access arguments' => array('Storm attribute: access'),
+    'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
     'type' => MENU_CALLBACK);
   
@@ -121,15 +97,15 @@ function stormattribute_access($op, $item=NULL, $account=NULL) {
   }
 
   if ($op == 'create') {
-    return user_access('Storm attribute: add');
+    return user_access('Storm: access administration pages');
   }
 
   if ($op == 'delete') {
-    return user_access('Storm attribute: delete');
+    return user_access('Storm: access administration pages');
   }
 
   if ($op == 'update') {
-    return user_access('Storm attribute: edit');
+    return user_access('Storm: access administration pages');
   }
   
   return FALSE;
