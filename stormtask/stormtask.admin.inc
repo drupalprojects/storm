@@ -6,7 +6,6 @@
  */
 
 function stormtask_tasks($project) {
-  $node_invoice = node_load($invoice->nid);
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Projects'), 'storm/projects');
