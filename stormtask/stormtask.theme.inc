@@ -6,7 +6,7 @@
  */
 
 function theme_stormtask_tasks($form) {
-  if (count($form['tasks'])>0) {
+  if (count($form['tasks'])>0 && stormproject_access('update', $form['project']['#value'])) {
     drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
     drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
   }
@@ -38,8 +38,14 @@ function theme_stormtask_tasks($form) {
         'class' => 'storm_list_operations',
       ),
     );
+    if (!stormproject_access('update', $form['project']['#value'])) {
+      unset($data[5]);
+      unset($data[6]);
+    }
     $row['data'] = $data;
-    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
+    if (stormproject_access('update', $form['project']['#value'])) {
+      $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
+    }
     $rows[] = $row;
   }
   $o = theme('table', $header, $rows, array('id' => 'tasks'));
