@@ -50,6 +50,11 @@ function stormtask_tasks($project) {
     ),
   );
 
+  if (!stormproject_access('update', $project->nid)) {
+    unset($header[5]);
+    unset($header[6]);
+  }
+  
   $where = array();
   $args = array();
 
@@ -269,11 +274,21 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
     );
   }
 
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#submit' => array('stormtask_tasks_submit'),
-    '#value' => t('Save'),
+  $form['project'] = array(
+    '#type' => 'hidden',
+    '#value' => $project->nid,
   );
+  
+  if (stormproject_access('update', $project->nid)) {
+    // This form is displayed for users which may not have edit permissions for the nodes displayed.
+    // Furthermore, permissions can mean that the user could have edit permissions for some nodes displayed and not others.
+    // Therefore, the submit button must only be displayed if the user has the permission 'edit all', which guarantees the user is allowed to edit all nodes displayed.
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#submit' => array('stormtask_tasks_submit'),
+      '#value' => t('Save'),
+    );
+  }
 
   return $form;
 }
