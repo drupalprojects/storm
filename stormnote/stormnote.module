@@ -299,7 +299,6 @@ function stormnote_form(&$node) {
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
-    '#required' => true,
     '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
   );
 

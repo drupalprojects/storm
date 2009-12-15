@@ -388,6 +388,7 @@ function storminvoice_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
+    '#required' => true,
     '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, '-')"),
   );
 
