@@ -327,6 +327,10 @@ function storminvoice_form(&$node) {
       $node->project_nid = $_GET['project_nid'];
       $p = node_load($node->project_nid);
       $node->organization_nid = $p->organization_nid;
+      if (!stormorganization_access('view', $node->organization_nid)) {
+        drupal_set_message(t("You cannot add an invoice for this project, as you do not have access to view the organization's profile"));
+        drupal_goto('node/'. $node->project_nid);
+      }
     }
 
     if ($_SESSION['storminvoice_list_filter']['organization_nid'] && !$node->organization_nid) {
