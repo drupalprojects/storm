@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #660724 by Magnity: Changed Make node dependencies consistent.
 - Bug #527870 by Magnity | homoludens: Fixed Tasks drag to re-order without task edit permission.
 - Task #652212 by Magnity: Changed Storm Attribute to rely on 'Storm: access administration pages' permission.
 - Bug #654510 by jurgenhaas, Magnity | FrankT: Fixed Translatability.
