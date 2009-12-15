@@ -64,7 +64,7 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
     }
     
     $node->content['links']['auto_invoice'] = array(
-      '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
+      '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => $v,
       '#weight' => 1,
