@@ -251,7 +251,7 @@ function stormticket_stormtask_change_hierarchy($task_nid, $organization_nid, $o
   db_query($s, $organization_nid, $organization_title, $project_nid, $project_title, $task_nid);
 }
 
-// INVOICE CREATE / EDIT FORM
+// TICKET CREATE / EDIT FORM
 function stormticket_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
