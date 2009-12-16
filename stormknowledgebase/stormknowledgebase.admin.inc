@@ -29,9 +29,14 @@ function stormknowledgebase_list() {
       'class' => 'storm_list_operations',
     ),
   );
-
-  $s  = "SELECT n.nid, n.title, skb.* FROM {node} AS n INNER JOIN {stormknowledgebase} AS skb ON n.vid=skb.vid WHERE n.status=1 AND n.type='stormknowledgebase' ";
-
+  
+  // D7 TODO DBTNG
+  //$s  = "SELECT n.nid, n.title, skb.* FROM {node} AS n INNER JOIN {stormknowledgebase} AS skb ON n.vid=skb.vid WHERE n.status=1 AND n.type='stormknowledgebase' ";
+  $query = db_select('node', 'n');
+  $table_alias = $query->join('stormknowledgebase', 'skb', 'n.vid = skb.vid');
+  $query->fields('n', array('nid', 'title'));
+  $query->fields('skb');
+  
   $where = array();
   $args = array();
   $filterfields = array();
@@ -57,20 +62,25 @@ function stormknowledgebase_list() {
   
   $o = drupal_get_form('stormknowledgebase_list_filter', $filterdesc);
 
-  $s = stormknowledgebase_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
-  $tablesort = tablesort_sql($header);
-
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
-
+  //$s = stormknowledgebase_access_sql($s, $where);
+  // $query->addTag('stormknowledgebase_node_access');
+  $query->addTag('node_access');
+  
+  $query = $query
+  ->extend('TableSort')
+  ->orderByHeader($header);
+  $query = $query->extend('PagerDefault');
+  $query->limit($itemsperpage);
+  $result = $query->execute();
+  
   $notes = array();
-  while ($item = db_fetch_object($r)) {
+  foreach($result as $item) {
     $notes[] = $item;
   }
 
-  $o .= theme('stormknowledgebase_list', $header, $notes);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('stormknowledgebase_list', array('header' => $header, 'kbs' => $notes));
+  $o .= theme('pager', array('limit' => $itemsperpage));
+  return $o;
 }
 
 function stormknowledgebase_list_filter(&$form_state, $filterdesc = 'Filter') {

@@ -5,7 +5,10 @@
  * @file
  */
 
-function theme_stormknowledgebase_list($header, $kbs) {
+function theme_stormknowledgebase_list($variables) {
+  $header = $variables['header'];
+  $kbs = $variables['kbs'];
+  
   $rows = array();
   $topics = stormattribute_attributes_bydomain('Knowledge base topic');
 
@@ -27,12 +30,16 @@ function theme_stormknowledgebase_list($header, $kbs) {
   return $o;
 }
 
-function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
+function theme_stormknowledgebase_view(array $variables = array()) {
+  $node = $variables['node'];
+  $teaser = isset($variables['teaser']) ? $variables['teaser'] : FALSE;
+  $page = isset($variables['page']) ? $variables['page'] : FALSE;
+  
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
   
-  $node = node_prepare($node, $teaser);
+  //$node = node_prepare($node, $teaser);
   
-  $node->content['links'] = array(
+  /*$node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
     '#weight' => $w++,
@@ -42,9 +49,9 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
-  );
+  );*/
 
-  $node->content['group1']['topic'] = array(
+  /*$node->content['group1']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Topic'), stormattribute_value('Knowledge base topic', $node->topic)),
@@ -57,7 +64,7 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
-  unset($node->content['body']);
+  unset($node->content['body']);*/
   
   return $node;
 }
