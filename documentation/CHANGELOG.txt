@@ -1,7 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- No changes since 6.x-1.28
+- Feature #595276 by Magnity: Added Assign to fields for tasks and tickets.
 
 Version 6.x-1.28:
 - Task #660724 by Magnity: Changed Make node dependencies consistent.
