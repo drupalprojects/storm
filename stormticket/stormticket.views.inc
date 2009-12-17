@@ -192,7 +192,41 @@ function stormticket_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-
+  
+  $data['stormticet']['assigned_nid'] = array(
+    'title' => t('Ticket Assigned Node ID'),
+    'help' => 'Storm Ticket Assigned Node ID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_equality',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['stormticket']['assigned_title'] = array(
+    'title' => t('Ticket Assigned Title'),
+    'help' => 'Storm Ticket Assigned Title',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+  
   return $data;
 }
 

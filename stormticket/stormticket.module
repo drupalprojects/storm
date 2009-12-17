@@ -27,12 +27,15 @@ function stormticket_perm() {
     'Storm ticket: delete all',
     'Storm ticket: delete own',
     'Storm ticket: delete of user organization',
+    'Storm ticket: delete if assigned to ticket',
     'Storm ticket: edit all',
     'Storm ticket: edit own',
     'Storm ticket: edit of user organization',
+    'Storm ticket: edit if assigned to ticket',
     'Storm ticket: view all',
     'Storm ticket: view own',
     'Storm ticket: view of user organization',
+    'Storm ticket: view if assigned to ticket',
   );
 }
 
@@ -69,6 +72,15 @@ function stormticket_access($op, $node, $account=NULL) {
     }
     else if (user_access('Storm ticket: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
+    } 
+    else if (user_access('Storm ticket: delete if assigned to ticket' && ($account->stormperson_nid == $node->assigned_nid))) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: delete if assigned to ticket' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
+      return TRUE;
+    } 
+     else if (user_access('Storm ticket: delete if assigned to ticket' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
+      return TRUE;
     }
   }
 
@@ -81,6 +93,15 @@ function stormticket_access($op, $node, $account=NULL) {
     }
     else if (user_access('Storm ticket: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
+    } 
+    else if (user_access('Storm ticket: edit if assigned to ticket') && ($account->stormperson_nid == $node->assigned_nid)) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: edit if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: edit if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
+      return TRUE;
     }
   }
 
@@ -92,6 +113,15 @@ function stormticket_access($op, $node, $account=NULL) {
       return TRUE;
     }
     else if (user_access('Storm ticket: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: view if assigned to ticket') && ($account->stormperson_nid == $node->assigned_nid)) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: view if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
+      return TRUE;
+    } 
+    else if (user_access('Storm ticket: view if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
@@ -114,6 +144,20 @@ function stormticket_access_sql($sql, $where=array()) {
     if (!empty($cond)) $cond .= ' OR ';
     $cond .= 'sti.organization_nid='. $user->stormorganization_nid;
   }
+  if (user_access('Storm ticket: view if assigned to ticket')) {
+    if (!empty($cond)) $cond .= ' OR ';
+    $cond .= 'sti.assigned_nid='. $user->stormperson_nid;
+    
+    if (module_exists('stormteam')) {
+      // Load teams that the account belongs to
+      $belonged_teams = stormteam_user_return_teams($account);
+      // Allow access if any of those teams is the one in question
+      foreach ($belonged_teams as $belonged_team) {
+        $cond .= ' OR sti.assigned_nid = '. $belonged_team;
+      }
+    }
+  }
+  
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
 
@@ -151,6 +195,20 @@ function stormticket_storm_rewrite_where_sql($query, $primary_table, $account) {
       }
       $cond .= ' sti1.organization_nid='. $account->stormorganization_nid;
     }
+    if (user_access('Storm ticket: view if assigned to ticket')) {
+      if ($cond) $cond .= ' OR ';
+      $cond .= 'sti1.assigned_nid='. $account->uid;
+      
+      if (module_exists('stormteam')) {
+        // Load teams that the account belongs to
+        $belonged_teams = stormteam_user_return_teams($account);
+        // Allow access if any of those teams is the one in question
+        foreach ($belonged_teams as $belonged_team) {
+          $cond .= ' OR sti1.assigned_nid = '. $belonged_team;
+        }
+      }
+    }
+    
     if ($cond) {
       $cond = " WHEN 'stormticket' THEN (SELECT IF($cond,1,0) FROM {stormticket} sti1 WHERE sti1.vid=${primary_table}.vid) ";
     }
@@ -219,6 +277,7 @@ function stormticket_content_extra_fields($type_name) {
       'group2' => array('label' => 'Category/Status/Priority Group', 'weight' => -19),
       'group3' => array('label' => 'Date/Duration Group', 'weight' => -18),
       'group4' => array('label' => 'Price Group', 'weight' => -17),
+      'group5' => array('label' => 'Assigned to', 'weight' => -16),
     );
   }
 }
@@ -467,7 +526,48 @@ function stormticket_form(&$node) {
     '#default_value' => $node->currency,
     '#options' => array('-' => '-') + $currencies['values'],
   );
-
+  
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
+  
+  $options = array(0 => '-');
+  
+  if (module_exists('stormperson')) {
+    $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
+    $s_per = stormperson_access_sql($s_per);
+    $s_per = db_rewrite_sql($s_per);
+    $r_per = db_query($s_per);
+    $people = array();
+    while ($person = db_fetch_object($r_per)) {
+      $people[$person->nid] = $person->title;
+    }
+    
+    $options = $options + array(-1 => '-PEOPLE-') + $people;
+  }
+  
+  if (module_exists('stormteam')) {
+    $s_team = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormteam' ORDER BY n.title";
+    $s_team = stormteam_access_sql($s_team);
+    $s_team = db_rewrite_sql($s_team);
+    $r_team = db_query($s_team);
+    $teams = array();
+    while ($team = db_fetch_object($r_team)) {
+      $teams[$team->nid] = $team->title;
+    }
+    
+    $options = $options + array(-2 => '-TEAMS-') + $teams;
+  }
+  
+  $form['group5']['assigned_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#options' => $options,
+    '#default_value' => $node->assigned_nid,
+  );
+  
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
@@ -487,14 +587,16 @@ function stormticket_insert($node) {
   db_query("INSERT INTO {stormticket}
     (vid, nid, organization_nid, organization_title, project_nid, project_title,
     task_nid, task_title, task_stepno, ticketcategory, ticketstatus, ticketpriority, 
-    datebegin, dateend, durationunit, duration, pricemode, price, currency)
+    datebegin, dateend, durationunit, duration, pricemode, price, currency, 
+    assigned_nid, assigned_title)
     VALUES
     (%d, %d, %d, '%s', %d, '%s',
     %d, '%s', '%s', '%s', '%s', '%s',
-    %d, %d, '%s', %f, '%s', %f, '%s')",
+    %d, %d, '%s', %f, '%s', %f, '%s', %d, '%s')",
     $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
     $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-    $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, $node->price, $node->currency
+    $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, $node->price, $node->currency,
+    $node->assigned_nid, $node->assigned_title
   );
 }
 
@@ -530,11 +632,13 @@ function stormticket_update($node) {
       organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
       task_nid=%d, task_title='%s', task_stepno='%s', ticketcategory='%s', ticketstatus='%s', 
       ticketpriority='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f, pricemode='%s', 
-      price=%f, currency='%s' WHERE vid = %d",
+      price=%f, currency='%s', assigned_nid=%d, assigned_title='%s' WHERE vid = %d",
       $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
       $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, 
       $node->ticketpriority, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, 
-      $node->price, $node->currency, $node->vid
+      $node->price, $node->currency, 
+      $node->assigned_nid, $node->assigned_title,
+      $node->vid
     );
     if ($node->title != $node->title_old) {
       module_invoke_all('stormticket_change', $node->nid, $node->title);

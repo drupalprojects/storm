@@ -148,6 +148,13 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 3,
   );
   
+  $node->content['group5']['assigned'] = array(
+    '#prefix' => '<div class="assigned">',
+    '#suffix' => '</div>',
+    '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
+    '#weight' => 2,
+  );
+  
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',

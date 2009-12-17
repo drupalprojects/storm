@@ -295,6 +295,40 @@ function stormtask_views_data() {
     ),
   );
   
+  $data['stormtask']['assigned_nid'] = array(
+    'title' => t('Task Assigned Node ID'),
+    'help' => 'Storm Task Assigned Node ID',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_equality',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['stormtask']['assigned_title'] = array(
+    'title' => t('Task Assigned Title'),
+    'help' => 'Storm Task Assigned Title',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+  
   return $data;
 }
 
