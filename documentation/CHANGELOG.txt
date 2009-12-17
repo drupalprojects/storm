@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- No changes since 6.x-1.28
+
 Version 6.x-1.28:
 - Task #660724 by Magnity: Changed Make node dependencies consistent.
 - Bug #527870 by Magnity | homoludens: Fixed Tasks drag to re-order without task edit permission.
