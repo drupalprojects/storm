@@ -307,11 +307,6 @@ function stormproject_form(&$node) {
   $breadcrumb[] = l(t('Projects'), 'storm/projects');
   drupal_set_breadcrumb($breadcrumb);
 
-  $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Projects'), 'storm/projects');
-  drupal_set_breadcrumb($breadcrumb);
-
   if (arg(1)=='add') {
     $node->datebegin = time();
     $node->dateend = time();
