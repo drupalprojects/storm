@@ -278,6 +278,8 @@ function stormticket_form(&$node) {
       $t = node_load($node->task_nid);
       $node->organization_nid = $t->organization_nid;
       $node->project_nid = $t->project_nid;
+      // $project_access deals with the case whereby the project could be blank, hence access rules not required
+      $project_access = $node->project_nid ? stormproject_access('view', $node->project_nid) : TRUE;
       if (!stormorganization_access('view', $node->organization_nid) || !stormproject_access('view', $node->project_nid)) {
         drupal_set_message(t("You cannot add a ticket for this task, as you do not have access to view the both the organization and project's profile"));
         drupal_goto('node/'. $node->task_nid);
