@@ -639,8 +639,9 @@ function storm_icon_delete_node($node, $params=array()) {
 function storm_icon_add($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
+  // D7 TODO - change to _node_access
   $af = $type .'_access';
-  if (!$af('create', $item, $user)) return '';
+  //if (!$af('create', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_add', $path, t('Add'), '', $params, $attributes);
 }

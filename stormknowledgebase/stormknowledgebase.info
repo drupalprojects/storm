@@ -8,7 +8,7 @@ package = Storm
 
 ; Dependencies
 dependencies[] = storm
-dependencies[] = stormattribute
+dependencies[] = views
 
 ; Files registry
 files[] = stormknowledgebase.admin.inc

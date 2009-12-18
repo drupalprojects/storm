@@ -3,8 +3,17 @@
 
 /**
  * @file
+ * Contains hooks and functions for the Storm Knowledge Base module
+ *
+ * Contents:
+ * 1) General hooks: help, menu, permission, theme
+ * 2) Node hooks: node_info, node_access
  */
 
+/**
+ * @function
+ * Implementation of hook_help
+ */
 function stormknowledgebase_help($path, $arg) {
   $o = '';
 
@@ -17,46 +26,89 @@ function stormknowledgebase_help($path, $arg) {
   return $o;
 }
 
+/**
+ * @function
+ * Implementation of hook_menu
+ */
+/*function stormknowledgebase_menu() {
+  $items = array();
+
+  $items['storm/knowledgebase'] = array(
+    'title' => 'Knowledge base',
+    'description' => 'Storm Knowledge base',
+    'page callback' => 'stormknowledgebase_list',
+    'access arguments' => array('Storm knowledgebase: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'stormknowledgebase.admin.inc',
+  );
+
+  return $items;
+}*/
+
+/**
+ * @function
+ * Implementation of hook_permission
+ */
 function stormknowledgebase_permission() {
+  return node_list_permissions('stormknowledgebase');
+}
+
+/**
+ * @function
+ * Implementation of hook_theme
+ */
+function stormknowledgebase_theme() {
   return array(
-    'Storm knowledgebase: access' => array(
-      'title' => t('Access Knowledgebase'),
+    'stormknowledgebase_view' => array(
+      'file'      => 'stormknowledgebase.theme.inc',
+      'arguments' => array('node', 'teaser', 'page'),
     ),
-    'Storm knowledgebase: add' => array(
-      'title' => t('Create Knowledgebase content'),
-    ),
-    'Storm knowledgebase: delete all' => array(
-      'title' => t('Delete any Knowledgebase content'),
-    ),
-    'Storm knowledgebase: delete own' => array(
-      'title' => t('Delete own Knowledgebase content'),
-      'description' => t('Delete Knowledgebase content, created by the user'),
-    ),
-    'Storm knowledgebase: edit all' => array(
-      'title' => t('Edit any Knowledgebase content'),
-    ),
-    'Storm knowledgebase: edit own' => array(
-      'title' => t('Edit own Knowledgebase content'),
-      'description' => t('Edit Knowledgebase content, created by the user'),
-    ),
-    'Storm knowledgebase: view all' => array(
-      'title' => t('View any Knowledgebase content'),
-    ),
-    'Storm knowledgebase: view own' => array(
-      'title' => t('View own Knowledgebase content'),
-      'description' => t('View Knowledgebase content, created by the user'),
+    'stormknowledgebase_list' => array(
+      'file'      => 'stormknowledgebase.theme.inc',
+      'arguments' => array('header'),
     ),
   );
 }
 
-function stormknowledgebase_access($op, $node, $account=NULL) {
+/**
+ * @function
+ * Implementation of hook_views_api
+ */
+function stormknowledgebase_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'stormknowledgebase'),
+  );
+}
+
+/**
+ * @function
+ * Implementation of hook_node_info
+ */
+function stormknowledgebase_node_info() {
+  return array(
+    'stormknowledgebase' => array(
+      'name' => t('Knowledge base'),
+      'base' => 'stormknowledgebase',
+      'description' => t('A knowledgebase article for Storm.'),
+    )
+  );
+}
+
+/**
+ * @function
+ * Implementation of hook_node_access
+ */
+function stormknowledgebase_node_access($node, $op, $account=NULL) {
+  $type = is_string($node) ? $node : $node->type;
+  
   if (empty($account)) {
     global $user;
     $account = $user;
   }
 
-  if ($op == 'create') {
-    return user_access('Storm knowledgebase: add');
+  if ($op == 'create' && user_access('Storm knowledgebase: add', $account)) {
+    return NODE_ACCESS_ALLOW;
   }
 
   if (is_numeric($node)) {
@@ -64,34 +116,34 @@ function stormknowledgebase_access($op, $node, $account=NULL) {
   }
 
   if ($op == 'delete') {
-    if (user_access('Storm knowledgebase: delete all')) {
-      return TRUE;
+    if (user_access('Storm knowledgebase: delete all', $account)) {
+      return NODE_ACCESS_ALLOW;
     }
-    else if (user_access('Storm knowledgebase: delete own') && ($account->uid == $node->uid)) {
-      return TRUE;
+    else if (user_access('Storm knowledgebase: delete own', $account) && ($account->uid == $node->uid)) {
+      return NODE_ACCESS_ALLOW;
     }
   }
 
   if ($op == 'update') {
-    if (user_access('Storm knowledgebase: edit all')) {
-      return TRUE;
+    if (user_access('Storm knowledgebase: edit all', $account)) {
+      return NODE_ACCESS_ALLOW;
     }
-    else if (user_access('Storm knowledgebase: edit own') && ($account->uid == $node->uid)) {
-      return TRUE;
+    else if (user_access('Storm knowledgebase: edit own', $account) && ($account->uid == $node->uid)) {
+      return NODE_ACCESS_ALLOW;
     }
   }
 
   if ($op == 'view') {
-    if (user_access('Storm knowledgebase: view all')) {
-      return TRUE;
+    if (user_access('Storm knowledgebase: view all', $account)) {
+      return NODE_ACCESS_ALLOW;
     }
-    else if (user_access('Storm knowledgebase: view own') && ($account->uid == $node->uid)) {
-      return TRUE;
+    else if (user_access('Storm knowledgebase: view own', $account) && ($account->uid == $node->uid)) {
+      return NODE_ACCESS_ALLOW;
     }
   }
-  return FALSE;
 }
 
+// LEGACY ACCESS FUNCTIONS, NEEDS CHANGEOVER TO GRANTS
 function stormknowledgebase_access_sql($sql, $where = array()) {
   if (user_access('Storm knowledgebase: view all')) {
     $where[] = "'storm_access'='storm_access'";
@@ -142,48 +194,3 @@ function stormknowledgebase_storm_rewrite_where_sql($query, $primary_table, $acc
   return $cond;
 }
 
-function stormknowledgebase_menu() {
-  $items = array();
-
-  $items['storm/knowledgebase'] = array(
-    'title' => 'Knowledge base',
-    'description' => 'Storm Knowledge base',
-    'page callback' => 'stormknowledgebase_list',
-    'access arguments' => array('Storm knowledgebase: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormknowledgebase.admin.inc',
-  );
-
-  return $items;
-}
-
-function stormknowledgebase_theme() {
-  return array(
-    'stormknowledgebase_view' => array(
-      'file'      => 'stormknowledgebase.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
-    ),
-    'stormknowledgebase_list' => array(
-      'file'      => 'stormknowledgebase.theme.inc',
-      'arguments' => array('header'),
-    ),
-  );
-}
-
-function stormknowledgebase_node_info() {
-  return array(
-    'stormknowledgebase' => array(
-      'name' => t('Knowledge base'),
-      'base' => 'stormknowledgebase',
-      'description' => t('A knowledgebase article for Storm.'),
-      'has_body' => true,
-    )
-  );
-}
-
-function stormknowledgebase_views_api() {
-  return array(
-    'api' => 2,
-    'path' => drupal_get_path('module', 'stormknowledgebase'),
-  );
-}

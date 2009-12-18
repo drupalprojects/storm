@@ -6,8 +6,9 @@
  */
 
 function stormknowledgebase_install() {
-  drupal_install_schema('stormknowledgebase');
   variable_set('node_options_stormknowledgebase', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormknowledgebase', 0);
   
   // Create fields
   $field = array(
@@ -60,3 +61,41 @@ function stormknowledgebase_schema() {
 
   return $schema;
 }
+
+/*
+ * @function
+ * Upgrade to Drupal 7
+ */
+/*function stormknowledebase_update_7100() {
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormknowledgebase', 0);
+  
+  // Create fields
+  $field = array(
+    'field_name' => 'stormknowledgebase_topic',
+    'type' => 'text',
+    'settings' => array(
+      'allowed_values' => 'OS|Operating systems',
+        /*'Linux'=>'-- Linux',
+        'Ubuntu'=>'-- Ubuntu',
+        'DB' => 'Databases',
+        'MySQL'=>'-- MySQL',
+        'PostgreSQL'=>'-- PostgreSQL',*/
+    ),
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormknowledgebase_topic',
+    'object_type' => 'node',
+    'bundle' => 'stormknowledgebase',
+    'label' => t('Topic'),
+    //'description' => t('You can enter your last name here.'),
+    'widget' => array(
+      'type' => 'options_select',
+      'weight' => 0,
+    ),
+  );
+  field_create_instance($instance);
+
+}*/
