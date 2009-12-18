@@ -76,11 +76,6 @@ function stormknowledgebase_schema() {
     'type' => 'text',
     'settings' => array(
       'allowed_values' => 'OS|Operating systems',
-        /*'Linux'=>'-- Linux',
-        'Ubuntu'=>'-- Ubuntu',
-        'DB' => 'Databases',
-        'MySQL'=>'-- MySQL',
-        'PostgreSQL'=>'-- PostgreSQL',*/
     ),
   );
   field_create_field($field);

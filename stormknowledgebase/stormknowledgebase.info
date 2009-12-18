@@ -11,8 +11,7 @@ dependencies[] = storm
 dependencies[] = views
 
 ; Files registry
-files[] = stormknowledgebase.admin.inc
 files[] = stormknowledgebase.install
 files[] = stormknowledgebase.module
 files[] = stormknowledgebase.theme.inc
-files[] = stormknowledgebase.views.inc
+files[] = stormknowledgebase.views_default.inc
