@@ -28,25 +28,6 @@ function stormknowledgebase_help($path, $arg) {
 
 /**
  * @function
- * Implementation of hook_menu
- */
-/*function stormknowledgebase_menu() {
-  $items = array();
-
-  $items['storm/knowledgebase'] = array(
-    'title' => 'Knowledge base',
-    'description' => 'Storm Knowledge base',
-    'page callback' => 'stormknowledgebase_list',
-    'access arguments' => array('Storm knowledgebase: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormknowledgebase.admin.inc',
-  );
-
-  return $items;
-}*/
-
-/**
- * @function
  * Implementation of hook_permission
  */
 function stormknowledgebase_permission() {

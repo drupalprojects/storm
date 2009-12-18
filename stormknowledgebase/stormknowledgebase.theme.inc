@@ -5,31 +5,6 @@
  * @file
  */
 
-function theme_stormknowledgebase_list($variables) {
-  $header = $variables['header'];
-  $kbs = $variables['kbs'];
-  
-  $rows = array();
-  $topics = stormattribute_attributes_bydomain('Knowledge base topic');
-
-  foreach ($kbs as $kb) {
-    $n = new stdClass();
-    $n->nid = $kb->nid;
-    $n->uid = $kb->uid;
-    $n->type = 'stormknowledgebase';
-    $rows[] = array(
-      l($kb->title, 'node/'. $kb->nid),
-      $topics[values][$kb->topic],
-      array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
-        'class' => 'storm_list_operations',
-      ),
-    );
-  }
-  $o = theme('table', $header, $rows);
-  return $o;
-}
-
 function theme_stormknowledgebase_view(array $variables = array()) {
   $node = $variables['node'];
   $teaser = isset($variables['teaser']) ? $variables['teaser'] : FALSE;
