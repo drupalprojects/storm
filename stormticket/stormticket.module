@@ -665,6 +665,9 @@ function _stormticket_beforesave(&$node) {
   $node->task_title = $ta->title;
   $node->task_stepno = $ta->stepno;
   
+  $assigned = node_load($node->assigned_nid);
+  $node->assigned_title = $assigned->title;
+  
   // Allow use of comma when inputting numerical values - str_replace with period decimal
   $node->duration = str_replace(',', '.', $node->duration);
   $node->price = str_replace(',', '.', $node->price);

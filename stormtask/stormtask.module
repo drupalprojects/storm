@@ -774,6 +774,9 @@ function _stormtask_beforesave(&$node) {
   $p = db_fetch_object($r);
   $node->project_title = $p->title;
   
+  $assigned = node_load($node->assigned_nid);
+  $node->assigned_title = $assigned->title;
+  
   // Allow use of comma when inputting numerical values - str_replace with period decimal
   $node->duration = str_replace(',', '.', $node->duration);
   $node->price = str_replace(',', '.', $node->price);
