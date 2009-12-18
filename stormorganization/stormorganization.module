@@ -5,6 +5,10 @@
  * @file
  */
 
+/**
+ * @function
+ * Implementation of hook_help
+ */
 function stormorganization_help($path, $arg) {
   $output = '';
 
@@ -17,23 +21,49 @@ function stormorganization_help($path, $arg) {
   return $output;
 }
 
-function stormorganization_perm() {
+/**
+ * @function
+ * Implementation of hook_menu
+ */
+function stormorganization_menu() {
   return array(
-    'Storm organization: access',
-    'Storm organization: add',
-    'Storm organization: delete all',
-    'Storm organization: delete own',
-    'Storm organization: edit all',
-    'Storm organization: edit own',
-    'Storm organization: edit belonged',
-    'Storm organization: view all',
-    'Storm organization: view own',
-    'Storm organization: view belonged',
-    'Storm organization: associate user'
+    'admin/settings/storm/organization' => array(
+      'title' => 'Storm Organization',
+      'description' => 'Storm Organization Administration Page',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('stormorganization_admin_settings'),
+      'access arguments' => array('Storm: access administration pages'),
+      'type' => MENU_LOCAL_TASK,
+    ),
   );
 }
 
-function stormorganization_access($op, $node, $account = NULL) {
+/**
+ * @function
+ * Implementation of hook_permission
+ */
+function stormorganization_permission() {
+  $perms = array(
+    'Storm organization: access' => array(
+      'title' => 'Access Storm Organization'
+    ),
+    'Storm organization: delete belonged' => array(
+      'title' => 'Delete Organizations that the user belongs to',
+    ),
+    'Storm organization: edit belonged' => array(
+      'title' => 'Edit Organizations that the user belongs to',
+    ),
+    'Storm organization: view belonged' => array(
+      'title' => 'View Organizations that the user belongs to',
+    ),
+    'Storm organization: associate user'
+  );
+  
+  $perms += node_list_permissions('stormorganization');
+  return $perms;
+}
+
+function stormorganization_node_access($node, $op, $account = NULL) {
   if (empty($account)) {
     global $user;
     $account = $user;
@@ -145,43 +175,10 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table, $acco
   return $cond;
 }
 
-function stormorganization_menu() {
-  $items = array();
-  $items['storm/organizations'] = array(
-    'title' => 'Organizations',
-    'description' => 'Storm Organizations',
-    'page callback' => 'stormorganization_list',
-    'access arguments' => array('Storm organization: access'),
-    'file' => 'stormorganization.admin.inc',
-    'type' => MENU_NORMAL_ITEM
-  );
 
-  $items['storm/organizations/autocomplete'] = array(
-    'title' => 'Organization autocomplete',
-    'page callback' => 'stormorganization_autocomplete',
-    'access arguments' => array('Storm organization: access'),
-    'type' => MENU_CALLBACK,
-    'file' => 'stormorganization.admin.inc',
-  );
-  
-  $items['admin/settings/storm/organization'] = array(
-    'title' => 'Storm Organization',
-    'description' => 'Storm Organization Administration Page',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('stormorganization_admin_settings'),
-    'access arguments' => array('Storm: access administration pages'),
-    'type' => MENU_LOCAL_TASK,
-  );
-
-  return $items;
-}
 
 function stormorganization_theme() {
   return array(
-    'stormorganization_list' => array(
-      'file'      => 'stormorganization.theme.inc',
-      'arguments' => array('header', 'organizations'),
-    ),
     'stormorganization_view' => array(
       'file'      => 'stormorganization.theme.inc',
       'arguments' => array('node', 'teaser', 'page'),
@@ -390,71 +387,6 @@ function stormorganization_form(&$node) {
   );
 
   return $form;
-}
-
-function stormorganization_insert($node) {
-  db_query("INSERT INTO {stormorganization}
-           (vid, nid, prefix, fullname, country, www, phone, email, currency,
-           provstate, zip, city, address, taxid, orglanguage, iscustomer, isprovider, isactive
-           ) VALUES
-           (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s',
-           '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d
-           )",
-            $node->vid, $node->nid, $node->prefix, $node->fullname, $node->country, $node->www, $node->phone, $node->email, $node->currency,
-            $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, 
-            $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive
-            );
-}
-
-function stormorganization_update($node) {
-  // if this is a new node or we're adding a new revision,
-  if ($node->revision) {
-    stormorganization_insert($node);
-  }
-  else {
-    db_query("UPDATE {stormorganization} SET
-              prefix = '%s', fullname = '%s', country='%s', www='%s', phone='%s', email='%s', currency = '%s',
-              provstate = '%s', zip = '%s', city = '%s', address = '%s', taxid = '%s', orglanguage = '%s',
-              iscustomer=%d, isprovider=%d, isactive=%d WHERE vid = %d",
-              $node->prefix, $node->fullname, $node->country, $node->www, $node->phone, $node->email, $node->currency,
-              $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, $node->orglanguage,
-              $node->iscustomer, $node->isprovider, $node->isactive, $node->vid);
-    if ($node->title != $node->title_old) {
-      module_invoke_all('stormorganization_change', $node->nid, $node->title);
-    }
-  }
-}
-
-function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if(!$node->nid) {
-        $node->iscustomer = 1;
-        $node->isactive = 1;
-
-        $country_list = stormattribute_attributes_bydomain('Country');
-        $node->country = $country_list['default'];
-
-        $currency_list = stormattribute_attributes_bydomain('Currency');
-        $node->currency = $currency_list['default'];
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
-      break;
-  }
-}
-
-function stormorganization_delete($node) {
-  // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormorganization} WHERE nid = %d', $node->nid);
-}
-
-function stormorganization_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormorganization} WHERE vid = %d', $node->vid));
-  $additions->title_old = $node->title;
-  return $additions;
 }
 
 function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {

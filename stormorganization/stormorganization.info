@@ -1,11 +1,14 @@
 ; $Id$
 name = Storm Organization
 description = "Allows storing of organizations for use within Storm"
-dependencies[] = storm
-dependencies[] = stormattribute
 package = Storm
 core = 7.x
 
+; dependencies
+dependencies[] = storm
+dependencies[] = views
+
+; files
 files[] = stormorganization.admin.inc
 files[] = stormorganization.install
 files[] = stormorganization.module

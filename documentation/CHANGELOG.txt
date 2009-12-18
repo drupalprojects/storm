@@ -1,7 +1,8 @@
 /* $Id$ */
 
-This changelog will list the differences between the 7.x and 6.x branches, and then provide an issue by issue changelog from the first 7.x snapshot release.
-
 Version 7.x-1.x-dev:
-
-Initial port to Drupal 7.x
+- Port from Drupal 6 version (major changes):
+  - Storm now uses Field API for fields.
+  - Storm now uses the Views module for list views.
+    Unfortunately this means however that all modules now have a dependency on Views.
+  - Storm Attribute module has gone, and the allowed field values are now managed as part of Field API.
