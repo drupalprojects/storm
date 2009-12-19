@@ -9,6 +9,7 @@ function stormorganization_install() {
   variable_set('node_options_stormorganization', array('status'));
   
   // Create fields
+  // Prefix
   $field = array(
     'field_name' => 'stormorganization_prefix',
     'type' => 'text',
@@ -25,6 +26,32 @@ function stormorganization_install() {
       'type' => 'text_field',
       'weight' => 0,
     ),
+    'display' => array(
+      'label' => 'inline',
+    ),
+  );
+  field_create_instance($instance);
+  
+  // Full name
+  $field = array(
+    'field_name' => 'stormorganization_fullname',
+    'type' => 'text',
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormorganizaton_fullname',
+    'object_type' => 'node',
+    'bundle' => 'stormorganization',
+    'label' => t('Fullname'),
+    //'description' => t('You can enter your last name here.'),
+    'widget' => array(
+      'type' => 'text_field',
+      'weight' => 0,
+    ),
+    'display' => array(
+      'label' => 'inline',
+    ),
   );
   field_create_instance($instance);
 }
@@ -34,6 +61,9 @@ function stormorganization_disable() {
 }
 
 function stormorganization_uninstall() {
+  field_delete_field('stormorganization_prefix');
+  field_delete_field('stormorganization_fullname');
+  
   drupal_uninstall_schema('stormorganization');
 }
 
