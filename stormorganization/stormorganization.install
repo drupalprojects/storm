@@ -7,6 +7,26 @@
 
 function stormorganization_install() {
   variable_set('node_options_stormorganization', array('status'));
+  
+  // Create fields
+  $field = array(
+    'field_name' => 'stormorganization_prefix',
+    'type' => 'text',
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormorganizaton_prefix',
+    'object_type' => 'node',
+    'bundle' => 'stormorganization',
+    'label' => t('Prefix'),
+    //'description' => t('You can enter your last name here.'),
+    'widget' => array(
+      'type' => 'text_field',
+      'weight' => 0,
+    ),
+  );
+  field_create_instance($instance);
 }
 
 function stormorganization_disable() {
