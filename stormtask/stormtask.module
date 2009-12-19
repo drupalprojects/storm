@@ -671,7 +671,7 @@ function stormtask_form(&$node) {
   }
   
   if (module_exists('stormteam')) {
-    $s_team = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormteam' ORDER BY n.title";
+    $s_team = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormteam} ste ON n.vid=ste.vid WHERE n.type='stormteam' ORDER BY n.title";
     $s_team = stormteam_access_sql($s_team);
     $s_team = db_rewrite_sql($s_team);
     $r_team = db_query($s_team);
