@@ -425,22 +425,6 @@ function stormattribute_install() {
     'paid' => 'Paid',
   );
 
-  $prevdomain = '';
-  $weight = 0;
-  foreach ($attributes as $domain => $attribute) {
-    if ($domain != $prevdomain) $weight=0;
-    foreach ($attribute as $key => $value) {
-      $fields = array('domain' => $domain, 'akey' => $key, 'avalue' => $value, 'weight' => $weight);
-      db_insert('stormattribute')->fields($fields)->execute();
-      $weight++;
-    }
-    $prevdomain = $domain;
-  }
-
-}
-
-function stormattribute_uninstall() {
-  drupal_uninstall_schema('stormattribute');
 }
 
 function stormattribute_schema() {
