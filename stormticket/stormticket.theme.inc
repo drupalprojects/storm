@@ -101,18 +101,24 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 3,
   );
   
+  $node->content['group5'] = array(
+    '#prefix' => '<div class="stormfields">',
+    '#suffix' => '</div>',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -16,
+  );
+  
   $node->content['group5']['assigned'] = array(
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
-    '#weight' => 2,
+    '#weight' => 4,
   );
   
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -15,
   );
   unset($node->content['body']);
 
