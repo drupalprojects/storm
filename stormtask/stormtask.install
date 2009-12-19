@@ -47,19 +47,7 @@ function stormtask_schema() {
   return $schema;
 }
 
-function stormtask_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormtask', 'taskcategory', array('type' => 'varchar', 'length' => 20));
-  db_add_field($ret, 'stormtask', 'taskpriority', array('type' => 'varchar', 'length' => 20));
-  return $ret;
+function hook_update_last_removed() {
+  // Removed 6.x updates
+  return 2;
 }
-
-function stormtask_update_2() {
-  $ret = array();
-  db_add_field($ret, 'stormtask', 'datebegin', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormtask', 'dateend', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormtask', 'durationunit', array('type' => 'varchar', 'length' => 20));
-  db_add_field($ret, 'stormtask', 'duration', array('type' => 'float', 'default' => 0));
-  return $ret;
-}
-

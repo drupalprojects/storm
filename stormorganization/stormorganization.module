@@ -56,7 +56,9 @@ function stormorganization_permission() {
     'Storm organization: view belonged' => array(
       'title' => 'View Organizations that the user belongs to',
     ),
-    'Storm organization: associate user'
+    'Storm organization: associate user' => array(
+      'title' => 'Associate User to a Storm Organization',
+    ),
   );
   
   $perms += node_list_permissions('stormorganization');
@@ -110,73 +112,10 @@ function stormorganization_node_access($node, $op, $account = NULL) {
   return FALSE;
 }
 
-function stormorganization_access_sql($sql, $where = array()) {
-  if (user_access('Storm organization: view all')) {
-    $where[] = "'storm_access'='storm_access'";
-    return storm_rewrite_sql($sql, $where);
-  }
-
-  global $user;
-
-  $cond = '';
-  if (user_access('Storm organization: view own')) {
-    $cond .= 'n.uid='. $user->uid;
-  }
-  if (user_access('Storm organization: view belonged')) {
-    if (!empty($cond)) $cond .= ' OR ';
-    $cond .= 'n.nid='. $user->stormorganization_nid;
-  }
-  if (empty($cond)) $cond = '0=1';
-  $where[] = $cond;
-
-  $where[] = "'storm_access'='storm_access'";
-  return storm_rewrite_sql($sql, $where);
-}
-
-function stormorganization_storm_rewrite_where_sql($query, $primary_table, $account) {
-  static $conds = array();
-
-  if ($conds[$primary_table][$account->uid]) {
-    return $conds[$primary_table][$account->uid];
-  }
-
-  if (preg_match("/'storm_access'='storm_access'/", $query)) {
-    $cond = '';
-  }
-  else {
-    if (user_access('Storm organization: view all', $account)) {
-      return '';
-    }
-
-    $cond = '';
-    if (user_access('Storm organization: view own', $account)) {
-      $cond .= "${primary_table}.uid=". $account->uid;
-    }
-    if (user_access('Storm organization: view belonged', $account)) {
-      if ($cond) {
-        $cond .= ' OR ';
-      }
-      // If function is called without viewing an organization, this variable may not be set.
-      // These lines check for that and set the organization node id to zero if not otherwise set.
-      if (!isset($account->stormorganization_nid)) {
-        $account->stormorganization_nid = 0;
-      }
-      $cond .= ' sor1.nid='. $account->stormorganization_nid;
-    }
-    if ($cond) {
-      $cond = " WHEN 'stormorganization' THEN (SELECT IF($cond,1,0) FROM {stormorganization} sor1 WHERE sor1.vid=${primary_table}.vid) ";
-    }
-    else {
-      $cond = " WHEN 'stormorganization' THEN 0 ";
-    }
-  }
-
-  $conds[$primary_table][$account->uid] = $cond;
-  return $cond;
-}
-
-
-
+/**
+ * @function
+ * Implementation of hook_theme
+ */
 function stormorganization_theme() {
   return array(
     'stormorganization_view' => array(
@@ -186,6 +125,10 @@ function stormorganization_theme() {
   );
 }
 
+/**
+ * @function
+ * Implementation of hook_node_info
+ */
 function stormorganization_node_info() {
   return array(
     'stormorganization' => array(

@@ -52,26 +52,7 @@ function stormexpense_schema() {
   return $schema;
 }
 
-function stormexpense_update_1() {
-  $ret = array();
-  db_change_field($ret, 'stormexpense', 'vat', 'tax', array('type' => 'float'));
-  return $ret;
-}
-
-function stormexpense_update_6101() {
-  $ret = array();
-  db_add_field($ret, 'stormexpense', 'expensestatus', array('type' => 'varchar', 'length' => 128));
-  return $ret;
-}
-
-function stormexpense_update_6102() {
-  $ret = array();
-  db_change_field($ret, 'stormexpense', 'tax', 'tax1', array('type' => 'float'));
-  db_add_field($ret, 'stormexpense', 'tax1app', array('type' => 'int'));
-  db_add_field($ret, 'stormexpense', 'tax1percent', array('type' => 'float'));
-  db_add_field($ret, 'stormexpense', 'tax2app', array('type' => 'int'));
-  db_add_field($ret, 'stormexpense', 'tax2percent', array('type' => 'float'));
-  db_add_field($ret, 'stormexpense', 'tax2', array('type' => 'float'));
-  db_add_field($ret, 'stormexpense', 'subtotal', array('type' => 'float'));
-  return $ret;
+function hook_update_last_removed() {
+  // Removed 6.x updates
+  return 6102;
 }

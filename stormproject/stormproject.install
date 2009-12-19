@@ -46,35 +46,7 @@ function stormproject_schema() {
   return $schema;
 }
 
-function stormproject_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'projectpriority', array('type' => 'varchar', 'length' => 20));
-  return $ret;
-}
-
-function stormproject_update_2() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'datebegin', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormproject', 'dateend', array('type' => 'int', 'default' => 0));
-  return $ret;
-}
-
-function stormproject_update_3() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'durationunit', array('type' => 'varchar', 'length' => 20));
-  db_add_field($ret, 'stormproject', 'duration', array('type' => 'float', 'default' => 0));
-  return $ret;
-}
-
-/**
- * @function
- * Implementation of hook_update_N to add manager_nid, manager_title, assigned_nid and assigned_title fields.
- */
-function stormproject_update_6104() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'manager_nid', array('type' => 'int'));
-  db_add_field($ret, 'stormproject', 'manager_title', array('type' => 'varchar', 'length' => 100));
-  db_add_field($ret, 'stormproject', 'assigned_nid', array('type' => 'int'));
-  db_add_field($ret, 'stormproject', 'assigned_title', array('type' => 'varchar', 'length' => 100));
-  return $ret;
+function hook_update_last_removed() {
+  // Removed 6.x updates
+  return 6104;
 }
