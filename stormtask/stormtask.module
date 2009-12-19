@@ -417,15 +417,26 @@ function stormtask_form(&$node) {
     if (array_key_exists('project_nid', $_GET) && !$node->project_nid) {
       $node->project_nid = $_GET['project_nid'];
       $p = node_load($node->project_nid);
+      // Ensure that the correct organization is loaded
       $node->organization_nid = $p->organization_nid;
       if (!stormorganization_access('view', $node->organization_nid)) {
         drupal_set_message(t("You cannot add a task for this project, as you do not have access to view the organization's profile"));
         drupal_goto('node/'. $node->project_nid);
       }
     }
-    
-    if (array_key_exists('parent_nid', $_GET) && !$node->parent_nid) {
-      $node->parent_nid = $_GET['parent_nid'];
+    if (array_key_exists('task_nid', $_GET) && !$node->parent_nid) {
+      // Parent task can be autoloaded by use of ?task_nid=string
+      $node->parent_nid = $_GET['task_nid'];
+      $t = node_load($node->parent_nid);
+      // Ensure that the correct project is loaded
+      $node->project_nid = $t->project_nid;
+      $node->organization_nid = $t->organization_nid;
+      // If no parent project then no need to check access rights, there will always be a parent org.
+      $project_access = $node->project_nid ? stormproject_access('view', $node->project_nid) : TRUE;
+      if (!$project_access || !stormorganization_access('view', $node->organization_nid)) {
+        drupal_set_message(t("You cannot add a task with this parent, as you do not have access to view both the organization and project profiles"));
+        drupal_goto('node/'. $node->parent_nid);
+      }
     }
     
     if ($_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
