@@ -6,7 +6,6 @@
  */
 
 function stormorganization_install() {
-  drupal_install_schema('stormorganization');
   variable_set('node_options_stormorganization', array('status'));
 }
 
@@ -46,23 +45,10 @@ function stormorganization_schema() {
   return $schema;
 }
 
-function stormorganization_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormorganization', 'iscustomer', array('type' => 'int', 'default' => 1));
-  db_add_field($ret, 'stormorganization', 'isprovider', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormorganization', 'isactive', array('type' => 'int', 'default' => 1));
-  return $ret;
+function hook_update_last_removed() {
+  // 6.x updates have all been removed
+  return 3;
 }
 
-function stormorganization_update_2() {
-  $ret = array();
-  db_change_field($ret, 'stormorganization', 'vatid', 'taxid', array('type' => 'varchar', 'length' => 50));
-  return $ret;
-}
-
-function stormorganization_update_3() {
-  $ret = array();
-  db_query('UPDATE {stormorganization} SET iscustomer=1, isprovider=1, isactive=1');
-  return $ret;
-}
-
+/*function stormorganization_update_7100() {
+}*/
