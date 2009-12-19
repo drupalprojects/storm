@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #663166 by jurgenhaas: Fixed stormteam_access_sql() fails.
+- Bug #660122 by jurgenhaas: Fixed Link to create a new subtask doesn't work.
 - Feature #595276 by Magnity: Added Assign to fields for tasks and tickets.
 
 Version 6.x-1.28:
