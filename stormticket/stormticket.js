@@ -30,7 +30,7 @@ function stormticket_task_tickets(_task_select, _organization_select_id, _projec
 };
 
 function stormticket_project_task_tickets(_project_select, _organization_select_id, _task_select_id, _ticket_select_id, _with_all_option, _all_text) {
-  stormtask_project_tasks(_project_select, _task_select_id, _with_all_option, _all_text);
+  stormtask_project_tasks(_organization_select_id, _project_select, _task_select_id, '', _with_all_option, _all_text);
   var task_select = $("#" + _task_select_id).get(0);
   stormticket_task_tickets(task_select, _organization_select_id, _project_select.id, _ticket_select_id, _with_all_option, _all_text);
 };

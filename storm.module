@@ -793,3 +793,161 @@ function storm_form_alter(&$form, $form_state, $form_id) {
     }
   }
 }
+
+/**
+ * Get a list of people and teams for select boxes
+ *
+ * Params:
+ *  $organization_nid
+ *    Leave blank to get a list of all teams and persons, otherwise also provide
+ *  $project_nid
+ *    to get a limited list of teams and persons following the following logic:
+ *    - If the project is assigned to a person, only that person is listed as an option
+ *    - If the project is assigned to a team, all team members are listed as options
+ *    - If the project is neither assigned to a person nor a team, all people that are
+ *      assigned to the given origanization are listed as options
+ *    - In addition, if the project is assigned to a manager, that person is also listed
+ *    - Finally, look into all existing teams and list those teams that exclusively
+ *      contain members that are already selected
+ *    If $organization_nid is provided but $project_nid is omitted, then the logic is as
+ *    above, just for all projects of the given organization.
+ *
+ */
+function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
+  $teams = t('Teams:');
+  $people = t('People:');
+  $options = array();
+  if (!$organization_nid) {
+    $options['all'] = t('- no filter -');
+    $options['mine'] = t('- mine -');
+  }
+  $options['none'] = t('- unassigned -');
+  if (module_exists('stormteam')) {
+    $options[$teams] = array();
+  }
+  if (module_exists('stormperson')) {
+    $options[$people] = array();
+  }
+  $add_org_people = TRUE;
+  if ($organization_nid) {
+    $add_org_people = FALSE;
+    $manager = array();
+    $projects = array();
+    if ($project_nid) {
+      $projects[] = $project_nid;
+    }
+    else {
+      $sql  = "SELECT n.nid FROM {node} AS n
+        INNER JOIN {stormproject} AS spr
+          ON n.vid=spr.vid
+        WHERE n.status=1
+          AND n.type='stormproject'
+          AND spr.organization_nid=%d";
+      $sql = stormproject_access_sql($sql);
+      $result = db_query(db_rewrite_sql($sql), $organization_nid);
+      while ($project = db_fetch_object($result)) {
+        $projects[] = $project->nid;
+      }
+      $add_org_people = TRUE;
+    }
+    foreach ($projects as $pid) {
+      $project = node_load($pid);
+      if ($project->manager_nid) {
+        $manager[] = node_load($project->manager_nid);
+      }
+      if ($project->assigned_nid) {
+        $node = node_load($project->assigned_nid);
+        if ($node->type == 'stormperson') {
+          if (module_exists('stormperson')) {
+            $options[$people][$node->nid] = $node->title;
+          }
+        }
+        else { // ($node->type == 'stormteam')
+          if (module_exists('stormteam')) {
+            $options[$teams][$node->nid] = $node->title;
+            foreach ($node->members_array as $nid => $name) {
+              $options[$people][$nid] = $name;
+            }
+          }
+        }
+      }
+      else {
+        $add_org_people = TRUE;
+      }
+    }
+  }
+  if ($add_org_people) {
+    if (module_exists('stormperson')) {
+      $where = isset($organization_nid) ? 'WHERE spe.organization_nid = %d' : '';
+      $sql = "SELECT  spe.nid,
+                      spe.fullname,
+                      n.title
+                  FROM {node} n
+                  INNER JOIN {stormperson} spe
+                    ON n.vid = spe.vid
+                  $where
+                  ORDER BY spe.fullname ASC";
+      $sql = stormperson_access_sql($sql);
+      $sql = db_rewrite_sql($sql);
+      $result = db_query($sql, array($organization_nid));
+      while ($person = db_fetch_object($result)) {
+        $options[$people][$person->nid] = ($person->fullname) ? $person->fullname : $person->title;
+        if (empty($options[$people][$person->nid])) {
+          $options[$people][$person->nid] = t('Person !nid', array('!nid' => $person->nid));
+        }
+      }
+    }
+  }
+  else {
+    if (isset($manager) && module_exists('stormperson')) {
+      foreach ($manager as $manager_node) {
+        if (!array_key_exists($manager_node->nid, $options[$people])) {
+          $options[$people][$manager_node->nid] = $manager_node->title;
+        }
+      }
+    }
+  }
+  if (module_exists('stormteam')) {
+    $sql = "SELECT  n.nid,
+                    n.title,
+                    ste.members
+                FROM {node} n
+                INNER JOIN {stormteam} ste
+                  ON n.vid = ste.vid
+                WHERE n.type = 'stormteam'
+                ORDER BY n.title ASC";
+    $sql = stormteam_access_sql($sql);
+    $sql = db_rewrite_sql($sql);
+    $result = db_query($sql);
+    while ($team = db_fetch_object($result)) {
+      if (!array_key_exists($team->nid, $options[$teams])) {
+        $add_team = TRUE;
+        if (isset($organization_nid)) {
+          //Check if all team members are relevant to current org or project
+          foreach (unserialize($team->members) as $nid => $name) {
+            if (!array_key_exists($nid, $options[$people])) {
+              $add_team = FALSE;
+              break;
+            }
+          }
+        }
+        if ($add_team) {
+          $options[$teams][$team->nid] = $team->title;
+        }
+      }
+    }
+  }
+  if (array_key_exists(0, $options[$people])) {
+    unset($options[$people][0]);
+  }
+  if (array_key_exists(0, $options[$teams])) {
+    unset($options[$teams][0]);
+  }
+  if (!sizeof($options[$people])) {
+    unset($options[$people]);
+  }
+  if (!sizeof($options[$teams])) {
+    unset($options[$teams]);
+  }
+  return $options;
+}

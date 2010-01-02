@@ -405,6 +405,12 @@ function _stormtask_project_tasks_js($project_nid) {
   exit();
 }
 
+function _stormtask_project_assignments_js($organization_nid, $project_nid) {
+  $assignments = storm_get_assignment_options($organization_nid, $project_nid);
+  print drupal_to_js($assignments);
+  exit();
+}
+
 function stormtask_list() {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');

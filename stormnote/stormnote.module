@@ -292,7 +292,7 @@ function stormnote_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', '', true, '-')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormproject} spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
@@ -309,7 +309,7 @@ function stormnote_form(&$node) {
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
-    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', '', true, '-')"),
   );
 
   $tree = _stormtask_get_tree($node->project_nid);

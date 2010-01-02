@@ -39,7 +39,8 @@ function stormtask_perm() {
 function stormtask_init() {
   $settings = array(
     'storm' => array(
-      'project_tasks_url' => url('storm/project_tasks_js/')
+      'project_tasks_url' => url('storm/project_tasks_js/'),
+      'project_assignments_url' => url('storm/project_assignments_js/'),
     ),
   );
   drupal_add_js($settings, 'setting');
@@ -231,6 +232,14 @@ function stormtask_menu() {
     'title' => 'Tasks',
     'page callback' => '_stormtask_project_tasks_js',
     'page arguments' => array(2),
+    'access arguments' => array('Storm task: access'),
+    'file' => 'stormtask.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['storm/project_assignments_js/%'] = array(
+    'title' => 'Assignments',
+    'page callback' => '_stormtask_project_assignments_js',
+    'page arguments' => array(2, 3),
     'access arguments' => array('Storm task: access'),
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
@@ -477,7 +486,7 @@ function stormtask_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
   
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
@@ -497,7 +506,7 @@ function stormtask_form(&$node) {
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
   
   $form['group1']['project_nid_old'] = array(
@@ -655,34 +664,8 @@ function stormtask_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
   
-  $options = array(0 => '-');
-  
-  if (module_exists('stormperson')) {
-    $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
-    $s_per = stormperson_access_sql($s_per);
-    $s_per = db_rewrite_sql($s_per);
-    $r_per = db_query($s_per);
-    $people = array();
-    while ($person = db_fetch_object($r_per)) {
-      $people[$person->nid] = $person->title;
-    }
-    
-    $options = $options + array(-1 => '-PEOPLE-') + $people;
-  }
-  
-  if (module_exists('stormteam')) {
-    $s_team = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormteam} ste ON n.vid=ste.vid WHERE n.type='stormteam' ORDER BY n.title";
-    $s_team = stormteam_access_sql($s_team);
-    $s_team = db_rewrite_sql($s_team);
-    $r_team = db_query($s_team);
-    $teams = array();
-    while ($team = db_fetch_object($r_team)) {
-      $teams[$team->nid] = $team->title;
-    }
-    
-    $options = $options + array(-2 => '-TEAMS-') + $teams;
-  }
-  
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),

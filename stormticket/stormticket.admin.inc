@@ -273,7 +273,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#title' => t('Organization'),
     '#default_value' => $organization_nid,
     '#options' => $organizations,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', true, 'All')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', 'edit-assigned-nid', true, 'All')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
@@ -292,7 +292,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#default_value' => $project_nid,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
-    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, 'All')"),
+    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, 'All')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta
