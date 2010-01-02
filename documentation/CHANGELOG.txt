@@ -1,11 +1,11 @@
 /* $Id$ */
 
-Version 6.x-1.x-dev:
+Version 6.x-1.29:
 - Bug #670606 by Magnity | com2: Fixed 'Default Items per Page' setting fails in tickets and timetracking list.
 - Task #663930 by Magnity: Changed Removal of blank .js files.
 - Bug #663166 by jurgenhaas: Fixed stormteam_access_sql() fails.
 - Bug #660122 by jurgenhaas: Fixed Link to create a new subtask doesn't work.
-- Feature #595276 by Magnity: Added Assign to fields for tasks and tickets.
+- Feature #595276 by Magnity | jurgenhaas: Added Assign to fields for tasks and tickets.
 
 Version 6.x-1.28:
 - Task #660724 by Magnity: Changed Make node dependencies consistent.
