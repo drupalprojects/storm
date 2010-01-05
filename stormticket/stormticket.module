@@ -331,7 +331,7 @@ function stormticket_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => TRUE,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assgned-nid', true, '-')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
@@ -348,7 +348,7 @@ function stormticket_form(&$node) {
     '#default_value' => $node->project_nid,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
-    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-task-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, '-')"),
   );
   
   $tree = _stormtask_get_tree($node->project_nid);
@@ -467,6 +467,21 @@ function stormticket_form(&$node) {
     '#title' => t('Price currency'),
     '#default_value' => $node->currency,
     '#options' => array('-' => '-') + $currencies['values'],
+  );
+  
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
+  
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  
+  $form['group5']['assigned_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#options' => $options,
+    '#default_value' => $node->assigned_nid,
   );
 
   if ($type->has_body) {

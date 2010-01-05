@@ -37,7 +37,8 @@ function stormtask_init() {
   $settings = array(
     'storm' => array(
       // D7STORM TODO: call to url triggered error so disabled
-      //'project_tasks_url' => url('storm/project_tasks_js/')
+      //'project_tasks_url' => url('storm/project_tasks_js/'),
+      //'project_assignments_url' => url('storm/project_assignmets_js/'),
     ),
   );
   drupal_add_js($settings, 'setting');
@@ -170,6 +171,7 @@ function stormtask_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 4
   );
+  
   $items['storm/project_tasks_js/%'] = array(
     'title' => 'Tasks',
     'page callback' => '_stormtask_project_tasks_js',
@@ -178,6 +180,16 @@ function stormtask_menu() {
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
   );
+  
+  $items['storm/project_assignments_js/%'] = array(
+    'title' => 'Assignments',
+    'page callback' => '_stormtask_project_assignments_js',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('Storm task: access'),
+    'file' => 'stormtask.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  
   $items['storm/tasks'] = array(
     'title' => 'Tasks',
     'description' => 'Storm Tasks',
@@ -421,7 +433,7 @@ function stormtask_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
 
   $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
@@ -441,7 +453,7 @@ function stormtask_form(&$node) {
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
     '#required' => true,
-    '#attributes' => array('onchange' => "stormtask_project_tasks(this, 'edit-parent-nid', true, '-')"),
+    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
   
   $form['group1']['project_nid_old'] = array(
@@ -573,6 +585,21 @@ function stormtask_form(&$node) {
     '#title' => t('Price currency'),
     '#default_value' => $node->currency,
     '#options' => $currency_list['values'],
+  );
+  
+  $form['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+  );
+  
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+
+  $form['group5']['assigned_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#options' => $options,
+    '#default_value' => $node->assigned_nid,
   );
 
   if ($type->has_body) {

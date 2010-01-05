@@ -470,8 +470,6 @@ function stormproject_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
   
-  $options = array(0 => '-');
-  
   if (module_exists('stormperson')) {
     $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
     $s_per = stormperson_access_sql($s_per);
@@ -482,7 +480,7 @@ function stormproject_form(&$node) {
       $people[$person->nid] = $person->title;
     }
     
-    $options = $options + array(-1 => '-PEOPLE-') + $people;
+    $options = array(0 => '- none -', 'People:' => $people);
   }
   
   $form['group5']['manager_nid'] = array(
@@ -493,7 +491,7 @@ function stormproject_form(&$node) {
   );
   
   if (module_exists('stormteam')) {
-    $s_team = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormteam' ORDER BY n.title";
+    $s_team = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormteam} ste ON n.vid=ste.vid WHERE n.type='stormteam' ORDER BY n.title";
     $s_team = stormteam_access_sql($s_team);
     $s_team = db_rewrite_sql($s_team);
     $r_team = db_query($s_team);
@@ -502,7 +500,7 @@ function stormproject_form(&$node) {
       $teams[$team->nid] = $team->title;
     }
     
-    $options = $options + array(-2 => '-TEAMS-') + $teams;
+    $options = array(0 => '- unassigned -', 'Teams:' => $teams, 'People:' => $people);
   }
   
   $form['group5']['assigned_nid'] = array(
