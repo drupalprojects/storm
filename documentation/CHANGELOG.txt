@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #671588 by Magnity: Fixed Team members array always has 0:Null appended.
 - Feature #671256 by alberto56: Added Invoicing tracked time: a better calculation of the hourly rate.
 
 Version 6.x-1.29:
