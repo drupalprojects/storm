@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- No changes since 6.x-1.29.
+
 Version 6.x-1.29:
 - Bug #670606 by Magnity | com2: Fixed 'Default Items per Page' setting fails in tickets and timetracking list.
 - Task #663930 by Magnity: Changed Removal of blank .js files.
