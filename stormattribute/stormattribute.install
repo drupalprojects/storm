@@ -11,6 +11,7 @@ function stormattribute_install() {
   $attributes = array();
 
   $attributes['Price mode'] = array(
+    'not applicable' => 'Not Applicable',
     'fixed' => 'Fixed',
     'hourly' => 'Hourly',
     'daily' => 'Daily',
@@ -936,6 +937,14 @@ function stormattribute_update_6109() {
   $ret = array();
 
   $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
+
+  return $ret;  
+}
+
+function stormattribute_update_6110() {
+  $ret = array();
+
+  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'not applicable', 'Not Applicable', 0, 1)");
 
   return $ret;  
 }

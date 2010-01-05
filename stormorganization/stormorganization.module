@@ -361,6 +361,21 @@ function stormorganization_form(&$node) {
     '#default_value' => $node->currency,
   );
 
+  $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+  $form['group5']['pricemode'] = array(
+    '#type' => 'select',
+    '#title' => t('Price mode'),
+    '#default_value' => $node->pricemode,
+    '#options' => $pricemode_list['values'],
+  );
+
+  $form['group5']['price'] = array(
+    '#title' => t('Price'),
+    '#type' => 'textfield',
+    '#size' => 15,
+    '#default_value' => $node->price,
+  );
+
   $languages = language_list('language', TRUE);
   $languages_options = array();
   foreach ($languages as $language_code => $language) {
@@ -395,14 +410,14 @@ function stormorganization_form(&$node) {
 function stormorganization_insert($node) {
   db_query("INSERT INTO {stormorganization}
            (vid, nid, prefix, fullname, country, www, phone, email, currency,
-           provstate, zip, city, address, taxid, orglanguage, iscustomer, isprovider, isactive
+           provstate, zip, city, address, taxid, orglanguage, iscustomer, isprovider, isactive, pricemode, price
            ) VALUES
            (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s',
-           '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d
+           '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %f
            )",
             $node->vid, $node->nid, $node->prefix, $node->fullname, $node->country, $node->www, $node->phone, $node->email, $node->currency,
             $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, 
-            $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive
+            $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive, $node->pricemode, $node->price
             );
 }
 
@@ -415,10 +430,10 @@ function stormorganization_update($node) {
     db_query("UPDATE {stormorganization} SET
               prefix = '%s', fullname = '%s', country='%s', www='%s', phone='%s', email='%s', currency = '%s',
               provstate = '%s', zip = '%s', city = '%s', address = '%s', taxid = '%s', orglanguage = '%s',
-              iscustomer=%d, isprovider=%d, isactive=%d WHERE vid = %d",
+              iscustomer=%d, isprovider=%d, isactive=%d, pricemode='%s', price=%f WHERE vid = %d",
               $node->prefix, $node->fullname, $node->country, $node->www, $node->phone, $node->email, $node->currency,
               $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, $node->orglanguage,
-              $node->iscustomer, $node->isprovider, $node->isactive, $node->vid);
+              $node->iscustomer, $node->isprovider, $node->isactive, $node->pricemode, $node->price, $node->vid);
     if ($node->title != $node->title_old) {
       module_invoke_all('stormorganization_change', $node->nid, $node->title);
     }
@@ -437,6 +452,9 @@ function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
 
         $currency_list = stormattribute_attributes_bydomain('Currency');
         $node->currency = $currency_list['default'];
+
+        $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+        $node->pricemode = $pricemode_list['default'];
       }
       break;
     case 'delete revision':

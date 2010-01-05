@@ -658,7 +658,6 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
     return;
   } else {
     global $user;
-    $hours_per_day = 8;
     
     if (!$invoice_nid) {
     
@@ -694,62 +693,13 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice = node_load($invoice_nid);
     }
     
-    if ($node->ticket_nid) {
-      $parent_ticket = node_load($node->ticket_nid);
-      switch($parent_ticket->pricemode) {
-        case 'hourly':
-          $hourly_rate = $parent_ticket->price;
-          break;
-        case 'daily':
-          $hourly_rate = $parent_ticket->price / $hours_per_day;
-          break;
-        default:
-          drupal_set_message('Error whilst finding hourly rate from ticket', 'error');
-      }
-    }
-    elseif ($node->task_nid) {
-      $parent_task = node_load($node->task_nid);
-      switch($parent_task->pricemode) {
-        case 'hourly':
-          $hourly_rate = $parent_task->price;
-          break;
-        case 'daily':
-          $hourly_rate = $parent_task->price / $hours_per_day;
-          break;
-        default:
-          drupal_set_message('Error whilst finding hourly rate from task', 'error');
-      }
-    }
-    elseif ($node->project_nid) {
-      $parent_project = node_load($node->project_nid);
-      switch($parent_project->pricemode) {
-        case 'hourly':
-          $hourly_rate = $parent_project->price;
-          break;
-        case 'daily':
-          $hourly_rate = $parent_project->price / $hours_per_day;
-          break;
-        default:
-          drupal_set_message('Error whilst finding hourly rate from project', 'error');
-      }
-    }
-    else {
-      $parent_organization = node_load($node->organization_nid);
-      switch($parent_organization->pricemode) {
-        case 'hourly':
-          $hourly_rate = $parent_organization->price;
-          break;
-        case 'daily':
-          $hourly_rate = $parent_organization->price / $hours_per_day;
-          break;
-        default:
-          drupal_set_message('Error whilst finding hourly rate from organization', 'error');
-      }
-    }
+    $hourly_rate = stormtimetracking_timetracking_to_hourly_rate($node);
     
     $count = count($new_invoice->items);
     
-    $new_invoice->items[$count]->description = $node->billing_duration .' hours work at '. $hourly_rate .' per hour on '. $node->title;
+    $new_invoice->items[$count]->description  = date('d M y', $node->trackingdate) . ': ';
+    $new_invoice->items[$count]->description .= ($hourly_rate ? t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@rate' => $hourly_rate, '@desc' => $node->title)) : t('@dur hours unbilled work on @desc', array('@dur' => $node->billing_duration, '@desc' => $node->title)));
+    
     $new_invoice->items[$count]->amount = $node->billing_duration * $hourly_rate;
     // Tax percent simply uses default at the moment
     $new_invoice->items[$count]->tax1percent = variable_get('storminvoice_tax1_percent', 20);
@@ -772,4 +722,44 @@ function stormtimetracking_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'stormtimetracking'),
   );
+}
+
+/**
+ * Try to obtain an hourly rate from a timetracking node. To do this we will 
+ * use the first technique, among the following, to work:
+ * 
+ *  (1) try to obtain an hourly rate from a ticket
+ *  (2) try to obtain an hourly rate from a task
+ *  (3) try to obtain an hourly rate from a project
+ *  (4) try to obtain an hourly rate from an organization
+ *  (5) return an error if none of this worked.
+ *
+ * @return
+ *   An hourly rate (can be zero).
+ */
+function stormtimetracking_timetracking_to_hourly_rate($node) {
+  $hours_per_day = 8;
+  
+  foreach (array('ticket' => $node->ticket_nid, 'task' => $node->task_nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid) as $type => $nid) {
+    if($nid) {
+      $parent_item = node_load($nid);
+      switch($parent_item->pricemode) {
+        case 'hourly':
+          $hourly_rate = $parent_item->price;
+          break;
+        case 'daily':
+          $hourly_rate = $parent_item->price / $hours_per_day;
+          break;
+        case 'fixed':
+          $hourly_rate = 0;
+          break;
+        default:
+          continue;
+      }
+    }
+  }
+  if(!isset($hourly_rate)) {
+    drupal_set_message(t('Error whilst finding hourly rate from ticket, task, project and organization. Consider setting the pricemode and price for your client organizations to avoid this error.'), 'error');
+  } 
+  return $hourly_rate;
 }
