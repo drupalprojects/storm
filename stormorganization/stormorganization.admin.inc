@@ -42,11 +42,13 @@ function stormorganization_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormorganization_list_filter']['country']) {
+  $country = $_SESSION['stormorganization_list_filter']['country'];
+  if ($country && $country!='-') {
     $where[] = "sor.country='%s'";
     $args[] = $_SESSION['stormorganization_list_filter']['country'];
     $filterfields[] = t('Country');
   }
+  
   if ($_SESSION['stormorganization_list_filter']['name']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
@@ -119,10 +121,10 @@ function stormorganization_list() {
 
 function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
   $country_list = stormattribute_attributes_bydomain('Country');
-  $country = $_SESSION['stormproject_list_filter']['country'];
+  $country = $_SESSION['stormorganization_list_filter']['country'];
   if (!$country) {
-    $country = $country_list['default'];
-    $_SESSION['stormproject_list_filter']['country'] = $country;
+    $country = '-';
+    $_SESSION['stormorganization_list_filter']['country'] = $country;
   }
 
   $name = $_SESSION['stormorganization_list_filter']['name'];
@@ -153,7 +155,7 @@ function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => t('Country'),
     '#default_value' => $country,
-    '#options' => $country_list['values'],
+    '#options' => array('-' => t('-')) + $country_list['values'],
   );
 
   $form['filter']['name'] = array(
