@@ -12,6 +12,7 @@ function stormattribute_install() {
   $attributes = array();
 
   $attributes['Price mode'] = array(
+    'not applicable' => 'Not Applicable',
     'fixed' => 'Fixed',
     'hourly' => 'Hourly',
     'daily' => 'Daily',

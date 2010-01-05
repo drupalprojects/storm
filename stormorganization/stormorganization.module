@@ -301,6 +301,21 @@ function stormorganization_form(&$node) {
     '#default_value' => $node->currency,
   );
 
+  $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+  $form['group5']['pricemode'] = array(
+    '#type' => 'select',
+    '#title' => t('Price mode'),
+    '#default_value' => $node->pricemode,
+    '#options' => $pricemode_list['values'],
+  );
+
+  $form['group5']['price'] = array(
+    '#title' => t('Price'),
+    '#type' => 'textfield',
+    '#size' => 15,
+    '#default_value' => $node->price,
+  );
+  
   $languages = language_list('language', TRUE);
   $languages_options = array();
   foreach ($languages as $language_code => $language) {
