@@ -60,3 +60,30 @@ function stormteam_schema() {
   
   return $schema;
 }
+
+/**
+ * @function
+ * Implementatin of hook_update_N
+ * Removes 0:N from members array
+ */
+function stormteam_update_6101() {
+  $ret = array();
+  
+  $sql = "SELECT ste.members, ste.vid FROM {stormteam} ste";
+  $results = db_query($sql);
+  while($team = db_fetch_object($results)) {
+    $members_array = unserialize($team->members);
+    
+    if (array_key_exists(0, $members_array)) {
+      unset($members_array[0]);
+    }
+    
+    $team->members = serialize($members_array);
+    
+    $sql = "UPDATE {stormteam} SET members='%s' WHERE vid=%d";
+    $result = db_query($sql, $team->members, $team->vid);
+    
+    $ret[] = array('success' => $result !== FALSE, 'query' => 'Removed 0:N from vid '. $team->vid);
+  }
+  return $ret;
+}
