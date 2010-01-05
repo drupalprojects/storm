@@ -358,13 +358,16 @@ function stormteam_view($node) {
 function _stormteam_beforesave(&$node) {
   $i = 1;
   $variable = 'members_array_'. $i;
-
-  //for ($i = 1; $i <= 10; $i++) {
+  
   while (isset($node->$variable)) {
     $title = db_fetch_object(db_query('SELECT n.title FROM {node} AS n WHERE nid = %d', $node->$variable));
     $node->members_array[$node->$variable] = $title->title;
     $i++;
     $variable = 'members_array_'. $i;
+  }
+  
+  if (array_key_exists(0, $node->members_array)) {
+    unset($node->members_array[0]);
   }
   
   $node->members = serialize($node->members_array);
