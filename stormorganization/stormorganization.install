@@ -9,6 +9,29 @@ function stormorganization_install() {
   variable_set('node_options_stormorganization', array('status'));
   
   // Create fields
+  
+  // Customer
+  $field = array(
+    'field_name' => 'stormorganization_iscustomer',
+    'type' => 'boolean',
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormorganizaton_iscustomer',
+    'object_type' => 'node',
+    'bundle' => 'stormorganization',
+    'label' => t('Customer'),
+    'widget' => array(
+      'type' => 'text_field',
+      'weight' => 0,
+    ),
+    'display' => array(
+      'label' => 'inline',
+    ),
+  );
+  field_create_instance($instance);
+  
   // Prefix
   $field = array(
     'field_name' => 'stormorganization_prefix',
@@ -21,7 +44,6 @@ function stormorganization_install() {
     'object_type' => 'node',
     'bundle' => 'stormorganization',
     'label' => t('Prefix'),
-    //'description' => t('You can enter your last name here.'),
     'widget' => array(
       'type' => 'text_field',
       'weight' => 0,
@@ -44,7 +66,28 @@ function stormorganization_install() {
     'object_type' => 'node',
     'bundle' => 'stormorganization',
     'label' => t('Fullname'),
-    //'description' => t('You can enter your last name here.'),
+    'widget' => array(
+      'type' => 'text_field',
+      'weight' => 0,
+    ),
+    'display' => array(
+      'label' => 'inline',
+    ),
+  );
+  field_create_instance($instance);
+  
+  // Country
+  $field = array(
+    'field_name' => 'stormorganization_country',
+    'type' => 'text',
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormorganizaton_country',
+    'object_type' => 'node',
+    'bundle' => 'stormorganization',
+    'label' => t('Country'),
     'widget' => array(
       'type' => 'text_field',
       'weight' => 0,
@@ -61,8 +104,24 @@ function stormorganization_disable() {
 }
 
 function stormorganization_uninstall() {
+  field_delete_field('stormorganization_iscustomer');
+  field_delete_field('stormorganization_isprovider');
+  field_delete_field('stormorganization_isactive');
   field_delete_field('stormorganization_prefix');
   field_delete_field('stormorganization_fullname');
+  field_delete_field('stormorganization_address');
+  field_delete_field('stormorganization_city');
+  field_delete_field('stormorganization_province');
+  field_delete_field('stormorganization_country');
+  field_delete_field('stormorganization_zip');
+  field_delete_field('stormorganization_phone');
+  field_delete_field('stormorganization_www');
+  field_delete_field('stormorganization_email');
+  field_delete_field('stormorganization_currency');
+  field_delete_field('stormorganization_pricemode');
+  field_delete_field('stormorganization_price');
+  field_delete_field('stormorganization_language');
+  field_delete_field('stormorganization_taxid');
   
   drupal_uninstall_schema('stormorganization');
 }
@@ -70,11 +129,6 @@ function stormorganization_uninstall() {
 function stormorganization_schema() {
   $schema['stormorganization'] = array(
     'fields'        => array(
-      'vid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'prefix'      => array('type' => 'varchar', 'length' => 100),
-      'fullname'    => array('type' => 'varchar', 'length' => 100),
-      'country'     => array('type' => 'varchar', 'length' => 100),
       'orglanguage' => array('type' => 'varchar', 'length' => 20),
       'provstate'   => array('type' => 'varchar', 'length' => 50),
       'city'        => array('type' => 'varchar', 'length' => 100),
@@ -85,13 +139,11 @@ function stormorganization_schema() {
       'www'         => array('type' => 'varchar', 'length' => 100),
       'phone'       => array('type' => 'varchar', 'length' => 100),
       'currency'    => array('type' => 'varchar', 'length' => 20),
-      'iscustomer'  => array('type' => 'int', 'default' => 1),
       'isprovider'  => array('type' => 'int', 'default' => 0),
       'isactive'    => array('type' => 'int', 'default' => 1),
       'pricemode'   => array('type' => 'varchar', 'length' => 20),
       'price'       => array('type' => 'float'),
     ),
-    'primary key' => array('vid', 'nid'),
   );
 
   return $schema;
