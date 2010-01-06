@@ -215,10 +215,7 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
   $params['project_nid'] = $project->nid;
 
   foreach ($tasks as $task) {
-    $n = new stdClass();
-    $n->nid = $task->nid;
-    $n->uid = $task->uid;
-    $n->type = 'stormtask';
+    $task->type = 'stormtask';
 
     $form['tasks']['tasks'][$task->nid]['task_depth_'. $task->nid] = array(
       '#value' => $task->depth,
@@ -264,11 +261,13 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
       '#type' => 'weight',
       '#default_value' => $task->weight,
     );
-
-    $v = storm_icon_edit_node($n, $params);
-    $v .= '&nbsp;'. storm_icon_delete_node($n, $params);
-    $params['parent_nid'] = $task->nid;
-    $v .= '&nbsp;'. storm_icon_add_node($n, $params);
+    
+    $params['task_nid'] = $task->nid;
+    
+    $v = storm_icon_edit_node($task, $params);
+    $v .= '&nbsp;'. storm_icon_delete_node($task, $params);
+    $v .= '&nbsp;'. storm_icon_add_node($task, $params);
+    
     $form['tasks']['tasks'][$task->nid]['task_operations_'. $task->nid] = array(
       '#value' => $v,
     );

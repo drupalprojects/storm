@@ -866,7 +866,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
   if (!isset($children[$project_nid])) {
     $children[$project_nid] = array();
 
-    $s = "SELECT n.title, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta
+    $s = "SELECT n.title, n.uid, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta
     ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' AND sta.project_nid=%d
     ORDER BY sta.weight";
     $s = stormtask_access_sql($s, $where);
