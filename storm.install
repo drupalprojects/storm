@@ -29,3 +29,18 @@ function storm_uninstall() {
   variable_del('storm_yearsrangebegin');
   variable_del('storm_yearsrangeend');
 }
+
+/**
+ * @function
+ * Implementation of hook_update_N
+ * Removes stormteammember table if it exists, cleanup from stormteam transition
+ */
+function storm_update_6101() {
+  $ret = array();
+  
+  if (db_table_exists('stormteammember')) {
+    db_drop_table(&$ret, 'stormteammember');
+  }
+    
+  return $ret;
+}
