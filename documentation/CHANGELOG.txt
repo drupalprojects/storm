@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #595278 by Magnity: Changed Remove old Storm Teammember table.
 - Bug #673722 by Magnity: Fixed Hierarchical Project tasks view is not obeying permissions correctly.
 - Bug #666656 by com2: Fixed Country field has no 'don't care' like the other filter options and is not saved.
 - Bug #671588 by Magnity: Fixed Team members array always has 0:Null appended.
