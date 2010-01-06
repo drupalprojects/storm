@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #673722 by Magnity: Fixed Hierarchical Project tasks view is not obeying permissions correctly.
+- Bug #666656 by com2: Fixed Country field has no 'don't care' like the other filter options and is not saved.
 - Bug #671588 by Magnity: Fixed Team members array always has 0:Null appended.
 - Feature #671256 by alberto56: Added Invoicing tracked time: a better calculation of the hourly rate.
 
