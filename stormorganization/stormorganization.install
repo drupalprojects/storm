@@ -13,17 +13,17 @@ function stormorganization_install() {
   // Customer
   $field = array(
     'field_name' => 'stormorganization_iscustomer',
-    'type' => 'boolean',
+    'type' => 'number_integer',
   );
   field_create_field($field);
   
   $instance = array(
-    'field_name' => 'stormorganizaton_iscustomer',
+    'field_name' => 'stormorganization_iscustomer',
     'object_type' => 'node',
     'bundle' => 'stormorganization',
     'label' => t('Customer'),
     'widget' => array(
-      'type' => 'text_field',
+      'type' => 'options_onoff',
       'weight' => 0,
     ),
     'display' => array(
