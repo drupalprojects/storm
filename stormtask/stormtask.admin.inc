@@ -274,7 +274,7 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
     );
   }
 
-  $form['project'] = array(
+  $form['tasks']['project'] = array(
     '#type' => 'hidden',
     '#value' => $project->nid,
   );
