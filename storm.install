@@ -39,7 +39,7 @@ function storm_update_6101() {
   $ret = array();
   
   if (db_table_exists('stormteammember')) {
-    db_drop_table(&$ret, 'stormteammember');
+    db_drop_table($ret, 'stormteammember');
   }
     
   return $ret;
