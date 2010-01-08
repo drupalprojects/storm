@@ -56,15 +56,23 @@ function theme_stormtask_list($header, $tasks) {
   $rows = array();
   foreach ($tasks as $task) {
     $rows[] = array(
-      l($task->organization_title, 'node/'. $task->organization_nid),
-      l($task->project_title, 'node/'. $task->project_nid),
-      l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
-      storm_icon('category_'. $task->taskcategory, $task->taskcategory),
-      storm_icon('status_'. $task->taskstatus, $task->taskstatus),
-      storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
-      array(
-        'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
-        'class' => 'storm_list_operations',
+      // Add classes to each row in table.
+      // Allows customisation of row via css depending on the task's attributes (category, status, priority)
+      'class' => 
+        'storm_category_'. preg_replace('/[^a-zA-Z]/', '', $task->taskcategory) . ' ' .
+        'storm_status_'. preg_replace('/[^a-zA-Z]/', '', $task->taskstatus) . ' ' .
+        'storm_priority_'. preg_replace('/[^a-zA-Z]/', '', $task->taskpriority),
+      'data' => array(
+        l($task->organization_title, 'node/'. $task->organization_nid),
+        l($task->project_title, 'node/'. $task->project_nid),
+        l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
+        storm_icon('category_'. $task->taskcategory, $task->taskcategory),
+        storm_icon('status_'. $task->taskstatus, $task->taskstatus),
+        storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
+        array(
+          'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
+          'class' => 'storm_list_operations',
+        ),
       ),
     );
   }
