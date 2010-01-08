@@ -1,6 +1,9 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #676042 by alberto56 | Magnity: Added Add classes to themed task rows to allow further color customization.
+- Bug #527870 by Magnity | com2: Fixed Tasks drag to re-order without task edit permission. (again)
+- Bug #663164 by Magnity | dbt102: Fixed stormproject is an undefined function. (again)
 - Task #595278 by Magnity: Changed Remove old Storm Teammember table.
 - Bug #673722 by Magnity: Fixed Hierarchical Project tasks view is not obeying permissions correctly.
 - Bug #666656 by com2: Fixed Country field has no 'don't care' like the other filter options and is not saved.
