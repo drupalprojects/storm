@@ -940,7 +940,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   if (array_key_exists(0, $options[$people])) {
     unset($options[$people][0]);
   }
-  if (array_key_exists(0, $options[$teams])) {
+  if (isset($options[$teams]) && array_key_exists(0, $options[$teams])) {
     unset($options[$teams][0]);
   }
   if (!sizeof($options[$people])) {
