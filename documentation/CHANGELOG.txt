@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- No changes since 6.x-1.30.
+
 Version 6.x-1.30:
 - Bug #678250 by Magnity | gnuwings: Fixed Warning on create/edit task.
 - Feature #676042 by alberto56 | Magnity: Added Add classes to themed task rows to allow further color customization.
