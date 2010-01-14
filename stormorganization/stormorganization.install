@@ -40,7 +40,7 @@ function stormorganization_install() {
   field_create_field($field);
   
   $instance = array(
-    'field_name' => 'stormorganizaton_prefix',
+    'field_name' => 'stormorganization_prefix',
     'object_type' => 'node',
     'bundle' => 'stormorganization',
     'label' => t('Prefix'),
@@ -53,29 +53,7 @@ function stormorganization_install() {
     ),
   );
   field_create_instance($instance);
-  
-  // Full name
-  $field = array(
-    'field_name' => 'stormorganization_fullname',
-    'type' => 'text',
-  );
-  field_create_field($field);
-  
-  $instance = array(
-    'field_name' => 'stormorganizaton_fullname',
-    'object_type' => 'node',
-    'bundle' => 'stormorganization',
-    'label' => t('Fullname'),
-    'widget' => array(
-      'type' => 'text_field',
-      'weight' => 0,
-    ),
-    'display' => array(
-      'label' => 'inline',
-    ),
-  );
-  field_create_instance($instance);
-  
+    
   // Country
   $field = array(
     'field_name' => 'stormorganization_country',
