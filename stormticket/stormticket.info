@@ -2,7 +2,6 @@
 name = Storm Ticket
 description = "Allows creation of tickets for Storm Projects and Tasks"
 dependencies[] = storm 
-dependencies[] = stormattribute
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
