@@ -26,9 +26,6 @@ function stormorganization_install() {
       'type' => 'options_onoff',
       'weight' => 0,
     ),
-    'display' => array(
-      'label' => 'inline',
-    ),
   );
   field_create_instance($instance);
   
@@ -48,9 +45,6 @@ function stormorganization_install() {
       'type' => 'text_field',
       'weight' => 0,
     ),
-    'display' => array(
-      'label' => 'inline',
-    ),
   );
   field_create_instance($instance);
     
@@ -69,9 +63,6 @@ function stormorganization_install() {
     'widget' => array(
       'type' => 'text_field',
       'weight' => 0,
-    ),
-    'display' => array(
-      'label' => 'inline',
     ),
   );
   field_create_instance($instance);
