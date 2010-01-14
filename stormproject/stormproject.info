@@ -8,7 +8,6 @@ dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = views
 
-files[] = stormproject.admin.inc
 files[] = stormproject.install
 files[] = stormproject.module
 files[] = stormproject.theme.inc

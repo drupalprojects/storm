@@ -231,22 +231,12 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
 
 function stormproject_menu() {
   $items = array();
-
-  $items['storm/projects'] = array(
-    'title' => 'Projects',
-    'description' => 'Storm Projects',
-    'page callback' => 'stormproject_list',
-    'access arguments' => array('Storm project: access'),
-    'file' => 'stormproject.admin.inc',
-    'type' => MENU_NORMAL_ITEM
-  );
-
+  
   $items['storm/organization_projects_js/%'] = array(
     'title' => 'Projects',
     'page callback' => '_stormproject_organization_projects_js',
     'page arguments' => array(2),
     'access arguments' => array('Storm project: access'),
-    'file' => 'stormproject.admin.inc',
     'type' => MENU_CALLBACK,
   );
 
@@ -307,12 +297,7 @@ function stormproject_form(&$node) {
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Projects'), 'storm/projects');
   drupal_set_breadcrumb($breadcrumb);
-
-  $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Projects'), 'storm/projects');
-  drupal_set_breadcrumb($breadcrumb);
-
+  
   if (arg(1)=='add') {
     $node->datebegin = time();
     $node->dateend = time();
@@ -324,11 +309,11 @@ function stormproject_form(&$node) {
       $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-        ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+      ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);
@@ -688,4 +673,22 @@ function stormproject_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'stormproject'),
   );
+}
+
+function _stormproject_organization_projects_js($organization_nid=0) {
+  $projects = array();
+
+  if ($organization_nid) {
+    $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject' AND spr.organization_nid=%d ORDER BY n.title";
+    $s = stormproject_access_sql($s);
+    $s = db_rewrite_sql($s);
+    $r = db_query($s, $organization_nid);
+
+    while ($item = db_fetch_object($r)) {
+      $nid = $item->nid;
+      $projects[$nid] = $item->title;
+    }
+  }
+  print drupal_to_js($projects);
+  exit();
 }
