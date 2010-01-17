@@ -10,12 +10,6 @@ function theme_stormproject_list($header, $projects) {
 
   $rows = array();
   foreach ($projects as $key => $project) {
-    $n = new stdClass();
-    $n->nid = $project->nid;
-    $n->uid = $project->uid;
-    $n->organization_nid = $project->organization_nid;
-    $n->type = 'stormproject';
-
     $rows[] = array(
       storm_icon('projectcategory_'. $project->projectcategory, $project->projectcategory),
       l($project->organization_title, 'node/'. $project->organization_nid),
@@ -23,7 +17,7 @@ function theme_stormproject_list($header, $projects) {
       storm_icon('status_'. $project->projectstatus, $project->projectstatus),
       storm_icon('priority_'. $project->projectpriority, $project->projectpriority),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($project, $_GET) .'&nbsp;'. storm_icon_delete_node($project, $_GET),
         'class' => 'storm_list_operations',
       ),
     );
