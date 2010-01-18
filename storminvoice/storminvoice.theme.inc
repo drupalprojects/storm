@@ -171,7 +171,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
   
   $where = array();
-  $s  = "SELECT sit.description, sit.amount, sit.tax1, sit.tax2, sit.total FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight";
+  $s  = "SELECT sit.description, sit.amount, sit.tax1, sit.tax2, sit.total FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight ASC";
   $r = db_query($s, $node->vid);
 
   $invoice_items = array();
