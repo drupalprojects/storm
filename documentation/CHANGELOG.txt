@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #687596 by alberto56: Fixed Invoice items ORDER BY weight when shown, not when edited.
 - Bug #688388 by com2: Fixed Link to parent task is incorrect.
 - Bug #678922 by com2: Fixed Project list Edit icon missing.
 - Bug #686332 by alberto56: Fixed Warnings on project and task add pages.

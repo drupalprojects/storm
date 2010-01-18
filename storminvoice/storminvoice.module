@@ -778,7 +778,7 @@ function storminvoice_load($node) {
   $additions = db_fetch_object(db_query('SELECT * FROM {storminvoice} WHERE vid = %d', $node->vid));
   
   // Load invoice items
-  $result = db_query('SELECT * FROM {storminvoice_items} WHERE invoice_vid = %d', $node->vid);
+  $result = db_query('SELECT * FROM {storminvoice_items} WHERE invoice_vid = %d ORDER BY weight ASC', $node->vid);
   $additions->items = array();
   while ($item = db_fetch_object($result)) {
     $additions->items[] = $item;
