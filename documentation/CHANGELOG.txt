@@ -1,7 +1,9 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
-- No changes since 6.x-1.30.
+- Bug #688388 by com2: Fixed Link to parent task is incorrect.
+- Bug #678922 by com2: Fixed Project list Edit icon missing.
+- Bug #686332 by alberto56: Fixed Warnings on project and task add pages.
 
 Version 6.x-1.30:
 - Bug #678250 by Magnity | gnuwings: Fixed Warning on create/edit task.
