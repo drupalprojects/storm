@@ -39,7 +39,7 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['task'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->project_nid)),
+    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
     '#weight' => 3,
   );
 
