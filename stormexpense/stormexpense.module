@@ -690,12 +690,10 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
       
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
+    } else {
+      $new_invoice = node_load($invoice_nid);
     }
     
-    $new_invoice_item = new StdClass;
-    $new_invoice_item->uid = $user->uid;
-    $new_invoice_item->type = 'storminvoiceitem';
-
     if ($node->ticket_nid) {
       $parent_ticket = node_load($node->ticket_nid);
     }
@@ -709,19 +707,21 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $parent_organization = node_load($node->organization_nid);
     }
 
-    $new_invoice_item->invoice_nid = $invoice_nid;
-    $new_invoice_item->title = $node->title;
-    $new_invoice_item->amount = $node->amount;
-    // Tax percent simply uses default at the moment
-    $new_invoice_item->tax1app = $node->tax1app;
-    $new_invoice_item->tax1percent = $node->tax1percent;
-    $new_invoice_item->tax1;
-    $new_invoice_item->tax2app = $node->tax2app;
-    $new_invoice_item->tax2percent = $node->tax2percent;
-    $new_invoice_item->tax2;
-    //$new_invoice_item->total
-
-    node_save($new_invoice_item);
+    $count = count($new_invoice->items);
+    
+    $new_invoice->items[$count]->description = $node->title;
+    $new_invoice->items[$count]->amount = $node->amount;
+    // Tax percent uses the values set on the expense.
+    $new_invoice->items[$count]->tax1app = $node->tax1app;
+    $new_invoice->items[$count]->tax1percent = $node->tax1percent;
+    $new_invoice->items[$count]->tax1 = $node-> tax1;
+    $new_invoice->items[$count]->tax2app = $node->tax2app;
+    $new_invoice->items[$count]->tax2percent = $node->tax2percent;
+    $new_invoice->items[$count]->tax2 = $node->tax2;
+    $new_invoice->items[$count]->total = $node->total;
+    
+    //storm_taxation($new_invoice->items[$count]);
+    storminvoice_update($new_invoice);
   }
   return $invoice_nid;
 }
