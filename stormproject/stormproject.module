@@ -469,7 +469,7 @@ function stormproject_form(&$node) {
   }
   
   $form['group5']['manager_nid'] = array(
-    '#type' => 'select',
+    '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Project Manager'),
     '#options' => $options,
     '#default_value' => $node->manager_nid,
@@ -489,7 +489,7 @@ function stormproject_form(&$node) {
   }
   
   $form['group5']['assigned_nid'] = array(
-    '#type' => 'select',
+    '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Assigned to'),
     '#options' => $options,
     '#default_value' => $node->assigned_nid,
