@@ -3,11 +3,11 @@
 /* CSS Attributes used when viewing Storm nodes */
 
 dt.print_html {
-background: transparent url(images/html.png) no-repeat top left;
+  background: transparent url(images/html.png) no-repeat top left;
 }
 
 dt.print_pdf {
-background: transparent url(images/pdf.png) no-repeat top left;
+  background: transparent url(images/pdf.png) no-repeat top left;
 }
 
 div.stormfields, div.field, div.stormbody {
@@ -23,13 +23,15 @@ div.stormfields div.label, div.stormbody div.label, div.field div.field-label-in
   font-weight: bold;
 }
 
-/* Used on node view by most storm modules */
 div.stormlinks {
   float:right;
   width: 30%;
 }
 
-/* Used on node view for all storm modules */
 div.stormbody div.value p {
   margin: 0;
+}
+
+table#attachments {
+  float: left;
 }
