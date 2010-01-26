@@ -118,7 +118,7 @@ function stormorganization_schema() {
   return $schema;
 }
 
-function hook_update_last_removed() {
+function stormorganization_update_last_removed() {
   // 6.x updates have all been removed
   return 3;
 }
