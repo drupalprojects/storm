@@ -75,7 +75,7 @@ function storm_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['admin/config/storm'] = array(
+  $items['admin/config/system/storm'] = array(
     'title' => 'Storm',
     'description' => 'Storm Administration Page',
     'page callback' => 'drupal_get_form',
@@ -84,7 +84,7 @@ function storm_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   
-  $items['admin/config/storm/storm'] = array(
+  $items['admin/config/system/storm/storm'] = array(
     'title' => 'Storm',
     'description' => 'Storm Administration Page',
     'access arguments' => array('Storm: access administration pages'),
