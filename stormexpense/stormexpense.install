@@ -52,7 +52,7 @@ function stormexpense_schema() {
   return $schema;
 }
 
-function hook_update_last_removed() {
+function stormexpense_update_last_removed() {
   // Removed 6.x updates
   return 6102;
 }
