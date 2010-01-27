@@ -1,16 +1,16 @@
 ; $Id$
 name = Storm Timetracking
 description = "Allows recording of times worked based on project, task and/or ticket"
+package = Storm
+core = 7.x
+
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
 dependencies[] = stormticket
-package = Storm
-core = 7.x
 
 files[] = stormtimetracking.admin.inc
 files[] = stormtimetracking.install
 files[] = stormtimetracking.module
 files[] = stormtimetracking.theme.inc
-files[] = stormtimetracking.views.inc
