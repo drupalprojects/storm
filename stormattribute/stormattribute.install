@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Provides install, disable and uninstall functionality for the Storm Attribute module.
+ * This file will be removed once the data has been included in the Field API configuratio
  */
 
 function stormattribute_install() {
@@ -444,9 +444,4 @@ function stormattribute_schema() {
   );
 
   return $schema;
-}
-
-function hook_update_last_removed() {
-  // Removed 6.x updates.
-  return 6109;
 }

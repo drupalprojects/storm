@@ -46,16 +46,7 @@ function stormtimetracking_schema() {
   return $schema;
 }
 
-function stormtimetracking_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormtimetracking', 'billable', array('type' => 'int'));
-  return $ret;
-}
-
-function stormtimetracking_update_6102() {
-  $ret = array();
-  db_add_field($ret, 'stormtimetracking', 'billed', array('type' => 'int'));
-  db_change_field($ret, 'stormtimetracking', 'duration', 'billing_duration', array('type' => 'float'));
-  db_add_field($ret, 'stormtimetracking', 'duration', array('type' => 'float'));
-  return $ret;
+function stormtimetracking_update_last_removed() {
+  // Removed 6.x updates
+  return 6102;
 }
