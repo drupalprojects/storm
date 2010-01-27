@@ -13,4 +13,3 @@ files[] = stormtask.admin.inc
 files[] = stormtask.install
 files[] = stormtask.module
 files[] = stormtask.theme.inc
-files[] = stormtask.views.inc
