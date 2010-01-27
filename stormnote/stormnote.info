@@ -1,15 +1,15 @@
 ; $Id$
 name = Storm Note
 description = "Allows creation of notes about organizations, projects or tasks."
+package = Storm
+core = 7.x
+
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
-package = Storm
-core = 7.x
 
 files[] = stormnote.admin.inc
 files[] = stormnote.install
 files[] = stormnote.module
 files[] = stormnote.theme.inc
-files[] = stormnote.views.inc

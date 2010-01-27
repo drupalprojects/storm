@@ -13,4 +13,3 @@ files[] = stormexpense.admin.inc
 files[] = stormexpense.install
 files[] = stormexpense.module
 files[] = stormexpense.theme.inc
-files[] = stormexpense.views.inc
