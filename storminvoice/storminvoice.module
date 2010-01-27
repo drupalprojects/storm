@@ -111,7 +111,7 @@ function storminvoice_menu() {
     'file' => 'storminvoice.admin.inc',
   );
 
-  $items['admin/settings/storm/invoice'] = array(
+  $items['admin/config/system/storm/invoice'] = array(
     'title' => 'Storm Invoice',
     'description' => 'Storm Invoice Administration Page',
     'page callback' => 'drupal_get_form',
