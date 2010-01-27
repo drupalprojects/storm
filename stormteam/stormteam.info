@@ -12,5 +12,4 @@ dependencies[] = stormperson
 files[] = stormteam.install
 files[] = stormteam.module
 files[] = stormteam.theme.inc
-files[] = stormteam.views.inc
 files[] = stormteam_handler_field_teammembers.inc

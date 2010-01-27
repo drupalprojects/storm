@@ -10,4 +10,3 @@ files[] = stormperson.admin.inc
 files[] = stormperson.install
 files[] = stormperson.module
 files[] = stormperson.theme.inc
-files[] = stormperson.views.inc
