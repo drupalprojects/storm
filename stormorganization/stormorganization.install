@@ -56,7 +56,7 @@ function stormorganization_install() {
   field_create_field($field);
   
   $instance = array(
-    'field_name' => 'stormorganizaton_country',
+    'field_name' => 'stormorganization_country',
     'object_type' => 'node',
     'bundle' => 'stormorganization',
     'label' => t('Country'),
