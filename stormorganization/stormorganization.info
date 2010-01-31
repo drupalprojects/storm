@@ -11,5 +11,6 @@ dependencies[] = views
 ; files
 files[] = stormorganization.install
 files[] = stormorganization.module
+files[] = stormorganization.test
 files[] = stormorganization.theme.inc
 files[] = stormorganization.views_default.inc
