@@ -11,15 +11,18 @@ Organization module',
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization');
+    parent::setUp('storm', 'stormorganization');
     $privileged_user = $this->drupalCreateUser(array('create stormorganization content'));
     $this->drupalLogin($privileged_user);
   }
 
   public function testStormorganizationCreate() {
+    $langcode = FIELD_LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
+    
     $edit = array(
-      'title' => $this->randomName(32),
-      'body' => $this->randomName(64),
+      'title' => $this->randomName(8),
+      $body_key => $this->randomName(16),
     );
     $this->drupalPost('node/add/stormorganization', $edit, t('Save'));
     $this->assertText(t('Organization @title has been created.', array('@title' => $edit['title'])));
