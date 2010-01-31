@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #544968 by Magnity: Changed Tests for Storm. (Initial commit of test)
 - Task #688088 by com2 | Magnity: Changed Attachments below and not beside.
 - Bug #687066 by Magnity | csattila: Fixed Adding expense data to invoice does not work.
 - Bug #687596 by alberto56: Fixed Invoice items ORDER BY weight when shown, not when edited.
