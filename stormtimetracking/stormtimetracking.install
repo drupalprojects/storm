@@ -9,7 +9,7 @@ function stormtimetracking_install() {
   drupal_install_schema('stormtimetracking');
   variable_set('node_options_stormtimetracking', array('status'));
   // Stop node module from setting Storm permissions
-  variable_set('node_permissions_stormknowledgebase', 0);
+  variable_set('node_permissions_stormtimetracking', 0);
 }
 
 function stormtimetracking_disable() {

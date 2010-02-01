@@ -6,8 +6,10 @@
  */
 
 function stormnote_install() {
-  drupal_install_schema('stormnote');
+  // Default to not published to front page
   variable_set('node_options_stormnote', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormnote', 0);
 }
 
 function stormnote_disable() {

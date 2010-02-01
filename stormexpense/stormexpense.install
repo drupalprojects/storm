@@ -6,8 +6,10 @@
  */
 
 function stormexpense_install() {
-  drupal_install_schema('stormexpense');
+  // Default to not published to front page
   variable_set('node_options_stormexpense', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormexpense', 0);
 }
 
 function stormexpense_disable() {

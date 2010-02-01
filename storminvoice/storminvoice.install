@@ -6,9 +6,9 @@
  */
 
 function storminvoice_install() {
-  drupal_install_schema('storminvoice');
   variable_set('node_options_storminvoice', array('status'));
-  variable_set('node_options_storminvoiceitem', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_storminvoice', 0);
 }
 
 function storminvoice_disable() {

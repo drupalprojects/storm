@@ -148,20 +148,15 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   return $cond;
 }
 
-function stormnote_menu() {
+/**
+ * @function
+ * Implementation of hook_menu
+ * Not currently implemented
+ */
+/*function stormnote_menu() {
   $items = array();
-
-  $items['storm/notes'] = array(
-    'title' => 'Notes',
-    'description' => 'Storm notes',
-    'page callback' => 'stormnote_list',
-    'access arguments' => array('Storm note: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormnote.admin.inc',
-  );
-
   return $items;
-}
+}*/
 
 function stormnote_theme() {
   return array(

@@ -6,6 +6,7 @@
  */
 
 function stormknowledgebase_install() {
+  // Default to not published to front page
   variable_set('node_options_stormknowledgebase', array('status'));
   // Stop node module from setting Storm permissions
   variable_set('node_permissions_stormknowledgebase', 0);
