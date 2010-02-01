@@ -20,24 +20,13 @@
 /**
  * @function
  * Implementation of hook_menu
+ * Not currently implemented
  */
-function stormteam_menu() {
+/*function stormteam_menu() {
   $items = array();
   
-  $items['storm/teams'] = array(
-    'title' => 'Teams',
-    'description' => 'Storm Teams',
-    'page callback' => 'stormteam_list',
-    'access arguments' => array('Storm team: access'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-  
-  //$items['storm/teams/autocomplete'] = array();
-  
-  //$items['admin/settings/storm/team'] = array();
-  
   return $items;
-}
+}*/
 
 /**
  * @function

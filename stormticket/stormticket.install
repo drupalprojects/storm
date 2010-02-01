@@ -6,8 +6,10 @@
  */
 
 function stormticket_install() {
-  drupal_install_schema('stormticket');
+  // Default to not published to front page
   variable_set('node_options_stormticket', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormticket', 0);
 }
 
 function stormticket_disable() {
