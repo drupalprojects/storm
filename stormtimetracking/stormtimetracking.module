@@ -151,16 +151,7 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $acco
 
 function stormtimetracking_menu() {
   $items = array();
-  
-  $items['storm/timetrackings'] = array(
-    'title' => 'Timetrackings',
-    'description' => 'Storm Timetrackings',
-    'page callback' => 'stormtimetracking_list',
-    'access arguments' => array('Storm timetracking: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormtimetracking.admin.inc',
-  );
-  
+    
   $items['storm/timetrackings/report/%/%'] = array(
     'title' => 'Timetrackings',
     'description' => 'Storm Timetrackings',
