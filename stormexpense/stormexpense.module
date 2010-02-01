@@ -181,18 +181,13 @@ function stormexpense_storm_rewrite_where_sql($query, $primary_table, $account) 
   return $cond;
 }
 
+/**
+ * @function
+ * Implementation of hook_menu
+ */
 function stormexpense_menu() {
   $items = array();
-
-  $items['storm/expenses'] = array(
-    'title' => 'Expenses',
-    'description' => 'Storm expenses',
-    'page callback' => 'stormexpense_list',
-    'access arguments' => array('Storm expense: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormexpense.admin.inc',
-  );
-
+  
   $items['storm/expenses/report/%/%'] = array(
     'title' => 'Expenses',
     'description' => 'Storm expenses',
@@ -202,7 +197,7 @@ function stormexpense_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'stormexpense.admin.inc',
   );
-
+  
   $items['storm/expenses/provider_autocomplete'] = array(
     'title' => 'Provider autocomplete',
     'page callback' => 'stormexpense_autocomplete',
@@ -210,7 +205,7 @@ function stormexpense_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'stormexpense.admin.inc',
   );
-
+  
   return $items;
 }
 
