@@ -7,6 +7,8 @@
 
 function stormorganization_install() {
   variable_set('node_options_stormorganization', array('status'));
+  // Stop node module from setting Storm permissions
+  variable_set('node_permissions_stormorganization', 0);
   
   // Create fields
   
