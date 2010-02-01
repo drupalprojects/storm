@@ -27,7 +27,7 @@ function stormorganization_help($path, $arg) {
  */
 function stormorganization_menu() {
   return array(
-    'admin/settings/storm/organization' => array(
+    'admin/config/system/storm/organization' => array(
       'title' => 'Storm Organization',
       'description' => 'Storm Organization Administration Page',
       'page callback' => 'drupal_get_form',

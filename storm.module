@@ -77,7 +77,7 @@ function storm_menu() {
 
   $items['admin/config/system/storm'] = array(
     'title' => 'Storm',
-    'description' => 'Storm Administration Page',
+    'description' => 'Configure the Storm modules',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),

@@ -190,8 +190,8 @@ function stormtask_menu() {
     'type' => MENU_CALLBACK,
   );
   
-  $items['admin/settings/storm/task'] = array(
-    'title' => 'Storm Task',
+  $items['admin/config/system/storm/task'] = array(
+    'title' => 'Tasks',
     'description' => 'Storm Task Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtask_admin_settings'),

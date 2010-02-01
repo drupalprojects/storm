@@ -171,8 +171,8 @@ function stormtimetracking_menu() {
     'file' => 'stormtimetracking.admin.inc',
   );
   
-  $items['admin/settings/storm/timetracking'] = array(
-    'title' => 'Storm Timetracking',
+  $items['admin/config/system/storm/timetracking'] = array(
+    'title' => 'Timetrackings',
     'description' => 'Storm Timetracking Administration Page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtimetracking_admin_settings'),
