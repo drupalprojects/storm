@@ -153,6 +153,14 @@ function stormorganization_content_extra_fields($type_name) {
   }
 }
 
+function stormorganization_options_list($field) {
+  $options = array(
+    0 => t('No'),
+    1 => t('Yes'),
+  );
+  return $options;
+}
+
 function stormorganization_form(&$node) {
   $breadcrumb = array();
   $breadcrumb[] = l('Storm', 'storm');
