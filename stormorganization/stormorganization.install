@@ -26,7 +26,7 @@ function stormorganization_install() {
     'label' => t('Customer'),
     'widget' => array(
       'type' => 'options_onoff',
-      'weight' => 0,
+      'weight' => -50,
     ),
   );
   field_create_instance($instance);
@@ -34,7 +34,7 @@ function stormorganization_install() {
   // Provider
   $field = array(
     'field_name' => 'stormorganization_isprovider',
-    'type' => 'number_integer',
+    'type' => 'list_boolean',
   );
   field_create_field($field);
   
@@ -45,7 +45,7 @@ function stormorganization_install() {
     'label' => t('Provider'),
     'widget' => array(
       'type' => 'options_onoff',
-      'weight' => 1,
+      'weight' => -49,
     ),
   );
   field_create_instance($instance);
@@ -64,7 +64,7 @@ function stormorganization_install() {
     'label' => t('Prefix'),
     'widget' => array(
       'type' => 'text_field',
-      'weight' => 2,
+      'weight' => -48,
     ),
   );
   field_create_instance($instance);
@@ -83,7 +83,7 @@ function stormorganization_install() {
     'label' => t('Address'),
     'widget' => array(
       'type' => 'text_field',
-      'weight' => 3,
+      'weight' => -47,
     ),
   );
   field_create_instance($instance);
@@ -102,7 +102,7 @@ function stormorganization_install() {
     'label' => t('Country'),
     'widget' => array(
       'type' => 'text_field',
-      'weight' => 4,
+      'weight' => -46,
     ),
   );
   field_create_instance($instance);
