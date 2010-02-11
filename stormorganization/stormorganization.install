@@ -25,7 +25,7 @@ function stormorganization_install() {
     'bundle' => 'stormorganization',
     'label' => t('Customer'),
     'widget' => array(
-      'type' => 'options_onoff',
+      'type' => 'options_buttons',
       'weight' => -50,
     ),
   );
