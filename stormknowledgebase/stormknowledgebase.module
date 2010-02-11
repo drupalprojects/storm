@@ -80,6 +80,21 @@ function stormknowledgebase_node_info() {
 
 /**
  * @function
+ * Implementation of hook_options_list
+ */
+function stormknowledgebase_options_list($field) {
+  $options = array(
+    'Linux'=>'-- Linux',
+    'Ubuntu'=>'-- Ubuntu',
+    'DB' => 'Databases',
+    'MySQL'=>'-- MySQL',
+    'PostgreSQL'=>'-- PostgreSQL',
+  );
+  return $options;
+}
+
+/**
+ * @function
  * Implementation of hook_node_access
  */
 function stormknowledgebase_node_access($node, $op, $account=NULL) {
