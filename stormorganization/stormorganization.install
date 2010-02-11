@@ -16,6 +16,7 @@ function stormorganization_install() {
   $field = array(
     'field_name' => 'stormorganization_iscustomer',
     'type' => 'list_boolean',
+    'label' => t('Customer'),
   );
   field_create_field($field);
   
