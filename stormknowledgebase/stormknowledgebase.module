@@ -84,8 +84,8 @@ function stormknowledgebase_node_info() {
  */
 function stormknowledgebase_options_list($field) {
   $options = array(
-    'Linux'=>'-- Linux',
-    'Ubuntu'=>'-- Ubuntu',
+    0 => t('-- Linux'),
+    'Ubuntu'=> '-- Ubuntu',
     'DB' => 'Databases',
     'MySQL'=>'-- MySQL',
     'PostgreSQL'=>'-- PostgreSQL',

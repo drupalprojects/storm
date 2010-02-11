@@ -14,7 +14,7 @@ function stormknowledgebase_install() {
   // Create fields
   $field = array(
     'field_name' => 'stormknowledgebase_topic',
-    'type' => 'text',
+    'type' => 'list_text',
   );
   field_create_field($field);
   
