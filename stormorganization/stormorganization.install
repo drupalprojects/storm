@@ -15,7 +15,7 @@ function stormorganization_install() {
   // Customer
   $field = array(
     'field_name' => 'stormorganization_iscustomer',
-    'type' => 'number_integer',
+    'type' => 'list_boolean',
   );
   field_create_field($field);
   
