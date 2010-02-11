@@ -35,6 +35,9 @@ function stormorganization_install() {
   $field = array(
     'field_name' => 'stormorganization_isprovider',
     'type' => 'list_boolean',
+    'settings' => array(
+      'allowed_values' => '1|Yes',
+    ),
   );
   field_create_field($field);
   
