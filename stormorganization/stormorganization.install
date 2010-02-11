@@ -16,7 +16,6 @@ function stormorganization_install() {
   $field = array(
     'field_name' => 'stormorganization_iscustomer',
     'type' => 'list_boolean',
-    'label' => t('Customer'),
   );
   field_create_field($field);
   
@@ -104,6 +103,25 @@ function stormorganization_install() {
     'widget' => array(
       'type' => 'text_field',
       'weight' => -46,
+    ),
+  );
+  field_create_instance($instance);
+  
+  // Country
+  $field = array(
+    'field_name' => 'stormorganization_zip',
+    'type' => 'text',
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'stormorganization_zip',
+    'object_type' => 'node',
+    'bundle' => 'stormorganization',
+    'label' => t('ZIP'),
+    'widget' => array(
+      'type' => 'text_field',
+      'weight' => -45,
     ),
   );
   field_create_instance($instance);
