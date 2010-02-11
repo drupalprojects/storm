@@ -15,14 +15,6 @@ function stormknowledgebase_install() {
   $field = array(
     'field_name' => 'stormknowledgebase_topic',
     'type' => 'text',
-    'settings' => array(
-      'allowed_values' => 'OS|Operating systems',
-        /*'Linux'=>'-- Linux',
-        'Ubuntu'=>'-- Ubuntu',
-        'DB' => 'Databases',
-        'MySQL'=>'-- MySQL',
-        'PostgreSQL'=>'-- PostgreSQL',*/
-    ),
   );
   field_create_field($field);
   
@@ -31,7 +23,6 @@ function stormknowledgebase_install() {
     'object_type' => 'node',
     'bundle' => 'stormknowledgebase',
     'label' => t('Topic'),
-    //'description' => t('You can enter your last name here.'),
     'widget' => array(
       'type' => 'options_select',
       'weight' => 0,
