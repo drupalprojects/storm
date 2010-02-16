@@ -110,7 +110,8 @@ function stormattribute_attributes_bydomain($domain) {
   $r = db_query($s, $domain);
   $attributes['values'] = array();
   while ($attribute = db_fetch_object($r)) {
-    $attributes['values'][$attribute->akey] = $attribute->avalue;
+    // The variable is deliberately passed through t() for translatability
+    $attributes['values'][$attribute->akey] = t($attribute->avalue);
     if($attribute->isdefault) $attributes['default'] = $attribute->akey;
   }
   if(is_array($attributes['values']) && !array_key_exists('default', $attributes)) {
