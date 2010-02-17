@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #714764 by juliangb, FrankT: Fixed Translatability for Stormteam
 - Feature #671554 by seutje | iamjon: Added Translatable Attributes.
 - Task #544968 by Magnity: Changed Tests for Storm. (Initial commit of test)
 - Task #688088 by com2 | Magnity: Changed Attachments below and not beside.
