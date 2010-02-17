@@ -293,7 +293,7 @@ function stormteam_form(&$node) {
     foreach ($node->members_array as $node->$variable => $name) {
       $form['group1'][$variable] = array(
         '#type' => 'select',
-        '#title' => 'Team Member '. $i,
+        '#title' => t('Team Member @num', array('@num' => $i)),
         '#options' => $options,
         '#default_value' => $node->$variable,
       );
@@ -307,7 +307,7 @@ function stormteam_form(&$node) {
     $variable = 'members_array_'. $i;
     $form['group1'][$variable] = array(
       '#type' => 'select',
-      '#title' => 'Team Member '. $i,
+      '#title' => t('Team Member @num', array('@num' => $i)),
       '#options' => $options,
       '#default_value' => $node->$variable,
     );
