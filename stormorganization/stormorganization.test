@@ -17,7 +17,7 @@ class StormorganisationTestCase extends DrupalWebTestCase {
 
   public function testStormorganizationCreate() {
     // Create and login user.
-    $account = $this->drupalCreateUser(array('access content', 'create stormorganization content'));
+    $account = $this->drupalCreateUser(array('access content'));//, 'create stormorganization content'));
     $this->drupalLogin($account);
     
     // Create a new node.
