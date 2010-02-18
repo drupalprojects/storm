@@ -6,10 +6,38 @@
  */
 
 function stormorganization_install() {
+  // get the name of our localization function for translation during install
+  $t = get_t();
+  
   variable_set('node_options_stormorganization', array('status'));
   // Stop node module from setting Storm permissions
   variable_set('node_permissions_stormorganization', 0);
   
+  // Define the node type.  This is similar to hook_node_info() in Drupal 6
+  $content_type_stormorganization = array(
+    'type' => 'stormorganization',
+    'name' => $t('Organization'),
+    'base' => 'stormorganization',
+    //'description' => $t('This is an example node type with a few fields.'),
+    //'body_label' => $t('Example Description')
+  );
+
+  // Complete the node type definition by setting any defaults not explicitly
+  // declared above.
+  // http://api.drupal.org/api/function/node_type_set_defaults/7
+  $content_type = node_type_set_defaults($content_type_stormorganization);
+
+  // Save the content type
+  node_type_save($content_type);
+
+  // Load the instance definition for our content types body
+  // http://api.drupal.org/api/function/field_info_instance/7
+  $body_instance = field_info_instance('node', 'body', 'stormorganization');
+
+  // Save our changes to the body field instance.
+  // http://api.drupal.org/api/function/field_update_instance/7
+  field_update_instance($body_instance);
+
   // Create fields
   
   // Customer
@@ -23,7 +51,7 @@ function stormorganization_install() {
     'field_name' => 'stormorganization_iscustomer',
     'object_type' => 'node',
     'bundle' => 'stormorganization',
-    'label' => t('Customer'),
+    'label' => $t('Customer'),
     'widget' => array(
       'type' => 'options_buttons',
       'weight' => -50,
