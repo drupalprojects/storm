@@ -164,7 +164,8 @@ function stormtask_tasks($project) {
     }
 
     $o_gantt .= "<div style='position:relative' class='gantt' id='GanttChartDIV'></div>";
-    $o_gantt .= "<script>
+
+    drupal_add_js("
       // Here is all the html code neccessary to display the chart object
       // Future idea would be to allow XML file name to be passed in and chart tasks built from file.
       var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
@@ -188,8 +189,7 @@ function stormtask_tasks($project) {
       else
       {
     alert('not defined');
-      }
-    </script>";
+      }", 'inline', 'footer');
   }
   
   $o .= drupal_get_form('stormtask_tasks_form', $header, $taskstree, $project);
