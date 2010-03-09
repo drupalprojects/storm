@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #737384 by juliangb: Changed Remove translations from CVS.
 - Bug #717174 by juliangb | Onopoc: Fixed Attribute character limit.
 - Task #735910 by juliangb: Changed Attribute cleanups.
 
