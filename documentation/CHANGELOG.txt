@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- Task #735910 by juliangb: Changed Attribute cleanups.
+
 Version 6.x-1.31:
 - Bug #701298 by Magnity: Fixed Gantt chart should use drupal_add_js().
 - Bug #688936 by JGonzalez, Magnity: Fixed Comments and Descriptions FLOAT issue in Storm Task.
