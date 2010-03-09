@@ -450,6 +450,7 @@ function stormattribute_form($attribute = NULL) {
     '#required' => TRUE,
     '#default_value' => $attribute->akey,
     '#size' => 25,
+    '#maxlength' => 20,
   );
 
   $form['group2']['avalue'] = array(
