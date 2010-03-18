@@ -175,9 +175,26 @@ function storminvoice_views_data() {
     ),
   );
   
-  $data['storminvoice']['tax'] = array(
-    'title' => t('Invoice Tax'),
-    'help' => 'Storm Invoice Tax',
+  $data['storminvoice']['tax1'] = array(
+    'title' => t('Invoice Tax1'),
+    'help' => 'Storm Invoice Tax 1',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['storminvoice']['tax2'] = array(
+    'title' => t('Invoice Tax2'),
+    'help' => 'Storm Invoice Tax 2',
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -244,15 +261,15 @@ function storminvoice_views_data() {
   );
 
   // Invoice items
-  $data['storminvoiceitem']['table']['group']  = 'Storm';
-  $data['storminvoiceitem']['table']['join'] = array(
+  $data['storminvoice_items']['table']['group']  = 'Storm';
+  $data['storminvoice_items']['table']['join'] = array(
     'node' => array(
       'left_field' => 'nid',
-      'field' => 'nid',
+      'field' => 'invoice_nid',
     ),
   );
   
-  $data['storminvoiceitem']['invoice_nid'] = array(
+  $data['storminvoice_items']['invoice_nid'] = array(
     'title' => t('Invoiceitem Invoice Node ID'),
     'help' => 'Storm Invoiceitem Invoice Node ID',
     'field' => array(
@@ -269,7 +286,7 @@ function storminvoice_views_data() {
     ),
   );
 
-  $data['storminvoiceitem']['weight'] = array(
+  $data['storminvoice_items']['weight'] = array(
     'title' => t('Invoiceitem Weight'),
     'help' => 'Storm Invoiceitem Weight',
     'field' => array(
@@ -286,7 +303,7 @@ function storminvoice_views_data() {
     ),
   );
   
-  $data['storminvoiceitem']['amount'] = array(
+  $data['storminvoice_items']['amount'] = array(
     'title' => t('Invoiceitem Amount'),
     'help' => t('Storm Invoiceitem Amount'),
     'field' => array(
@@ -303,9 +320,9 @@ function storminvoice_views_data() {
     ),
   );
   
-  $data['storminvoiceitem']['taxpercent'] = array(
-    'title' => t('Invoiceitem Tax Percent'),
-    'help' => t('Storm Invoiceitem Tax Percent'),
+  $data['storminvoice_items']['tax1percent'] = array(
+    'title' => t('Invoiceitem Tax 1 Percent'),
+    'help' => t('Storm Invoiceitem Tax 1 Percent'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -320,9 +337,43 @@ function storminvoice_views_data() {
     ),
   );
 
-  $data['storminvoiceitem']['tax'] = array(
-    'title' => t('Invoiceitem Tax'),
-    'help' => t('Storm Invoiceitem Tax'),
+  $data['storminvoice_items']['tax2percent'] = array(
+    'title' => t('Invoiceitem Tax 2 Percent'),
+    'help' => t('Storm Invoiceitem Tax 2 Percent'),
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['storminvoice_items']['tax1'] = array(
+    'title' => t('Invoiceitem Tax 1'),
+    'help' => t('Storm Invoiceitem Tax 1'),
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['storminvoice_items']['tax2'] = array(
+    'title' => t('Invoiceitem Tax 2'),
+    'help' => t('Storm Invoiceitem Tax 2'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -337,7 +388,7 @@ function storminvoice_views_data() {
     ),
   );
   
-  $data['storminvoiceitem']['total'] = array(
+  $data['storminvoice_items']['total'] = array(
     'title' => t('Invoiceitem Total'),
     'help' => t('Storm Invoiceitem Total'),
     'field' => array(
