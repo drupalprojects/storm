@@ -231,6 +231,9 @@ function stormtimetracking_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
   );
   
   $data['stormtimetracking']['billed'] = array(
@@ -241,6 +244,9 @@ function stormtimetracking_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
     ),
   );
   
