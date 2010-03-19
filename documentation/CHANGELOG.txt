@@ -2,8 +2,9 @@
 
 
 Version 6.x-1.x-dev:
-- #660150 by flickerfly, juliangb | Magnity: Added Allow filter by 'billed' column in views.
-- #743724 by tchurch: Fixed Columns for views with update 6106/6103 not correct.
+- Feature #747056 by juliangb: Added Test for dashboard access.
+- Feature #660150 by flickerfly, juliangb | Magnity: Added Allow filter by 'billed' column in views.
+- Bug #743724 by tchurch: Fixed Columns for views with update 6106/6103 not correct.
 - Task #737384 by juliangb: Changed Remove translations from CVS.
 - Bug #717174 by juliangb | Onopoc: Fixed Attribute character limit.
 - Task #735910 by juliangb: Changed Attribute cleanups.
