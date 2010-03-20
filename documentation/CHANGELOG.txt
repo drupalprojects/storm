@@ -1,7 +1,7 @@
 /* $Id$ */
 
-
 Version 6.x-1.x-dev:
+- Bug #744690 by tchurch: Fixed Names for tax1 and tax2 on all node views not taken from database.
 - Feature #747056 by juliangb: Added Test for dashboard access.
 - Feature #660150 by flickerfly, juliangb | Magnity: Added Allow filter by 'billed' column in views.
 - Bug #743724 by tchurch: Fixed Columns for views with update 6106/6103 not correct.

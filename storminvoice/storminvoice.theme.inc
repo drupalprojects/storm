@@ -75,11 +75,11 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 1'),
+      'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
       'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 2'),
+      'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
       'style' => 'text-align: right;',
     ),
     array(
@@ -311,11 +311,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       //'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 1'),
+      'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
       //'style' => 'text-align: right;',
     ),
     array(
-      'data' => t('Tax 2'),
+      'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
       //'style' => 'text-align: right;',
     ),
     array(
@@ -366,14 +366,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['tax1'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax 1'), sprintf('%.2f', $node->tax1)),
+    '#value' => theme('storm_view_item', t(variable_get('storm_tax1_name', 'Tax 1')), sprintf('%.2f', $node->tax1)),
     '#weight' => 2,
   );
   
   $node->content['group5']['tax2'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax 2'), sprintf('%.2f', $node->tax2)),
+    '#value' => theme('storm_view_item', t(variable_get('storm_tax2_name', 'Tax 2')), sprintf('%.2f', $node->tax2)),
     '#weight' => 3,
   );
   
@@ -567,8 +567,8 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($language1) $o .= "\n". t('Amount', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  $o = variable_get('storm_tax1_name', 'VAT');
-  if ($language1) $o .= "\n". variable_get('storm_tax1_name', 'VAT');
+  $o = variable_get('storm_tax1_name', 'Tax 1');
+  if ($language1) $o .= "\n". variable_get('storm_tax1_name', 'Tax 1');
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
   $o = variable_get('storm_tax2_name', 'Tax 2');
@@ -744,11 +744,11 @@ function theme_storminvoice_report_html($node, $language) {
   $amount = t('Amount', array(), $language);
   if ($language1) $amount .= '<br />'. t('Amount', array(), $language1);
 
-  $tax1 = variable_get('storm_tax1_name', 'VAT');
-  if ($language1) $tax1 .= '<br />'. variable_get('storm_tax1_name', 'VAT');
+  $tax1 = variable_get('storm_tax1_name', 'Tax 1');
+  if ($language1) $tax1 .= '<br />'. variable_get('storm_tax1_name', 'Tax 1');
   
   $tax2 = variable_get('storm_tax2_name', 'Tax 2');
-  if ($language1) $tax1 .= '<br />'. variable_get('storm_tax2_name', 'Tax 2');
+  if ($language1) $tax2 .= '<br />'. variable_get('storm_tax2_name', 'Tax 2');
 
   $total = t('Total', array(), $language);
   if ($language1) $total .= '<br />'. t('Total', array(), $language1);
