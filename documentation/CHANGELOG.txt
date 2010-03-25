@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #741466 by juliangb | tchurch: Fixed Emailed PDF file can't be opened.
 - Bug #744690 by tchurch: Fixed Names for tax1 and tax2 on all node views not taken from database.
 - Feature #747056 by juliangb: Added Test for dashboard access.
 - Feature #660150 by flickerfly, juliangb | Magnity: Added Allow filter by 'billed' column in views.

@@ -485,7 +485,7 @@ function storminvoice_send_form_submit($form, &$form_state) {
   $pdffile_mime = file_get_mimetype($pdffile);
   $params['body']  .= "--$trenner"."\n";
   $params['body']  .= "Content-Type:$pdffile_mime; name='$pdffile_name'\n";
-  $params['body']  .= "Content-Disposition: attachment; filename='$pdffile_name'\n";
+  $params['body']  .= "Content-Disposition: attachment; filename=$pdffile_name\n";
   $params['body']  .= "Content-Transfer-Encoding: base64\n\n";
   $params['body']  .= chunk_split(base64_encode($filedata));
   $params['body'] .= "--$trenner--";

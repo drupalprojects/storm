@@ -619,7 +619,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0 ,1,'C');
   }
 
-  $filename = strtolower($title . '_' . $myorg->title . '_' . $organization->title . '_' . str_replace('/', '-', $node->number)) .'.pdf';
+  $filename = strtolower('invoice_'. str_replace('/', '-', $node->number)) .'.pdf';
 
   //Close and output PDF document
   if ($output == 'screen') {
