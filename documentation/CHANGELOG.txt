@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #750294 by juliangb | tchurch: Fixed missing css files.
 - Bug #746410 by tchurch: Fixed tax 1/2 not hidden on screens and print-outs if switched off in admin settings.
 - Bug #741466 by juliangb | tchurch: Fixed Emailed PDF file can't be opened.
 - Bug #744690 by tchurch: Fixed Names for tax1 and tax2 on all node views not taken from database.

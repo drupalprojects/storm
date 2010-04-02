@@ -27,7 +27,6 @@ function theme_dateext($element) {
 
 function theme_storm_list_report($header, $rows, $title, $footer) {
   $css_all_file = drupal_get_path('module', 'storm') .'/storm_list_report_all.css';
-  $css_print_file = drupal_get_path('module', 'storm') .'/storm_list_report_print.css';
   $query_string = '?'. drupal_substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   $o = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -35,7 +34,6 @@ function theme_storm_list_report($header, $rows, $title, $footer) {
   $o .= '<head>';
   $o .= '<title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
   $o .= '<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . $css_all_file . $query_string .'" />';
-  $o .= '<link type="text/css" rel="stylesheet" media="print" href="'. base_path() . $css_print_file . $query_string .'" />';
   $o .= '</head>';
   $o .= '<body>';
   $o .= '<table class="storm_report_header"><tr>';
@@ -57,7 +55,6 @@ function theme_storm_list_report($header, $rows, $title, $footer) {
 
 function theme_storm_report($header, $content, $title, $footer, $headtitle='') {
   $css_all_file = drupal_get_path('module', 'storm') .'/storm_report_all.css';
-  $css_print_file = drupal_get_path('module', 'storm') .'/storm_report_print.css';
   $query_string = '?'. drupal_substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   $o = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -65,7 +62,6 @@ function theme_storm_report($header, $content, $title, $footer, $headtitle='') {
   $o .= '<head>';
   $o .= '<title>'. ($headtitle ? strip_tags($headtitle) : $title) .'</title>';
   $o .= '<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . $css_all_file . $query_string .'" />';
-  $o .= '<link type="text/css" rel="stylesheet" media="print" href="'. base_path() . $css_print_file . $query_string .'" />';
   $o .= '</head>';
   $o .= '<body>';
   $o .= '<table class="storm_report_header"><tr>';
