@@ -685,14 +685,52 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
 function storm_icon($icon, $title) {
   global $base_path;
   $icon = str_replace(' ', '_', $icon);
+
   if (variable_get('storm_icons_display', TRUE) == TRUE) {
-    $img_src = $base_path . variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons') .'/'. $icon .'.png';
-    $o = '<img src="'. $img_src .'" alt="'. $title .'" title="'. $title .'" />';
-  } else {
+    $available = cache_get('storm:icons');
+    if ($available == 0) {
+      // Cache miss
+      $available = storm_icon_recache();
+    }
+
+    if (in_array($icon .'.png', $available->data)) {
+      // Standard route - display normal image
+      $img_src = $base_path . variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons') .'/'. $icon .'.png';
+      $o = '<img src="'. $img_src .'" alt="'. $title .'" title="'. $title .'" />';
+    }
+    else {
+      // Icon not found
+      $o = storm_icon_default($icon, $title);
+    }
+  }
+  else {
+    // Icons set to not display
     $o = $title;
   }
   return $o;
 }
+
+function storm_icon_recache() {
+  $available = array();
+
+  // For PHP5, replace with scandir() function
+  $dir = variable_get('storm_icons_path', drupal_get_path('module', 'storm'). '/icons');
+  $dh = opendir($dir);
+  while (false !== ($filename = readdir($dh))) {
+    $available[] = $filename;
+  }
+
+  cache_set('storm:icons', $available, 'cache', CACHE_TEMPORARY);
+  $available = cache_get('storm:icons');
+  return $available;
+}
+
+function storm_icon_default($icon, $title) {
+  // For now, just return $title.
+  // A future extension could be more intelligent using $icon.
+  return $title;
+}
+
 
 // SQL FUNCTIONS
 function storm_rewrite_sql($sql, $where=array(), $join=array()) {
