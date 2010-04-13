@@ -76,24 +76,18 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     ),
   );
   
-  if (variable_get('storm_tax_display', TRUE)) {
-    $header[] = array(
-      'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
-      'style' => 'text-align: right;',
-    );
-  }    
-
-  if (variable_get('storm_tax2_display', TRUE)) {
-    $header[] = array(
-      'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
-      'style' => 'text-align: right;',
-    );
-  }
-
-    $header[] = array(
-      'data' => t('Total'),
-      'style' => 'text-align: right;',
-    );
+  $header[] = array(
+    'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
+    'style' => 'text-align: right;',
+  );
+  $header[] = array(
+    'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
+    'style' => 'text-align: right;',
+  );
+  $header[] = array(
+    'data' => t('Total'),
+    'style' => 'text-align: right;',
+  );
 
   $rows = array();
   $rows[] = array(
@@ -106,25 +100,18 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-
-  if (variable_get('storm_tax_display', TRUE)) {
-    $rows[key(end($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_topay->tax1),
-      'style' => 'text-align: right;',
-    );
-  }
-  
-  if (variable_get('storm_tax2_display', TRUE)) {
-    $rows[key(end($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_topay->tax2),
-      'style' => 'text-align: right;',
-    );
-  }
-
-    $rows[key(end($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_topay->total),
-      'style' => 'text-align: right;',
-    );
+  $rows[key(end($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_topay->tax1),
+    'style' => 'text-align: right;',
+  );
+  $rows[key(end($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_topay->tax2),
+    'style' => 'text-align: right;',
+  );
+  $rows[key(end($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_topay->total),
+    'style' => 'text-align: right;',
+  );
     
   $rows[] = array(
     array(
@@ -136,22 +123,18 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  if (variable_get('storm_tax_display', TRUE)) {
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_paid->tax1),
-      'style' => 'text-align: right;',
-    );
-  }
-  if (variable_get('storm_tax2_display', TRUE)) {
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_paid->tax2),
-      'style' => 'text-align: right;',
-    );
-  }
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals_paid->total),
-      'style' => 'text-align: right;',
-    );
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_paid->tax1),
+    'style' => 'text-align: right;',
+  );
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_paid->tax2),
+    'style' => 'text-align: right;',
+  );
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals_paid->total),
+    'style' => 'text-align: right;',
+  );
     
   $rows[] = array(
     array(
@@ -163,23 +146,19 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  if (variable_get('storm_tax_display', TRUE)) {
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals->tax1),
-      'style' => 'text-align: right;',
-    );
-  }
-  if (variable_get('storm_tax2_display', TRUE)) {
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals->tax2),
-      'style' => 'text-align: right;',
-    );
-  }
-    $rows[end(array_keys($rows))][] = array(
-      'data' => sprintf('%.2f', $totals->total),
-      'style' => 'text-align: right;',
-    );
-    
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals->tax1),
+    'style' => 'text-align: right;',
+  );
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals->tax2),
+    'style' => 'text-align: right;',
+  );
+  $rows[end(array_keys($rows))][] = array(
+    'data' => sprintf('%.2f', $totals->total),
+    'style' => 'text-align: right;',
+  );
+
   $o .= theme('table', $header, $rows);
 
   return $o;
@@ -337,14 +316,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     ),
   );
   
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
     $header[] = array(
       'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
       //'style' => 'text-align: right;',
     );
   }
   
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
     $header[] = array(
       'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
       //'style' => 'text-align: right;',
@@ -358,10 +337,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     
   $where = array();
   $s  = "SELECT sit.description, sit.amount, ";
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
     $s .= "sit.tax1, ";
   }
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
     $s .= "sit.tax2, ";
   }
   $s .= "sit.total FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight ASC";
@@ -377,10 +356,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   foreach ($invoice_items as $key => $inv_item) {
     // PHP4 compatibility - for D7 change this to use the original array by reference
     $invoice_items[$key]['amount'] = sprintf("%.2f", $inv_item['amount']);
-    if (variable_get('storm_tax_display', TRUE)) {
+    if ($node->tax1) {
     $invoice_items[$key]['tax1'] = sprintf("%.2f", $inv_item['tax1']);
     }
-    if (variable_get('storm_tax2_display', TRUE)) {
+    if ($node->tax2) {
     $invoice_items[$key]['tax2'] = sprintf("%.2f", $inv_item['tax2']);
     }
     $invoice_items[$key]['total'] = sprintf("%.2f", $inv_item['total']);
@@ -406,7 +385,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 1,
   );
 
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
   $node->content['group5']['tax1'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
@@ -415,7 +394,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
   }
   
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
   $node->content['group5']['tax2'] = array(
     '#prefix' => '<div class="tax">',
     '#suffix' => '</div>',
@@ -614,13 +593,13 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($language1) $o .= "\n". t('Amount', array(), $language1);
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
 
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
   $o = variable_get('storm_tax1_name', 'Tax 1');
   if ($language1) $o .= "\n". variable_get('storm_tax1_name', 'Tax 1');
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
   }
 
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
   $o = variable_get('storm_tax2_name', 'Tax 2');
   if ($language1) $o .= "\n". variable_get('storm_tax2_name', 'Tax 2');
   $pdf->MultiCell($pageWidth * .15, 0, $o, 1, 'C', 1, 0);
@@ -644,10 +623,10 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     $pdf->setY($y);
     $pdf->setX(PDF_MARGIN_LEFT + $pageWidth * .4);
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->amount), 1, 0, 'R', $c);
-    if (variable_get('storm_tax_display', TRUE)) {
+    if ($node->tax1) {
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax1), 1, 0, 'R', $c);
     }
-    if (variable_get('storm_tax2_display', TRUE)) {
+    if ($node->tax2) {
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->tax2), 1, 0, 'R', $c);
     }
     $pdf->Cell($pageWidth * .15, $h, sprintf('%.2f', $i->total), 1, 1, 'R', $c);
@@ -799,12 +778,12 @@ function theme_storminvoice_report_html($node, $language) {
   $amount = t('Amount', array(), $language);
   if ($language1) $amount .= '<br />'. t('Amount', array(), $language1);
 
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
   $tax1 = variable_get('storm_tax1_name', 'Tax 1');
   if ($language1) $tax1 .= '<br />'. variable_get('storm_tax1_name', 'Tax 1');
   }
   
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
   $tax2 = variable_get('storm_tax2_name', 'Tax 2');
   if ($language1) $tax2 .= '<br />'. variable_get('storm_tax2_name', 'Tax 2');
   }
@@ -820,12 +799,12 @@ function theme_storminvoice_report_html($node, $language) {
       'data' => $amount,
     ),
   );
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
     $header[] = array(
       'data' => $tax1,
     );
   }
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
     $header[] = array(
       'data' => $tax2,
     );
@@ -846,13 +825,13 @@ function theme_storminvoice_report_html($node, $language) {
         'style' => 'text-align: right;',
       ),
     );
-    if (variable_get('storm_tax_display', TRUE)) {
+    if ($node->tax1) {
       $rows[end(array_keys($rows))][] = array(
         'data' => sprintf('%.2f', $i->tax1),
         'style' => 'text-align: right;',
       );
     }
-    if (variable_get('storm_tax2_display', TRUE)) {
+    if ($node->tax2) {
       $rows[end(array_keys($rows))][] = array(
         'data' => sprintf('%.2f', $i->tax2),
         'style' => 'text-align: right;',
@@ -878,13 +857,13 @@ function theme_storminvoice_report_html($node, $language) {
     ),
   );
     
-  if (variable_get('storm_tax_display', TRUE)) {
+  if ($node->tax1) {
     $rows[end(array_keys($rows))][] = array(
       'data' => sprintf('%.2f', $node->tax1),
       'style' => 'text-align: right;',
     );
   }
-  if (variable_get('storm_tax2_display', TRUE)) {
+  if ($node->tax2) {
     $rows[end(array_keys($rows))][] = array(
       'data' => sprintf('%.2f', $node->tax2),
       'style' => 'text-align: right;',
