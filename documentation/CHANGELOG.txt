@@ -1,6 +1,6 @@
 /* $Id$ */
 
-Version 6.x-1.x-dev:
+Version 6.x-1.32:
 - Bug #257881 by juliangb: Fixed New attribute results in missing icon.
 - Bug #735694 by tchurch: Fixed timetracking records not taking fixed price from organisation, project or task.
 - Bug #750294 by juliangb | tchurch: Fixed missing css files.
