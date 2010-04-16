@@ -29,7 +29,6 @@ function stormorganization_perm() {
     'Storm organization: view all',
     'Storm organization: view own',
     'Storm organization: view belonged',
-    'Storm organization: associate user'
   );
 }
 
