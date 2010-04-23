@@ -411,6 +411,9 @@ function _stormtask_project_assignments_js($organization_nid, $project_nid) {
 }
 
 function stormtask_list() {
+  
+  global $user;
+  
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   drupal_set_breadcrumb($breadcrumb);
@@ -558,6 +561,37 @@ function stormtask_list() {
       $filterfields[] = 'Date';
     }
   }
+  
+  if ($_SESSION['stormtask_list_filter']['assigned_to']) {
+    if (!is_numeric($_SESSION['stormtask_list_filter']['assigned_to'])) {
+      switch ($_SESSION['stormtask_list_filter']['assigned_to']) {
+        
+        case 'all':
+          // NO FILTER
+          break;
+        
+        case 'mine':
+          // CURRENT USER 
+          if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
+            $assigned_to_nid = $user->stormperson_nid;
+          }
+          break;
+          
+        case 'none':
+          $where[] = '(sta.assigned_nid IS NULL OR sta.assigned_nid = 0) ';
+          break;
+          
+      }
+    }
+    else {
+      $assigned_to_nid = $_SESSION['stormtask_list_filter']['assigned_to'];
+    }
+    if (!empty($assigned_to_nid) && is_numeric($assigned_to_nid)) {
+      $where[] = 'sta.assigned_nid=%d';
+      $args[] = $assigned_to_nid;
+      $filterfields[] = t('Assigned to');
+    }
+  }
 
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -620,6 +654,8 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
   $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
   $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
+  
+  $assigned_to = $_SESSION['stormtask_list_filter']['assigned_to'];
 
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -740,6 +776,15 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
+  
+  // ASSIGNED TO
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $form['filter']['group4_1']['assigned_to'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#default_value' => $assigned_to,
+    '#options' => $options,
+  );
 
   $form['filter']['group5'] = array(
     '#type' => 'markup',
@@ -780,6 +825,7 @@ function stormtask_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtask_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
   $_SESSION['stormtask_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormtask_list_filter']['dateendto'] = $form_state['values']['dateendto'];
+  $_SESSION['stormtask_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
   $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

@@ -193,7 +193,7 @@ function stormticket_views_data() {
     ),
   );
   
-  $data['stormticet']['assigned_nid'] = array(
+  $data['stormticket']['assigned_nid'] = array(
     'title' => t('Ticket Assigned Node ID'),
     'help' => 'Storm Ticket Assigned Node ID',
     'field' => array(

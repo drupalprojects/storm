@@ -126,6 +126,37 @@ function stormproject_list() {
     }
   }
 
+  if ($_SESSION['stormproject_list_filter']['assigned_to']) {
+    if (!is_numeric($_SESSION['stormproject_list_filter']['assigned_to'])) {
+      switch ($_SESSION['stormproject_list_filter']['assigned_to']) {
+        
+        case 'all':
+          // NO FILTER
+          break;
+        
+        case 'mine':
+          // CURRENT USER 
+          if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
+            $assigned_to_nid = $user->stormperson_nid;
+          }
+          break;
+          
+        case 'none':
+          $where[] = '(spr.assigned_nid IS NULL OR spr.assigned_nid = 0) ';
+          break;
+          
+      }
+    }
+    else {
+      $assigned_to_nid = $_SESSION['stormproject_list_filter']['assigned_to'];
+    }
+    if (!empty($assigned_to_nid) && is_numeric($assigned_to_nid)) {
+      $where[] = 'spr.assigned_nid=%d';
+      $args[] = $assigned_to_nid;
+      $filterfields[] = t('Assigned to');
+    }
+  }
+  
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
@@ -186,6 +217,8 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
   $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
 
+  $assigned_to = $_SESSION['stormproject_list_filter']['assigned_to'];
+  
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
@@ -285,8 +318,22 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
   );
+  
+  // ASSIGNED TO
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $form['filter']['group4']['assigned_to'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#default_value' => $assigned_to,
+    '#options' => $options,
+  );
+  
+  $form['filter']['group5'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
 
-  $form['filter']['group4']['itemsperpage'] = array(
+  $form['filter']['group5']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Items'),
     '#size' => 10,
@@ -295,13 +342,13 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#suffix' => '</div>',
   );
 
-  $form['filter']['group4']['submit'] = array(
+  $form['filter']['group5']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
     '#submit' => array('stormproject_list_filter_filter'),
   );
 
-  $form['filter']['group4']['reset'] = array(
+  $form['filter']['group5']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
     '#submit' => array('stormproject_list_filter_reset'),
@@ -319,6 +366,7 @@ function stormproject_list_filter_filter($form, &$form_state) {
   $_SESSION['stormproject_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
   $_SESSION['stormproject_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormproject_list_filter']['dateendto'] = $form_state['values']['dateendto'];
+  $_SESSION['stormproject_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

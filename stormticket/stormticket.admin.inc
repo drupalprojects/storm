@@ -6,6 +6,9 @@
  */
 
 function stormticket_list() {
+  
+  global $user;
+  
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   drupal_set_breadcrumb($breadcrumb);
@@ -81,6 +84,7 @@ function stormticket_list() {
   $filterfields = array();
 
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
+  
   if ($_SESSION['stormticket_list_filter']['organization_nid']) {
     $where[] = 'sti.organization_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
@@ -174,6 +178,37 @@ function stormticket_list() {
       $filterfields[] = t('Date');
     }
   }
+  
+  if ($_SESSION['stormticket_list_filter']['assigned_to']) {
+    if (!is_numeric($_SESSION['stormticket_list_filter']['assigned_to'])) {
+      switch ($_SESSION['stormticket_list_filter']['assigned_to']) {
+        
+        case 'all':
+          // NO FILTER
+          break;
+        
+        case 'mine':
+          // CURRENT USER 
+          if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
+            $assigned_to_nid = $user->stormperson_nid;
+          }
+          break;
+          
+        case 'none':
+          $where[] = '(sti.assigned_nid IS NULL OR sti.assigned_nid = 0) ';
+          break;
+          
+      }
+    }
+    else {
+      $assigned_to_nid = $_SESSION['stormticket_list_filter']['assigned_to'];
+    }
+    if (!empty($assigned_to_nid) && is_numeric($assigned_to_nid)) {
+      $where[] = 'sti.assigned_nid=%d';
+      $args[] = $assigned_to_nid;
+      $filterfields[] = t('Assigned to');
+    }
+  }
 
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
@@ -243,6 +278,8 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
   $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
   $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
   $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
+  
+  $assigned_to = $_SESSION['stormticket_list_filter']['assigned_to'];
 
   $form = array();
 
@@ -375,6 +412,17 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
+  
+  
+  // ASSIGNED TO
+  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $form['filter']['group4_1']['assigned_to'] = array(
+    '#type' => 'select',
+    '#title' => t('Assigned to'),
+    '#default_value' => $assigned_to,
+    '#options' => $options,
+  );
+  
 
   $form['filter']['group5'] = array(
     '#type' => 'markup',
@@ -416,6 +464,7 @@ function stormticket_list_filter_filter($form, &$form_state) {
   $_SESSION['stormticket_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
   $_SESSION['stormticket_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormticket_list_filter']['dateendto'] = $form_state['values']['dateendto'];
+  $_SESSION['stormticket_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
   $_SESSION['stormticket_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

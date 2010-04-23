@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #593252 by Carsten Müller | Onopoc, Magnity: Added Adding 'assigned to' person in filters.
 - Feature #773314 by juliangb: Added Tests for Storm Project.
 - Feature #773274 by juliangb: Added Tests for Storm Invoice.
 - Task #752720 by juliangb | tchurch: Changed Remove permission 'Storm organization: associate user'.
