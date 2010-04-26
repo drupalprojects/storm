@@ -315,10 +315,7 @@ function storminvoice_form(&$node) {
   if (arg(1)=='add') {
     $node->requestdate = time();
     $node->duedate = $node->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
-    $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
-      WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
-    $date = getdate($node->requestdate);
-    $node->number = (db_result(db_query($s, $node->requestdate)) + 1) .'/'. $date['year'];
+    $node->number = storminvoice_get_invoice_number($node->requestdate);
 
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
@@ -867,4 +864,20 @@ function storminvoice_getitems($invoice_vid) {
     $items[] = $i;
   }
   return $items;
+}
+
+/**
+ * function to return the next invoice number.
+ * It will look for the highest invoice number within the current year and add one.
+ *
+ * @return
+ * Returns a text value of the calculated invoice number.
+ */
+function storminvoice_get_invoice_number($requestdate) {
+  $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
+    WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
+  $date = getdate($requestdate);
+  $new_invoice_number = (db_result(db_query($s, $requestdate)) + 1) .'/'. $date['year'];
+  
+  return $new_invoice_number;
 }

@@ -666,10 +666,7 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       //Code copied with edits from node form
       $new_invoice->requestdate = time();
       $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
-      $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
-        WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
-      $date = getdate($new_invoice->requestdate);
-      $new_invoice->number = (db_result(db_query($s, $new_invoice->requestdate)) + 1) .'/'. $date['year'];
+      $new_invoice->number = storminvoice_get_invoice_number($new_invoice->requestdate);
 
       $new_invoice->title = $node->title;
       $new_invoice->uid = $user->uid;
