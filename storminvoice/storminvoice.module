@@ -144,6 +144,10 @@ function storminvoice_theme() {
       'file'      => 'storminvoice.theme.inc',
       'arguments' => array('node', 'language', array('output' => 'screen')),
     ),
+    'storminvoice_autoadd_links' => array(
+      'file'      => 'storminvoice.theme.inc',
+      'arguments' => array('nid', 'billable', 'billed'),
+    ),
   );
 }
 

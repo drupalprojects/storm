@@ -45,28 +45,12 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Code to create invoice auto_add link
-  if (module_exists('storminvoice') && user_access('Storm invoice: add')) {
-    if ($node->billable && !$node->billed) {
-      $v = '';
-      $v = '<strong>'. t('Invoice this item:') .'</strong>';
-      $v .= '<ul>';
-      $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
-      $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
-      $v .= '</ul>';
-    }
-    elseif ($node->billed) {
-      $v = '';
-      $v .= '<strong>'. t('Item already billed.') .'</strong>';
-    }
-    else {
-      $v = '';
-      $v .= '<strong>'. t('Item marked unbillable.') .'</strong>';
-    }
-    
+  if (module_exists('storminvoice')) {
+
     $node->content['links']['auto_invoice'] = array(
       '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
       '#suffix' => '</dt>',
-      '#value' => $v,
+      '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
       '#weight' => 1,
     );
   }

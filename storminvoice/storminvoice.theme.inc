@@ -903,3 +903,31 @@ function theme_storminvoice_report_html($node, $language) {
 
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
+
+ /* Code to create invoice auto_add link
+ * Input billable and billed to determine what the link is.
+ * 
+ * @return
+ * html coding for the link
+ */
+function theme_storminvoice_autoadd_links($nid, $billable, $billed) {
+  if (user_access('Storm invoice: add')) {
+    if ($billable && !$billed) {
+      $v = '';
+      $v = '<strong>'. t('Invoice this item:') .'</strong>';
+      $v .= '<ul>';
+      $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $nid) .'</li>';
+      $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $nid) .'</li>';
+      $v .= '</ul>';
+    }
+    elseif ($billed) {
+      $v = '';
+      $v .= '<strong>'. t('Item already billed.') .'</strong>';
+    }
+    else {
+      $v = '';
+      $v .= '<strong>'. t('Item marked unbillable.') .'</strong>';
+    }
+  }
+  return $v;
+}
