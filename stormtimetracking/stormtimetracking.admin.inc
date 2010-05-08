@@ -132,10 +132,15 @@ function stormtimetracking_list() {
     $args[] = _storm_datetime_to_gmtimestamp($dateto);
     $filterfields[] = t('Date');
   }
-  if ($_SESSION['stormtimetracking_list_filter']['billable']!='-' && $_SESSION['stormtimetracking_list_filter']['billable']!= NULL) {
+  if ($_SESSION['stormtimetracking_list_filter']['billable'] != '-' && $_SESSION['stormtimetracking_list_filter']['billable'] != NULL) {
     $where[] = 'stt.billable=%d';
     $args[] = $_SESSION['stormtimetracking_list_filter']['billable'];
     $filterfields[] = t('Billable');
+  }
+  if ($_SESSION['stormtimetracking_list_filter']['billed'] != '-' && $_SESSION['stormtimetracking_list_filter']['billed'] != NULL) {
+    $where[] = 'stt.billed=%d';
+    $args[] = $_SESSION['stormtimetracking_list_filter']['billed'];
+    $filterfields[] = t('Billed');
   }
 
   $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
@@ -333,31 +338,43 @@ function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#autocomplete_path' => 'user/autocomplete',
   );
 
-  $form['filter']['billable'] = array(
+  $form['filter']['group3'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
+  $form['filter']['group3']['billable'] = array(
     '#type' => 'select',
     '#title' => 'Billable',
     '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
     '#default_value' => $_SESSION['stormtimetracking_list_filter']['billable'],
   );
 
-  $form['filter']['group3'] = array(
+  $form['filter']['group3']['billed'] = array(
+    '#type' => 'select',
+    '#title' => 'Billed',
+    '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
+    '#default_value' => $_SESSION['stormtimetracking_list_filter']['billed'],
+  );
+
+  $form['filter']['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
   );
 
-  $form['filter']['group3']['submit'] = array(
+  $form['filter']['group4']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
     '#submit' => array('stormtimetracking_list_filter_filter'),
   );
 
-  $form['filter']['group3']['reset'] = array(
+  $form['filter']['group4']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Reset'),
     '#submit' => array('stormtimetracking_list_filter_reset'),
   );
 
-  $form['filter']['group3']['itemsperpage'] = array(
+  $form['filter']['group4']['itemsperpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Items'),
     '#size' => 10,
@@ -377,6 +394,7 @@ function stormtimetracking_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtimetracking_list_filter']['datefrom'] = $form_state['values']['datefrom'];
   $_SESSION['stormtimetracking_list_filter']['dateto'] = $form_state['values']['dateto'];
   $_SESSION['stormtimetracking_list_filter']['billable'] = $form_state['values']['billable'];
+  $_SESSION['stormtimetracking_list_filter']['billed'] = $form_state['values']['billed'];
   $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
   $_SESSION['stormtimetracking_list_filter']['user'] = $form_state['values']['user'];
 }

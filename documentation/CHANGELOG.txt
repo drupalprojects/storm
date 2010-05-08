@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #786148 by tchurch: Added Add billed to filter on list page.
 - Task #784188 by tchurch: Changed Place 'add to invoice' link in separate function.
 - Task #781814 by tchurch: Changed move invoice number code into separate function.
 - Feature #593252 by Carsten Müller | Onopoc, Magnity: Added Adding 'assigned to' person in filters.
