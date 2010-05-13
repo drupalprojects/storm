@@ -1,6 +1,8 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Task #788204 by tchurch: Changed move invoice item description/amount code into storminvoice module.
+- Bug #787822 by tchurch: Fixed Ticket Date Fields.
 - Feature #786148 by tchurch: Added Add billed to filter on list page.
 - Task #784188 by tchurch: Changed Place 'add to invoice' link in separate function.
 - Task #781814 by tchurch: Changed move invoice number code into separate function.

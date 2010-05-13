@@ -929,3 +929,45 @@ function storminvoice_get_invoice_number($requestdate) {
   
   return $new_invoice_number;
 }
+
+function storminvoice_get_item_desc($rate_array, $node) {
+  $description  = date('d M y', $node->trackingdate) . ': ';
+
+  switch ($rate_array['pricemode_used']) {
+    case 'hourly':
+      $description .= t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      break;
+    case 'daily':
+      $description .= t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      break;
+    case 'daily':
+      $description .= t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      break;
+    case 'fixed':
+      $description .= t('@dur hours unbilled work on @desc', array('@dur' => $node->billing_duration, '@desc' => $node->title));
+      break;
+    case 'fixed_timetracking':
+      $description .= t('work billed for @desc', array('@desc' => $node->title));
+      break;
+  }
+
+  return $description;
+
+}
+
+function storminvoice_get_item_amount($rate_array, $node) {
+  switch ($rate_array['pricemode_used']) {
+    case 'hourly':
+      $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      break;
+    case 'fixed':
+      $amount = $rate_array['rate_to_use'];
+      break;
+    case 'fixed_timetracking':
+      $amount = $rate_array['rate_to_use'];
+      break;
+    }
+
+  return $amount;
+}
+
