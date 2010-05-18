@@ -434,15 +434,6 @@ function storminvoice_form(&$node) {
     '#default_value' => _storm_gmtimestamp_to_date($node->requestdate),
   );
 
-  if (module_exists('date_api') && module_exists('date_popup')) {
-    $form['group3']['requestdate'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Request date'),
-      '#date_format' =>  'Y-m-d',
-      '#default_value' => date('Y-m-d',$node->requestdate),
-    );
-  }
-
   $form['group3']['duedate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
@@ -450,31 +441,13 @@ function storminvoice_form(&$node) {
     '#default_value' => _storm_gmtimestamp_to_date($node->duedate),
   );
 
-  if (module_exists('date_api') && module_exists('date_popup')) {
-    $form['group3']['duedate'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Due date'),
-      '#date_format' =>  'Y-m-d',
-      '#default_value' => date('Y-m-d',$node->duedate),
-    );
-  }
-
   $form['group3']['paymentdate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
     '#title' => t('Payment date'),
     '#default_value' => _storm_gmtimestamp_to_date($node->paymentdate),
   );
-
-  if (module_exists('date_api') && module_exists('date_popup')) {
-    $form['group3']['paymentdate'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Payment date'),
-      '#date_format' =>  'Y-m-d',
-      '#default_value' => date('Y-m-d',$node->paymentdate),
-    );
-  }
-
+  
   $form['group4'] = array(
     '#type' => 'markup',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
@@ -702,26 +675,9 @@ function _storminvoice_beforesave(&$node) {
   $node->total = str_replace(',', '.', $node->total);
   $node->totalcustomercurr = str_replace(',', '.', $node->totalcustomercurr);
   
-  if (is_array($node->requestdate)) {
-    $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
-  }
-  else {
-    $node->requestdate = strtotime($node->requestdate);
-  }
-  
-  if (is_array($node->duedate)) {
-    $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
-  }
-  else {
-    $node->duedate = strtotime($node->duedate);
-  }
-  
-  if (is_array($node->paymentdate)) {
-    $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
-  }
-  else {
-    $node->paymentdate = strtotime($node->paymentdate);
-  }
+  if (is_array($node->requestdate)) $node->requestdate = _storm_date_to_gmtimestamp($node->requestdate);
+  if (is_array($node->duedate)) $node->duedate = _storm_date_to_gmtimestamp($node->duedate);
+  if (is_array($node->paymentdate)) $node->paymentdate = _storm_date_to_gmtimestamp($node->paymentdate);
 
   $s = "SELECT n.title FROM {node} AS n 
     INNER JOIN {stormorganization} AS o ON n.vid=o.vid
