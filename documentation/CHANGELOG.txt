@@ -1,6 +1,7 @@
 /* $Id$ */
 
-Version 6.x-1.x-dev:
+Version 6.x-1.33:
+- SA-CONTRIB-2010-054
 - Task #788204 by tchurch: Changed move invoice item description/amount code into storminvoice module.
 - Feature #786148 by tchurch: Added Add billed to filter on list page.
 - Task #784188 by tchurch: Changed Place 'add to invoice' link in separate function.
