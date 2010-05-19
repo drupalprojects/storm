@@ -235,9 +235,9 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $expenses_total = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->organization_title,
-          $expense->project_title,
-          $expense->title,
+          check_plain($expense->organization_title),
+          check_plain($expense->project_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -255,8 +255,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $expenses_total = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->project_title,
-          $expense->title,
+          check_plain($expense->project_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -276,9 +276,9 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $total_duration = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->project_title,
-          $expense->task_title,
-          $expense->title,
+          check_plain($expense->project_title),
+          check_plain($expense->task_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -299,8 +299,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $total_duration = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->task_title,
-          $expense->title,
+          check_plain($expense->task_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );

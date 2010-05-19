@@ -25,9 +25,9 @@ function theme_stormtask_tasks($form) {
 
     $data = array(
       theme('indentation', $form['tasks'][$key]['task_depth_'. $key]['#value']) . drupal_render($form['tasks'][$key]['task_description_'. $key]),
-      drupal_render($form['tasks'][$key]['task_category_'. $key]),
-      drupal_render($form['tasks'][$key]['task_status_'. $key]),
-      drupal_render($form['tasks'][$key]['task_priority_'. $key]),
+      check_markup(drupal_render($form['tasks'][$key]['task_category_'. $key])),
+      check_markup(drupal_render($form['tasks'][$key]['task_status_'. $key])),
+      check_markup(drupal_render($form['tasks'][$key]['task_priority_'. $key])),
       array(
         'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) .' '. substr($durationunit, 0, 1), 
         'style' => 'text-align: right'),
@@ -66,9 +66,9 @@ function theme_stormtask_list($header, $tasks) {
         l($task->organization_title, 'node/'. $task->organization_nid),
         l($task->project_title, 'node/'. $task->project_nid),
         l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
-        storm_icon('category_'. $task->taskcategory, $task->taskcategory),
-        storm_icon('status_'. $task->taskstatus, $task->taskstatus),
-        storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
+        storm_icon('category_'. check_plain($task->taskcategory), check_plain($task->taskcategory)),
+        storm_icon('status_'. check_plain($task->taskstatus), check_plain($task->taskstatus)),
+        storm_icon('priority_'. check_plain($task->taskpriority), check_plain($task->taskpriority)),
         array(
           'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
           'class' => 'storm_list_operations',
@@ -119,7 +119,7 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['stepno'] = array(
     '#prefix' => '<div class="stepno">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Step no.'), $node->stepno),
+    '#value' => theme('storm_view_item', t('Step no.'), check_plain($node->stepno)),
     '#weight' => 3,
   );
 
@@ -132,21 +132,21 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['category'] = array(
     '#prefix' => '<div class="category">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Category'), stormattribute_value('Task category', $node->taskcategory)),
+    '#value' => theme('storm_view_item', t('Category'), check_plain(stormattribute_value('Task category', $node->taskcategory))),
     '#weight' => 1,
   );
 
   $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Status'), stormattribute_value('Task status', $node->taskstatus)),
+    '#value' => theme('storm_view_item', t('Status'), check_plain(stormattribute_value('Task status', $node->taskstatus))),
     '#weight' => 2,
   );
  
   $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Priority'), stormattribute_value('Task priority', $node->taskpriority)),
+    '#value' => theme('storm_view_item', t('Priority'), check_plain(stormattribute_value('Task priority', $node->taskpriority))),
     '#weight' => 3,
   );
   

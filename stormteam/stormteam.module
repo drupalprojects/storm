@@ -510,7 +510,7 @@ function stormteam_list() {
   while ($team = db_fetch_object($r)) {
     $rows[] = array(
       l($team->title, 'node/'. $team->nid),
-      $team->teaser,
+      check_markup($team->teaser),
       array(
         'data' => storm_icon_edit_node($team, $_GET) .'&nbsp;'. storm_icon_delete_node($team, $_GET),
         'class' => 'storm_list_operations',

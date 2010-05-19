@@ -484,7 +484,7 @@ function _stormticket_task_tickets_js($organization_nid=0, $project_nid=0, $task
   $r = db_query($s, $organization_nid, $project_nid, $task_nid);
   while ($item = db_fetch_object($r)) {
     $nid = $item->nid;
-    $tickets[$nid] = $item->title;
+    $tickets[$nid] = check_plain($item->title);
   }
   print drupal_to_js($tickets);
   exit();

@@ -897,14 +897,14 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
         $node = node_load($project->assigned_nid);
         if ($node->type == 'stormperson') {
           if (module_exists('stormperson')) {
-            $options[$people][$node->nid] = $node->title;
+            $options[$people][$node->nid] = check_plain($node->title);
           }
         }
         else { // ($node->type == 'stormteam')
           if (module_exists('stormteam')) {
-            $options[$teams][$node->nid] = $node->title;
+            $options[$teams][$node->nid] = check_plain($node->title);
             foreach ($node->members_array as $nid => $name) {
-              $options[$people][$nid] = $name;
+              $options[$people][$nid] = check_plain($name);
             }
           }
         }
@@ -929,7 +929,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
       $sql = db_rewrite_sql($sql);
       $result = db_query($sql, array($organization_nid));
       while ($person = db_fetch_object($result)) {
-        $options[$people][$person->nid] = ($person->fullname) ? $person->fullname : $person->title;
+        $options[$people][$person->nid] = ($person->fullname) ? check_plain($person->fullname) : check_plain($person->title);
         if (empty($options[$people][$person->nid])) {
           $options[$people][$person->nid] = t('Person !nid', array('!nid' => $person->nid));
         }
@@ -940,7 +940,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     if (isset($manager) && module_exists('stormperson')) {
       foreach ($manager as $manager_node) {
         if (!array_key_exists($manager_node->nid, $options[$people])) {
-          $options[$people][$manager_node->nid] = $manager_node->title;
+          $options[$people][$manager_node->nid] = check_plain($manager_node->title);
         }
       }
     }
@@ -970,7 +970,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
           }
         }
         if ($add_team) {
-          $options[$teams][$team->nid] = $team->title;
+          $options[$teams][$team->nid] = check_plain($team->title);
         }
       }
     }

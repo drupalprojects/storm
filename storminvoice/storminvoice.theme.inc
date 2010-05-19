@@ -44,7 +44,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
 
     $rows[] = array(
       array(
-        'data' => storm_icon('invoice_status_'. $invoice->status, $invoice->status),
+        'data' => storm_icon('invoice_status_'. check_plain($invoice->status), check_plain($invoice->status)),
         'style' => 'text-align: center',
       ),
       array(
@@ -257,7 +257,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['group2']['reference'] = array(
       '#prefix' => '<div class="reference">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', t('Reference'), $node->reference),
+      '#value' => theme('storm_view_item', t('Reference'), check_plain($node->reference)),
       '#weight' => 3,
     );
   }

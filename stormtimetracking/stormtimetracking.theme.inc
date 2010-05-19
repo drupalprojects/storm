@@ -124,9 +124,9 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
       $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
-          $timetracking->organization_title,
-          $timetracking->project_title,
-          $timetracking->title,
+          check_plain($timetracking->organization_title),
+          check_plain($timetracking->project_title),
+          check_plain($timetracking->title),
           format_date($timetracking->trackingdate, 'small'),
           array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
@@ -144,8 +144,8 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
       $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
-          $timetracking->project_title,
-          $timetracking->title,
+          check_plain($timetracking->project_title),
+          check_plain($timetracking->title),
           format_date($timetracking->trackingdate, 'small'),
           array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
@@ -165,9 +165,9 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
       $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
-          $timetracking->project_title,
-          $timetracking->task_title,
-          $timetracking->title,
+          check_plain($timetracking->project_title),
+          check_plain($timetracking->task_title),
+          check_plain($timetracking->title),
           format_date($timetracking->trackingdate, 'small'),
           array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );
@@ -188,8 +188,8 @@ function theme_stormtimetracking_list_report($report, $language, $timetrackings)
       $total_billing_duration = 0;
       foreach ($timetrackings as $timetracking) {
         $rows[] = array(
-          $timetracking->task_title,
-          $timetracking->title,
+          check_plain($timetracking->task_title),
+          check_plain($timetracking->title),
           format_date($timetracking->trackingdate, 'small'),
           array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
         );

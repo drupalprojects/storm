@@ -385,7 +385,7 @@ function _stormproject_organization_projects_js($organization_nid=0) {
 
     while ($item = db_fetch_object($r)) {
       $nid = $item->nid;
-      $projects[$nid] = $item->title;
+      $projects[$nid] = check_plain($item->title);
     }
   }
   print drupal_to_js($projects);

@@ -16,13 +16,13 @@ function theme_stormticket_list($header, $tickets) {
     $n->type = 'stormticket';
 
     $rows[] = array(
-      storm_icon('category_'. $ticket->ticketcategory, $ticket->ticketcategory),
+      storm_icon('category_'. check_plain($ticket->ticketcategory), check_plain($ticket->ticketcategory)),
       l($ticket->organization_title, 'node/'. $ticket->organization_nid),
       l($ticket->project_title, 'node/'. $ticket->project_nid),
       l($ticket->title, 'node/'. $ticket->nid) . theme('mark', node_mark($ticket->nid, $ticket->changed)),
       format_date($ticket->created, 'small'),
-      storm_icon('status_'. $ticket->ticketstatus, $ticket->ticketstatus),
-      storm_icon('priority_'. $ticket->ticketpriority, $ticket->ticketpriority),
+      storm_icon('status_'. check_plain($ticket->ticketstatus), check_plain($ticket->ticketstatus)),
+      storm_icon('priority_'. check_plain($ticket->ticketpriority), check_plain($ticket->ticketpriority)),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
@@ -83,21 +83,21 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['category'] = array(
     '#prefix' => '<div class="category">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Category'), stormattribute_value('Ticket category', $node->ticketcategory)),
+    '#value' => theme('storm_view_item', t('Category'), check_plain(stormattribute_value('Ticket category', $node->ticketcategory))),
     '#weight' => 1,
   );
   
   $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Status'), stormattribute_value('Ticket status', $node->ticketstatus)),
+    '#value' => theme('storm_view_item', t('Status'), check_plain(stormattribute_value('Ticket status', $node->ticketstatus))),
     '#weight' => 2,
   );
 
   $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Priority'), stormattribute_value('Ticket priority', $node->ticketpriority)),
+    '#value' => theme('storm_view_item', t('Priority'), check_plain(stormattribute_value('Ticket priority', $node->ticketpriority))),
     '#weight' => 3,
   );
   

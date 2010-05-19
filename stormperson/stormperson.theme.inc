@@ -61,7 +61,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['fullname'] = array(
     '#prefix' => '<div id="fullname">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Fullname'), $node->fullname),
+    '#value' => theme('storm_view_item', t('Fullname'), check_plain($node->fullname)),
     '#weight' => 1,
   );
   
@@ -94,14 +94,14 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group4']['phone'] = array(
     '#prefix' => '<div id="phone">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Phone'), $node->phone),
+    '#value' => theme('storm_view_item', t('Phone'), check_plain($node->phone)),
     '#weight' => 1,
   );
 
   $node->content['group4']['im'] = array(
     '#prefix' => '<div id="im">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('IM'), $node->im),
+    '#value' => theme('storm_view_item', t('IM'), check_plain($node->im)),
     '#weight' => 2,
   );
 

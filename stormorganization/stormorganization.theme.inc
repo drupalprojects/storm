@@ -18,7 +18,7 @@ function theme_stormorganization_list($header, $organizations) {
 
     $rows[] = array(
       l($organization->title, 'node/'. $organization->nid),
-      $countries['values'][$organization->country],
+      check_plain($countries['values'][$organization->country]),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
@@ -58,7 +58,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2'] ['fullname'] = array(
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Fullname'), $node->fullname),
+    '#value' => theme('storm_view_item', t('Fullname'), check_plain($node->fullname)),
     '#weight' => $w++,
   );
 
@@ -71,35 +71,35 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group3']['address'] = array(
     '#prefix' => '<div class="address">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Address'), $node->address),
+    '#value' => theme('storm_view_item', t('Address'), check_plain($node->address)),
     '#weight' => 1,
   );
 
   $node->content['group3']['city'] = array(
     '#prefix' => '<div class="city">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('City'), $node->city),
+    '#value' => theme('storm_view_item', t('City'), check_plain($node->city)),
     '#weight' => 2,
   );
 
   $node->content['group3']['provstate'] = array(
     '#prefix' => '<div class="provstate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Province / State'), $node->provstate),
+    '#value' => theme('storm_view_item', t('Province / State'), check_plain($node->provstate)),
     '#weight' => 3,
   );
 
   $node->content['group3'] ['country'] = array(
     '#prefix' => '<div class="country">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Country'), $node->country),
+    '#value' => theme('storm_view_item', t('Country'), check_plain($node->country)),
     '#weight' => 4,
   );
 
   $node->content['group3'] ['zip'] = array(
     '#prefix' => '<div class="zip">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Zip'), $node->zip),
+    '#value' => theme('storm_view_item', t('Zip'), check_plain($node->zip)),
     '#weight' => 5,
   );
 
@@ -112,7 +112,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group4']['phone'] = array(
     '#prefix' => '<div class="phone">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Phone'), $node->phone),
+    '#value' => theme('storm_view_item', t('Phone'), check_plain($node->phone)),
     '#weight' => 1,
   );
 
@@ -139,7 +139,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['currency'] = array(
     '#prefix' => '<div class="currency">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Currency'), $node->currency),
+    '#value' => theme('storm_view_item', t('Currency'), check_plain($node->currency)),
     '#weight' => 1,
   );
 
@@ -152,14 +152,14 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['language'] = array(
     '#prefix' => '<div class="language">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Language'), $languages_options[$node->orglanguage]),
+    '#value' => theme('storm_view_item', t('Language'), check_plain($languages_options[$node->orglanguage])),
     '#weight' => 2,
   );
 
   $node->content['group5'] ['taxid'] = array(
     '#prefix' => '<div class="taxid">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax ID'), $node->taxid),
+    '#value' => theme('storm_view_item', t('Tax ID'), check_plain($node->taxid)),
     '#weight' => 3,
   );
 
