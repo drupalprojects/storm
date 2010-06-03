@@ -1,5 +1,8 @@
 /* $Id$ */
 
+Version 6.x-1.x-dev:
+- Feature #688086 by Francewhoa: Reformat 'Description' section.
+
 Version 6.x-1.33:
 - SA-CONTRIB-2010-054
 - Task #788204 by tchurch: Changed move invoice item description/amount code into storminvoice module.
