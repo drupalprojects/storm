@@ -37,6 +37,7 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   
   $node = node_prepare($node, $teaser);
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
   
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -51,7 +52,7 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
       '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
-      '#weight' => 1,
+      '#weight' => $l_pos++,
     );
   }
 

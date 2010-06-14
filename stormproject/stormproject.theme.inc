@@ -30,18 +30,20 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   
   $node = node_prepare($node, $teaser);
-  
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
     '#weight' => -25,
   );
   
-  $node->content['links']['expenses'] = theme('storm_link', 'stormproject', 'stormexpense', $node->nid, 1);
-  $node->content['links']['notes'] = theme('storm_link', 'stormproject', 'stormnote', $node->nid, 2);
-  $node->content['links']['tasks'] = theme('storm_link', 'stormproject', 'stormtask', $node->nid, 3);
-  $node->content['links']['tickets'] = theme('storm_link', 'stormproject', 'stormticket', $node->nid, 4);  
-  $node->content['links']['timetrackings'] = theme('storm_link', 'stormproject', 'stormtimetracking', $node->nid, 5);
+  $node->content['links']['expenses'] = theme('storm_link', 'stormproject', 'stormexpense', $node->nid, $l_pos++);
+  $node->content['links']['invoices'] = theme('storm_link', 'stormproject', 'storminvoice', $node->nid, $l_pos++);
+  $node->content['links']['notes'] = theme('storm_link', 'stormproject', 'stormnote', $node->nid, $l_pos++);
+  $node->content['links']['tasks'] = theme('storm_link', 'stormproject', 'stormtask', $node->nid, $l_pos++);
+  $node->content['links']['tickets'] = theme('storm_link', 'stormproject', 'stormticket', $node->nid, $l_pos++);
+  $node->content['links']['timetrackings'] = theme('storm_link', 'stormproject', 'stormtimetracking', $node->nid, $l_pos++);
   
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',

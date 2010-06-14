@@ -78,6 +78,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   
   $node = node_prepare($node, $teaser);
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -97,7 +98,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
       '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => $v,
-      '#weight' => $w++,
+      '#weight' => $l_pos++,
     );
   }
   

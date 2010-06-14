@@ -33,21 +33,22 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   
   $node = node_prepare($node, $teaser);
-  
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
     '#weight' => -25,
   );
   
-  $node->content['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $w++);
-  $node->content['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $w++);
-  $node->content['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $w++);
-  $node->content['links']['people'] = theme('storm_link', 'stormorganization', 'stormperson', $node->nid, $w++);
-  $node->content['links']['projects'] = theme('storm_link', 'stormorganization', 'stormproject', $node->nid, $w++);
-  $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $w++);
-  $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $w++);
-  $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $w++);
+  $node->content['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $l_pos++);
+  $node->content['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $l_pos++);
+  $node->content['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $l_pos++);
+  $node->content['links']['people'] = theme('storm_link', 'stormorganization', 'stormperson', $node->nid, $l_pos++);
+  $node->content['links']['projects'] = theme('storm_link', 'stormorganization', 'stormproject', $node->nid, $l_pos++);
+  $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $l_pos++);
+  $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $l_pos++);
+  $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $l_pos++);
   
   $node->content['group2'] = array(
     '#prefix' => '<div class="stormfields">',

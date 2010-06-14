@@ -183,6 +183,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storminvoice') . '/storminvoice-nodeview.css');  
   
   $node = node_prepare($node, $teaser);
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
   
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -199,7 +200,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#prefix' => '<dt class="stormcomponent print_html">',
     '#suffix' => '</dt>',
     '#value' => l(t('Print HTML'), 'storm/invoice/report/'. $node->nid .'/html/'. $node->language),
-    '#weight' => $w++,
+    '#weight' => $l_pos++,
   );
 
   // Display link to tcpdf library only if library is installed.
@@ -209,14 +210,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#prefix' => '<dt class="stormcomponent print_pdf">',
       '#suffix' => '</dt>',
       '#value' => l(t('Print PDF'), 'storm/invoice/report/'. $node->nid .'/pdf/'. $node->language),
-      '#weight' => $w++,
+      '#weight' => $l_pos++,
     );
       $node->content['links']['print']['email'] = array(
       '#value' => t('Send PDF via e-mail'),
       '#prefix' => '<dt class="stormcomponent print_pdf">',
       '#suffix' => '</dt>',
       '#value' => l(t('Send PDF via e-mail'), 'storm/invoice/report/'. $node->nid .'/email/'. $node->language, array('query' => drupal_get_destination())),
-      '#weight' => $w++,
+      '#weight' => $l_pos++,
     );
   }
   
