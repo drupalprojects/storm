@@ -1,5 +1,6 @@
 /* $Id$ */
 
+
 Version 6.x-1.x-dev:
 - Feature #688086 by Francewhoa: Reformat 'Description' section.
 - Feature #814820 by Carsten Müller | tchurch: Add invoice icon on project page.
