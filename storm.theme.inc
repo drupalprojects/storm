@@ -3,6 +3,7 @@
 
 /**
  * @file
+ * Provides theme functions for Storm modules
  */
 
 function theme_storm_form_group($form) {
@@ -141,7 +142,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormattribute":
       $user_access_check = 'Storm: access administration pages';
       $list_text = t('Attributes');
-      $list_path = 'storm/attributes/';
+      $list_path = 'storm/attributes';
       $add_icon_type = 'stormattribute';
       $add_path = 'storm/attributes/add';
       $dt_id = 'stormattributes';
@@ -159,7 +160,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormexpense":
       $user_access_check = 'Storm expense: access';
       $list_text = t('Expenses');
-      $list_path = 'storm/expenses/';
+      $list_path = 'storm/expenses';
       $add_icon_type = 'stormexpense';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormexpenses';
@@ -168,7 +169,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "storminvoice":
       $user_access_check = 'Storm invoice: access';
       $list_text = t('Invoices');
-      $list_path = 'storm/invoices/';
+      $list_path = 'storm/invoices';
       $add_icon_type = 'storminvoice';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'storminvoices';
@@ -177,7 +178,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormknowledgebase":
       $user_access_check = 'Storm knowledgebase: access';
       $list_text = t('Knowledge base');
-      $list_path = 'storm/knowledgebase/';
+      $list_path = 'storm/knowledgebase';
       $add_icon_type = 'stormknowledgebase';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormknowledgebase';
@@ -195,7 +196,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormorganization":
       $user_access_check = 'Storm organization: access';
       $list_text = t('Organizations');
-      $list_path = 'storm/organizations/';
+      $list_path = 'storm/organizations';
       $add_icon_type = 'stormorganization';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormorganizations';
@@ -213,7 +214,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormproject":
       $user_access_check = 'Storm project: access';
       $list_text = t('Projects');
-      $list_path = 'storm/projects/';
+      $list_path = 'storm/projects';
       $add_icon_type = 'stormproject';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormprojects';
@@ -231,7 +232,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormteam":
       $user_access_check = 'Storm team: access';
       $list_text = t('Teams');
-      $list_path = 'storm/teams/';
+      $list_path = 'storm/teams';
       $add_icon_type = 'stormteam';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormteams';
@@ -249,7 +250,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     case "stormtimetracking":
       $user_access_check = 'Storm timetracking: access';
       $list_text = t('Timetrackings');
-      $list_path = 'storm/timetrackings/';
+      $list_path = 'storm/timetrackings';
       $add_icon_type = 'stormtimetracking';
       $node_links_key = 'timetrackings';
       $add_path = 'node/add/'. $destination_module;
@@ -278,7 +279,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       }
       $v .= storm_icon_add($add_path, $i, $params);
     }
-    
+
     if ($node_nid == 0) {
       $r = variable_get('storm_icons_display', TRUE) ? '<dt id="'. $dt_id .'" class="stormcomponent">' : '<dt class="stormcomponent">';
       $r .= $v;
