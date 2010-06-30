@@ -3,8 +3,13 @@
 ; Basic information
 name = Storm Attribute
 description = "Provides attributes (allowed field values) for use within Storm modules"
-core = 6.x
+core = 7.x
 package = Storm
 
 ; Dependencies
 dependencies[] = storm
+
+; Files registry
+files[] = stormattribute.install
+files[] = stormattribute.module
+files[] = stormattribute.theme.inc
