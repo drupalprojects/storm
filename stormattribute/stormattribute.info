@@ -1,0 +1,10 @@
+; $Id$
+
+; Basic information
+name = Storm Attribute
+description = "Provides attributes (allowed field values) for use within Storm modules"
+core = 6.x
+package = Storm
+
+; Dependencies
+dependencies[] = storm
