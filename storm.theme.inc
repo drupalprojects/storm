@@ -183,7 +183,7 @@ function theme_storm_link($args = array()) {
     case "stormconfiguration":
       $user_access_check = 'Storm: access administration pages';
       $list_text = t('Configuration');
-      $list_path = 'admin/settings/storm';
+      $list_path = 'admin/config/system/storm';
       $add_icon_type = '';
       $add_path = '';
       $dt_id = 'stormconfiguration';

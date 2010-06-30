@@ -22,13 +22,13 @@
  */
 function storm_help($path, $arg) {
   $output = '';
-  
+
   switch ($path) {
     case "admin/help#storm":
       $output = '<p>'.  t("Provides a complete project management environment") .'</p>';
       break;
   }
-  
+
   return $output;
 }
 
@@ -641,7 +641,7 @@ function storm_icon_add($path, $item, $params=array()) {
   $type = $item->type;
   // D7 TODO - change to _node_access
   $af = $type .'_access';
-  //if (!$af('create', $item, $user)) return '';
+  if (!$af('create', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_add', $path, t('Add'), '', $params, $attributes);
 }
@@ -717,14 +717,52 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
 function storm_icon($icon, $title) {
   global $base_path;
   $icon = str_replace(' ', '_', $icon);
+
   if (variable_get('storm_icons_display', TRUE) == TRUE) {
-    $img_src = $base_path . variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons') .'/'. $icon .'.png';
-    $o = '<img src="'. $img_src .'" alt="'. $title .'" title="'. $title .'" />';
-  } else {
+    $available = cache_get('storm:icons');
+    if ($available == 0) {
+      // Cache miss
+      $available = storm_icon_recache();
+    }
+
+    if (in_array($icon .'.png', $available->data)) {
+      // Standard route - display normal image
+      $img_src = $base_path . variable_get('storm_icons_path', drupal_get_path('module', 'storm') .'/icons') .'/'. $icon .'.png';
+      $o = '<img src="'. $img_src .'" alt="'. $title .'" title="'. $title .'" />';
+    }
+    else {
+      // Icon not found
+      $o = storm_icon_default($icon, $title);
+    }
+  }
+  else {
+    // Icons set to not display
     $o = $title;
   }
   return $o;
 }
+
+function storm_icon_recache() {
+  $available = array();
+
+  // For PHP5, replace with scandir() function
+  $dir = variable_get('storm_icons_path', drupal_get_path('module', 'storm'). '/icons');
+  $dh = opendir($dir);
+  while (false !== ($filename = readdir($dh))) {
+    $available[] = $filename;
+  }
+
+  cache_set('storm:icons', $available, 'cache', CACHE_TEMPORARY);
+  $available = cache_get('storm:icons');
+  return $available;
+}
+
+function storm_icon_default($icon, $title) {
+  // For now, just return $title.
+  // A future extension could be more intelligent using $icon.
+  return $title;
+}
+
 
 // SQL FUNCTIONS
 function storm_rewrite_sql($sql, $where=array(), $join=array()) {
@@ -889,14 +927,14 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
         $node = node_load($project->assigned_nid);
         if ($node->type == 'stormperson') {
           if (module_exists('stormperson')) {
-            $options[$people][$node->nid] = $node->title;
+            $options[$people][$node->nid] = check_plain($node->title);
           }
         }
         else { // ($node->type == 'stormteam')
           if (module_exists('stormteam')) {
-            $options[$teams][$node->nid] = $node->title;
+            $options[$teams][$node->nid] = check_plain($node->title);
             foreach ($node->members_array as $nid => $name) {
-              $options[$people][$nid] = $name;
+              $options[$people][$nid] = check_plain($name);
             }
           }
         }
@@ -921,7 +959,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
       $sql = db_rewrite_sql($sql);
       $result = db_query($sql, array($organization_nid));
       while ($person = db_fetch_object($result)) {
-        $options[$people][$person->nid] = ($person->fullname) ? $person->fullname : $person->title;
+        $options[$people][$person->nid] = ($person->fullname) ? check_plain($person->fullname) : check_plain($person->title);
         if (empty($options[$people][$person->nid])) {
           $options[$people][$person->nid] = t('Person !nid', array('!nid' => $person->nid));
         }
@@ -932,7 +970,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     if (isset($manager) && module_exists('stormperson')) {
       foreach ($manager as $manager_node) {
         if (!array_key_exists($manager_node->nid, $options[$people])) {
-          $options[$people][$manager_node->nid] = $manager_node->title;
+          $options[$people][$manager_node->nid] = check_plain($manager_node->title);
         }
       }
     }
@@ -962,12 +1000,12 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
           }
         }
         if ($add_team) {
-          $options[$teams][$team->nid] = $team->title;
+          $options[$teams][$team->nid] = check_plain($team->title);
         }
       }
     }
   }
-  if (array_key_exists(0, $options[$people])) {
+  if (isset($options[$people]) && array_key_exists(0, $options[$people])) {
     unset($options[$people][0]);
   }
   if (isset($options[$teams]) && array_key_exists(0, $options[$teams])) {
