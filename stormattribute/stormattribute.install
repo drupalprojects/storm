@@ -6,8 +6,6 @@
  */
 
 function stormattribute_install() {
-  drupal_install_schema('stormattribute');
-
   $attributes = array();
 
   $attributes['Price mode'] = array(
