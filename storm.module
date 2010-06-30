@@ -13,9 +13,13 @@
  * 6: Storm Icons
  * 7: SQL Functions
  * 8: Node form theming
- */
+*/
 
 // HOOKS
+/**
+ * @function
+ * Implementation of hook_help
+ */
 function storm_help($path, $arg) {
   $output = '';
 
@@ -118,14 +122,22 @@ function storm_theme() {
   );
 }
 
-// FUNCTION TO CREATE STORM DASHBOARD
+
+/**
+ * @function
+ * Function to create dashboard (call to theme function)
+ */
 function storm_dashboard() {
   drupal_set_title(t('Storm Dashboard'));
   drupal_add_css(drupal_get_path('module', 'storm'). '/storm-dashboard.css');
   return theme('storm_dashboard');
 }
 
-// ADMIN SETTINGS FORM
+
+/**
+ * @function
+ * Defines the administration settings form for the Storm module
+ */
 function storm_admin_settings() {
   $form = array();
   $w = -10;
@@ -544,7 +556,11 @@ function _timetostr($time=array()) {
   return $timestr;
 }
 
-// TAXATION MANIPULATION
+
+/**
+ * @function
+ * Calculates taxation for Storm nodes
+ */
 function storm_taxation(&$node) {
   // If values are not set, then use default values
   if (!isset($node->tax1app)) {
