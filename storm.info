@@ -13,3 +13,5 @@ configure = admin/config/system/storm
 files[] = storm.install
 files[] = storm.module
 files[] = storm.theme.inc
+files[] = storm.test
+
