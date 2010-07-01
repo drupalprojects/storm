@@ -1000,16 +1000,15 @@ function stormattribute_update_6108(){
 function stormattribute_update_6109() {
   $ret = array();
 
-  foreach ($attribute as $key => $value) {
-    db_insert('stormattribute')
-      ->fields(array(
-        'domain' => 'Project category search',
-        'akey' => '-',
-        'avalue' => 'all',
-        'weight' => 0,
-        'isactive' => 1,
-      ))
-      ->execute();
+  db_insert('stormattribute')
+    ->fields(array(
+      'domain' => 'Project category search',
+      'akey' => '-',
+      'avalue' => 'all',
+      'weight' => 0,
+      'isactive' => 1,
+    ))
+    ->execute();
 
   return $ret;  
 }
