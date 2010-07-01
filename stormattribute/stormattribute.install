@@ -506,6 +506,8 @@ function stormattribute_update_1() {
 
   $prevdomain = '';
   $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+  if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
       db_insert('stormattribute')
         ->fields(array(
