@@ -424,13 +424,19 @@ function stormattribute_install() {
     'paid' => 'Paid',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -498,13 +504,17 @@ function stormattribute_update_1() {
     '4-urgent' => 'urgent'
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
-  foreach ($attributes as $domain => $attribute) {
-    if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -761,13 +771,20 @@ function stormattribute_update_2() {
     'ZM' => 'Zambia',
     'ZW' => 'Zimbabwe',
   );
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -786,13 +803,19 @@ function stormattribute_update_3() {
     'PostgreSQL'=>'-- PostgreSQL',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -808,13 +831,19 @@ function stormattribute_update_4() {
     'day' => 'Day',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -832,13 +861,19 @@ function stormattribute_update_5() {
     'task' => 'task'
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -880,13 +915,19 @@ function stormattribute_update_6() {
   $attributes['Ticket category search'] = array('-' => 'all');
   $attributes['Ticket priority search'] = array('-' => 'all');
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('%s', '%s', '%s', %d, 1)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -899,8 +940,25 @@ function stormattribute_update_6107(){
   // Updated numbering to use Drupal standard format. See also http://api.drupal.org/api/function/hook_update_N/6
   $ret = array();
 
-  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'development', 'development', 0, 1)");
-  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'support', 'support', 0, 1)");
+  db_insert('stormattribute')
+    ->fields(array(
+      'domain' => 'Project category search',
+      'akey' => 'development',
+      'avalue' => 'development',
+      'weight' => 0,
+      'isactive' => 1,
+    ))
+    ->execute();
+    
+  db_insert('stormattribute')
+    ->fields(array(
+      'domain' => 'Project category search',
+      'akey' => 'support',
+      'avalue' => 'support',
+      'weight' => 0,
+      'isactive' => 1,
+    ))
+    ->execute();
     
   return $ret;
 }
@@ -923,7 +981,14 @@ function stormattribute_update_6108(){
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -935,7 +1000,16 @@ function stormattribute_update_6108(){
 function stormattribute_update_6109() {
   $ret = array();
 
-  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
+  foreach ($attribute as $key => $value) {
+    db_insert('stormattribute')
+      ->fields(array(
+        'domain' => 'Project category search',
+        'akey' => '-',
+        'avalue' => 'all',
+        'weight' => 0,
+        'isactive' => 1,
+      ))
+      ->execute();
 
   return $ret;  
 }
@@ -943,11 +1017,18 @@ function stormattribute_update_6109() {
 function stormattribute_update_6110() {
   $ret = array();
 
-  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'not applicable', 'Not Applicable', 0, 1)");
+  db_insert('stormattribute')
+    ->fields(array(
+      'domain' => 'Price mode',
+      'akey' => 'not applicable',
+      'avalue' => 'Not Applicable',
+      'weight' => 0,
+      'isactive' => 1,
+    ))
+    ->execute();
 
   return $ret;  
 }
-
 
 /**
  * Added fixed_timetracking attribute for issue 735694
@@ -955,7 +1036,16 @@ function stormattribute_update_6110() {
 function stormattribute_update_6111() {
   $ret = array();
 
-  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'fixed_timetracking', 'Fixed Timetracking', 0, 1)");
+  db_insert('stormattribute')
+    ->fields(array(
+      'domain' => 'Price mode',
+      'akey' => 'fixed_timetracking',
+      'avalue' => 'Fixed Timetracking',
+      'weight' => 0,
+      'isactive' => 1,
+    ))
+    ->execute();
 
   return $ret;
 }
+
