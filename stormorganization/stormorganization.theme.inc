@@ -60,7 +60,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#prefix' => '<div class="fullname">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Fullname'), check_plain($node->fullname)),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
   $node->content['group3'] = array(

@@ -8,6 +8,7 @@
 
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
+  $output = null; // Variable set as per issue 684016.
 
   $row = array();
   foreach (element_children($form) as $key) {

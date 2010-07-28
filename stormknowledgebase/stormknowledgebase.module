@@ -188,7 +188,7 @@ function stormknowledgebase_form(&$node) {
   $form['group1']['topic'] = array(
     '#type' => 'select',
     '#title' => t('Topic'),
-    '#default_value' => $node->topic,
+    '#default_value' => isset($node->topic) ? $node->topic : NULL,
     '#options' => $topic_list['values'],
   );
 

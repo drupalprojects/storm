@@ -264,14 +264,14 @@ function stormorganization_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Prefix'),
     '#size' => 20,
-    '#default_value' => $node->prefix,
+    '#default_value' => isset($node->prefix) ? $node->prefix : NULL,
   );
 
   $form['group2']['fullname'] = array(
     '#type' => 'textfield',
     '#title' => t('Fullname'),
     '#size' => 40,
-    '#default_value' => $node->fullname,
+    '#default_value' => isset($node->fullname) ? $node->fullname : NULL,
   );
 
   $form['group3'] = array(
@@ -283,7 +283,7 @@ function stormorganization_form(&$node) {
   $form['group3']['address'] = array(
     '#type' => 'textfield',
     '#title' => t('Address'),
-    '#default_value' => $node->address,
+    '#default_value' => isset($node->address) ? $node->address : NULL,
     '#weight' => 1,
   );
 
@@ -291,7 +291,7 @@ function stormorganization_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('City'),
     '#size' => 20,
-    '#default_value' => $node->city,
+    '#default_value' => isset($node->city) ? $node->city : NULL,
     '#weight' => 2,
   );
 
@@ -299,7 +299,7 @@ function stormorganization_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Province / State'),
     '#size' => 20,
-    '#default_value' => $node->provstate,
+    '#default_value' => isset($node->provstate) ? $node->provstate : NULL,
     '#weight' => 3,
   );
 
@@ -316,7 +316,7 @@ function stormorganization_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Zip'),
     '#size' => 15,
-    '#default_value' => $node->zip,
+    '#default_value' => isset($node->zip) ? $node->zip : NULL,
     '#weight' => 5,
   );
 
@@ -329,21 +329,21 @@ function stormorganization_form(&$node) {
   $form['group4']['phone'] = array(
     '#type' => 'textfield',
     '#title' => t('Phone'),
-    '#default_value' => $node->phone,
+    '#default_value' => isset($node->phone) ? $node->phone : NULL,
   );
   
   $form['group4']['www'] = array(
     '#type' => 'textfield',
     '#title' => t('WWW'),
     '#size' => 30,
-    '#default_value' => $node->www,
+    '#default_value' => isset($node->www) ? $node->www : NULL,
   );
 
   $form['group4']['email'] = array(
     '#type' => 'textfield',
     '#title' => t('Email'),
     '#size' => 30,
-    '#default_value' => $node->email,
+    '#default_value' => isset($node->email) ? $node->email : NULL,
   );
 
   $form['group5'] = array(
@@ -372,7 +372,7 @@ function stormorganization_form(&$node) {
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
-    '#default_value' => $node->price,
+    '#default_value' => isset($node->price) ? $node->price : NULL,
   );
 
   $languages = language_list('language', TRUE);
@@ -384,14 +384,14 @@ function stormorganization_form(&$node) {
     '#type' => 'select',
     '#title' => t('Language'),
     '#options' => $languages_options,
-    '#default_value' => $node->orglanguage,
+    '#default_value' => isset($node->orglanguage) ? $node->orglanguage : NULL,
   );
 
   $form['group5']['taxid'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax ID'),
     '#size' => 20,
-    '#default_value' => $node->taxid,
+    '#default_value' => isset($node->taxid) ? $node->taxid : NULL,
   );
   
   if ($type->has_body) {
@@ -400,7 +400,7 @@ function stormorganization_form(&$node) {
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => isset($node->title_old) ? $node->title_old : NULL,
   );
 
   return $form;
@@ -442,8 +442,9 @@ function stormorganization_update($node) {
 function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!$node->nid) {
+      if(!isset($node->nid)) {
         $node->iscustomer = 1;
+        $node->isprovider = 0;
         $node->isactive = 1;
 
         $country_list = stormattribute_attributes_bydomain('Country');

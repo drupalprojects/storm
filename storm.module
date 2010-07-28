@@ -330,7 +330,7 @@ function storm_elements() {
   $type['datetime'] = array(
     '#input' => TRUE,
     '#process' => array('storm_datetime_expand'),
-    '#element_validate' => array('storm_datetime_validate' => array()),
+    '#element_validate' => array('storm_datetime_validate'),
     '#default_value' => array(
       'day' => format_date(time(), 'custom', 'j'),
       'month' => format_date(time(), 'custom', 'n'),
@@ -342,7 +342,7 @@ function storm_elements() {
   $type['dateext'] = array(
     '#input' => TRUE,
     '#process' => array('storm_dateext_expand'),
-    '#element_validate' => array('storm_dateext_validate' => array()),
+    '#element_validate' => array('storm_dateext_validate'),
     '#default_value' => array(
       'day' => format_date(time(), 'custom', 'j'),
       'month' => format_date(time(), 'custom', 'n'),
@@ -833,13 +833,15 @@ function storm_form_alter(&$form, $form_state, $form_id) {
   }
 
   if ($form_id == $form['type']['#value'] .'_node_form') {
-    $class = $form['#attributes']['class'];
+    $class = null;
+    if (isset($form['#attributes']['class'])) $class = $form['#attributes']['class'];
     if ($class) $class .= ' ';
     $class .= $form_id;
     $form['#attributes']['class'] = $class;
     foreach ($form as $key => $elem) {
-      if (is_array($elem) && $elem['#type']=='fieldset') {
-        $class = $elem['#attributes']['class'];
+
+      if (is_array($elem) && (isset($elem['#type']) ? $elem['#type'] : NULL)=='fieldset') {
+        $class = (isset($elem['#attributes']['class'])) ? $elem['#attributes']['class'] : NULL;
         if ($class) $class .= ' ';
         $class .= $key;
         $form[$key]['#attributes']['class'] = $class;

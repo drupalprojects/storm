@@ -413,11 +413,13 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   
   $organization = node_load($node->organization_nid);
   $myorg = node_load(variable_get('storm_organization_nid', 0));
-  if ($myorg->orglanguage != $organization->orglanguage) {
-    $language = $organization->orglanguage .','. $myorg->orglanguage;
-  }
-  else {
-    $language = $myorg->orglanguage;
+  if (isset($myorg->orglanguage)) {
+    if ($myorg->orglanguage != $organization->orglanguage) {
+      $language = $organization->orglanguage .','. $myorg->orglanguage;
+    }
+    else {
+      $language = $myorg->orglanguage;
+    }
   }
 
   if($node->content['body']['#value']) {

@@ -320,6 +320,7 @@ function storminvoice_form(&$node) {
     $node->requestdate = time();
     $node->duedate = $node->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
     $node->number = storminvoice_get_invoice_number($node->requestdate);
+    $node->paymentdate = null;
 
     if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
       $node->organization_nid = $_GET['organization_nid'];
@@ -334,10 +335,10 @@ function storminvoice_form(&$node) {
       }
     }
 
-    if ($_SESSION['storminvoice_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['storminvoice_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['storminvoice_list_filter']['organization_nid'];
     }
-    if ($_SESSION['storminvoice_list_filter']['project_nid'] && !$node->project_nid) {
+    if (isset($_SESSION['storminvoice_list_filter']['project_nid']) && !$node->project_nid) {
       $node->project_nid = $_SESSION['storminvoice_list_filter']['project_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
@@ -386,7 +387,7 @@ function storminvoice_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
@@ -409,7 +410,7 @@ function storminvoice_form(&$node) {
   $form['group2']['project_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project'),
-    '#default_value' => $node->project_nid,
+    '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
   );
@@ -417,7 +418,7 @@ function storminvoice_form(&$node) {
   $form['group2']['reference'] = array(
     '#type' => 'textfield',
     '#title' => t('Reference'),
-    '#default_value' => $node->reference,
+    '#default_value' => isset($node->reference) ? $node->reference : NULL,
     '#size' => 40,
   );
 
@@ -453,7 +454,7 @@ function storminvoice_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
   
-  $count = count($node->items);
+  $count = (isset($node->items)) ? count($node->items) : 0;
   for ($k = $count; $k <= $count + 2; $k++) {
     //$node->items[$k] = stdclass;
     $node->items[$k]->tax1app = variable_get('storm_tax1_app', 1);
@@ -482,13 +483,13 @@ function storminvoice_form(&$node) {
     $form['group4'][$i]['first']['items_'. $i .'_description'] = array(
       '#type' => 'textfield',
       '#title' => 'Item description',
-      '#default_value' => $node->items[$i]->description,
+      '#default_value' => isset($node->items[$i]->description) ? $node->items[$i]->description : NULL,
       '#size' => 80,
     );  
     
     $form['group4'][$i]['first']['items_'. $i .'_weight'] = array(
       '#type' => 'hidden',
-      '#default_value' => $node->items[$i]->weight,
+      '#default_value' => isset($node->items[$i]->weight) ? $node->items[$i]->weight : NULL,
     );
     
     $form['group4'][$i]['first']['items_'. $i .'_amount'] = array(
@@ -496,7 +497,7 @@ function storminvoice_form(&$node) {
       '#withnull' => 'true',
       '#title' => t('Amount'),
       '#size' => 15,
-      '#default_value' => $node->items[$i]->amount,
+      '#default_value' => isset($node->items[$i]->amount) ? $node->items[$i]->amount : NULL,
     );
 
     $form['group4'][$i]['tax1'] = array(
@@ -556,7 +557,7 @@ function storminvoice_form(&$node) {
     
     $form['group4'][$i]['items_'. $i .'_total'] = array(
       '#type' => 'hidden',
-      '#default_value' => $node->items[$i]->total,
+      '#default_value' => isset($node->items[$i]->total) ? $node->items[$i]->total : NULL,
     );
     
     $i++;
@@ -573,7 +574,7 @@ function storminvoice_form(&$node) {
     '#title' => t('Amount'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
-    '#default_value' => $node->amount,
+    '#default_value' => isset($node->amount) ? $node->amount : NULL,
   );
 
   $form['group5']['tax1'] = array(
@@ -581,7 +582,7 @@ function storminvoice_form(&$node) {
     '#title' => variable_get('storm_tax1_name', 'Tax 1'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
-    '#default_value' => $node->tax1,
+    '#default_value' => isset($node->tax1) ? $node->tax1 : NULL,
   );
 
   $form['group5']['tax2'] = array(
@@ -589,7 +590,7 @@ function storminvoice_form(&$node) {
     '#title' => variable_get('storm_tax2_name', 'Tax 2'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
-    '#default_value' => $node->tax2,
+    '#default_value' => isset($node->tax2) ? $node->tax2 : NULL,
   );
 
   $form['group5']['total'] = array(
@@ -597,7 +598,7 @@ function storminvoice_form(&$node) {
     '#title' => t('Total'),
     /*'#attributes' => array('readonly' => 'readonly'),*/ //See #450778
     '#size' => 15,
-    '#default_value' => $node->total,
+    '#default_value' => isset($node->total) ? $node->total : NULL,
   );
 
   if (!variable_get('storm_tax_display', TRUE)) {
@@ -614,7 +615,7 @@ function storminvoice_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Total in customer currency'),
     '#size' => 15,
-    '#default_value' => $node->totalcustomercurr,
+    '#default_value' => isset($node->totalcustomercurr) ? $node->totalcustomercurr : NULL,
   );
 
   return $form;
@@ -623,6 +624,10 @@ function storminvoice_form(&$node) {
 // INVOICE NODE MANIPULATION FUNCTIONS
 function storminvoice_insert($node) {
   _storminvoice_beforesave($node);
+
+  $node->taxexempt = (isset($node->taxexempt)) ? $node->taxexempt : NULL;
+  $node->src_nid = (isset($node->src_nid)) ? $node->src_nid : NULL;
+  $node->src_vid = (isset($node->src_vid)) ? $node->src_vid : NULL;
 
   db_query("INSERT INTO {storminvoice}
       (vid, nid, number, reference, organization_nid, organization_title, 
@@ -686,12 +691,15 @@ function _storminvoice_beforesave(&$node) {
   $o = db_fetch_object($r);
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title FROM {node} AS n 
-    INNER JOIN {stormproject} AS p ON n.vid=p.vid
-    WHERE type='stormproject' AND n.nid=%d";
-  $r = db_query($s, $node->project_nid);
-  $p = db_fetch_object($r);
-  $node->project_title = $p->title;
+  if (isset($node->project_nid)) {
+    $s = "SELECT n.title FROM {node} AS n 
+      INNER JOIN {stormproject} AS p ON n.vid=p.vid
+      WHERE type='stormproject' AND n.nid=%d";
+    $r = db_query($s, $node->project_nid);
+    $p = db_fetch_object($r);
+    $node->project_title = (isset($p->title)) ? $p->title : NULL;
+  }
+
 
   if (!$node->totalcustomercurr) {
     $node->totalcustomercurr = $node->total;
@@ -725,7 +733,7 @@ function _storminvoice_beforesave(&$node) {
 
 function _storminvoice_insert_items($node) {
   $j = 0;
-  while (is_object($node->items[$j])) {
+  while (isset($node->items[$j])) { //removed is_object for 684016
     db_query("INSERT INTO {storminvoice_items}
       (invoice_nid, invoice_vid, amount, description,
       tax1app, tax1percent, tax1, 

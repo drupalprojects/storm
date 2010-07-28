@@ -314,7 +314,7 @@ function stormproject_form(&$node) {
     if (array_key_exists('organization_nid', $_GET) && !$node->organization) {
       $node->organization_nid = $_GET['organization_nid'];
     }
-    if ($_SESSION['stormproject_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['stormproject_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
@@ -341,7 +341,7 @@ function stormproject_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
@@ -444,7 +444,7 @@ function stormproject_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Duration'),
     '#size' => 20,
-    '#default_value' => $node->duration,
+    '#default_value' => isset($node->duration) ? $node->duration : NULL,
   );
 
   $form['group4'] = array(
@@ -465,7 +465,7 @@ function stormproject_form(&$node) {
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
-    '#default_value' => $node->price,
+    '#default_value' => isset($node->price) ? $node->price : NULL,
   );
 
   $currency_list = stormattribute_attributes_bydomain('Currency');
@@ -494,12 +494,15 @@ function stormproject_form(&$node) {
     
     $options = array(0 => '- none -', 'People:' => $people);
   }
+  else {
+    $options = array(0 => '- none -');
+  }
   
   $form['group5']['manager_nid'] = array(
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Project Manager'),
     '#options' => $options,
-    '#default_value' => $node->manager_nid,
+    '#default_value' => isset($node->manager_nid) ? $node->manager_nid : NULL,
   );
   
   if (module_exists('stormteam')) {
@@ -514,12 +517,15 @@ function stormproject_form(&$node) {
     
     $options = array(0 => '- unassigned -', 'Teams:' => $teams, 'People:' => $people);
   }
+  else {
+    $options = array(0 => '- unassigned -');
+  }
   
   $form['group5']['assigned_nid'] = array(
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Assigned to'),
     '#options' => $options,
-    '#default_value' => $node->assigned_nid,
+    '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : NULL,
   );
   
   if ($type->has_body) {
@@ -528,7 +534,7 @@ function stormproject_form(&$node) {
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => isset($node->title_old) ? $node->title_old : NULL,
   );
 
   return $form;
@@ -622,7 +628,7 @@ function _stormproject_beforesave(&$node) {
 function stormproject_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!$node->nid) {
+      if(!isset($node->nid)) {
         $category_list = stormattribute_attributes_bydomain('Project category');
         $node->projectcategory = $category_list['default'];
 
