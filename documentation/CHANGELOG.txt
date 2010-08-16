@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Bug #852892 by Carsten Müller: Fixed Patch for stormteam filter autocomplete.
 - Bug #848410 by Carsten Müller: Fixed Wrong variable used in stormteam_storm_rewrite_where_sql().
 - Feature #688086 by Francewhoa: Reformat 'Description' section.
 - Feature #814820 by Carsten Müller | tchurch: Add invoice icon on project page.
