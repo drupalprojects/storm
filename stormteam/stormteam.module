@@ -221,7 +221,7 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
       if ($cond) {
         $cond .= ' OR ';
       }
-      $cond .= "ste1.members LIKE '%i:". $user->stormperson_nid .";%'";
+      $cond .= "ste1.members LIKE '%i:". $account->stormperson_nid .";%'";
     }
     if ($cond) {
       $cond = " WHEN 'stormteam' THEN (SELECT IF($cond,1,0) FROM {stormteam} ste1 WHERE ste1.vid=${primary_table}.vid) ";
