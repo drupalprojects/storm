@@ -502,7 +502,7 @@ function stormproject_form(&$node) {
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Project Manager'),
     '#options' => $options,
-    '#default_value' => isset($node->manager_nid) ? $node->manager_nid : NULL,
+    '#default_value' => isset($node->manager_nid) ? $node->manager_nid : 0,
   );
   
   if (module_exists('stormteam')) {
@@ -525,7 +525,7 @@ function stormproject_form(&$node) {
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Assigned to'),
     '#options' => $options,
-    '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : NULL,
+    '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : 0,
   );
   
   if ($type->has_body) {

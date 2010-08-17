@@ -30,6 +30,6 @@ class StormprojectTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/stormorganization', $org, t('Save'));
     $this->drupalPost('node/add/stormproject', $prj, t('Save'));
 
-    //$this->assertText(t('Project @title has been created.', array('@title' => $prj['title'])));;
+    $this->assertText(t('Project @title has been created.', array('@title' => $prj['title'])));;
   }
 }
