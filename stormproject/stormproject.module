@@ -550,6 +550,9 @@ function stormproject_insert($node) {
   $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
   $r = db_query($s, $node->manager_nid);
   $manager = db_fetch_object($r);
+  if (!$manager) {
+    $manager->title = '';
+  }
   
   $assigned = node_load($node->assigned_nid);
   
