@@ -127,10 +127,10 @@ function storminvoice_list() {
   $tablesort = tablesort_sql($header);
 
   if ($tablesort == " ORDER BY  sin.number ASC") {
-    $tablesort = ' ORDER BY LPAD(sin.number, 10, "0") ASC';
+    $tablesort = " ORDER BY LPAD(sin.number, 10, '0') ASC";
   }
   else if ($tablesort == " ORDER BY  sin.number DESC") {
-    $tablesort = ' ORDER BY LPAD(sin.number, 10, "0") DESC';
+    $tablesort = " ORDER BY LPAD(sin.number, 10, '0') DESC";
   }
   
   if (count($filterfields) == 0) {
