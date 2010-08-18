@@ -64,16 +64,16 @@ function storminvoice_list() {
     ),
   );
 
-  $s  = "SELECT n.title, sin.* FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' ";
+  $s  = "SELECT n.title, sin.* FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice' ";
 
   $s_totals_topay = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
-  INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate=0";
+  INNER JOIN {node} n ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate=0";
 
   $s_totals_paid = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
-  INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate<>0";
+  INNER JOIN {node} n ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice' AND sin.paymentdate<>0";
 
   $s_totals = "SELECT SUM(amount) amount, SUM(tax1) tax1, SUM(tax2) tax2, SUM(total) total FROM {storminvoice} sin
-  INNER JOIN {node} n ON n.nid=sin.nid WHERE n.status=1 AND n.type='storminvoice'";
+  INNER JOIN {node} n ON n.vid=sin.vid WHERE n.status=1 AND n.type='storminvoice'";
 
   $where = array();
   $args = array();
