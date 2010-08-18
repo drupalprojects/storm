@@ -555,6 +555,9 @@ function stormproject_insert($node) {
   }
   
   $assigned = node_load($node->assigned_nid);
+  if (!$assigned) {
+    $assigned->title = '';
+  }
   
   db_query("INSERT INTO {stormproject}
     (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
