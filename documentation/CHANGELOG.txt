@@ -1,6 +1,7 @@
 /* $Id$ */
 
 Version 6.x-1.x-dev:
+- Feature #851464 by Carsten Müller: Added Sorting of assignments in storm.module, function storm_get_assignment_options().
 - Bug #847166 by davfigue: Fixed Invalid string format in query for PostgreSQL.
 - Bug #857154 by juliangb | Francewhoa: Fixed Multiple copies of same invoice are display in Invoice View.
 - Bug #870428 by juliangb: Fixed Reinstate commented out test assertion.

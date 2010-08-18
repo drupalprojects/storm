@@ -1005,5 +1005,11 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   if (!sizeof($options[$teams])) {
     unset($options[$teams]);
   }
+  
+  
+  // SORT OPTIONS
+  asort($options[$people], SORT_LOCALE_STRING);
+  asort($options[$teams], SORT_LOCALE_STRING);
+  
   return $options;
 }
