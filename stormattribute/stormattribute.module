@@ -11,6 +11,17 @@ function stormattribute_help($path, $arg) {
   switch ($path) {
     case "admin/help#stormattribute":
       $output = '<p>'.  t("Provides attributes support for Storm") .'</p>';
+      $output .= '<p>'. t("Price Modes - Price modes are used calculate the price of the Storm node when added to an invoice. A price mode can be added to any Storm node type and any type can be added to an invoice. When a node is added to an invoice it looks for a price mode in the following order:") .'</p>';
+      $output .= '<p>'. t("Ticket, Task, Project, Organization.") .'</p>';
+      $output .= '<p>'. t("It will take the price mode for it's current node or the first valid node type above in it's tree. e.g. For a task node type, if that node doesn't have a price mode it will look at the project and then the organization and take the first one it finds. This means you can define a price mode for the organization and it will be used for all nodes under that organization unless it's given a different one.") .'</p>';
+      $output .= '<p>'. t("The following price modes keys are defined:") .'<br />';
+      $output .= '<ul>';
+      $output .= '<li>'. t("not applicable - This is ignored by the system. This means that no price mode is defined.") .'</li>';
+      $output .= '<li>'. t("fixed - Price of 0 is used (so the invoice would need to be manually updated.") .'</li>';
+      $output .= '<li>'. t("hourly - Price taken from node and multiplied by billing duration.") .'</li>';
+      $output .= '<li>'. t("daily - Price given is for daily rate. This price is divided by 8 hours and then multiplied by the billing duration.") .'</li>';
+      $output .= '<li>'. t("fixed_price - Will use the price given as the fixed price for that invoice item.") .'</li>';
+      $output .= '</ul>';
       break;
   }
 

@@ -15,7 +15,7 @@ function stormattribute_install() {
     'fixed' => 'Fixed',
     'hourly' => 'Hourly',
     'daily' => 'Daily',
-    'fixed_timetracking' => 'Fixed Timetracking',
+    'fixed_price' => 'Fixed Price',
   );
 
   $attributes['Project status'] = array(
@@ -961,3 +961,38 @@ function stormattribute_update_6111() {
 
   return $ret;
 }
+
+/**
+ * Added more fixed attributes for issue 567558
+ * Converting all fixed_timetracking into fixed_price to make the function general for all Storm node types
+*/
+function stormattribute_update_6112() {
+  $ret = array();
+
+  $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'fixed_price', 'Fixed Price', 0, 1)");
+  
+  if (module_exists('stormorganization')) {
+    $ret[] = update_sql("UPDATE {stormorganization} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+    drupal_set_message(t('Nodes of type "Organization" have been updated - pricemode changed from fixed_timetracking to fixed_price.'), 'warning');
+  }
+
+  if (module_exists('stormproject')) {
+    $ret[] = update_sql("UPDATE {stormproject} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+    drupal_set_message(t('Nodes of type "Project" have been updated - pricemode changed from fixed_timetracking to fixed_price.'), 'warning');
+  }
+
+  if (module_exists('stormtask')) {
+    $ret[] = update_sql("UPDATE {stormtask} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+    drupal_set_message(t('Nodes of type "Task" have been updated - pricemode changed from fixed_timetracking to fixed_price.'), 'warning');
+  }
+
+  if (module_exists('stormticket')) {
+    $ret[] = update_sql("UPDATE {stormticket} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+    drupal_set_message(t('Nodes of type "Ticket" have been updated - pricemode changed from fixed_timetracking to fixed_price.'), 'warning');
+  }
+
+  $ret[] = update_sql("DELETE FROM {stormattribute} where domain = 'Price mode' and akey = 'fixed_timetracking'");
+
+  return $ret;
+}
+
