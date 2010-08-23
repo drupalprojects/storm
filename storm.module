@@ -999,10 +999,10 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   if (isset($options[$teams]) && array_key_exists(0, $options[$teams])) {
     unset($options[$teams][0]);
   }
-  if (!sizeof($options[$people])) {
+  if (isset($options[$people]) && !sizeof($options[$people])) {
     unset($options[$people]);
   }
-  if (!sizeof($options[$teams])) {
+  if (isset($options[$teams]) && !sizeof($options[$teams])) {
     unset($options[$teams]);
   }
   return $options;

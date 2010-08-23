@@ -457,10 +457,10 @@ function stormtask_form(&$node) {
       }
     }
     
-    if ($_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['stormtask_list_filter']['organization_nid']) && $_SESSION['stormtask_list_filter']['organization_nid'] && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
     }
-    if ($_SESSION['stormtask_list_filter']['project_nid'] && !$node->project_nid) {
+    if (isset($_SESSION['stormtask_list_filter']['project_nid']) && $_SESSION['stormtask_list_filter']['project_nid'] && !$node->project_nid) {
       $node->project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
@@ -490,7 +490,7 @@ function stormtask_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
@@ -509,7 +509,7 @@ function stormtask_form(&$node) {
   $projects = array();
   while ($project = db_fetch_object($r)) {
     $projects[$project->nid] = $project->title;
-    if (!$node->project_nid) $node->project_nid = $project->nid;
+    if (!isset($node->project_nid)) $node->project_nid = $project->nid;
   }
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
@@ -531,7 +531,7 @@ function stormtask_form(&$node) {
   $form['group1']['parent_nid'] = array(
     '#type' => 'select',
     '#title' => t('Parent task'),
-    '#default_value' => $node->parent_nid,
+    '#default_value' => isset($node->parent_nid) ? $node->parent_nid : 0,
     '#options' => array(0 => '-') + $parent_tasks,
     '#process' => array('storm_dependent_select_process'),
   );
@@ -539,7 +539,7 @@ function stormtask_form(&$node) {
   $form['group1']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $node->weight,
+    '#default_value' => isset($node->weight) ? $node->weight : 0,
   );
 
   $form['group1']['stepno'] = array(
@@ -547,7 +547,7 @@ function stormtask_form(&$node) {
     '#title' => t('Step no.'),
     '#size' => 15,
     '#required' => FALSE,
-    '#default_value' => $node->stepno,
+    '#default_value' => isset($node->stepno) ? $node->stepno : NULL,
   );
 
   $form['title'] = array(
@@ -638,7 +638,7 @@ function stormtask_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Duration'),
     '#size' => 20,
-    '#default_value' => $node->duration,
+    '#default_value' => isset($node->duration) ? $node->duration : NULL,
   );
 
   $form['group4'] = array(
@@ -659,7 +659,7 @@ function stormtask_form(&$node) {
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
-    '#default_value' => $node->price,
+    '#default_value' => isset($node->price) ? $node->price : NULL,
   );
 
   $currency_list = stormattribute_attributes_bydomain('Currency');
@@ -682,7 +682,7 @@ function stormtask_form(&$node) {
     '#type' => 'select',
     '#title' => t('Assigned to'),
     '#options' => $options,
-    '#default_value' => $node->assigned_nid,
+    '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : 0,
   );
 
   $form['group6'] = array(
@@ -694,14 +694,14 @@ function stormtask_form(&$node) {
   $form['group6']['billable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billable'),
-    '#default_value' => $node->billable,
+    '#default_value' => isset($node->billable) ? $node->billable : variable_get('stormtask_billable_default', FALSE),
     '#weight' => 1,
   );
   
   $form['group6']['billed'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billed'),
-    '#default_value' => $node->billed,
+    '#default_value' => isset($node->billed) ? $node->billed : FALSE,
     '#weight' => 2,
   );
 
@@ -711,12 +711,12 @@ function stormtask_form(&$node) {
 
   $form['stepno_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->stepno_old,
+    '#default_value' => isset($node->stepno_old) ? $node->stepno_old : NULL,
   );
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => isset($node->title_old) ? $node->title_old : NULL,
   );
 
   return $form;
@@ -802,7 +802,7 @@ function _stormtask_beforesave(&$node) {
   $node->project_title = $p->title;
   
   $assigned = node_load($node->assigned_nid);
-  $node->assigned_title = $assigned->title;
+  $node->assigned_title = isset($assigned->title) ? $assigned->title : NULL;
   
   // Allow use of comma when inputting numerical values - str_replace with period decimal
   $node->duration = str_replace(',', '.', $node->duration);
@@ -826,7 +826,7 @@ function _stormtask_beforesave(&$node) {
 function stormtask_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!$node->nid) {
+      if(!isset($node->nid)) {
         $node->iscustomer = 1;
         $node->isactive = 1;
 
@@ -863,7 +863,7 @@ function stormtask_delete($node) {
 
 function stormtask_load($node) {
   $additions = db_fetch_object(db_query('SELECT * FROM {stormtask} WHERE vid = %d', $node->vid));
-  $additions->stepno_old = $node->stepno;
+  $additions->stepno_old = isset($node->stepno) ? $node->stepno : NULL;
   $additions->title_old = $node->title;
   return $additions;
 }
@@ -914,7 +914,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
   }
 
   $max_depth = (is_null($max_depth)) ? count($children[$project_nid]) : $max_depth;
-  if ($children[$project_nid][$parent_nid]) {
+  if (isset($children[$project_nid][$parent_nid]) && $children[$project_nid][$parent_nid]) {
     foreach ($children[$project_nid][$parent_nid] as $child_nid) {
       if ($max_depth > $depth) {
         $task = drupal_clone($tasks[$project_nid][$child_nid]);
@@ -927,7 +927,7 @@ function _stormtask_get_tree($project_nid, $parent_nid = 0, $depth = -1, $max_de
       }
     }
   }
-  return $tree ? $tree : array();
+  return isset($tree) ? $tree : array();
 }
 
 function _stormtask_plain_tree($tree) {
