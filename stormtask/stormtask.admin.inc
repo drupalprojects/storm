@@ -593,6 +593,18 @@ function stormtask_list() {
     }
   }
 
+  if ($_SESSION['stormtask_list_filter']['billable'] != '-' && $_SESSION['stormtask_list_filter']['billable'] != NULL) {
+    $where[] = 'sta.billable=%d';
+    $args[] = $_SESSION['stormtask_list_filter']['billable'];
+    $filterfields[] = t('Billable');
+  }
+
+  if ($_SESSION['stormtask_list_filter']['billed'] != '-' && $_SESSION['stormtask_list_filter']['billed'] != NULL) {
+    $where[] = 'sta.billed=%d';
+    $args[] = $_SESSION['stormtask_list_filter']['billed'];
+    $filterfields[] = t('Billed');
+  }
+
   $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
@@ -776,7 +788,12 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
-  
+
+  $form['filter']['group4_1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
+
   // ASSIGNED TO
   $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
   $form['filter']['group4_1']['assigned_to'] = array(
@@ -784,6 +801,20 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#title' => t('Assigned to'),
     '#default_value' => $assigned_to,
     '#options' => $options,
+  );
+
+  $form['filter']['group4_1']['billable'] = array(
+    '#type' => 'select',
+    '#title' => 'Billable',
+    '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
+    '#default_value' => $_SESSION['stormtask_list_filter']['billable'],
+  );
+
+  $form['filter']['group4_1']['billed'] = array(
+    '#type' => 'select',
+    '#title' => 'Billed',
+    '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
+    '#default_value' => $_SESSION['stormtask_list_filter']['billed'],
   );
 
   $form['filter']['group5'] = array(
@@ -826,6 +857,8 @@ function stormtask_list_filter_filter($form, &$form_state) {
   $_SESSION['stormtask_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormtask_list_filter']['dateendto'] = $form_state['values']['dateendto'];
   $_SESSION['stormtask_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
+  $_SESSION['stormtask_list_filter']['billable'] = $form_state['values']['billable'];
+  $_SESSION['stormtask_list_filter']['billed'] = $form_state['values']['billed'];
   $_SESSION['stormtask_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

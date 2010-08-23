@@ -241,6 +241,15 @@ function stormticket_menu() {
     'file' => 'stormticket.admin.inc',
     'type' => MENU_CALLBACK,
   );
+
+  $items['admin/settings/storm/ticket'] = array(
+    'title' => 'Storm Ticket',
+    'description' => 'Storm Ticket Administration Page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stormticket_admin_settings'),
+    'access arguments' => array('Storm: access administration pages'),
+    'type' => MENU_LOCAL_TASK,
+  );
   
   return $items;
 }
@@ -278,6 +287,7 @@ function stormticket_content_extra_fields($type_name) {
       'group3' => array('label' => 'Date/Duration Group', 'weight' => -18),
       'group4' => array('label' => 'Price Group', 'weight' => -17),
       'group5' => array('label' => 'Assigned to', 'weight' => -16),
+      'group6' => array('label' => 'Billable / Billed Group', 'weight' => -15),
     );
   }
 }
@@ -359,6 +369,9 @@ function stormticket_form(&$node) {
     if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
               ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+
+    $node->billable = variable_get('stormticket_billable_default', FALSE);
+
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
@@ -530,7 +543,7 @@ function stormticket_form(&$node) {
   $form['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -15,
   );
   
   $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
@@ -541,7 +554,27 @@ function stormticket_form(&$node) {
     '#options' => $options,
     '#default_value' => $node->assigned_nid,
   );
+
+  $form['group6'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group6') : -14,
+  );
+
+  $form['group6']['billable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Billable'),
+    '#default_value' => $node->billable,
+    '#weight' => 1,
+  );
   
+  $form['group6']['billed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Billed'),
+    '#default_value' => $node->billed,
+    '#weight' => 2,
+  );
+
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
@@ -562,15 +595,15 @@ function stormticket_insert($node) {
     (vid, nid, organization_nid, organization_title, project_nid, project_title,
     task_nid, task_title, task_stepno, ticketcategory, ticketstatus, ticketpriority, 
     datebegin, dateend, durationunit, duration, pricemode, price, currency, 
-    assigned_nid, assigned_title)
+    assigned_nid, assigned_title, billable, billed)
     VALUES
     (%d, %d, %d, '%s', %d, '%s',
     %d, '%s', '%s', '%s', '%s', '%s',
-    %d, %d, '%s', %f, '%s', %f, '%s', %d, '%s')",
+    %d, %d, '%s', %f, '%s', %f, '%s', %d, '%s', %d, %d)",
     $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
     $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
     $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, $node->price, $node->currency,
-    $node->assigned_nid, $node->assigned_title
+    $node->assigned_nid, $node->assigned_title, $node->billable, $node->billed
   );
 }
 
@@ -606,13 +639,13 @@ function stormticket_update($node) {
       organization_nid=%d, organization_title='%s', project_nid=%d, project_title='%s',
       task_nid=%d, task_title='%s', task_stepno='%s', ticketcategory='%s', ticketstatus='%s', 
       ticketpriority='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f, pricemode='%s', 
-      price=%f, currency='%s', assigned_nid=%d, assigned_title='%s' WHERE vid = %d",
+      price=%f, currency='%s', assigned_nid=%d, assigned_title='%s', billable=%d, billed=%d WHERE vid = %d",
       $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
       $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, 
       $node->ticketpriority, $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, 
       $node->price, $node->currency, 
       $node->assigned_nid, $node->assigned_title,
-      $node->vid
+      $node->billable, $node->billed, $node->vid
     );
     if ($node->title != $node->title_old) {
       module_invoke_all('stormticket_change', $node->nid, $node->title);
@@ -696,4 +729,89 @@ function stormticket_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'stormticket'),
   );
+}
+
+// ADMIN SETTINGS
+function stormticket_admin_settings() {
+  $form = array();
+
+  $form['stormticket_billable_default'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Default Value for billable field.'),
+    '#default_value' => variable_get('stormticket_billable_default', FALSE),
+    '#description' => t('When checked, Storm will set the ticket to billable by default'),
+    '#size' => 5,
+  );
+  
+  return system_settings_form($form);
+}
+
+// INVOICE AUTO ADD HANDLER
+function stormticket_storminvoice_auto_add($node, $invoice_nid = NULL) {
+  if (!module_exists('storminvoice')) {
+    drupal_set_message(t('This function should only be called from within Storm Invoice'));
+    return;
+  } elseif ($node->billed) {
+    drupal_set_message(t('This ticket has already been billed!'));
+    return;
+  } elseif (!$node->billable) {
+    drupal_set_message(t('This ticket is marked unbillable!'));
+    return;
+  } else {
+    global $user;
+    
+    if (!$invoice_nid) {
+    
+      $new_invoice = new StdClass;
+      
+      //Code copied with edits from node form
+      $new_invoice->requestdate = time();
+      $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
+      $new_invoice->number = storminvoice_get_invoice_number($new_invoice->requestdate);
+
+      $new_invoice->title = $node->title;
+      $new_invoice->uid = $user->uid;
+      $new_invoice->type = 'storminvoice';
+      //$new_invoice->reference
+      $new_invoice->organization_nid = $node->organization_nid;
+      $new_invoice->organization_title = $node->organization_title;
+      $new_invoice->project_nid = $node->project_nid;
+      $new_invoice->project_title = $node->project_title;
+      //$new_invoice->amount
+      //$new_invoice->tax
+      //$new_invoice->total
+      //$new_invoice->totalcustomercurr
+      //$new_invoice->taxexempt
+      $new_invoice->src_nid = $node->nid;
+      $new_invoice->src_vid = $node->vid;
+      
+      node_save($new_invoice);
+      $invoice_nid = $new_invoice->nid;
+    } else {
+      $new_invoice = node_load($invoice_nid);
+    }
+
+    $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
+    
+    $rate_array = storminvoice_get_rate($node);
+    
+    $count = count($new_invoice->items);
+    
+    $new_invoice->items[$count]->description = storminvoice_get_item_desc($rate_array, $node);
+
+    $new_invoice->items[$count]->amount = storminvoice_get_item_amount($rate_array, $node);
+
+    // Tax percent simply uses default at the moment
+    $new_invoice->items[$count]->tax1percent = variable_get('storm_tax1_percent', 20);
+    //$new_invoice_item->items[$count]->tax1
+    //$new_invoice_item->items[$count]->total
+    
+    storm_taxation($new_invoice->items[$count]);
+    storminvoice_update($new_invoice);
+  }
+  
+  // Mark task as billed.
+  db_query("UPDATE {stormticket} SET billed=%d WHERE vid=%d", 1, $node->vid);
+  
+  return $invoice_nid;
 }

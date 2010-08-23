@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Feature #567558 by tchurch: Added Extend auto-billing to other types of Storm node.
 - (REVERTED) Feature #851464 by Carsten Müller: Added Sorting of assignments in storm.module, function storm_get_assignment_options().
 - Bug #847166 by davfigue: Fixed Invalid string format in query for PostgreSQL.
 - Bug #857154 by juliangb | Francewhoa: Fixed Multiple copies of same invoice are display in Invoice View.

@@ -42,6 +42,8 @@ function stormtask_schema() {
       'duration'            => array('type' => 'float', 'default' => 0),
       'assigned_nid'        => array('type' => 'int'),
       'assigned_title'      => array('type' => 'varchar', 'length' => 100),
+      'billable'            => array('type' => 'int', 'default' => 0),
+      'billed'              => array('type' => 'int', 'default' => 0),
     ),
     'primary key' => array('vid', 'nid'),
   );
@@ -75,3 +77,14 @@ function stormtask_update_6103() {
   db_add_field($ret, 'stormtask', 'assigned_title', array('type' => 'varchar', 'length' => 100));
   return $ret;
 }
+
+/**
+ * Added billable and billed fields to stormtask table for issue 567558
+*/
+function stormtask_update_6106() {
+  $ret = array();
+  db_add_field($ret, 'stormtask', 'billable', array('type' => 'int', 'default' => 0));
+  db_add_field($ret, 'stormtask', 'billed', array('type' => 'int', 'default' => 0));
+  return $ret;
+}
+

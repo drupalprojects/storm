@@ -738,11 +738,13 @@ function _storminvoice_insert_items($node) {
       (invoice_nid, invoice_vid, amount, description,
       tax1app, tax1percent, tax1, 
       tax2app, tax2percent, tax2, 
-      total, weight) VALUES
+      total, weight
+      ) VALUES
       (%d, %d, %f, '%s',
       %d, %f, %f,
       %d, %f, %f,
-      %f, %d)",
+      %f, %d
+      )",
       $node->nid, $node->vid, $node->items[$j]->amount, $node->items[$j]->description,
       $node->items[$j]->tax1app, $node->items[$j]->tax1percent, $node->items[$j]->tax1,
       $node->items[$j]->tax2app, $node->items[$j]->tax2percent, $node->items[$j]->tax2,
@@ -877,7 +879,6 @@ function storminvoice_getitems($invoice_vid) {
   }
   return $items;
 }
-
 /**
  * function to return the next invoice number.
  * It will look for the highest invoice number within the current year and add one.
@@ -894,25 +895,123 @@ function storminvoice_get_invoice_number($requestdate) {
   return $new_invoice_number;
 }
 
+/**
+ * Try to obtain an hourly rate or fixed price for the new invoice item for a timetracking node.
+ * To do this we will use the first technique, among the following, to work:
+  
+ *  (1) try to obtain a rate from a ticket
+ *  (2) try to obtain a rate from a task
+ *  (3) try to obtain a rate from a project
+ *  (4) try to obtain a rate from an organization
+ *  (5) return an error if none of this worked.
+ *
+ * @return
+ *   Variables in an array.
+ */
+
+function storminvoice_get_rate($node) {
+  $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
+
+  $hours_per_day = 8;
+  $found = FALSE;
+
+  $node_list = array();
+  
+  switch ($node->type) {
+    case 'stormtimetracking':
+      $node_list = array('ticket' => $node->ticket_nid, 'task' => $node->task_nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid);
+      break;
+    case 'stormproject':
+      $node_list = array('project' => $node->nid, 'organization' => $node->organization_nid);
+      break;
+    case 'stormtask':
+      $node_list = array('task' => $node->nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid);
+      break;
+    case 'stormticket':
+      $node_list = array('ticket' => $node->nid, 'task' => $node->task_nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid);
+      break;
+    }
+  
+    foreach ($node_list as $type => $nid) {
+    if($nid) {
+      $parent_item = node_load($nid);
+      switch ($parent_item->pricemode) {
+        case 'hourly':
+          $found = TRUE;
+          $rate_array['rate_to_use'] = $parent_item->price;
+          break;
+
+        case 'daily':
+          $found = TRUE;
+          $rate_array['rate_to_use'] = $parent_item->price / $hours_per_day;
+          break;
+
+        case 'fixed':
+          $found = TRUE;
+          $rate_array['rate_to_use'] = 0;
+          break;
+
+        case 'fixed_price':
+          $found = TRUE;
+          $rate_array['rate_to_use'] = $parent_item->price;
+          break;
+
+        default:
+          continue;
+      }
+    }
+  if ($found == TRUE) {
+    $rate_array['pricemode_used'] = $parent_item->pricemode;
+    break;
+    }
+  }
+  if($found == FALSE) {
+    drupal_set_message(t('Error whilst finding a rate from ticket, task, project and organization. Consider setting the pricemode and price for your client organizations to avoid this error.'), 'error');
+    }
+  return $rate_array;
+}
+
 function storminvoice_get_item_desc($rate_array, $node) {
-  $description  = date('d M y', $node->trackingdate) . ': ';
 
   switch ($rate_array['pricemode_used']) {
     case 'hourly':
-      $description .= t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      if ($node->type == 'stormtimetracking') {
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      }
+      else {
+        $description = date('d M y') . ': ' . t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      }
       break;
     case 'daily':
-      $description .= t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
-      break;
-    case 'daily':
-      $description .= t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
-      break;
+      if ($node->type == 'stormtimetracking') {
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      }
+      else {
+        $description = date('d M y') . ': ' . t('@dur hours work at @rate per day on @desc', array('@dur' => $node->duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+      }
     case 'fixed':
-      $description .= t('@dur hours unbilled work on @desc', array('@dur' => $node->billing_duration, '@desc' => $node->title));
+      if ($node->type == 'stormtimetracking') {
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours unbilled work on @desc', array('@dur' => $node->billing_duration, '@desc' => $node->title));
+      }
+      else {
+        $description = date('d M y') . ': ' . t('@dur hours unbilled work on @desc', array('@dur' => $node->duration, '@desc' => $node->title));
+      }
       break;
-    case 'fixed_timetracking':
-      $description .= t('work billed for @desc', array('@desc' => $node->title));
-      break;
+    case 'fixed_price':
+      switch ($node->type) {
+        case 'stormtimetracking':
+        $description = date('d M y', $node->trackingdate) . ': ' . t('work billed for @desc', array('@desc' => $node->title));
+        break;
+      case 'stormproject':
+        $description = t('Project billed: @desc', array('@desc' => $node->title));
+        break;
+      case 'stormtask':
+        $description = t('Task billed: @desc', array('@desc' => $node->title));
+        break;
+      case 'stormticket':
+        $description = t('Ticket billed: @desc', array('@desc' => $node->title));
+        break;
+      }
   }
 
   return $description;
@@ -924,10 +1023,13 @@ function storminvoice_get_item_amount($rate_array, $node) {
     case 'hourly':
       $amount = $node->billing_duration * $rate_array['rate_to_use'];
       break;
+    case 'daily':
+      $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      break;
     case 'fixed':
       $amount = $rate_array['rate_to_use'];
       break;
-    case 'fixed_timetracking':
+    case 'fixed_price':
       $amount = $rate_array['rate_to_use'];
       break;
     }

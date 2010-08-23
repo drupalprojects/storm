@@ -210,6 +210,18 @@ function stormticket_list() {
     }
   }
 
+  if ($_SESSION['stormticket_list_filter']['billable'] != '-' && $_SESSION['stormticket_list_filter']['billable'] != NULL) {
+    $where[] = 'sti.billable=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['billable'];
+    $filterfields[] = t('Billable');
+  }
+
+  if ($_SESSION['stormticket_list_filter']['billed'] != '-' && $_SESSION['stormticket_list_filter']['billed'] != NULL) {
+    $where[] = 'sti.billed=%d';
+    $args[] = $_SESSION['stormticket_list_filter']['billed'];
+    $filterfields[] = t('Billed');
+  }
+
   $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
@@ -413,6 +425,10 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#default_value' => $dateendto,
   );
   
+  $form['filter']['group4_1'] = array(
+    '#type' => 'markup',
+    '#theme' => 'storm_form_group',
+  );
   
   // ASSIGNED TO
   $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
@@ -423,6 +439,19 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#options' => $options,
   );
   
+  $form['filter']['group4_1']['billable'] = array(
+    '#type' => 'select',
+    '#title' => 'Billable',
+    '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
+    '#default_value' => $_SESSION['stormticket_list_filter']['billable'],
+  );
+
+  $form['filter']['group4_1']['billed'] = array(
+    '#type' => 'select',
+    '#title' => 'Billed',
+    '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
+    '#default_value' => $_SESSION['stormticket_list_filter']['billed'],
+  );
 
   $form['filter']['group5'] = array(
     '#type' => 'markup',
@@ -465,6 +494,8 @@ function stormticket_list_filter_filter($form, &$form_state) {
   $_SESSION['stormticket_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormticket_list_filter']['dateendto'] = $form_state['values']['dateendto'];
   $_SESSION['stormticket_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
+  $_SESSION['stormticket_list_filter']['billable'] = $form_state['values']['billable'];
+  $_SESSION['stormticket_list_filter']['billed'] = $form_state['values']['billed'];
   $_SESSION['stormticket_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }
 

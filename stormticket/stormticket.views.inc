@@ -227,6 +227,34 @@ function stormticket_views_data() {
     ),
   );
   
+  $data['stormtask']['billable'] = array(
+    'title' => t('Task Billable'),
+    'help' => 'Storm Task Billable',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
+  
+  $data['stormtask']['billed'] = array(
+    'title' => t('Tasl Billed'),
+    'help' => 'Storm Task Billed',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
+
   return $data;
 }
 

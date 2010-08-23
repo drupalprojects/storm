@@ -13,10 +13,10 @@ function storminvoice_auto_add($node, $invoice = NULL) {
       $invoice_nid = stormorganization_storminvoice_auto_add($node, $invoice);
       break;
     case 'stormproject':
-      $invoice_nid = stormorganization_storminvoice_auto_add($node, $invoice);
+      $invoice_nid = stormproject_storminvoice_auto_add($node, $invoice);
       break;
     case 'stormtask':
-      $invoice_nid = stormorganization_storminvoice_auto_add($node, $invoice);
+      $invoice_nid = stormtask_storminvoice_auto_add($node, $invoice);
       break;
     case 'stormticket':
       $invoice_nid = stormticket_storminvoice_auto_add($node, $invoice);

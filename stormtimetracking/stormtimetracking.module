@@ -690,9 +690,9 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice = node_load($invoice_nid);
     }
 
-    $rate_array = array('pricemode_used' => '', 'use_fixed' => FALSE, 'use_hourly' => FALSE, 'use_fixed_timetracking' => FALSE, 'rate_to_use' => 0);
+    $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
     
-    $rate_array = stormtimetracking_timetracking_get_rate($node);
+    $rate_array = storminvoice_get_rate($node);
     
     $count = count($new_invoice->items);
     
@@ -723,64 +723,3 @@ function stormtimetracking_views_api() {
   );
 }
 
-/**
- * Try to obtain an hourly rate or fixed price for the new invoice item for a timetracking node.
- * To do this we will use the first technique, among the following, to work:
-  
- *  (1) try to obtain a rate from a ticket
- *  (2) try to obtain a rate from a task
- *  (3) try to obtain a rate from a project
- *  (4) try to obtain a rate from an organization
- *  (5) return an error if none of this worked.
- *
- * @return
- *   Variables in an array.
- */
-function stormtimetracking_timetracking_get_rate($node) {
-  $rate_array = array('pricemode_used' => '', 'use_fixed' => FALSE, 'use_hourly' => FALSE, 'use_fixed_timetracking' => FALSE, 'rate_to_use' => 0);
-
-  $hours_per_day = 8;
-  $found = FALSE;
-  
-  foreach (array('ticket' => $node->ticket_nid, 'task' => $node->task_nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid) as $type => $nid) {
-    if($nid) {
-      $parent_item = node_load($nid);
-      switch ($parent_item->pricemode) {
-        case 'hourly':
-          $rate_array['use_hourly'] = TRUE;
-          $found = TRUE;
-          $rate_array['rate_to_use'] = $parent_item->price;
-          break;
-
-        case 'daily':
-          $rate_array['use_hourly'] = TRUE;
-          $found = TRUE;
-          $rate_array['rate_to_use'] = $parent_item->price / $hours_per_day;
-          break;
-
-        case 'fixed':
-          $rate_array['use_fixed'] = TRUE;
-          $found = TRUE;
-          $rate_array['rate_to_use'] = 0;
-          break;
-
-        case 'fixed_timetracking':
-          $rate_array['use_fixed_timetracking'] = TRUE;
-          $found = TRUE;
-          $rate_array['rate_to_use'] = $parent_item->price;
-          break;
-
-        default:
-          continue;
-      }
-    }
-  if ($found == TRUE) {
-  	$rate_array['pricemode_used'] = $parent_item->pricemode;
-    break;
-    }
-  }
-  if($found == FALSE) {
-    drupal_set_message(t('Error whilst finding a rate from ticket, task, project and organization. Consider setting the pricemode and price for your client organizations to avoid this error.'), 'error');
-    }
-  return $rate_array;
-}

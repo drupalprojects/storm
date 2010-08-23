@@ -157,6 +157,18 @@ function stormproject_list() {
     }
   }
   
+  if ($_SESSION['stormproject_list_filter']['billable'] != '-' && $_SESSION['stormproject_list_filter']['billable'] != NULL) {
+    $where[] = 'spr.billable=%d';
+    $args[] = $_SESSION['stormproject_list_filter']['billable'];
+    $filterfields[] = t('Billable');
+  }
+
+  if ($_SESSION['stormproject_list_filter']['billed'] != '-' && $_SESSION['stormproject_list_filter']['billed'] != NULL) {
+    $where[] = 'spr.billed=%d';
+    $args[] = $_SESSION['stormproject_list_filter']['billed'];
+    $filterfields[] = t('Billed');
+  }
+
   $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
@@ -327,6 +339,21 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#default_value' => $assigned_to,
     '#options' => $options,
   );
+
+  $form['filter']['group4']['billable'] = array(
+    '#type' => 'select',
+    '#title' => 'Billable',
+    '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
+    '#default_value' => $_SESSION['stormproject_list_filter']['billable'],
+  );
+
+  $form['filter']['group4']['billed'] = array(
+    '#type' => 'select',
+    '#title' => 'Billed',
+    '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
+    '#default_value' => $_SESSION['stormproject_list_filter']['billed'],
+  );
+
   
   $form['filter']['group5'] = array(
     '#type' => 'markup',
@@ -366,6 +393,8 @@ function stormproject_list_filter_filter($form, &$form_state) {
   $_SESSION['stormproject_list_filter']['datebeginto'] = $form_state['values']['datebeginto'];
   $_SESSION['stormproject_list_filter']['dateendfrom'] = $form_state['values']['dateendfrom'];
   $_SESSION['stormproject_list_filter']['dateendto'] = $form_state['values']['dateendto'];
+  $_SESSION['stormproject_list_filter']['billable'] = $form_state['values']['billable'];
+  $_SESSION['stormproject_list_filter']['billed'] = $form_state['values']['billed'];
   $_SESSION['stormproject_list_filter']['assigned_to'] = $form_state['values']['assigned_to'];
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $form_state['values']['itemsperpage'];
 }

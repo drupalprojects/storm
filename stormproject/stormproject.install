@@ -39,6 +39,8 @@ function stormproject_schema() {
       'manager_title'       => array('type' => 'varchar', 'length' => 100),
       'assigned_nid'        => array('type' => 'int'),
       'assigned_title'      => array('type' => 'varchar', 'length' => 100),
+      'billable'            => array('type' => 'int', 'default' => 0),
+      'billed'              => array('type' => 'int', 'default' => 0),
     ),
     'primary key' => array('vid', 'nid'),
   );
@@ -76,5 +78,15 @@ function stormproject_update_6104() {
   db_add_field($ret, 'stormproject', 'manager_title', array('type' => 'varchar', 'length' => 100));
   db_add_field($ret, 'stormproject', 'assigned_nid', array('type' => 'int'));
   db_add_field($ret, 'stormproject', 'assigned_title', array('type' => 'varchar', 'length' => 100));
+  return $ret;
+}
+
+/**
+ * Added billable and billed fields to stormproject table for issue 567558
+*/
+function stormproject_update_6105() {
+  $ret = array();
+  db_add_field($ret, 'stormproject', 'billable', array('type' => 'int', 'default' => 0));
+  db_add_field($ret, 'stormproject', 'billed', array('type' => 'int', 'default' => 0));
   return $ret;
 }

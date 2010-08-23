@@ -37,14 +37,26 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#suffix' => '</dl></div>',
     '#weight' => -25,
   );
-  
+
   $node->content['links']['expenses'] = theme('storm_link', 'stormproject', 'stormexpense', $node->nid, $l_pos++);
   $node->content['links']['invoices'] = theme('storm_link', 'stormproject', 'storminvoice', $node->nid, $l_pos++);
   $node->content['links']['notes'] = theme('storm_link', 'stormproject', 'stormnote', $node->nid, $l_pos++);
   $node->content['links']['tasks'] = theme('storm_link', 'stormproject', 'stormtask', $node->nid, $l_pos++);
   $node->content['links']['tickets'] = theme('storm_link', 'stormproject', 'stormticket', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormproject', 'stormtimetracking', $node->nid, $l_pos++);
-  
+
+  // Code to create invoice auto_add link
+  if (module_exists('storminvoice')) {
+
+    $node->content['links']['auto_invoice'] = array(
+      '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
+      '#weight' => $l_pos++,
+    );
+  }
+
+
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',

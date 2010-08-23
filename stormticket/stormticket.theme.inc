@@ -48,6 +48,17 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, $l_pos++);
 
+  // Code to create invoice auto_add link
+  if (module_exists('storminvoice')) {
+
+    $node->content['links']['auto_invoice'] = array(
+      '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
+      '#weight' => $l_pos++,
+    );
+  }
+
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',

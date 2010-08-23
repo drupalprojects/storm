@@ -278,6 +278,34 @@ function stormproject_views_data() {
     ),
   );
   
+  $data['stormproject']['billable'] = array(
+    'title' => t('Project Billable'),
+    'help' => 'Storm Project Billable',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
+  
+  $data['stormproject']['billed'] = array(
+    'title' => t('Project Billed'),
+    'help' => 'Storm Project Billed',
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
+
   return $data;
 }
 
