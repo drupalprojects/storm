@@ -1021,10 +1021,20 @@ function storminvoice_get_item_desc($rate_array, $node) {
 function storminvoice_get_item_amount($rate_array, $node) {
   switch ($rate_array['pricemode_used']) {
     case 'hourly':
-      $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      if ($node->type == 'stormtimetracking') {
+        $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      }
+      else {
+        $amount = $node->duration * $rate_array['rate_to_use'];
+      }
       break;
     case 'daily':
-      $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      if ($node->type == 'stormtimetracking') {
+        $amount = $node->billing_duration * $rate_array['rate_to_use'];
+      }
+      else {
+        $amount = $node->duration * $rate_array['rate_to_use'];
+      }
       break;
     case 'fixed':
       $amount = $rate_array['rate_to_use'];
