@@ -231,6 +231,7 @@ function stormticket_menu() {
     'access arguments' => array('Storm ticket: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormticket.admin.inc',
+    'weight' => 5,
   );
   
   $items['storm/task_tickets_js/%/%/%'] = array(

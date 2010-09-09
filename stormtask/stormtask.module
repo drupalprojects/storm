@@ -251,6 +251,7 @@ function stormtask_menu() {
     'access arguments' => array('Storm task: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormtask.admin.inc',
+    'weight' => 4,
   );
   
   $items['admin/settings/storm/task'] = array(

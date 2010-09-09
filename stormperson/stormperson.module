@@ -208,6 +208,7 @@ function stormperson_menu() {
     'access arguments' => array('Storm person: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormperson.admin.inc',
+    'weight' => 1,
   );
 
   $items['storm/organization_people_js/%'] = array(

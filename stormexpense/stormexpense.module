@@ -158,6 +158,7 @@ function stormexpense_menu() {
     'access arguments' => array('Storm expense: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormexpense.admin.inc',
+    'weight' => 9,
   );
 
   $items['storm/expenses/report/%/%'] = array(

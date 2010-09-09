@@ -3,7 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
-- No changes since 6.x-1.34.
+- Feature #891916 by juliangb: Added Weighted menu items.
 
 Version 6.x-1.34:
 - Feature #886132 by juliangb: Added Tests for Storm Task.

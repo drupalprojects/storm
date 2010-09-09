@@ -37,8 +37,10 @@ function stormattribute_menu() {
     'page callback' => 'stormattribute_list',
     'access arguments' => array('Storm: access administration pages'),
     'file' => 'stormattribute.admin.inc',
-    'type' => MENU_NORMAL_ITEM);
-  
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 11,
+  );
+
   $items['storm/attributes/add'] = array(
     'title' => 'Add a new attribute',
     'description' => 'Storm Attributes',

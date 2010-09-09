@@ -237,7 +237,8 @@ function stormproject_menu() {
     'page callback' => 'stormproject_list',
     'access arguments' => array('Storm project: access'),
     'file' => 'stormproject.admin.inc',
-    'type' => MENU_NORMAL_ITEM
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 3,
   );
 
   $items['storm/organization_projects_js/%'] = array(

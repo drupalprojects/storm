@@ -30,6 +30,7 @@ function stormteam_menu() {
     'page callback' => 'stormteam_list',
     'access arguments' => array('Storm team: access'),
     'type' => MENU_NORMAL_ITEM,
+    'weight' => 2,
   );
   
   $items['storm/teams/autocomplete'] = array(

@@ -63,6 +63,7 @@ function storminvoice_menu() {
     'access arguments' => array('Storm invoice: access'),
     'file' => 'storminvoice.admin.inc',
     'type' => MENU_CALLBACK,
+    'weight' => 8,
   );
 
   $items['storm/invoices'] = array(

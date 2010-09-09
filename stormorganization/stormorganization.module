@@ -152,7 +152,8 @@ function stormorganization_menu() {
     'page callback' => 'stormorganization_list',
     'access arguments' => array('Storm organization: access'),
     'file' => 'stormorganization.admin.inc',
-    'type' => MENU_NORMAL_ITEM
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 0,
   );
 
   $items['storm/organizations/autocomplete'] = array(

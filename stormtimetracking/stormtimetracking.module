@@ -159,6 +159,7 @@ function stormtimetracking_menu() {
     'access arguments' => array('Storm timetracking: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormtimetracking.admin.inc',
+    'weight' => 6,
   );
   
   $items['storm/timetrackings/report/%/%'] = array(

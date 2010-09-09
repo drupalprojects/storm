@@ -158,6 +158,7 @@ function stormnote_menu() {
     'access arguments' => array('Storm note: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormnote.admin.inc',
+    'weight' => 7,
   );
 
   return $items;
