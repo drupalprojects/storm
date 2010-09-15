@@ -37,7 +37,6 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   
   $node = node_prepare($node, $teaser);
-  $l_pos = 1; // Used to increase the link position number (see issue 814820)
   
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -45,8 +44,8 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => -25,
   );
 
-  $node->content['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, $l_pos++);
-  $node->content['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, $l_pos++);
+  $node->content['links']['expenses'] = theme('storm_link', 'stormticket', 'stormexpense', $node->nid, 1);
+  $node->content['links']['timetrackings'] = theme('storm_link', 'stormticket', 'stormtimetracking', $node->nid, 2);
 
   // Code to create invoice auto_add link
   if (module_exists('storminvoice')) {
@@ -55,7 +54,7 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
       '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
-      '#weight' => $l_pos++,
+      '#weight' => 3,
     );
   }
 
@@ -69,21 +68,21 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
-    '#weight' => $w++,
+    '#weight' => 1,
   );
 
   $node->content['group1']['project_nid'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
   $node->content['group1']['task_nid'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
-    '#weight' => $w++,
+    '#weight' => 2,
   );
 
   $node->content['group2'] = array(
@@ -123,7 +122,6 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
-    '#weight' => 4,
   );
   
   $node->content['body_field'] = array(

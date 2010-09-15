@@ -454,7 +454,7 @@ function storm_dateext_expand($element) {
     $parents[] = $type;
     $element[$type] = array(
       '#type' => 'select',
-      '#value' => $element['#value'][$type],
+      '#value' => isset($element['#value'][$type]) ? $element['#value'][$type] : NULL,
       '#attributes' => $element['#attributes'],
       '#options' => $options,
       '#attributes' => array('onchange' => "storm_datext_tonull(this, '". $element['#id'] ."')"),

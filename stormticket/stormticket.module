@@ -355,13 +355,13 @@ function stormticket_form(&$node) {
       }
     }
 
-    if ($_SESSION['stormticket_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['stormticket_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormticket_list_filter']['organization_nid'];
     }
-    if ($_SESSION['stormticket_list_filter']['project_nid'] && !$node->project_nid) {
+    if (isset($_SESSION['stormticket_list_filter']['project_nid']) && !$node->project_nid) {
       $node->project_nid = $_SESSION['stormticket_list_filter']['project_nid'];
     }
-    if ($_SESSION['stormticket_list_filter']['task_nid'] && !$node->task_nid) {
+    if (isset($_SESSION['stormticket_list_filter']['task_nid']) && !$node->task_nid) {
       $node->task_nid = $_SESSION['stormticket_list_filter']['task_nid'];
     }
 
@@ -395,7 +395,9 @@ function stormticket_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) {
+      $node->organization_nid = $organization->nid;
+    }
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
@@ -417,25 +419,25 @@ function stormticket_form(&$node) {
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project'),
-    '#default_value' => $node->project_nid,
+    '#default_value' => isset($node->project_nid) ? $node->project_nid : 0,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, '-')"),
   );
 
-  $tree = _stormtask_get_tree($node->project_nid);
+  $tree = isset(_stormtask_get_tree($node->project_nid)) ? _stormtask_get_tree($node->project_nid) : array();
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
     '#title' => t('Task'),
-    '#default_value' => $node->task_nid,
+    '#default_value' => isset($node->task_nid) ? $node->task_nid : 0,
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),
   );
   
   $form['group1']['task_nid_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->task_nid,
+    '#default_value' => isset($node->task_nid) ? $node->task_nid : NULL,
   );
   
   $form['group2'] = array(
@@ -493,7 +495,7 @@ function stormticket_form(&$node) {
     '#type' => 'dateext',
     '#title' => t('Date end'),
     '#withnull' => TRUE,
-    '#default_value' => _storm_gmtimestamp_to_date($node->dateend),
+    '#default_value' => isset($node->dateend) ? _storm_gmtimestamp_to_date($node->dateend) : NULL,
   );
 
   $durationunits = stormattribute_attributes_bydomain('Duration unit');
@@ -508,7 +510,7 @@ function stormticket_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Duration'),
     '#size' => 20,
-    '#default_value' => $node->duration,
+    '#default_value' => isset($node->duration) ? $node->duration : NULL,
   );
 
   $form['group4'] = array(
@@ -530,7 +532,7 @@ function stormticket_form(&$node) {
     '#title' => t('Price'),
     '#type' => 'textfield',
     '#size' => 15,
-    '#default_value' => $node->price,
+    '#default_value' => isset($node->price) ? $node->price : NULL,
   );
 
   $currencies = stormattribute_attributes_bydomain('Currency');
@@ -547,13 +549,13 @@ function stormticket_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -15,
   );
   
-  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $options = isset($node->project_nid) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : storm_get_assignment_options($node->organization_nid);
   
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
     '#options' => $options,
-    '#default_value' => $node->assigned_nid,
+    '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : NULL,
   );
 
   $form['group6'] = array(
@@ -572,7 +574,7 @@ function stormticket_form(&$node) {
   $form['group6']['billed'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billed'),
-    '#default_value' => $node->billed,
+    '#default_value' => isset($node->billed) ? $node->billed : 0,
     '#weight' => 2,
   );
 
@@ -582,7 +584,7 @@ function stormticket_form(&$node) {
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => isset($node->title_old) ? $node->title_old : NULL,
   );
 
   return $form;
@@ -665,16 +667,16 @@ function _stormticket_beforesave(&$node) {
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
-  $node->project_title = $p->title;
+  $node->project_title = isset($p->title) ? $p->title : '';
 
   $s = "SELECT title, stepno FROM {node} n INNER JOIN {stormtask} t ON n.nid=t.nid WHERE n.type='stormtask' AND n.nid=%d";
   $r = db_query($s, $node->task_nid);
   $ta = db_fetch_object($r);
-  $node->task_title = $ta->title;
-  $node->task_stepno = $ta->stepno;
+  $node->task_title = isset($ta->title) ? $ta->title : '';
+  $node->task_stepno = isset($ta->stepno) ? $ta->stepno : '';
   
   $assigned = node_load($node->assigned_nid);
-  $node->assigned_title = $assigned->title;
+  $node->assigned_title = isset($assigned->title) ? $assigned->title : '';
   
   // Allow use of comma when inputting numerical values - str_replace with period decimal
   $node->duration = str_replace(',', '.', $node->duration);
@@ -687,7 +689,7 @@ function _stormticket_beforesave(&$node) {
 function stormticket_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if (!$node->nid) {
+      if (!isset($node->nid)) {
         $category_list = stormattribute_attributes_bydomain('Ticket category');
         $node->ticketcategory = $category_list['default'];
 
