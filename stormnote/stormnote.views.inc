@@ -2,7 +2,7 @@
 // $Id$
 
 function stormnote_views_data() {
-  $data['stormnote']['table']['group']  = 'Storm';
+  $data['stormnote']['table']['group']  = t('Storm Note');
   $data['stormnote']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,25 +11,19 @@ function stormnote_views_data() {
   );
   
   $data['stormnote']['organization_nid'] = array(
-    'title' => t('Note Organization Node ID'),
-    'help' => 'Storm Note Organization Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Note -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Note -> Organization'),
     ),
   );
   
   $data['stormnote']['organization_title'] = array(
-    'title' => t('Note Organization Title'),
-    'help' => 'Storm Note Organization Title',
+    'title' => t('Organization'),
+    'help' => t('Storm Note Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,25 +39,19 @@ function stormnote_views_data() {
   );
   
   $data['stormnote']['project_nid'] = array(
-    'title' => t('Note Project Node ID'),
-    'help' => 'Storm Note Project Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Project'),
+    'help' => t('Note -> Project'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Note -> Project'),
     ),
   );
   
   $data['stormnote']['project_title'] = array(
-    'title' => t('Note Project Title'),
-    'help' => 'Storm Note Project Title',
+    'title' => t('Project'),
+    'help' => t('Storm Note Project (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -79,25 +67,19 @@ function stormnote_views_data() {
   );
   
   $data['stormnote']['task_nid'] = array(
-    'title' => t('Note Task Node ID'),
-    'help' => 'Storm Note Task Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Task'),
+    'help' => t('Note -> Task'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Note -> Task'),
     ),
   );
   
   $data['stormnote']['task_stepno'] = array(
-    'title' => t('Note Task Step Number'),
-    'help' => 'Storm Note Task Step Number',
+    'title' => t('Task Step Number'),
+    'help' => t('Storm Note Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -113,8 +95,8 @@ function stormnote_views_data() {
   );
   
   $data['stormnote']['task_title'] = array(
-    'title' => t('Note Task Title'),
-    'help' => 'Storm Note Task Title',
+    'title' => t('Task'),
+    'help' => t('Storm Note Task (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),

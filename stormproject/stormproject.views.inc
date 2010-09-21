@@ -2,7 +2,7 @@
 // $Id$
 
 function stormproject_views_data() {
-  $data['stormproject']['table']['group']  = 'Storm';
+  $data['stormproject']['table']['group']  = 'Storm Project';
   $data['stormproject']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,25 +11,19 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['organization_nid'] = array(
-    'title' => t('Project Organization Node ID'),
-    'help' => 'Storm Project Organization Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Project -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Project -> Organization'),
     ),
   );
   
   $data['stormproject']['organization_title'] = array(
-    'title' => t('Project Organization Title'),
-    'help' => 'Storm Project Organization Title',
+    'title' => t('Organization'),
+    'help' => t('Storm Project Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,8 +39,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['projectstatus'] = array(
-    'title' => t('Project Status'),
-    'help' => 'Storm Project Status',
+    'title' => t('Status'),
+    'help' => t('Storm Project Status'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -62,8 +56,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['projectcategory'] = array(
-    'title' => t('Project Category'),
-    'help' => 'Storm Project Category',
+    'title' => t('Category'),
+    'help' => t('Storm Project Category'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -79,8 +73,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['projectpriority'] = array(
-    'title' => t('Project Priority'),
-    'help' => 'Storm Project Priority',
+    'title' => t('Priority'),
+    'help' => t('Storm Project Priority'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -96,8 +90,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['pricemode'] = array(
-    'title' => t('Project Price Mode'),
-    'help' => 'Storm Project Price Mode',
+    'title' => t('Price Mode'),
+    'help' => t('Storm Project Price Mode'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -113,8 +107,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['price'] = array(
-    'title' => t('Project Price'),
-    'help' => 'Storm Project Price',
+    'title' => t('Price'),
+    'help' => t('Storm Project Price'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -130,8 +124,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['currency'] = array(
-    'title' => t('Project Currency'),
-    'help' => 'Storm Project Currency',
+    'title' => t('Currency'),
+    'help' => t('Storm Project Currency'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -147,8 +141,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['datebegin'] = array(
-    'title' => t('Project Date Begin'),
-    'help' => 'Storm Project Date Begin',
+    'title' => t('Date Begin'),
+    'help' => t('Storm Project Date Begin'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
@@ -162,8 +156,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['dateend'] = array(
-    'title' => t('Project Date End'),
-    'help' => 'Storm Project Date End',
+    'title' => t('Date End'),
+    'help' => t('Storm Project Date End'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
@@ -177,8 +171,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['duration unit'] = array(
-    'title' => t('Project Duration Unit'),
-    'help' => 'Storm Project Duration Unit',
+    'title' => t('Duration Unit'),
+    'help' => t('Storm Project Duration Unit'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -194,8 +188,8 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['duration'] = array(
-    'title' => t('Project Duration'),
-    'help' => 'Storm Project Duration',
+    'title' => t('Duration'),
+    'help' => t('Storm Project Duration'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -211,25 +205,19 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['manager_nid'] = array(
-    'title' => t('Project Manager Node ID'),
-    'help' => 'Storm Project Manager Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_equality',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Manager'),
+    'help' => t('Project -> Manager'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Project -> Manager'),
     ),
   );
   
   $data['stormproject']['manager_title'] = array(
-    'title' => t('Project Manager Title'),
-    'help' => 'Storm Project Manager Title',
+    'title' => t('Project Manager'),
+    'help' => t('Storm Project Manager (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -245,25 +233,19 @@ function stormproject_views_data() {
   );
   
   $data['stormproject']['assigned_nid'] = array(
-    'title' => t('Project Assigned Node ID'),
-    'help' => 'Storm Project Assigned Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_equality',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Assigned'),
+    'help' => t('Project -> Assigned'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Project -> Assigned'),
     ),
   );
   
   $data['stormproject']['assigned_title'] = array(
-    'title' => t('Project Assigned Title'),
-    'help' => 'Storm Project Assigned Title',
+    'title' => t('Assigned'),
+    'help' => t('Storm Project Assigned (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),

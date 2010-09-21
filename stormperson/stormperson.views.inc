@@ -2,7 +2,7 @@
 // $Id$
 
 function stormperson_views_data() {
-  $data['stormperson']['table']['group']  = 'Storm';
+  $data['stormperson']['table']['group']  = 'Storm Person';
   $data['stormperson']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,25 +11,19 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['organization_nid'] = array(
-    'title' => t('Person Organization NID'),
-    'help' => 'Storm Person Organization NID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Person -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Person -> Organization'),
     ),
   );
   
   $data['stormperson']['organization_title'] = array(
-    'title' => t('Person Organization Title'),
-    'help' => 'Storm Person Organization Title',
+    'title' => t('Organization'),
+    'help' => t('Storm Person Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,8 +39,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['prefix'] = array(
-    'title' => t('Person Prefix'),
-    'help' => 'Storm Person Prefix',
+    'title' => t('Prefix'),
+    'help' => t('Storm Person Prefix'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -62,8 +56,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['fullname'] = array(
-    'title' => t('Person Fullname'),
-    'help' => 'Storm Person Fullname',
+    'title' => t('Fullname'),
+    'help' => t('Storm Person Fullname'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -79,8 +73,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['email'] = array(
-    'title' => t('Person Email'),
-    'help' => 'Storm Person Email',
+    'title' => t('Email'),
+    'help' => t('Storm Person Email'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -96,8 +90,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['www'] = array(
-    'title' => t('Person WWW'),
-    'help' => 'Storm Person WWW',
+    'title' => t('WWW'),
+    'help' => t('Storm Person WWW'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -113,8 +107,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['phone'] = array(
-    'title' => t('Person Phone'),
-    'help' => 'Storm Person Phone',
+    'title' => t('Phone'),
+    'help' => t('Storm Person Phone'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -130,8 +124,8 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['im'] = array(
-    'title' => t('Person IM'),
-    'help' => 'Storm Person IM',
+    'title' => t('IM'),
+    'help' => t('Storm Person IM'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -147,19 +141,13 @@ function stormperson_views_data() {
   );
   
   $data['stormperson']['user_uid'] = array(
-    'title' => t('Person Drupal User ID'),
-    'help' => 'Storm Person Drupal User ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Drupal User'),
+    'help' => t('Storm Person -> Drupal User'),
+    'relationship' => array(
+      'base' => 'user',
+      'field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Person -> User'),
     ),
   );
   

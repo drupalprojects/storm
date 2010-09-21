@@ -2,7 +2,7 @@
 // $Id$
 
 function stormtimetracking_views_data() {
-  $data['stormtimetracking']['table']['group']  = 'Storm';
+  $data['stormtimetracking']['table']['group']  = 'Storm Timetracking';
   $data['stormtimetracking']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,25 +11,19 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['organization_nid'] = array(
-    'title' => t('Timetracking Organization Node ID'),
-    'help' => 'Storm Timetracking Organization Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Timetracking -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Timetracking -> Organization'),
     ),
   );
   
   $data['stormtimetracking']['organization_title'] = array(
-    'title' => t('Timetracking Organization Title'),
-    'help' => 'Storm Timetracking Organization Title',
+    'title' => t('Organization'),
+    'help' => t('Storm Timetracking Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,25 +39,19 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['project_nid'] = array(
-    'title' => t('Timetracking Project Node ID'),
-    'help' => 'Storm Timetracking Project Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Project'),
+    'help' => t('Timetracking -> Project'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Timetracking -> Project'),
     ),
   );
   
   $data['stormtimetracking']['project_title'] = array(
-    'title' => t('Timetracking Project Title'),
-    'help' => 'Storm Timetracking Project Title',
+    'title' => t('Project'),
+    'help' => t('Storm Timetracking Project (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -79,25 +67,19 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['task_nid'] = array(
-    'title' => t('Timetracking Task Node ID'),
-    'help' => 'Storm Timetracking Task Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Task'),
+    'help' => t('Timetracking -> Task'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Timetracking -> Task'),
     ),
   );
   
   $data['stormtimetracking']['task_stepno'] = array(
-    'title' => t('Timetracking Task Step Number'),
-    'help' => 'Storm Timetracking Task Step Number',
+    'title' => t('Task Step Number'),
+    'help' => t('Storm Timetracking Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -113,8 +95,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['task_title'] = array(
-    'title' => t('Timetracking Task Title'),
-    'help' => 'Storm Timetracking Task Title',
+    'title' => t('Task'),
+    'help' => t('Storm Timetracking Task (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -130,25 +112,19 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['ticket_nid'] = array(
-    'title' => t('Timetracking Ticket Node ID'),
-    'help' => 'Storm Timetracking Ticket Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Ticket'),
+    'help' => t('Timetracking -> Ticket'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Timetracking -> Ticket'),
     ),
   );
   
   $data['stormtimetracking']['ticket_title'] = array(
-    'title' => t('Timetracking Ticket Title'),
-    'help' => 'Storm Timetracking Ticket Title',
+    'title' => t('Ticket'),
+    'help' => t('Storm Timetracking Ticket (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -164,8 +140,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['trackingdate'] = array(
-    'title' => t('Timetracking Tracking Date'),
-    'help' => 'Storm Timetracking Tracking Date',
+    'title' => t('Tracking Date'),
+    'help' => t('Storm Timetracking Tracking Date'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
@@ -179,8 +155,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['timebegin'] = array(
-    'title' => t('Timetracking Time Begin'),
-    'help' => 'Storm Timetracking Time Begin',
+    'title' => t('Time Begin'),
+    'help' => t('Storm Timetracking Time Begin'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -190,8 +166,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['timeend'] = array(
-    'title' => t('Timetracking Time End'),
-    'help' => 'Storm Timetracking Time End',
+    'title' => t('Time End'),
+    'help' => t('Storm Timetracking Time End'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -201,8 +177,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['duration'] = array(
-    'title' => t('Timetracking Duration'),
-    'help' => 'Storm Timetracking Duration',
+    'title' => t('Duration'),
+    'help' => t('Storm Timetracking Duration'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -212,8 +188,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['billing_duration'] = array(
-    'title' => t('Timetracking Billing Duration'),
-    'help' => 'Storm Timetracking Billing Duration',
+    'title' => t('Billing Duration'),
+    'help' => t('Storm Timetracking Billing Duration'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -223,8 +199,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['billable'] = array(
-    'title' => t('Timetracking Billable'),
-    'help' => 'Storm Timetracking Billable',
+    'title' => t('Billable'),
+    'help' => t('Storm Timetracking Billable'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -237,8 +213,8 @@ function stormtimetracking_views_data() {
   );
   
   $data['stormtimetracking']['billed'] = array(
-    'title' => t('Timetracking Billed'),
-    'help' => 'Storm Timetracking Billed',
+    'title' => t('Billed'),
+    'help' => t('Storm Timetracking Billed'),
     'field' => array(
       'click sortable' => TRUE,
     ),

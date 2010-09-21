@@ -2,7 +2,7 @@
 // $Id$
 
 function stormtask_views_data() {
-  $data['stormtask']['table']['group']  = 'Storm';
+  $data['stormtask']['table']['group']  = 'Storm Task';
   $data['stormtask']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,8 +11,8 @@ function stormtask_views_data() {
   );
   
   $data['stormtask']['stepno'] = array(
-    'title' => t('Task Step Number'),
-    'help' => 'Storm Task Step Number',
+    'title' => t('Step Number'),
+    'help' => t('Storm Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -28,25 +28,19 @@ function stormtask_views_data() {
   );
   
   $data['stormtask']['organization_nid'] = array(
-    'title' => t('Task Organization Node ID'),
-    'help' => 'Storm Task Organization Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Task -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Task -> Organization'),
     ),
   );
   
   $data['stormtask']['organization_title'] = array(
-    'title' => t('Task Organization Title'),
-    'help' => 'Storm Task Organization Title',
+    'title' => t('Organization'),
+    'help' => t('Storm Task Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -62,25 +56,19 @@ function stormtask_views_data() {
   );
   
   $data['stormtask']['project_nid'] = array(
-    'title' => t('Task Project Node ID'),
-    'help' => 'Storm Task Project Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Project'),
+    'help' => t('Task -> Project'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Task -> Project'),
     ),
   );
 
   $data['stormtask']['project_title'] = array(
-    'title' => t('Task Project Title'),
-    'help' => 'Storm Task Project Title',
+    'title' => t('Project'),
+    'help' => t('Storm Task Project (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -96,25 +84,19 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['parent_nid'] = array(
-    'title' => t('Task Parent Task Node ID'),
-    'help' => 'Storm Task Patent Task Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Parent Task'),
+    'help' => t('Task -> Parent Task'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Task -> Parent Task'),
     ),
   );
 
   $data['stormtask']['weight'] = array(
-    'title' => t('Task Weight'),
-    'help' => 'Storm Task Weight',
+    'title' => t('Weight'),
+    'help' => t('Storm Task Weight'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -130,8 +112,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['taskstatus'] = array(
-    'title' => t('Task Status'),
-    'help' => 'Storm Task Status',
+    'title' => t('Status'),
+    'help' => t('Storm Task Status'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -147,8 +129,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['taskcategory'] = array(
-    'title' => t('Task Category'),
-    'help' => 'Storm Task Category',
+    'title' => t('Category'),
+    'help' => t('Storm Task Category'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -164,8 +146,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['taskpriority'] = array(
-    'title' => t('Task Priority'),
-    'help' => 'Storm Task Priority',
+    'title' => t('Priority'),
+    'help' => t('Storm Task Priority'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
@@ -181,8 +163,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['pricemode'] = array(
-    'title' => t('Task Price Mode'),
-    'help' => 'Storm Task Price Mode',
+    'title' => t('Price Mode'),
+    'help' => t('Storm Task Price Mode'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -198,8 +180,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['price'] = array(
-    'title' => t('Task Price'),
-    'help' => 'Storm Task Price',
+    'title' => t('Price'),
+    'help' => t('Storm Task Price'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -215,8 +197,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['currency'] = array(
-    'title' => t('Task Currency'),
-    'help' => 'Storm Task Currency',
+    'title' => t('Currency'),
+    'help' => t('Storm Task Currency'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -232,8 +214,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['datebegin'] = array(
-    'title' => t('Task Date Begin'),
-    'help' => 'Storm Task Date Begin',
+    'title' => t('Date Begin'),
+    'help' => t('Storm Task Date Begin'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
@@ -247,8 +229,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['dateend'] = array(
-    'title' => t('Task Date End'),
-    'help' => 'Storm Task Date End',
+    'title' => t('Date End'),
+    'help' => t('Storm Task Date End'),
     'field' => array(
       'click sortable' => TRUE,
       'handler' => 'views_handler_field_date',
@@ -262,8 +244,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['durationunit'] = array(
-    'title' => t('Task Duration Unit'),
-    'help' => 'Storm Task Duration Unit',
+    'title' => t('Duration Unit'),
+    'help' => t('Storm Task Duration Unit'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -279,8 +261,8 @@ function stormtask_views_data() {
   );
 
   $data['stormtask']['duration'] = array(
-    'title' => t('Task Duration'),
-    'help' => 'Storm Task Duration',
+    'title' => t('Duration'),
+    'help' => t('Storm Task Duration'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -296,25 +278,19 @@ function stormtask_views_data() {
   );
   
   $data['stormtask']['assigned_nid'] = array(
-    'title' => t('Task Assigned Node ID'),
-    'help' => 'Storm Task Assigned Node ID',
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_equality',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Assigned'),
+    'help' => t('Task -> Assigned'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Task -> Assigned'),
     ),
   );
   
   $data['stormtask']['assigned_title'] = array(
-    'title' => t('Task Assigned Title'),
-    'help' => 'Storm Task Assigned Title',
+    'title' => t('Assigned'),
+    'help' => t('Storm Task Assigned (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),

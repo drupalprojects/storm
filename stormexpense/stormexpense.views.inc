@@ -2,7 +2,7 @@
 // $Id$
 
 function stormexpense_views_data() {
-  $data['stormexpense']['table']['group']  = 'Storm';
+  $data['stormexpense']['table']['group']  = t('Storm Expense');
   $data['stormexpense']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,25 +11,19 @@ function stormexpense_views_data() {
   );
 
   $data['stormexpense']['organization_nid'] = array(
-    'title' => t('Expense Organization Node ID'),
-    'help' => t('Storm Expense Organization Node ID'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Organization'),
+    'help' => t('Expense -> Organization'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Expense -> Organization'),
     ),
   );
   
   $data['stormexpense']['organization_title'] = array(
-    'title' => t('Expense Organization'),
-    'help' => t('Storm Expense Organization'),
+    'title' => t('Organization'),
+    'help' => t('Storm Expense: Organization (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,25 +39,19 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['project_nid'] = array(
-    'title' => t('Expense Project Node ID'),
-    'help' => t('Storm Expense Project Node ID'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Project'),
+    'help' => t('Expense -> Project'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Expense -> Project'),
     ),
   );
 
   $data['stormexpense']['project_title'] = array(
-    'title' => t('Expense Project'),
-    'help' => t('Storm Expense Project'),
+    'title' => t('Project'),
+    'help' => t('Storm Expense Project (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -79,24 +67,18 @@ function stormexpense_views_data() {
   );
 
   $data['stormexpense']['task_nid'] = array(
-    'title' => t('Expense Task Node ID'),
-    'help' => t('Storm Expense Task Node ID'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Task'),
+    'help' => t('Expense -> Task'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Expense -> Task'),
     ),
   );
 
   $data['stormexpense']['task_stepno'] = array(
-    'title' => t('Expense Task Step Number'),
+    'title' => t('Task Step Number'),
     'help' => t('Storm Expense Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,
@@ -113,8 +95,8 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['task_title'] = array(
-    'title' => t('Expense Task'),
-    'help' => t('Storm Expense Task'),
+    'title' => t('Task'),
+    'help' => t('Storm Expense Task (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -131,25 +113,19 @@ function stormexpense_views_data() {
 
   
   $data['stormexpense']['ticket_nid'] = array(
-    'title' => t('Expense Ticket Node ID'),
-    'help' => t('Storm Expense Ticket Node ID'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Ticket'),
+    'help' => t('Expense -> Ticket'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Expense -> Ticket'),
     ),
   );
 
   $data['stormexpense']['ticket_title'] = array(
-    'title' => t('Expense Ticket'),
-    'help' => t('Storm Expense Ticket'),
+    'title' => t('Ticket'),
+    'help' => t('Storm Expense Ticket (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -165,25 +141,19 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['provider_nid'] = array(
-    'title' => t('Expense Provider Node ID'),
-    'help' => t('Storm Expense Provider Node ID'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+    'title' => t('Provider'),
+    'help' => t('Expense -> Provider'),
+    'relationship' => array(
+      'base' => 'node',
+      'field' => 'nid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Expense -> Provider'),
     ),
   );
 
   $data['stormexpense']['provider_title'] = array(
-    'title' => t('Expense Provider'),
-    'help' => t('Storm Expense Provider'),
+    'title' => t('Provider'),
+    'help' => t('Storm Expense Provider (title only)'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -199,7 +169,7 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['expensedate'] = array(
-    'title' => t('Expense Date'),
+    'title' => t('Date'),
     'help' => t('Storm Expense Date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -214,8 +184,8 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['amount'] = array(
-    'title' => t('Expense Amount'),
-    'help' => 'Storm Expense Amount',
+    'title' => t('Amount'),
+    'help' => t('Storm Expense Amount'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -231,8 +201,8 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['tax'] = array(
-    'title' => t('Expense Tax'),
-    'help' => 'Storm Expense Tax',
+    'title' => t('Tax'),
+    'help' => t('Storm Expense Tax'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -248,8 +218,8 @@ function stormexpense_views_data() {
   );
   
   $data['stormexpense']['total'] = array(
-    'title' => t('Expense Total'),
-    'help' => 'Storm Expense Total',
+    'title' => t('Total'),
+    'help' => t('Storm Expense Total'),
     'field' => array(
       'click sortable' => TRUE,
     ),

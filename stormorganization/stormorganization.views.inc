@@ -2,7 +2,7 @@
 // $Id$
 
 function stormorganization_views_data() {
-  $data['stormorganization']['table']['group']  = 'Storm';
+  $data['stormorganization']['table']['group']  = 'Storm Organization';
   $data['stormorganization']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
@@ -11,8 +11,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['prefix'] = array(
-    'title' => t('Organisation Prefix'),
-    'help' => 'Storm Organization Prefix',
+    'title' => t('Prefix'),
+    'help' => t('Storm Organization Prefix'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -28,8 +28,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['fullname'] = array(
-    'title' => t('Organisation Fullname'),
-    'help' => 'Storm Organization Fullname',
+    'title' => t('Fullname'),
+    'help' => t('Storm Organization Fullname'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -45,8 +45,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['country'] = array(
-    'title' => t('Organisation Country'),
-    'help' => 'Storm Organization Country',
+    'title' => t('Country'),
+    'help' => t('Storm Organization Country'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -62,8 +62,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['orglanguage'] = array(
-    'title' => t('Organisation Language'),
-    'help' => 'Storm Organization Language',
+    'title' => t('Language'),
+    'help' => t('Storm Organization Language'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -79,8 +79,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['provstate'] = array(
-    'title' => t('Organisation Province / State'),
-    'help' => 'Storm Organization Province / State',
+    'title' => t('Province / State'),
+    'help' => t('Storm Organization Province / State'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -96,8 +96,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['city'] = array(
-    'title' => t('Organisation City'),
-    'help' => 'Storm Organization City',
+    'title' => t('City'),
+    'help' => t('Storm Organization City'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -113,8 +113,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['zip'] = array(
-    'title' => t('Organisation Zip'),
-    'help' => 'Storm Organization Zip',
+    'title' => t('Zip'),
+    'help' => t('Storm Organization Zip'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -130,8 +130,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['address'] = array(
-    'title' => t('Organisation Address'),
-    'help' => 'Storm Organization Address',
+    'title' => t('Address'),
+    'help' => t('Storm Organization Address'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -147,8 +147,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['taxid'] = array(
-    'title' => t('Organisation Tax ID'),
-    'help' => 'Storm Organization Tax ID',
+    'title' => t('Tax ID'),
+    'help' => t('Storm Organization Tax ID'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -164,8 +164,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['email'] = array(
-    'title' => t('Organisation Email'),
-    'help' => 'Storm Organization Email',
+    'title' => t('Email'),
+    'help' => t('Storm Organization Email'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -181,8 +181,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['www'] = array(
-    'title' => t('Organisation WWW'),
-    'help' => 'Storm Organization WWW',
+    'title' => t('WWW'),
+    'help' => t('Storm Organization WWW'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -198,8 +198,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['phone'] = array(
-    'title' => t('Organisation Phone'),
-    'help' => 'Storm Organization Phone',
+    'title' => t('Phone'),
+    'help' => t('Storm Organization Phone'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -215,8 +215,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['currency'] = array(
-    'title' => t('Organisation Currency'),
-    'help' => 'Storm Organization Currency',
+    'title' => t('Currency'),
+    'help' => t('Storm Organization Currency'),
     'field' => array(
       'handler' => 'stormattribute_handler_field_attributes_domain',
       'domain' => 'Currency',
@@ -235,8 +235,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['iscustomer'] = array(
-    'title' => t('Organisation Is Customer'),
-    'help' => 'Storm Organization Is Customer',
+    'title' => t('Is Customer'),
+    'help' => t('Storm Organization Is Customer'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -252,8 +252,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['isprovider'] = array(
-    'title' => t('Organisation Is Provider'),
-    'help' => 'Storm Organization Is Provider',
+    'title' => t('Is Provider'),
+    'help' => t('Storm Organization Is Provider'),
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -269,8 +269,8 @@ function stormorganization_views_data() {
   );
   
   $data['stormorganization']['isactive'] = array(
-    'title' => t('Organisation Is Active'),
-    'help' => 'Storm Organization Is Active',
+    'title' => t('Is Active'),
+    'help' => t('Storm Organization Is Active'),
     'field' => array(
       'click sortable' => TRUE,
     ),
