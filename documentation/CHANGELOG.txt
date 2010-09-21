@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Feature #851464 by Carsten Müller: Added Sorting of assignments in storm.module, function storm_get_assignment_options().
 - Bug #854570 by sethcohn: Fixed Incorrectly coded views support.
 - Feature #891934 by juliangb: Added Tests for Storm Ticket.
 - Feature #891916 by juliangb: Added Weighted menu items.
