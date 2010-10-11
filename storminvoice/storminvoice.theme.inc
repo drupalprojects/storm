@@ -344,7 +344,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   if ($node->tax2) {
     $s .= "sit.tax2, ";
   }
-  $s .= "sit.total FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight ASC";
+  $s .= "sit.total, sit.src_nid FROM {storminvoice_items} sit WHERE sit.invoice_vid=%d ORDER BY sit.weight ASC";
   $r = db_query($s, $node->vid);
 
   $invoice_items = array();
@@ -364,6 +364,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $invoice_items[$key]['tax2'] = sprintf("%.2f", $inv_item['tax2']);
     }
     $invoice_items[$key]['total'] = sprintf("%.2f", $inv_item['total']);
+    if ($invoice_items[$key]['src_nid'] != 0 AND $invoice_items[$key]['src_nid'] != NULL) {
+      $invoice_items[$key]['description'] = l(t($invoice_items[$key]['description']), 'node/'. $inv_item['src_nid']);
+    }
+    unset($invoice_items[$key]['src_nid']);
   }
   
   $node->content['group4'] = array(

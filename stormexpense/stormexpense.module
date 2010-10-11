@@ -687,6 +687,8 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $new_invoice->items[$count]->tax2percent = $node->tax2percent;
     $new_invoice->items[$count]->tax2 = $node->tax2;
     $new_invoice->items[$count]->total = $node->total;
+    $new_invoice->items[$count]->src_nid = $node->nid;
+    $new_invoice->items[$count]->src_vid = $node->vid;
     
     //storm_taxation($new_invoice->items[$count]);
     storminvoice_update($new_invoice);

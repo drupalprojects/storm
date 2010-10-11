@@ -705,6 +705,8 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $new_invoice->items[$count]->tax1percent = variable_get('storm_tax1_percent', 20);
     //$new_invoice_item->items[$count]->tax1
     //$new_invoice_item->items[$count]->total
+    $new_invoice->items[$count]->src_nid = $node->nid;
+    $new_invoice->items[$count]->src_vid = $node->vid;
     
     storm_taxation($new_invoice->items[$count]);
     storminvoice_update($new_invoice);

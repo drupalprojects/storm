@@ -548,6 +548,16 @@ function storminvoice_form(&$node) {
       '#size' => 20,
     );
 
+    $form['group4'][$i]['first']['items_'. $i .'_src_nid'] = array(
+      '#type' => 'hidden',
+      '#default_value' => isset($node->items[$i]->src_nid) ? $node->items[$i]->src_nid : NULL,
+    );
+
+    $form['group4'][$i]['first']['items_'. $i .'_src_vid'] = array(
+      '#type' => 'hidden',
+      '#default_value' => isset($node->items[$i]->src_vid) ? $node->items[$i]->src_vid : NULL,
+    );
+
     if (!variable_get('storm_tax_display', TRUE)) {
       $form['group4'][$i]['tax1']['#type'] = 'hidden';
       $form['group4'][$i]['tax2']['#type'] = 'hidden';
@@ -723,6 +733,12 @@ function _storminvoice_beforesave(&$node) {
     $variable = 'items_'. $j .'_tax2percent';
     $node->items[$j]->tax2percent = $node->$variable;
     $node->items[$j]->weight = $j;
+
+    $variable = 'items_'. $j .'_src_nid';
+    $node->items[$j]->src_nid = $node->$variable;
+
+    $variable = 'items_'. $j .'_src_vid';
+    $node->items[$j]->src_vid = $node->$variable;
     
     // Update taxes
     storm_taxation($node->items[$j]);
@@ -735,21 +751,28 @@ function _storminvoice_beforesave(&$node) {
 function _storminvoice_insert_items($node) {
   $j = 0;
   while (isset($node->items[$j])) { //removed is_object for 684016
+    $node->items[$j]->src_nid = (isset($node->items[$j]->src_nid)) ? $node->items[$j]->src_nid : $node->src_nid;
+    $node->items[$j]->src_vid = (isset($node->items[$j]->src_vid)) ? $node->items[$j]->src_vid : $node->src_vid;
+
     db_query("INSERT INTO {storminvoice_items}
       (invoice_nid, invoice_vid, amount, description,
       tax1app, tax1percent, tax1, 
       tax2app, tax2percent, tax2, 
-      total, weight
+      total, weight,
+      src_nid, src_vid
       ) VALUES
       (%d, %d, %f, '%s',
       %d, %f, %f,
       %d, %f, %f,
-      %f, %d
+      %f, %d,
+      %d, %d
       )",
       $node->nid, $node->vid, $node->items[$j]->amount, $node->items[$j]->description,
       $node->items[$j]->tax1app, $node->items[$j]->tax1percent, $node->items[$j]->tax1,
       $node->items[$j]->tax2app, $node->items[$j]->tax2percent, $node->items[$j]->tax2,
-      $node->items[$j]->total, $node->items[$j]->weight);
+      $node->items[$j]->total, $node->items[$j]->weight,
+      $node->items[$j]->src_nid, $node->items[$j]->src_vid
+      );
     $j++;
   }
 }
