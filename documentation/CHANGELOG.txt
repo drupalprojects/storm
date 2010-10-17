@@ -3,6 +3,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Bug #887638 by tchurch: Invoice Items not in correct order
+- Bug #924436 by agsh,tchurch: Currency not visible
 - Feature #738020 by tchurch: Link node record to invoice item.
 - Feature #851464 by Carsten Müller: Added Sorting of assignments in storm.module, function storm_get_assignment_options().
 - Bug #854570 by sethcohn: Fixed Incorrectly coded views support.
