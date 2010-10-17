@@ -488,10 +488,6 @@ function storminvoice_form(&$node) {
       '#size' => 80,
     );  
     
-    $form['group4'][$i]['first']['items_'. $i .'_weight'] = array(
-      '#type' => 'hidden',
-      '#default_value' => isset($node->items[$i]->weight) ? $node->items[$i]->weight : NULL,
-    );
     
     $form['group4'][$i]['first']['items_'. $i .'_amount'] = array(
       '#type' => 'textfield',
@@ -499,6 +495,14 @@ function storminvoice_form(&$node) {
       '#title' => t('Amount'),
       '#size' => 15,
       '#default_value' => isset($node->items[$i]->amount) ? $node->items[$i]->amount : NULL,
+    );
+
+    $form['group4'][$i]['first']['items_'. $i .'_weight'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Weight'),
+      '#size' => 3,
+      '#maxlength' => 3,
+      '#default_value' => isset($node->items[$i]->weight) ? $node->items[$i]->weight : NULL,
     );
 
     $form['group4'][$i]['tax1'] = array(
@@ -732,7 +736,8 @@ function _storminvoice_beforesave(&$node) {
     $node->items[$j]->tax2app = $node->$variable;
     $variable = 'items_'. $j .'_tax2percent';
     $node->items[$j]->tax2percent = $node->$variable;
-    $node->items[$j]->weight = $j;
+    $variable = 'items_'. $j .'_weight';
+    $node->items[$j]->weight = (isset($node->$variable)) ? $node->$variable : $j;
 
     $variable = 'items_'. $j .'_src_nid';
     $node->items[$j]->src_nid = $node->$variable;
@@ -894,7 +899,7 @@ function storminvoice_views_api() {
 
 // Helper function to return items for a particular invoice. Called from within the theme functions
 function storminvoice_getitems($invoice_vid) {
-  $s = "SELECT sit.* FROM {storminvoice_items} AS sit WHERE sit.invoice_vid = %d";
+  $s = "SELECT sit.* FROM {storminvoice_items} AS sit WHERE sit.invoice_vid = %d ORDER BY sit.weight ASC";
   $r = db_query($s, $invoice_vid);
 
   $items = array();
