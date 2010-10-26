@@ -673,7 +673,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     return $pdf->Output($dir.$filename, "S");
   }
 }
-
+/*
 function theme_storminvoice_report_html($node, $language) {
   $languages = explode(',', $language);
   $language = $languages[0];
@@ -912,7 +912,7 @@ function theme_storminvoice_report_html($node, $language) {
 
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
-
+*/
  /* Code to create invoice auto_add link
  * Input billable and billed to determine what the link is.
  * 
