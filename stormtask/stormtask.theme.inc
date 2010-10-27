@@ -25,9 +25,9 @@ function theme_stormtask_tasks($form) {
 
     $data = array(
       theme('indentation', $form['tasks'][$key]['task_depth_'. $key]['#value']) . drupal_render($form['tasks'][$key]['task_description_'. $key]),
-      drupal_render($form['tasks'][$key]['task_category_'. $key]),
-      drupal_render($form['tasks'][$key]['task_status_'. $key]),
-      drupal_render($form['tasks'][$key]['task_priority_'. $key]),
+      check_markup(drupal_render($form['tasks'][$key]['task_category_'. $key])),
+      check_markup(drupal_render($form['tasks'][$key]['task_status_'. $key])),
+      check_markup(drupal_render($form['tasks'][$key]['task_priority_'. $key])),
       array(
         'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) .' '. substr($durationunit, 0, 1), 
         'style' => 'text-align: right'),
