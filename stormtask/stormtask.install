@@ -30,15 +30,15 @@ function stormtask_schema() {
       'project_title'       => array('type' => 'varchar', 'length' => 150),
       'parent_nid'          => array('type' => 'int'),
       'weight'              => array('type' => 'int'),
-      'taskstatus'          => array('type' => 'varchar', 'length' => 20),
-      'taskcategory'        => array('type' => 'varchar', 'length' => 20),
-      'taskpriority'        => array('type' => 'varchar', 'length' => 20),
-      'pricemode'           => array('type' => 'varchar', 'length' => 20),
+      'taskstatus'          => array('type' => 'varchar', 'length' => 100),
+      'taskcategory'        => array('type' => 'varchar', 'length' => 100),
+      'taskpriority'        => array('type' => 'varchar', 'length' => 100),
+      'pricemode'           => array('type' => 'varchar', 'length' => 100),
       'price'               => array('type' => 'float'),
-      'currency'            => array('type' => 'varchar', 'length' => 20),
+      'currency'            => array('type' => 'varchar', 'length' => 100),
       'datebegin'           => array('type' => 'int', 'default' => 0),
       'dateend'             => array('type' => 'int', 'default' => 0),
-      'durationunit'        => array('type' => 'varchar', 'length' => 20),
+      'durationunit'        => array('type' => 'varchar', 'length' => 100),
       'duration'            => array('type' => 'float', 'default' => 0),
       'assigned_nid'        => array('type' => 'int'),
       'assigned_title'      => array('type' => 'varchar', 'length' => 100),
@@ -85,6 +85,24 @@ function stormtask_update_6106() {
   $ret = array();
   db_add_field($ret, 'stormtask', 'billable', array('type' => 'int', 'default' => 0));
   db_add_field($ret, 'stormtask', 'billed', array('type' => 'int', 'default' => 0));
+  return $ret;
+}
+
+
+/*
+ * @function
+ * Database update for issue #899970
+ */
+function stormtask_update_6107() {
+  $ret = array();
+
+  db_change_field($ret, 'stormtask', 'taskstatus', 'taskstatus', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormtask', 'taskcategory', 'taskcategory', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormtask', 'taskpriority', 'taskpriority', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormtask', 'pricemode', 'pricemode', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormtask', 'currency', 'currency', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormtask', 'durationunit', 'durationunit', array('type' => 'varchar', 'length' => 100));
+  
   return $ret;
 }
 

@@ -23,7 +23,7 @@ function stormknowledgebase_schema() {
     'fields' => array(
       'vid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'nid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'topic' => array('type' => 'varchar', 'length' => 20),
+      'topic' => array('type' => 'varchar', 'length' => 100),
     ),
     'primary key' => array('vid', 'nid'),
   );
@@ -37,3 +37,16 @@ function stormknowledgebase_update_1() {
   $ret = array();
   return $ret;
 }
+
+/*
+ * @function
+ * Database update for issue #899970
+ */
+function stormknowledgebase_update_6102() {
+  $ret = array();
+
+  db_change_field($ret, 'stormknowledgebase', 'topic', 'topic', array('type' => 'varchar', 'length' => 100));
+
+  return $ret;
+}
+

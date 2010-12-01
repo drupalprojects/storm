@@ -30,15 +30,15 @@ function stormticket_schema() {
       'task_nid'            => array('type' => 'int'),
       'task_stepno'         => array('type' => 'varchar', 'length' => 128),
       'task_title'          => array('type' => 'varchar', 'length' => 128),
-      'ticketcategory'      => array('type' => 'varchar', 'length' => 20),
-      'ticketstatus'        => array('type' => 'varchar', 'length' => 20),
-      'ticketpriority'      => array('type' => 'varchar', 'length' => 20),
-      'pricemode'           => array('type' => 'varchar', 'length' => 20),
+      'ticketcategory'      => array('type' => 'varchar', 'length' => 100),
+      'ticketstatus'        => array('type' => 'varchar', 'length' => 100),
+      'ticketpriority'      => array('type' => 'varchar', 'length' => 100),
+      'pricemode'           => array('type' => 'varchar', 'length' => 100),
       'price'               => array('type' => 'float'),
-      'currency'            => array('type' => 'varchar', 'length' => 20),
+      'currency'            => array('type' => 'varchar', 'length' => 100),
       'datebegin'           => array('type' => 'int', 'default' => 0),
       'dateend'             => array('type' => 'int', 'default' => 0),
-      'durationunit'        => array('type' => 'varchar', 'length' => 20),
+      'durationunit'        => array('type' => 'varchar', 'length' => 100),
       'duration'            => array('type' => 'float', 'default' => 0),
       'assigned_nid'        => array('type' => 'int'),
       'assigned_title'      => array('type' => 'varchar', 'length' => 100),
@@ -88,3 +88,22 @@ function stormticket_update_6106() {
   db_add_field($ret, 'stormticket', 'billed', array('type' => 'int', 'default' => 0));
   return $ret;
 }
+
+
+/*
+ * @function
+ * Database update for issue #899970
+ */
+function stormticket_update_6107() {
+  $ret = array();
+
+  db_change_field($ret, 'stormticket', 'ticketcategory', 'ticketcategory', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormticket', 'ticketstatus', 'ticketstatus', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormticket', 'ticketpriority', 'ticketpriority', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormticket', 'pricemode', 'pricemode', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormticket', 'currency', 'currency', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormticket', 'durationunit', 'durationunit', array('type' => 'varchar', 'length' => 100));
+  
+  return $ret;
+}
+

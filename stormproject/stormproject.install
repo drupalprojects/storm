@@ -25,15 +25,15 @@ function stormproject_schema() {
       'nid'                 => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'organization_nid'    => array('type' => 'int'),
       'organization_title'  => array('type' => 'varchar', 'length' => 100),
-      'projectstatus'       => array('type' => 'varchar', 'length' => 20),
-      'projectcategory'     => array('type' => 'varchar', 'length' => 20),
-      'projectpriority'     => array('type' => 'varchar', 'length' => 20),
-      'pricemode'           => array('type' => 'varchar', 'length' => 20),
+      'projectstatus'       => array('type' => 'varchar', 'length' => 100),
+      'projectcategory'     => array('type' => 'varchar', 'length' => 100),
+      'projectpriority'     => array('type' => 'varchar', 'length' => 100),
+      'pricemode'           => array('type' => 'varchar', 'length' => 100),
       'price'               => array('type' => 'float'),
-      'currency'            => array('type' => 'varchar', 'length' => 20),
+      'currency'            => array('type' => 'varchar', 'length' => 100),
       'datebegin'           => array('type' => 'int', 'default' => 0),
       'dateend'             => array('type' => 'int', 'default' => 0),
-      'durationunit'        => array('type' => 'varchar', 'length' => 20),
+      'durationunit'        => array('type' => 'varchar', 'length' => 100),
       'duration'            => array('type' => 'float', 'default' => 0),
       'manager_nid'         => array('type' => 'int'),
       'manager_title'       => array('type' => 'varchar', 'length' => 100),
@@ -90,3 +90,22 @@ function stormproject_update_6105() {
   db_add_field($ret, 'stormproject', 'billed', array('type' => 'int', 'default' => 0));
   return $ret;
 }
+
+
+/*
+ * @function
+ * Database update for issue #899970
+ */
+function stormproject_update_6106() {
+  $ret = array();
+
+  db_change_field($ret, 'stormproject', 'projectstatus', 'projectstatus', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormproject', 'projectcategory', 'projectcategory', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormproject', 'projectpriority', 'projectpriority', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormproject', 'pricemode', 'pricemode', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormproject', 'currency', 'currency', array('type' => 'varchar', 'length' => 100));
+  db_change_field($ret, 'stormproject', 'durationunit', 'durationunit', array('type' => 'varchar', 'length' => 100));
+
+  return $ret;
+}
+
