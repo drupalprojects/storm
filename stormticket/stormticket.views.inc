@@ -203,9 +203,9 @@ function stormticket_views_data() {
     ),
   );
   
-  $data['stormtask']['billable'] = array(
-    'title' => t('Task Billable'),
-    'help' => 'Storm Task Billable',
+  $data['stormticket']['billable'] = array(
+    'title' => t('Ticket Billable'),
+    'help' => 'Storm Ticket Billable',
     'field' => array(
       'click sortable' => TRUE,
     ),
@@ -217,9 +217,9 @@ function stormticket_views_data() {
     ),
   );
   
-  $data['stormtask']['billed'] = array(
-    'title' => t('Tasl Billed'),
-    'help' => 'Storm Task Billed',
+  $data['stormticket']['billed'] = array(
+    'title' => t('Ticket Billed'),
+    'help' => 'Storm Ticket Billed',
     'field' => array(
       'click sortable' => TRUE,
     ),
