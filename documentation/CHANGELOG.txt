@@ -2,6 +2,9 @@
 
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
+Version 6x-1.x-dev:
+- No changes since 6.x-1.35
+
 Version 6.x-1.35:
 - Bug #899970 by juliangb | elisem94305: Inconsistent attribute key length fields
 - Bug #887638 by tchurch: Invoice Items not in correct order
