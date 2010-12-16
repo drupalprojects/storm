@@ -700,6 +700,11 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
 
 function storm_icon($icon, $title) {
   global $base_path;
+
+  // Running checkplain on these variables means that we can call storm_icon without further sanitising
+  $icon = check_plain($icon);
+  $title = check_plain($title);
+
   $icon = str_replace(' ', '_', $icon);
 
   if (variable_get('storm_icons_display', TRUE) == TRUE) {

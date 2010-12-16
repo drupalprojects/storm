@@ -3,8 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6x-1.x-dev:
-
-- No changes since 6.x-1.35
+- Bug #924002 by tchurch, juliangb: Fixed Tasks tab doesn't show Category, Status and Priority icons.
 
 Version 6.x-1.35:
 - Bug #899970 by juliangb | elisem94305: Inconsistent attribute key length fields
