@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6x-1.x-dev:
+- Bug #918760 by juliangb: Added Tests for Storm Note.
 - Bug #924002 by tchurch, juliangb: Fixed Tasks tab doesn't show Category, Status and Priority icons.
 
 Version 6.x-1.35:
