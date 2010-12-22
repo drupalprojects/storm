@@ -320,7 +320,7 @@ function stormtask_views_data() {
   );
   
   $data['stormtask']['billed'] = array(
-    'title' => t('Tasl Billed'),
+    'title' => t('Task Billed'),
     'help' => 'Storm Task Billed',
     'field' => array(
       'click sortable' => TRUE,
