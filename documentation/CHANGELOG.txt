@@ -2,7 +2,10 @@
 
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
-Version 6x-1.x-dev:
+Version 6.x-2.x:
+- Feature #332555 by jalama: Added Token support for Storm project.
+
+Version 6.x-1.36:
 - Bug #916302 by juliangb | Wappie08: Fixed No 'Storm: Ticket Duration' and 'Duration Unit' fields in views.
 - Bug #1002374 by juliangb: Fixed typo in Stormtask views integration
 - Bug #918760 by juliangb: Added Tests for Storm Note.

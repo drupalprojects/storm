@@ -810,3 +810,75 @@ function stormproject_storminvoice_auto_add($node, $invoice_nid = NULL) {
   
   return $invoice_nid;
 }
+
+/**
+*  Implementation of hook_token_list().
+*/
+function stormproject_token_list($type='all') {
+  $tokens = array();
+  if (($type == 'node') || ($type == 'all')) {
+    $tokens['node']['stormproject-projectstatus'] = t('Storm Project: Project Status.');
+    if (module_exists('stormperson')) {
+      // Project Manager
+      $tokens['node']['stormproject-manager-title'] = t('Storm Project: Project Manager Title.');
+      $tokens['node']['stormproject-manager-uid'] = t('Storm Project: Project Manager User ID.');
+      $tokens['node']['stormproject-manager-name'] = t('Storm Project: Project Manager Name.');
+      $tokens['node']['stormproject-manager-fullname'] = t('Storm Project: Project Manager Full Name.');
+      $tokens['node']['stormproject-manager-email'] = t('Storm Project: Project Manager Email Address.');
+      // Assignee(s)
+      $tokens['node']['stormproject-assigned-to-email'] = t('Storm Project: Project Assignee(s) Email Address(s).');
+      $tokens['node']['stormproject-assigned-title'] = t('Storm Project: Project Assignee(s) Title(s).');
+    }
+  }
+  return $tokens;
+}
+
+/**
+*  Implementation of hook_token_values().
+*/
+function stormproject_token_values ($type, $object = NULL) {
+  $values = array();
+  $node = $object;
+  if ((($type == 'node') || ($type == 'all')) && ($node->type === 'stormproject')) {
+    $values['stormproject-projectstatus'] = $node->projectstatus;
+    if (module_exists('stormperson')) {
+      // Project Manager
+      if ($node->manager_nid) {
+        $manager = node_load($node->manager_nid);
+        $values['stormproject-manager-uid'] = $manager->user_uid;
+        $values['stormproject-manager-name'] = $manager->title;
+        $values['stormproject-manager-fullname'] = $manager->fullname;
+        $values['stormproject-manager-email'] = stormperson_primary_email($manager);
+        $values['stormproject-manager-title'] = $node->manager_title;
+      }
+      else {
+        $values['stormproject-manager-email'] = NULL;
+      }
+      // Project Assignee(s) e-mail
+      if ($node->assigned_nid) {
+        $values['stormproject-assigned-title'] = $node->assigned_title;
+        $assignees_node = node_load($node->assigned_nid);
+        // Assigned to one person
+        if ($assignees_node->type === 'stormperson') {
+          $values['stormproject-assigned-to-email'] = stormperson_primary_email($assignees_node);
+        }
+        // Assigned to a team
+        else {
+          $assignees_array = $assignees_node->members_array;
+          $assignees = array();
+          foreach ($assignees_array as $nid => $name) {
+            $assignee = node_load($nid);
+            $assignees[] = stormperson_primary_email($assignee);
+          }
+          $assigned = implode(", ", $assignees);
+          // Return comma separated list of emails
+          $values['stormproject-assigned-to-email'] = $assigned;
+        }
+      }
+      else {
+        $values['stormproject-assigned-to-email'] = NULL;
+      }
+    }
+  }
+  return $values;
+}

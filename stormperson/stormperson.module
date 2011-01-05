@@ -538,3 +538,22 @@ function stormperson_views_api() {
     'path' => drupal_get_path('module', 'stormperson'),
   );
 }
+
+/**
+ * @function
+ * A helper function to return the email address of a stormperson
+ */
+function stormperson_primary_email($node) {
+  if ($node->type !== 'stormperson') {
+    return NULL;
+  }
+  // If there is a Drupal user account use that email
+  if ($node->user_uid) {
+    $stormperson_person = user_load($node->user_uid);
+    return $stormperson_person->mail;
+  }
+  // Else use the stormperson email
+  elseif ($node->email) {
+    return $node->email;
+  }
+}
