@@ -20,18 +20,13 @@ function stormperson_help($path, $arg) {
 function stormperson_init() {
   if (function_exists('drupal_set_content')) {
     global $user;
-    if ($user->uid && !$user->stormorganization_nid || !$user->stormperson_nid) {
-      $r = db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $user->uid);
-      if ($r) {
-        $a = db_fetch_object($r);
-        $user->stormperson_nid = $a->nid;
-        $user->stormorganization_nid = $a->organization_nid;
-      }
+    if ($user->uid && !isset($user->stormorganization_nid) || !isset($user->stormperson_nid)) {
+      _stormperson_user_load($user);
     }
-    if (!$user->uid || !$user->stormperson_nid) {
+    if (!$user->uid || !isset($user->stormperson_nid)) {
       $user->stormperson_nid = -1;
     }
-    if (!$user->uid || !$user->stormorganization_nid) {
+    if (!$user->uid || !isset($user->stormorganization_nid)) {
       $user->stormorganization_nid = -1;
     }
   }
@@ -279,7 +274,7 @@ function stormperson_form(&$node) {
       $node->organization_nid = $_GET['organization_nid'];
     }
 
-    if ($_SESSION['stormperson_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['stormperson_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormperson_list_filter']['organization_nid'];
     }
   }
@@ -301,7 +296,7 @@ function stormperson_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
@@ -324,7 +319,7 @@ function stormperson_form(&$node) {
   $form['group1']['user_name'] = array(
     '#type' => 'textfield',
     '#title' => t('User'),
-    '#default_value' => $node->user_name,
+    '#default_value' => isset($node->user_name) ? $node->user_name : '',
     '#autocomplete_path' => 'user/autocomplete',
     '#size' => 40,
   );
@@ -339,14 +334,14 @@ function stormperson_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Prefix'),
     '#size' => 20,
-    '#default_value' => $node->prefix,
+    '#default_value' => isset($node->prefix) ? $node->prefix : '',
   );
 
   $form['group2']['fullname'] = array(
     '#type' => 'textfield',
     '#title' => t('Fullname'),
     '#size' => 40,
-    '#default_value' => $node->fullname,
+    '#default_value' => isset($node->fullname) ? $node->fullname : '',
   );
 
   $form['group3'] = array(
@@ -359,14 +354,14 @@ function stormperson_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Email'),
     '#size' => 30,
-    '#default_value' => $node->email,
+    '#default_value' => isset($node->email) ? $node->email : '',
   );
 
   $form['group3']['www'] = array(
     '#type' => 'textfield',
     '#title' => t('WWW'),
     '#size' => 30,
-    '#default_value' => $node->www,
+    '#default_value' => isset($node->www) ? $node->www : '',
   );
 
   $form['group4'] = array(
@@ -379,14 +374,14 @@ function stormperson_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Phone'),
     '#size' => 30,
-    '#default_value' => $node->phone,
+    '#default_value' => isset($node->phone) ? $node->phone : '',
   );
 
   $form['group4']['im'] = array(
     '#type' => 'textfield',
     '#title' => t('IM'),
     '#size' => 30,
-    '#default_value' => $node->im,
+    '#default_value' => isset($node->im) ? $node->im : '',
   );
 
   if ($type->has_body) {
@@ -395,7 +390,7 @@ function stormperson_form(&$node) {
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => isset($node->title_old) ? $node->title_old : NULL,
   );
 
   return $form;
@@ -520,9 +515,8 @@ function stormperson_user($type, &$edit, &$account, $category = NULL) {
 }
 
 function _stormperson_user_load(&$account) {
-  $r = db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $account->uid);
-  if ($r) {
-    $a = db_fetch_object($r);
+  $a = db_fetch_object(db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $account->uid));
+  if ($a) {
     $account->stormperson_nid = $a->nid;
     $account->stormorganization_nid = $a->organization_nid;
   }
@@ -537,4 +531,23 @@ function stormperson_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'stormperson'),
   );
+}
+
+/**
+ * @function
+ * A helper function to return the email address of a stormperson
+ */
+function stormperson_primary_email($node) {
+  if ($node->type !== 'stormperson') {
+    return NULL;
+  }
+  // If there is a Drupal user account use that email
+  if ($node->user_uid) {
+    $stormperson_person = user_load($node->user_uid);
+    return $stormperson_person->mail;
+  }
+  // Else use the stormperson email
+  elseif ($node->email) {
+    return $node->email;
+  }
 }
