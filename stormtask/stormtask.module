@@ -1020,3 +1020,89 @@ function stormtask_storminvoice_auto_add($node, $invoice_nid = NULL) {
   
   return $invoice_nid;
 }
+
+/**
+*  Implementation of hook_token_list().
+*/
+function stormtask_token_list($type='all') {
+  $tokens = array();
+  if (($type == 'node') || ($type == 'all')) {
+    $tokens['node']['stormtask-step-no'] = t('Storm Task: Step No.');
+    $tokens['node']['stormtask-organization-nid'] = t('Storm Task: Organization Node ID.');
+    $tokens['node']['stormtask-organization-title'] = t('Storm Task: Organization Title.');
+    $tokens['node']['stormtask-project-nid'] = t('Storm Task: Project Node ID.');
+    $tokens['node']['stormtask-project-title'] = t('Storm Task: Project Title.');
+    $tokens['node']['stormtask-parent-nid'] = t('Storm Task: Parent NID.');
+    $tokens['node']['stormtask-taskstatus'] = t('Storm Task: Project Status.');
+    $tokens['node']['stormtask-taskcategory'] = t('Storm Task: Task Category.');
+    $tokens['node']['stormtask-taskpriority'] = t('Storm Task: Task Priority.');
+    $tokens['node']['stormtask-durationunit'] = t('Storm Task: Task Duration Unit.');
+    $tokens['node']['stormtask-duration'] = t('Storm Task: Task Duration.');
+    $tokens['node']['stormtask-datebegin'] = t('Storm Task: Task Begin Date.');
+    $tokens['node']['stormtask-dateend'] = t('Storm Task: Task End Date.');
+    $tokens['node']['stormtask-billable'] = t('Storm Task: Task Billable.');
+    $tokens['node']['stormtask-billed'] = t('Storm Task: Task Billed.');
+    $tokens['node']['stormtask-price'] = t('Storm Task: Task Price.');
+    $tokens['node']['stormtask-pricemode'] = t('Storm Task: Task Price Mode.');
+    if (module_exists('stormperson')) {
+      // Assignee(s)
+      $tokens['node']['stormtask-assigned-to-email'] = t('Storm Task: Task Assignee(s) Email Address(s).');
+      $tokens['node']['stormtask-assigned-title'] = t('Storm Task: Task Assignee(s) Title(s).');
+    }
+  }
+  return $tokens;
+}
+
+/**
+*  Implementation of hook_token_values().
+*/
+function stormtask_token_values ($type, $object = NULL) {
+  $values = array();
+  $node = $object;
+  if ((($type == 'node') || ($type == 'all')) && ($node->type === 'stormtask')) {
+    $values['stormtask-stepno'] = $node->stepno;
+    $values['stormtask-organization-nid'] = $node->organization_nid;
+    $values['stormtask-organization-title'] = $node->organization_title;
+    $values['stormtask-project-nid'] = $node->project_nid;
+    $values['stormtask-project-title'] = $node->project_title;
+    $values['stormtask-parent-nid'] = $node->parent_nid;
+    $values['stormtask-taskstatus'] = $node->taskstatus;
+    $values['stormtask-taskpriority'] = $node->taskpriority;
+    $values['stormtask-taskcategory'] = $node->taskcategory;
+    $values['stormtask-durationunit'] = $node->durationunit;
+    $values['stormtask-duration'] = $node->duration;
+    $values['stormtask-datebegin'] = format_date($node->datebegin,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormtask-dateend'] = format_date($node->dateend,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormtask-price'] = $node->price;
+    $values['stormtask-pricemode'] = $node->pricemode;
+    $values['stormtask-billable'] = $node->billable;
+    $values['stormtask-billed'] = $node->billed;
+    if (module_exists('stormperson')) {
+      // Project Assignee(s) e-mail
+      if ($node->assigned_nid) {
+        $values['stormtask-assigned-title'] = $node->assigned_title;
+        $assignees_node = node_load($node->assigned_nid);
+        // Assigned to one person
+        if ($assignees_node->type === 'stormperson') {
+          $values['stormtask-assigned-to-email'] = stormperson_primary_email($assignees_node);
+        }
+        // Assigned to a team
+        else {
+          $assignees_array = $assignees_node->members_array;
+          $assignees = array();
+          foreach ($assignees_array as $nid => $name) {
+            $assignee = node_load($nid);
+            $assignees[] = stormperson_primary_email($assignee);
+          }
+          $assigned = implode(", ", $assignees);
+          // Return comma separated list of emails
+          $values['stormtask-assigned-to-email'] = $assigned;
+        }
+      }
+      else {
+        $values['stormtask-assigned-to-email'] = NULL;
+      }
+    }
+  }
+  return $values;
+}

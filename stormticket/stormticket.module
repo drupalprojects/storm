@@ -820,3 +820,85 @@ function stormticket_storminvoice_auto_add($node, $invoice_nid = NULL) {
   
   return $invoice_nid;
 }
+
+/**
+*  Implementation of hook_token_list().
+*/
+function stormticket_token_list($type='all') {
+  $tokens = array();
+  if (($type == 'node') || ($type == 'all')) {
+    $tokens['node']['stormticket-organization-nid'] = t('Storm Ticket: Organization Node ID.');
+    $tokens['node']['stormticket-organization-title'] = t('Storm Ticket: Organization Title.');
+    $tokens['node']['stormticket-project-nid'] = t('Storm Ticket: Project Node ID.');
+    $tokens['node']['stormticket-project-title'] = t('Storm Ticket: Project Title.');
+    $tokens['node']['stormticket-ticketstatus'] = t('Storm Ticket: Project Status.');
+    $tokens['node']['stormticket-ticketcategory'] = t('Storm Ticket: Ticket Category.');
+    $tokens['node']['stormticket-ticketpriority'] = t('Storm Ticket: Ticket Priority.');
+    $tokens['node']['stormticket-durationunit'] = t('Storm Ticket: Ticket Duration Unit.');
+    $tokens['node']['stormticket-duration'] = t('Storm Ticket: Ticket Duration.');
+    $tokens['node']['stormticket-datebegin'] = t('Storm Ticket: Ticket Begin Date.');
+    $tokens['node']['stormticket-dateend'] = t('Storm Ticket: Ticket End Date.');
+    $tokens['node']['stormticket-billable'] = t('Storm Ticket: Ticket Billable.');
+    $tokens['node']['stormticket-billed'] = t('Storm Ticket: Ticket Billed.');
+    $tokens['node']['stormticket-price'] = t('Storm Ticket: Ticket Price.');
+    $tokens['node']['stormticket-pricemode'] = t('Storm Ticket: Ticket Price Mode.');
+    if (module_exists('stormperson')) {
+      // Assignee(s)
+      $tokens['node']['stormticket-assigned-to-email'] = t('Storm Ticket: Ticket Assignee(s) Email Address(s).');
+      $tokens['node']['stormticket-assigned-title'] = t('Storm Ticket: Ticket Assignee(s) Title(s).');
+    }
+  }
+  return $tokens;
+}
+
+/**
+*  Implementation of hook_token_values().
+*/
+function stormticket_token_values ($type, $object = NULL) {
+  $values = array();
+  $node = $object;
+  if ((($type == 'node') || ($type == 'all')) && ($node->type === 'stormticket')) {
+    $values['stormticket-organization-nid'] = $node->organization_nid;
+    $values['stormticket-organization-title'] = $node->organization_title;
+    $values['stormticket-project-nid'] = $node->project_nid;
+    $values['stormticket-project-title'] = $node->project_title;
+    $values['stormticket-ticketstatus'] = $node->ticketstatus;
+    $values['stormticket-ticketpriority'] = $node->ticketpriority;
+    $values['stormticket-ticketcategory'] = $node->ticketcategory;
+    $values['stormticket-durationunit'] = $node->durationunit;
+    $values['stormticket-duration'] = $node->duration;
+    $values['stormticket-datebegin'] = format_date($node->datebegin,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormticket-dateend'] = format_date($node->dateend,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormticket-price'] = $node->price;
+    $values['stormticket-pricemode'] = $node->pricemode;
+    $values['stormticket-billable'] = $node->billable;
+    $values['stormticket-billed'] = $node->billed;
+    if (module_exists('stormperson')) {
+      // Project Assignee(s) e-mail
+      if ($node->assigned_nid) {
+        $values['stormticket-assigned-title'] = $node->assigned_title;
+        $assignees_node = node_load($node->assigned_nid);
+        // Assigned to one person
+        if ($assignees_node->type === 'stormperson') {
+          $values['stormticket-assigned-to-email'] = stormperson_primary_email($assignees_node);
+        }
+        // Assigned to a team
+        else {
+          $assignees_array = $assignees_node->members_array;
+          $assignees = array();
+          foreach ($assignees_array as $nid => $name) {
+            $assignee = node_load($nid);
+            $assignees[] = stormperson_primary_email($assignee);
+          }
+          $assigned = implode(", ", $assignees);
+          // Return comma separated list of emails
+          $values['stormticket-assigned-to-email'] = $assigned;
+        }
+      }
+      else {
+        $values['stormticket-assigned-to-email'] = NULL;
+      }
+    }
+  }
+  return $values;
+}

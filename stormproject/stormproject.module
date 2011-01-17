@@ -818,6 +818,20 @@ function stormproject_token_list($type='all') {
   $tokens = array();
   if (($type == 'node') || ($type == 'all')) {
     $tokens['node']['stormproject-projectstatus'] = t('Storm Project: Project Status.');
+    $tokens['node']['stormproject-projectcategory'] = t('Storm Project: Project Category.');
+    $tokens['node']['stormproject-projectpriority'] = t('Storm Project: Project Priority.');
+    $tokens['node']['stormproject-durationunit'] = t('Storm Project: Project Duration Unit.');
+    $tokens['node']['stormproject-duration'] = t('Storm Project: Project Duration.');
+    $tokens['node']['stormproject-datebegin'] = t('Storm Project: Project Begin Date.');
+    $tokens['node']['stormproject-dateend'] = t('Storm Project: Project End Date.');
+    $tokens['node']['stormproject-billable'] = t('Storm Project: Project Billable.');
+    $tokens['node']['stormproject-billed'] = t('Storm Project: Project Billed.');
+    $tokens['node']['stormproject-price'] = t('Storm Project: Project Price.');
+    $tokens['node']['stormproject-pricemode'] = t('Storm Project: Project Price Mode.');
+    if(module_exists('stormorganization')) {
+      $tokens['node']['stormproject-organization-nid'] = t('Storm Project: Organization Node ID.');
+      $tokens['node']['stormproject-organization-title'] = t('Storm Project: Organization Title.');
+    }
     if (module_exists('stormperson')) {
       // Project Manager
       $tokens['node']['stormproject-manager-title'] = t('Storm Project: Project Manager Title.');
@@ -841,6 +855,20 @@ function stormproject_token_values ($type, $object = NULL) {
   $node = $object;
   if ((($type == 'node') || ($type == 'all')) && ($node->type === 'stormproject')) {
     $values['stormproject-projectstatus'] = $node->projectstatus;
+    $values['stormproject-projectpriority'] = $node->projectpriority;
+    $values['stormproject-projectcategory'] = $node->projectcategory;
+    $values['stormproject-durationunit'] = $node->durationunit;
+    $values['stormproject-duration'] = $node->duration;
+    $values['stormproject-datebegin'] = format_date($node->datebegin,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormproject-dateend'] = format_date($node->dateend,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormproject-price'] = $node->price;
+    $values['stormproject-pricemode'] = $node->pricemode;
+    $values['stormproject-billable'] = $node->billable;
+    $values['stormproject-billed'] = $node->billed;
+    if(module_exists('stormorganization')) {
+      $values['stormproject-organization-nid'] = $node->organization_nid;
+      $values['stormproject-organization-title'] = $node->organization_title;
+    }
     if (module_exists('stormperson')) {
       // Project Manager
       if ($node->manager_nid) {

@@ -4,7 +4,7 @@
 
 Version 6.x-2.x:
 - Feature #1018304 by jalama: Added Token support for Storm invoice.
-- Feature #332555 by jalama: Added Token support for Storm project.
+- Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.36:
 - Task #918758 by juliangb: Added Tests for Storm Person.
