@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Feature #1018304 by jalama: Added Token support for Storm invoice.
 - Feature #332555 by jalama: Added Token support for Storm project.
 
 Version 6.x-1.36:
