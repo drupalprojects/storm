@@ -326,7 +326,7 @@ function stormexpense_form(&$node) {
 
     $node->expensedate = time();
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
     
     // Load tax defaults
     $node->tax1app = variable_get('storm_tax1_app', 1);
@@ -336,7 +336,7 @@ function stormexpense_form(&$node) {
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   // Transition to compound tax - allow for nodes which may have been saved in the past without a tax percentage

@@ -369,14 +369,14 @@ function stormticket_form(&$node) {
     if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
     if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
 
     $node->billable = variable_get('stormticket_billable_default', FALSE);
 
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);

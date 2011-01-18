@@ -329,14 +329,14 @@ function stormproject_form(&$node) {
       $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
 
     $node->billable = variable_get('stormproject_billable_default', FALSE);
 
   }
   else {
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-        ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+        ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);
