@@ -315,7 +315,7 @@ function stormteam_form(&$node) {
       '#type' => 'select',
       '#title' => t('Team Member @num', array('@num' => $i)),
       '#options' => $options,
-      '#default_value' => $node->$variable,
+      '#default_value' => (isset($node->$variable)) ? $node->$variable : NULL,
     );
     $i++;
   }
@@ -326,7 +326,7 @@ function stormteam_form(&$node) {
   
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->title_old,
+    '#default_value' => (isset($node->title_old)) ? $node-title_old : NULL,
   );
   
   return $form;
@@ -338,7 +338,9 @@ function stormteam_form(&$node) {
  */
 function stormteam_load($node) {
   $additions = db_fetch_object(db_query('SELECT * FROM {stormteam} WHERE vid = %d', $node->vid));
-  $additions->members_array = unserialize($additions->members);
+  if (isset($additions->members)) {
+    $additions->members_array = unserialize($additions->members);
+  }
   $additions->title_old = $node->title;
   return $additions;
 }
@@ -347,7 +349,7 @@ function stormteam_load($node) {
  * @function
  * Implementation of hook_view
  */
-function stormteam_view($node) {
+function stormteam_view($node, $teaser, $page) {
   $breadcrumb = array(
     l('Storm', 'storm'),
     l('Teams', 'storm/teams'),
@@ -367,16 +369,19 @@ function _stormteam_beforesave(&$node) {
 
   while (isset($node->$variable)) {
     $title = db_fetch_object(db_query('SELECT n.title FROM {node} AS n WHERE nid = %d', $node->$variable));
-    $node->members_array[$node->$variable] = $title->title;
+    if (!empty($title)) {
+      $node->members_array[$node->$variable] = $title->title;
+    }
     $i++;
     $variable = 'members_array_'. $i;
   }
+  if (isset($node->members_array)) {
+    if (array_key_exists(0, $node->members_array)) {
+      unset($node->members_array[0]);
+    }
   
-  if (array_key_exists(0, $node->members_array)) {
-    unset($node->members_array[0]);
+    $node->members = serialize($node->members_array);
   }
-  
-  $node->members = serialize($node->members_array);
 }
 
 /**
@@ -385,11 +390,13 @@ function _stormteam_beforesave(&$node) {
  */
 function stormteam_insert($node) {
   _stormteam_beforesave($node);
-  db_query("INSERT INTO {stormteam}
-    (vid, nid, members) VALUES 
-    (%d, %d, '%s')",
-    $node->vid, $node->nid, $node->members
-  );
+  if (isset($node->vid) && (isset($node->nid)) && (isset($node->members))) {
+    db_query("INSERT INTO {stormteam}
+      (vid, nid, members) VALUES
+      (%d, %d, '%s')",
+      $node->vid, $node->nid, $node->members
+    );
+  }
 }
 
 /**
