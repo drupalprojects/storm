@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6x-1.x-dev:
+- Task #918752 by rjgoldsborough: Added Tests for Storm Team.
 - Bug #1038042 by kfritsche: Fixed Default filters for Storm Project list page.
 - Task #918758 by juliangb: Added Tests for Storm Person.
 - Bug #916302 by juliangb | Wappie08: Fixed No 'Storm: Ticket Duration' and 'Duration Unit' fields in views.
