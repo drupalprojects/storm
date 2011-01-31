@@ -9,6 +9,7 @@ Version 6.x-2.x:
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.36:
+- Task #918748 by rjgoldsborough: Added Tests for Storm Expense.
 - Task #918752 by rjgoldsborough: Added Tests for Storm Team.
 - Task #918758 by juliangb: Added Tests for Storm Person.
 - Bug #916302 by juliangb | Wappie08: Fixed No 'Storm: Ticket Duration' and 'Duration Unit' fields in views.
