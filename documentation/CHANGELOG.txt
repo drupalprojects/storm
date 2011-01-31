@@ -3,6 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Task #685140 by juliangb: Removed prefix and fullname fields from Storm Organization.
 - Bug #1038042 by kfritsche: Default filter for Storm Project list page.
 - Task #791100 by rjgoldsborough: Removed filtering by iscustomer on lists of organisations.
 - Feature #1018304 by jalama: Added Token support for Storm invoice.
