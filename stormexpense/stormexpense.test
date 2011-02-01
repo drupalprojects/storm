@@ -34,5 +34,14 @@ class StormexpenseTestCase extends DrupalWebTestCase {
 
     $this->assertText(t('Expense @title has been created.', array('@title' => $expense['title'])));
   }
+
+  public function testStormexpenseReports() {
+    // Create and login user
+    $user = $this->drupalCreateUser(array('Storm expense: access'));
+    $this->drupalLogin($user);
+
+    // Create a team
+    $this->drupalGet('storm/expenses/report/std/en');
+  }
 }
 

@@ -431,9 +431,14 @@ function stormexpense_list_form_report_submit($form, &$form_state) {
 function stormexpense_list_report($report, $language) {
   $timetrackings = array();
 
-  $sql = $_SESSION['stormexpense_list_filter']['sql'];
-  $args = $_SESSION['stormexpense_list_filter']['args'];
+  $s = "SELECT n.*,  sex.* FROM {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND n.type='stormexpense' ";
+  $s = stormexpense_access_sql($s, array());
+  $s = db_rewrite_sql($s);
+
+  $sql = isset($_SESSION['stormexpense_list_filter']['sql']) ? $_SESSION['stormexpense_list_filter']['sql'] : $s;
+  $args = isset($_SESSION['stormexpense_list_filter']['args']) ? $_SESSION['stormexpense_list_filter']['args'] : array();
   $r = db_query($sql, $args);
+  $expenses = array();
   while ($e = db_fetch_object($r)) {
     $expense = node_load($e->nid);
     $expenses[] = $expense;
