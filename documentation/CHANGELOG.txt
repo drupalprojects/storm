@@ -4,14 +4,15 @@
 
 Version 6.x-2.x:
 - Task #685140 by juliangb: Removed prefix and fullname fields from Storm Organization.
-- Bug #1038042 by kfritsche: Default filter for Storm Project list page.
 - Task #791100 by rjgoldsborough: Removed filtering by iscustomer on lists of organisations.
 - Feature #1018304 by jalama: Added Token support for Storm invoice.
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.36:
+- Bug #770526 by juliangb: Fixed PHP Notice on viewing expenses report.
 - Task #918748 by rjgoldsborough: Added Tests for Storm Expense.
 - Task #918752 by rjgoldsborough: Added Tests for Storm Team.
+- Bug #1038042 by kfritsche: Default filter for Storm Project list page.
 - Task #918758 by juliangb: Added Tests for Storm Person.
 - Bug #916302 by juliangb | Wappie08: Fixed No 'Storm: Ticket Duration' and 'Duration Unit' fields in views.
 - Bug #1002374 by juliangb: Fixed typo in Stormtask views integration

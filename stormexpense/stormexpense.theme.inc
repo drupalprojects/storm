@@ -234,6 +234,7 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         t('Date', array(), $language),
         t('Total', array(), $language));
       $expenses_total = 0;
+      $rows = array();
       foreach ($expenses as $expense) {
         $rows[] = array(
           check_plain($expense->organization_title),
