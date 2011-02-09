@@ -36,9 +36,15 @@ function stormknowledgebase_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormknowledgebase_list_filter']['topic'] && $_SESSION['stormknowledgebase_list_filter']['topic'] != '-') {
+  $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
+  if(!$topic) {
+    $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+    $topic = $topic_list['default'];
+    $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
+  }
+  if ($topic && $topic != '-') {
     $where[] = "skb.topic='%s'";
-    $args[] = $_SESSION['stormknowledgebase_list_filter']['topic'];
+    $args[] = $topic;
     $filterfields[] = 'Topic';
   }
   $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
@@ -76,10 +82,6 @@ function stormknowledgebase_list() {
 function stormknowledgebase_list_filter(&$form_state, $filterdesc = 'Filter') {
   $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
   $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
-  if(!$topic) {
-    $topic = $topic_list['default'];
-    $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
-  }
 
   $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
