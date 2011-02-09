@@ -58,8 +58,14 @@ function stormtask_tasks($project) {
   $where = array();
   $args = array();
 
-  if ($_SESSION['stormtask_tasks_filter']['taskcategory'] && $_SESSION['stormtask_tasks_filter']['taskcategory'] != '-') {
-    $category = split(',', $_SESSION['stormtask_tasks_filter']['taskcategory']);
+  $taskcategory = $_SESSION['stormtask_tasks_filter']['taskcategory'];
+  if (!$taskcategory) {
+    $category_list = stormattribute_attributes_bydomain('Task category search');
+    $taskcategory = $category_list['default'];
+    $_SESSION['stormtask_tasks_filter']['taskcategory'] = $taskcategory;
+  }
+  if ($taskcategory && $taskcategory != '-') {
+    $category = split(',', $taskcategory);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
     $where[] = "sta.taskcategory IN ('". implode("','",$v) ."')";
@@ -67,8 +73,15 @@ function stormtask_tasks($project) {
       $args[] = $value;
     }
   }
-  if ($_SESSION['stormtask_tasks_filter']['taskstatus'] && $_SESSION['stormtask_tasks_filter']['taskstatus'] != '-') {
-    $status = split(',', $_SESSION['stormtask_tasks_filter']['taskstatus']);
+
+  $taskstatus = $_SESSION['stormtask_tasks_filter']['taskstatus'];
+  if (!$taskstatus) {
+    $status_list = stormattribute_attributes_bydomain('Task status search');
+    $taskstatus = $status_list['default'];
+    $_SESSION['stormtask_tasks_filter']['taskstatus'] = $taskstatus;
+  }
+  if ($taskstatus && $taskstatus != '-') {
+    $status = split(',', $taskstatus);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
     $where[] = "sta.taskstatus IN ('". implode("','",$v) ."')";
@@ -76,8 +89,15 @@ function stormtask_tasks($project) {
       $args[] = $value;
     }
   }
-  if ($_SESSION['stormtask_tasks_filter']['taskpriority'] && $_SESSION['stormtask_tasks_filter']['taskpriority'] != '-') {
-    $priority = split(',', $_SESSION['stormtask_tasks_filter']['taskpriority']);
+
+  $taskpriority = $_SESSION['stormtask_tasks_filter']['taskpriority'];
+  if (!$taskpriority) {
+    $priority_list = stormattribute_attributes_bydomain('Task priority search');
+    $taskpriority = $priority_list['default'];
+    $_SESSION['stormtask_tasks_filter']['taskpriority'] = $taskpriority;
+  }
+  if ($taskpriority && $taskpriority != '-') {
+    $priority = split(',', $taskpriority);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
     $where[] = "sta.taskpriority IN ('". implode("','",$v) ."')";
@@ -313,24 +333,12 @@ function stormtask_tasks_submit($form, &$form_state) {
 function stormtask_tasks_filter() {
   $category_list = stormattribute_attributes_bydomain('Task category search');
   $taskcategory = $_SESSION['stormtask_tasks_filter']['taskcategory'];
-  if (!$taskcategory) {
-    $taskcategory = $category_list['default'];
-    $_SESSION['stormtask_tasks_filter']['taskcategory'] = $taskcategory;
-  }
 
   $status_list = stormattribute_attributes_bydomain('Task status search');
   $taskstatus = $_SESSION['stormtask_tasks_filter']['taskstatus'];
-  if (!$taskstatus) {
-    $taskstatus = $status_list['default'];
-    $_SESSION['stormtask_tasks_filter']['taskstatus'] = $taskstatus;
-  }
 
   $priority_list = stormattribute_attributes_bydomain('Task priority search');
   $taskpriority = $_SESSION['stormtask_tasks_filter']['taskpriority'];
-  if (!$taskpriority) {
-    $taskpriority = $priority_list['default'];
-    $_SESSION['stormtask_tasks_filter']['taskpriority'] = $taskpriority;
-  }
 
   $form = array();
 
