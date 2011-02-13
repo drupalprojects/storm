@@ -407,7 +407,7 @@ function stormteam_update($node) {
   _stormteam_beforesave($node);
   
   if ($node->revision) {
-    stormexpense_insert($node);
+    stormteam_insert($node);
   }
   else {
     db_query("UPDATE {stormteam} SET
