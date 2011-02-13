@@ -9,6 +9,7 @@ Version 6.x-2.x:
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.36:
+- Bug #1018448 by minorOffense, juliangb: Fixed Storm Person: Drupal User in Views.
 - Bug #1045258 by kfritsche: Fixed Default filter from storm attribute.
 - Bug #770526 by juliangb: Fixed PHP Notice on viewing expenses report.
 - Task #918748 by rjgoldsborough: Added Tests for Storm Expense.

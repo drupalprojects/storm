@@ -144,7 +144,7 @@ function stormperson_views_data() {
     'title' => t('Drupal User'),
     'help' => t('Storm Person -> Drupal User'),
     'relationship' => array(
-      'base' => 'user',
+      'base' => 'users',
       'field' => 'uid',
       'handler' => 'views_handler_relationship',
       'label' => t('Person -> User'),
