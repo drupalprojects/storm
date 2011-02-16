@@ -293,10 +293,10 @@ function stormteam_form(&$node) {
   
   $i = 1;
   $variable = 'members_array_'. $i;
-  
+
   // Add rows for existing team members
   if (isset($node->members_array) && is_array($node->members_array)) {
-    foreach ($node->members_array as $node->$variable => $name) {
+    foreach($node->members_array as $node->$variable => $name) {
       $form['group1'][$variable] = array(
         '#type' => 'select',
         '#title' => t('Team Member @num', array('@num' => $i)),
@@ -307,9 +307,9 @@ function stormteam_form(&$node) {
       $variable = 'members_array_'. $i;
     }
   }
-  
+
   // Add placeholder rows
-  for ($j = 0; $j < 3; $j++) {
+  for($j = 0; $j < 3; $j++) {
     $variable = 'members_array_'. $i;
     $form['group1'][$variable] = array(
       '#type' => 'select',
@@ -319,7 +319,7 @@ function stormteam_form(&$node) {
     );
     $i++;
   }
-  
+
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
@@ -337,9 +337,11 @@ function stormteam_form(&$node) {
  * Implementation of hook_load
  */
 function stormteam_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormteam} WHERE vid = %d', $node->vid));
-  if (isset($additions->members)) {
-    $additions->members_array = unserialize($additions->members);
+  $result = db_query('SELECT mnid FROM {stormteam} WHERE vid = %d', $node->vid);
+  $additions = new stdClass();
+  while ($members = db_fetch_object($result)) {
+    $mnode = node_load($members->mnid);
+    $additions->members_array[$members->mnid] = $mnode->title;
   }
   $additions->title_old = $node->title;
   return $additions;
@@ -390,12 +392,14 @@ function _stormteam_beforesave(&$node) {
  */
 function stormteam_insert($node) {
   _stormteam_beforesave($node);
-  if (isset($node->vid) && (isset($node->nid)) && (isset($node->members))) {
-    db_query("INSERT INTO {stormteam}
-      (vid, nid, members) VALUES
-      (%d, %d, '%s')",
-      $node->vid, $node->nid, $node->members
-    );
+  if (isset($node->vid) && (isset($node->nid)) && (isset($node->members_array))) {
+    $member = new stdClass();
+    $member->nid = $node->nid;
+    $member->vid = $node->vid;
+    foreach($node->members_array as $mnid => $member_name) {
+      $member->mnid = $mnid;
+      drupal_write_record('stormteam', $member);
+    }
   }
 }
 
@@ -410,11 +414,21 @@ function stormteam_update($node) {
     stormteam_insert($node);
   }
   else {
-    db_query("UPDATE {stormteam} SET
-      members = '%s' WHERE vid = %d",
-      $node->members, $node->vid
-    );
     
+    if (isset($node->vid) && (isset($node->nid)) && (isset($node->members_array))) {
+      // Delete the old members
+      db_query("DELETE FROM {stormteam} WHERE nid = %d AND vid = %d", $node->nid, $node->vid);
+
+      // Insert entries
+      $member = new stdClass();
+      $member->nid = $node->nid;
+      $member->vid = $node->vid;
+      foreach($node->members_array as $mnid => $member_name) {
+        $member->mnid = $mnid;
+        drupal_write_record('stormteam', $member);
+      }
+    }
+
     // Invokes hook_stormteam_change so that if title has changed, other modules that have cached the title can update it.
     if ($node->title != $node->title_old) {
       module_invoke_all('stormteam_change', $node->nid, $node->title);
@@ -678,8 +692,9 @@ function stormteam_user_return_teams($account = NULL) {
     $account = $user;
   }
   
-  $s = "SELECT ste.nid FROM {stormteam} ste WHERE (ste.members LIKE '%%i:%d;%%' OR ste.members LIKE '%%i:%d;%%')";
-  $r = db_query($s, $account->stormperson_nid, $account->stormorganization_nid);
+  // Get the list of team nodes. Include organizations which the person is a member of.
+  $s = "SELECT ste.nid FROM {stormteam} ste JOIN {stormperson} stp ON (stp.nid = ste.mnid OR stp.orgnization_nid = ste.mnid) WHERE stp.user_uid = %d";
+  $r = db_query($s, $account->uid);
   $teams = array();
   while ($team = db_fetch_object($r)) {
     $teams[] = $team->nid;
