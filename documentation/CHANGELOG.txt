@@ -3,7 +3,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
-- Task #1052154 by minorOffense: Changed schema on Storm Team module.
+- Task #1052154 by minorOffense, Carsten Müller: Changed schema on Storm Team module.
 - Task #685140 by juliangb: Removed prefix and fullname fields from Storm Organization.
 - Task #791100 by rjgoldsborough: Removed filtering by iscustomer on lists of organisations.
 - Feature #1018304 by jalama: Added Token support for Storm invoice.

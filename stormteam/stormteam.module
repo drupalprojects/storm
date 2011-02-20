@@ -23,7 +23,7 @@
  */
 function stormteam_menu() {
   $items = array();
-  
+
   $items['storm/teams'] = array(
     'title' => 'Teams',
     'description' => 'Storm Teams',
@@ -32,16 +32,16 @@ function stormteam_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 2,
   );
-  
+
   $items['storm/teams/autocomplete'] = array(
     'title' => 'Teams Autocomplete',
     'page callback' => 'stormteam_autocomplete',
     'access arguments' => array('Storm team: access'),
     'type' => MENU_CALLBACK,
   );
-  
+
   //$items['admin/settings/storm/team'] = array();
-  
+
   return $items;
 }
 
@@ -130,9 +130,9 @@ function stormteam_access($op, $node, $account = NULL) {
     global $user;
     $account = $user;
   }
-  
+
   if (is_numeric($node)) $node = node_load($node);
-  
+
   switch ($op) {
     case 'create':
       return user_access('Storm team: add');
@@ -182,14 +182,14 @@ function stormteam_access_sql($sql, $where = array()) {
     $where[] = "'storm_access'='storm_access'";
     return storm_rewrite_sql($sql, $where);
   }
-  
+
   global $user;
-  
+
   $cond = '';
   if (user_access('Storm team: view own')) {
     $cond .= 'n.uid='. $user->uid;
   }
-  if (user_access('Storm team: view belonged')) {    
+  if (user_access('Storm team: view belonged')) {
     if (!empty($cond)) $cond .= ' OR ';
     $cond .= "ste.members LIKE '%i:". $user->stormperson_nid .";%'";
   }
@@ -236,7 +236,7 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
       $cond = " WHEN 'stormteam' THEN 0 ";
     }
   }
-  
+
   $conds[$primary_table][$account->uid] = $cond;
   return $cond;
 }
@@ -251,9 +251,9 @@ function stormteam_form(&$node) {
     l('Teams', 'storm/teams'),
   );
   drupal_set_breadcrumb($breadcrumb);
-  
+
   $type = node_get_types('type', $node);
-  
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -261,14 +261,14 @@ function stormteam_form(&$node) {
     '#default_value' => $node->title,
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -21,
   );
-  
+
   $form['group1'] = array(
     '#type' => 'markup',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
-  
+
   $options = array(0 => '-');
-  
+
   $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
   $s_per = stormperson_access_sql($s_per);
   $s_per = db_rewrite_sql($s_per);
@@ -277,9 +277,9 @@ function stormteam_form(&$node) {
   while ($person = db_fetch_object($r_per)) {
     $people[$person->nid] = $person->title;
   }
-  
+
   $options = $options + array(-1 => t('-PEOPLE-')) + $people;
-  
+
   $s_org = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormorganization' ORDER BY n.title";
   $s_org = stormorganization_access_sql($s_org);
   $s_org = db_rewrite_sql($s_org);
@@ -288,9 +288,9 @@ function stormteam_form(&$node) {
   while ($organization = db_fetch_object($r_org)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  
+
   $options = $options + array(-2 => t('-ORGANIZATIONS-')) + $organizations;
-  
+
   $i = 1;
   $variable = 'members_array_'. $i;
 
@@ -323,12 +323,12 @@ function stormteam_form(&$node) {
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
-  
+
   $form['title_old'] = array(
     '#type' => 'hidden',
     '#default_value' => (isset($node->title_old)) ? $node-title_old : NULL,
   );
-  
+
   return $form;
 }
 
@@ -381,7 +381,7 @@ function _stormteam_beforesave(&$node) {
     if (array_key_exists(0, $node->members_array)) {
       unset($node->members_array[0]);
     }
-  
+
     $node->members = serialize($node->members_array);
   }
 }
@@ -409,12 +409,12 @@ function stormteam_insert($node) {
  */
 function stormteam_update($node) {
   _stormteam_beforesave($node);
-  
+
   if ($node->revision) {
     stormteam_insert($node);
   }
   else {
-    
+
     if (isset($node->vid) && (isset($node->nid)) && (isset($node->members_array))) {
       // Delete the old members
       db_query("DELETE FROM {stormteam} WHERE nid = %d AND vid = %d", $node->nid, $node->vid);
@@ -468,21 +468,21 @@ function stormteam_nodeapi(&$node, $op, $teaser, $page) {
 function stormteam_list() {
   // Add Storm generic CSS
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-  
+
   $breadcrumb = array(
     l('Storm', 'storm'),
   );
   drupal_set_breadcrumb($breadcrumb);
-  
+
   if (array_key_exists('name', $_GET)) {
     if ($_SESSION['stormteam_list_filter']['name'] != $_GET['name']) {
       $_SESSION['stormteam_list_filter']['name'] = $_GET['name'];
     }
   }
-  
+
   $i = new stdClass();
   $i->type = 'stormteam';
-  
+
   $header = array(
     array(
       'data' => t('Team Name'),
@@ -499,26 +499,26 @@ function stormteam_list() {
       'class' => 'storm_list_operations',
     ),
   );
-  
-  $s = "SELECT n.nid, n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid 
+
+  $s = "SELECT DISTINCT(n.nid), n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid
     WHERE n.status=1 AND n.type='stormteam'";
-  
+
   $where = array();
   $args = array();
   $filterfields = array();
-  
+
   if ($_SESSION['stormteam_list_filter']['name']) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormteam_list_filter']['name'];
     $filterfields[] = t('Team Name');
   }
-  
+
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     // Sets value for fieldset label, does not affect filter itself.
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
   }
-  
+
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
   }
@@ -526,9 +526,9 @@ function stormteam_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormteam_list_filter', $filterdesc);
-  
+
   $s = stormteam_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
@@ -544,7 +544,7 @@ function stormteam_list() {
       ),
     );
   }
-  
+
   $o .= theme('table', $header, $rows);
   $o .= theme('pager', NULL, $itemsperpage, 0);
   print theme('page', $o);
@@ -556,15 +556,15 @@ function stormteam_list() {
  */
 function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
   $name = $_SESSION['stormteam_list_filter']['name'];
-  
+
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
   if (!$itemsperpage) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['stormteam_list_filter']['itemsperpage'] = $itemsperpage;
   }
-  
+
   $form = array();
-  
+
   $form['filter'] = array(
     '#type' => 'fieldset',
     '#title' => $filterdesc,
@@ -572,7 +572,7 @@ function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#collapsed' => TRUE,
     '#weight' => -20,
   );
-  
+
   $form['filter']['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
@@ -673,7 +673,7 @@ function stormteam_autocomplete_combo($string = '') {
  */
 function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
   $node = node_load($team);
-  
+
   // Check for person_or_organization_nid in the team members array and return TRUE / FALSE
   if (is_array($node->members_array)) {
     return array_key_exists($person_or_organization_nid, $node->members_array);
@@ -691,7 +691,7 @@ function stormteam_user_return_teams($account = NULL) {
     global $user;
     $account = $user;
   }
-  
+
   // Get the list of team nodes. Include organizations which the person is a member of.
   $s = "SELECT ste.nid FROM {stormteam} ste JOIN {stormperson} stp ON (stp.nid = ste.mnid OR stp.orgnization_nid = ste.mnid) WHERE stp.user_uid = %d";
   $r = db_query($s, $account->uid);

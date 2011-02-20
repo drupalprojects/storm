@@ -70,21 +70,21 @@ function stormteam_schema() {
  */
 function stormteam_update_6101() {
   $ret = array();
-  
+
   $sql = "SELECT ste.members, ste.vid FROM {stormteam} ste";
   $results = db_query($sql);
   while($team = db_fetch_object($results)) {
     $members_array = unserialize($team->members);
-    
+
     if (array_key_exists(0, $members_array)) {
       unset($members_array[0]);
     }
-    
+
     $team->members = serialize($members_array);
-    
+
     $sql = "UPDATE {stormteam} SET members='%s' WHERE vid=%d";
     $result = db_query($sql, $team->members, $team->vid);
-    
+
     $ret[] = array('success' => $result !== FALSE, 'query' => 'Removed 0:N from vid '. $team->vid);
   }
   return $ret;
@@ -132,15 +132,14 @@ function stormteam_update_6200() {
   $mapping = array();
   while ($team = db_fetch_object($result)) {
     $members = unserialize($team->members);
-
     // Generate the mapping array and save it to the database
     foreach($members as $nid => $fullname) {
       $mapping = new stdClass();
       $mapping->nid = $team->nid;
       $mapping->vid = $team->vid;
       $mapping->mnid = $nid;
-      $result = db_query('INSERT INTO {stormteam_6200} VALUES (%d, %d, %d)', $mapping->nid, $mapping->vid, $mapping->mnid);
-      if (FALSE === $result) {
+      $result_insert = db_query('INSERT INTO {stormteam_6200} VALUES (%d, %d, %d)', $mapping->vid, $mapping->nid, $mapping->mnid);
+      if (FALSE === $result_insert) {
         // Write failed, abort the update
         $mapping = FALSE;
         break 2;
