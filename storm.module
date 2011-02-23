@@ -969,9 +969,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     }
   }
   if (module_exists('stormteam')) {
-    $sql = "SELECT  n.nid,
-                    n.title,
-                    ste.members
+    $sql = "SELECT DISTINCT(n.nid)
                 FROM {node} n
                 INNER JOIN {stormteam} ste
                   ON n.vid = ste.vid
@@ -982,10 +980,11 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     $result = db_query($sql);
     while ($team = db_fetch_object($result)) {
       if (!array_key_exists($team->nid, $options[$teams])) {
+        $team_node = node_load($team->nid);
         $add_team = TRUE;
         if (isset($organization_nid)) {
           //Check if all team members are relevant to current org or project
-          foreach (unserialize($team->members) as $nid => $name) {
+          foreach ($team_node->members_array as $nid => $name) {
             if (!array_key_exists($nid, $options[$people])) {
               $add_team = FALSE;
               break;
@@ -993,7 +992,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
           }
         }
         if ($add_team) {
-          $options[$teams][$team->nid] = check_plain($team->title);
+          $options[$teams][$team_node->nid] = check_plain($team_node->title);
         }
       }
     }
