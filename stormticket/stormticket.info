@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Ticket
 description = "SpeedTech Organizer and Resource Manager - Ticket"
 dependencies = storm stormattribute stormorganization stormproject stormtask

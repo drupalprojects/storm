@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Project
 description = "SpeedTech Organizer and Resource Manager - Project"
 dependencies = storm stormattribute stormorganization

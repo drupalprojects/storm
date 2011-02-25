@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Knowledge base
 description = "SpeedTech Organizer and Resource Manager - Knowledge base"
 dependencies = storm

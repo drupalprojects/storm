@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Invoice item
 description = "SpeedTech Organizer and Resource Manager - Invoice item"
 dependencies = storm stormattribute stormorganization stormproject storminvoice

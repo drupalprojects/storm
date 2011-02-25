@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Note
 description = "SpeedTech Organizer and Resource Manager - Note"
 dependencies = storm stormorganization stormproject stormtask

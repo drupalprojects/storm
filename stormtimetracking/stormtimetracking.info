@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Timetracking
 description = "SpeedTech Organizer and Resource Manager - Timetracking"
 dependencies = storm stormattribute stormorganization stormproject stormtask stormticket

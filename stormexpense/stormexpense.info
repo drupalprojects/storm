@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Expense
 description = "SpeedTech Organizer and Resource Manager - Expense"
 dependencies = storm stormattribute stormorganization stormproject stormtask stormticket
