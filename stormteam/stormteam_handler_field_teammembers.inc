@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Separate team members into array.

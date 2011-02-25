@@ -1,4 +1,3 @@
-/* $Id$ */
 
 Storm module for Drupal 7.x
 

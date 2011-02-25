@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Note
 description = "Allows creation of notes about organizations, projects or tasks."
 package = Storm

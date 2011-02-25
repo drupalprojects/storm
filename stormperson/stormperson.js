@@ -1,4 +1,3 @@
-// $Id$
 
 function stormperson_organization_people(_organization_select, _person_select_id, _with_all_option, _all_text) {
   var person_select = $("#" + _person_select_id).get(0);

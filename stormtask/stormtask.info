@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Task
 description = "Allows recording of tasks for Storm Organizations and Projects"
 package = Storm
