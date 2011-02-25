@@ -1,4 +1,3 @@
-// $Id$
 
 function storm_empty_select(_select) {
   if(_select == undefined) return;

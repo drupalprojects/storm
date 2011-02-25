@@ -1,4 +1,3 @@
-/* $Id$ */
 
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 

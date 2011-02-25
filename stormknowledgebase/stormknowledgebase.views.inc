@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormknowledgebase_views_data() {
   $data['stormknowledgebase']['table']['group']  = 'Storm';

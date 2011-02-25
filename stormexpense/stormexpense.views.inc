@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormexpense_views_data() {
   $data['stormexpense']['table']['group']  = t('Storm Expense');

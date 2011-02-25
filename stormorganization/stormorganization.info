@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Organization
 description = "Allows storing of organizations for use within Storm"
 dependencies[] = storm

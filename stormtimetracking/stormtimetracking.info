@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Timetracking
 description = "Allows recording of times worked based on project, task and/or ticket"
 dependencies[] = storm 

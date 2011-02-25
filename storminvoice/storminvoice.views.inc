@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function storminvoice_views_data() {
   // Invoice core fields
