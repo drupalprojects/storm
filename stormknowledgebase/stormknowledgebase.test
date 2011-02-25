@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class StormknowledgebaseTestCase extends DrupalWebTestCase {
   public static function getInfo() {

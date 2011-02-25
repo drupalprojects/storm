@@ -1,4 +1,3 @@
-// $Id$
 
 function stormticket_task_tickets(_task_select, _organization_select_id, _project_select_id, _ticket_select_id, _with_all_option, _all_text) {
   var ticket_select = $("#" + _ticket_select_id).get(0);

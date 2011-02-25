@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormtask_views_data() {
   $data['stormtask']['table']['group']  = 'Storm Task';

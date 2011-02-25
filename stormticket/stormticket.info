@@ -1,4 +1,3 @@
-; $Id$
 name = Storm Ticket
 description = "Allows creation of tickets for Storm Projects and Tasks"
 dependencies[] = storm 

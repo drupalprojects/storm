@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormtimetracking_views_data() {
   $data['stormtimetracking']['table']['group']  = 'Storm Timetracking';

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormperson_views_data() {
   $data['stormperson']['table']['group']  = 'Storm Person';

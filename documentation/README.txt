@@ -1,4 +1,3 @@
-/* $Id$ */
 
 Documentation for STORM project management application.
 - Project homepage: http://drupal.org/project/storm

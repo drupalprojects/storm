@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function stormticket_views_data() {
   $data['stormticket']['table']['group']  = 'Storm Ticket';
