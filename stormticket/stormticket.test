@@ -13,6 +13,21 @@ class StormticketTestCase extends DrupalWebTestCase {
     parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask', 'stormticket');
   }
 
+  public function testStormticketAccess() {
+    $this->drupalGet('storm/tickets');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Tickets list for anonymous user'));
+
+    $basic_user = $this->drupalCreateUser();
+    $this->drupalLogin($basic_user);
+    $this->drupalGet('storm/tickets');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Tickets list for basic user'));
+
+    $privileged_user = $this->drupalCreateUser(array('Storm ticket: access'));
+    $this->drupalLogin($privileged_user);
+    $this->drupalGet('storm/tickets');
+    $this->assertText(t('Tickets'), t('Make sure the correct page has been displayed by checking that the title is "Tickets".'));
+  }
+
   public function testStormticketCreate() {
     // Create and login user
     $user = $this->drupalCreateUser(array('Storm organization: add', 'Storm organization: view all', 'Storm project: add', 'Storm project: view all', 'Storm task: add', 'Storm task: view all', 'Storm ticket: add', 'Storm ticket: view all'));

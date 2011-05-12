@@ -13,6 +13,21 @@ class StormtaskTestCase extends DrupalWebTestCase {
     parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask');
   }
 
+  public function testStormtaskAccess() {
+    $this->drupalGet('storm/tasks');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Tasks list for anonymous user'));
+
+    $basic_user = $this->drupalCreateUser();
+    $this->drupalLogin($basic_user);
+    $this->drupalGet('storm/tasks');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Tasks list for basic user'));
+
+    $privileged_user = $this->drupalCreateUser(array('Storm task: access'));
+    $this->drupalLogin($privileged_user);
+    $this->drupalGet('storm/tasks');
+    $this->assertText(t('Tasks'), t('Make sure the correct page has been displayed by checking that the title is "Tasks".'));
+  }
+
   public function testStormtaskCreate() {
     // Create and login user
     $user = $this->drupalCreateUser(array('Storm organization: add', 'Storm organization: view all', 'Storm project: add', 'Storm project: view all', 'Storm task: add', 'Storm task: view all'));

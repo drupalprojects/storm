@@ -41,58 +41,55 @@ function stormorganization_list() {
   $args = array();
   $filterfields = array();
 
-  $country = $_SESSION['stormorganization_list_filter']['country'];
-  if ($country && $country!='-') {
+  $country = isset($_SESSION['stormorganization_list_filter']['country']) ? $_SESSION['stormorganization_list_filter']['country'] : '-';
+  if ($country != '-') {
     $where[] = "sor.country='%s'";
     $args[] = $_SESSION['stormorganization_list_filter']['country'];
     $filterfields[] = t('Country');
   }
   
-  if ($_SESSION['stormorganization_list_filter']['name']) {
+  if (isset($_SESSION['stormorganization_list_filter']['name'])) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
     $filterfields[] = t('Name');
   }
 
-  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
-  if ($iscustomer && $iscustomer!='-') {
-    if ($iscustomer=='yes') {
+  $iscustomer = isset($_SESSION['stormorganization_list_filter']['iscustomer']) ? $_SESSION['stormorganization_list_filter']['iscustomer'] : '-';
+  if ($iscustomer != '-') {
+    if ($iscustomer == 'yes') {
       $where[] = "sor.iscustomer=1";
     }
-    else if ($iscustomer=='no') {
+    else if ($iscustomer == 'no') {
       $where[] = "sor.iscustomer=0";
     }
     $filterfields[] = t('Customer');
   }
 
-  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
-  if ($isprovider && $isprovider!='-') {
-    if ($isprovider=='yes') {
+  $isprovider = isset($_SESSION['stormorganization_list_filter']['isprovider']) ? $_SESSION['stormorganization_list_filter']['isprovider'] : '-';
+  if ($isprovider != '-') {
+    if ($isprovider == 'yes') {
       $where[] = "sor.isprovider=1";
     }
-    else if ($isprovider=='no') {
+    else if ($isprovider == 'no') {
       $where[] = "sor.isprovider=0";
     }
     $filterfields[] = t('Provider');
   }
 
-  $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
-  if ($isactive && $isactive!='-') {
-    if ($isactive=='yes') {
+  $isactive = isset($_SESSION['stormorganization_list_filter']['isactive']) ? $_SESSION['stormorganization_list_filter']['isactive'] : '-';
+  if ($isactive != '-') {
+    if ($isactive == 'yes') {
       $where[] = "sor.isactive=1";
     }
-    else if ($isactive=='no') {
+    else if ($isactive == 'no') {
       $where[] = "sor.isactive=0";
     }
     $filterfields[] = t('Active');
   }
 
-  $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    // Sets value for fieldset label, does not affect filter itself.
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
-  
+  // Sets value for fieldset label, does not affect filter itself.
+  $itemsperpage = isset($_SESSION['stormorganization_list_filter']['itemsperpage']) ? $_SESSION['stormorganization_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
   }
@@ -120,25 +117,18 @@ function stormorganization_list() {
 
 function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
   $country_list = stormattribute_attributes_bydomain('Country');
-  $country = $_SESSION['stormorganization_list_filter']['country'];
-  if (!$country) {
-    $country = '-';
-    $_SESSION['stormorganization_list_filter']['country'] = $country;
-  }
+  $country = isset($_SESSION['stormorganization_list_filter']['country']) ? $_SESSION['stormorganization_list_filter']['country'] : '-';
+  $_SESSION['stormorganization_list_filter']['country'] = $country;
 
-  $name = $_SESSION['stormorganization_list_filter']['name'];
-  $iscustomer = $_SESSION['stormorganization_list_filter']['iscustomer'];
-  $isprovider = $_SESSION['stormorganization_list_filter']['isprovider'];
-  $isactive = $_SESSION['stormorganization_list_filter']['isactive'];
-  if (!$isactive) {
-    $isactive = 'yes';
-    $_SESSION['stormorganization_list_filter']['isactive'] = $isactive;
-  }
-  $itemsperpage = $_SESSION['stormorganization_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormorganization_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $name = isset($_SESSION['stormorganization_list_filter']['name']) ? $_SESSION['stormorganization_list_filter']['name'] : '';
+  $iscustomer = isset($_SESSION['stormorganization_list_filter']['iscustomer']) ? $_SESSION['stormorganization_list_filter']['iscustomer'] : NULL;
+  $isprovider = isset($_SESSION['stormorganization_list_filter']['isprovider']) ? $_SESSION['stormorganization_list_filter']['isprovider'] : NULL;
+
+  $isactive = isset($_SESSION['stormorganization_list_filter']['isactive']) ? $_SESSION['stormorganization_list_filter']['isactive'] : 'yes';
+  $_SESSION['stormorganization_list_filter']['isactive'] = $isactive;
+
+  $itemsperpage = isset($_SESSION['stormorganization_list_filter']['itemsperpage']) ? $_SESSION['stormorganization_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormorganization_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 

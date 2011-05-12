@@ -18,9 +18,7 @@ function stormperson_list() {
   $i->type = 'stormperson';
 
   $params = $_GET;
-  if ($_SESSION['stormperson_list_filter']['organization_nid']) {
-    $params['organization_nid'] = $_SESSION['stormperson_list_filter']['organization_nid'];
-  }
+  $params['organization_nid'] = isset($_SESSION['stormperson_list_filter']['organization_nid']) ? $_SESSION['stormperson_list_filter']['organization_nid'] : NULL;
 
   $header = array(
     array(
@@ -46,21 +44,19 @@ function stormperson_list() {
   $filterfields = array();
 
   $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' ";
-  if ($_SESSION['stormperson_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormperson_list_filter']['organization_nid'])) {
     $where[] = 'spe.organization_nid=%d';
     $args[] = $_SESSION['stormperson_list_filter']['organization_nid'];
     $filterfields[] = t('Organization');
   }
-  if ($_SESSION['stormperson_list_filter']['name']) {
+  if (isset($_SESSION['stormperson_list_filter']['name'])) {
     $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
     $args[] = $_SESSION['stormperson_list_filter']['name'];
     $filterfields[] = t('Name');
   }
-  $itemsperpage = $_SESSION['stormperson_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    // Sets $itemsperpage for fieldset label, but this section does not control storing of session variable.
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+
+  // Sets $itemsperpage for fieldset label, but this section does not control storing of session variable.
+  $itemsperpage = isset($_SESSION['stormperson_list_filter']['itemsperpage']) ? $_SESSION['stormperson_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
   
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -84,19 +80,16 @@ function stormperson_list() {
   }
 
   $o .= theme('stormperson_list', $header, $people);
-  $o .= theme('pager', NULL, $itemperpage, 0);
+  $o .= theme('pager', NULL, $itemsperpage, 0);
   print theme('page', $o);
 }
 
 function stormperson_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['stormperson_list_filter']['organization_nid'];
-  $name = $_SESSION['stormperson_list_filter']['name'];
+  $organization_nid = isset($_SESSION['stormperson_list_filter']['organization_nid']) ? $_SESSION['stormperson_list_filter']['organization_nid'] : 0;
+  $name = isset($_SESSION['stormperson_list_filter']['name']) ? $_SESSION['stormperson_list_filter']['name'] : '';
 
-  $itemsperpage = $_SESSION['stormperson_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormperson_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormperson_list_filter']['itemsperpage']) ? $_SESSION['stormperson_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormperson_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 

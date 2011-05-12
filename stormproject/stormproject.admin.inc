@@ -51,31 +51,27 @@ function stormproject_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormproject_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormproject_list_filter']['organization_nid'])) {
     $where[] = 'spr.organization_nid=%d';
     $args[] = $_SESSION['stormproject_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
 
-  $projectcategory = $_SESSION['stormproject_list_filter']['projectcategory'];
-  if (!$projectcategory) {
-    $category_list = stormattribute_attributes_bydomain('project category search');
-    $projectcategory = $category_list['default'];
-    $_SESSION['stormproject_list_filter']['projectcategory'] = $projectcategory;
-  }
-  if ($projectcategory && $projectcategory != '-') {
+  $category_list = stormattribute_attributes_bydomain('project category search');
+  $projectcategory = isset($_SESSION['stormproject_list_filter']['projectcategory']) ? $_SESSION['stormproject_list_filter']['projectcategory'] : $category_list['default'];
+  $_SESSION['stormproject_list_filter']['projectcategory'] = $projectcategory;
+
+  if ($projectcategory != '-') {
     $where[] = "spr.projectcategory='%s'";
     $args[] = $projectcategory;
     $filterfields[] = 'Category';
   }
 
-  $projectstatus = $_SESSION['stormproject_list_filter']['projectstatus'];
-  if (!$projectstatus) {
-    $status_list = stormattribute_attributes_bydomain('project status search');
-    $projectstatus = $status_list['default'];
-    $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
-  }
-  if ($projectstatus && $projectstatus != '-') {
+  $status_list = stormattribute_attributes_bydomain('project status search');
+  $projectstatus = isset($_SESSION['stormproject_list_filter']['projectstatus']) ? $_SESSION['stormproject_list_filter']['projectstatus'] : $status_list['default'];
+  $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
+
+  if ($projectstatus != '-') {
     $status = split(',', $projectstatus);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
@@ -86,20 +82,18 @@ function stormproject_list() {
     $filterfields[] = 'Status';
   }
 
-  $projectpriority = $_SESSION['stormproject_list_filter']['projectpriority'];
-  if (!$projectpriority) {
-    $priority_list = stormattribute_attributes_bydomain('project priority search');
-    $projectpriority = $priority_list['default'];
-    $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
-  }
-  if ($projectpriority && $projectpriority != '-') {
+  $priority_list = stormattribute_attributes_bydomain('project priority search');
+  $projectpriority = isset($_SESSION['stormproject_list_filter']['projectpriority']) ? $_SESSION['stormproject_list_filter']['projectpriority'] : $priority_list['default'];
+  $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
+
+  if ($projectpriority != '-') {
     $where[] = "spr.projectpriority='%s'";
     $args[] = $projectpriority;
     $filterfields[] = 'Priority';
   }
 
-  $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
-  if ($datebeginfrom) {
+  if (isset($_SESSION['stormproject_list_filter']['datebeginfrom'])) {
+    $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
@@ -110,8 +104,8 @@ function stormproject_list() {
     }
   }
 
-  $datebeginto = $_SESSION['stormproject_list_filter']['datebeginto'];
-  if ($datebeginto) {
+  if (isset($_SESSION['stormproject_list_filter']['datebeginto'])) {
+    $datebeginto = $_SESSION['stormproject_list_filter']['datebeginto'];
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
@@ -122,8 +116,8 @@ function stormproject_list() {
     }
   }
 
-  $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
-  if ($dateendfrom) {
+  if (isset($_SESSION['stormproject_list_filter']['dateendfrom'])) {
+    $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
@@ -134,8 +128,8 @@ function stormproject_list() {
     }      
   }
 
-  $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
-  if ($dateendto) {
+  if (isset($_SESSION['stormproject_list_filter']['dateendto'])) {
+    $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
@@ -146,25 +140,21 @@ function stormproject_list() {
     }
   }
 
-  if ($_SESSION['stormproject_list_filter']['assigned_to']) {
+  if (isset($_SESSION['stormproject_list_filter']['assigned_to'])) {
     if (!is_numeric($_SESSION['stormproject_list_filter']['assigned_to'])) {
       switch ($_SESSION['stormproject_list_filter']['assigned_to']) {
-        
         case 'all':
           // NO FILTER
           break;
-        
         case 'mine':
           // CURRENT USER 
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }
           break;
-          
         case 'none':
           $where[] = '(spr.assigned_nid IS NULL OR spr.assigned_nid = 0) ';
           break;
-          
       }
     }
     else {
@@ -177,23 +167,20 @@ function stormproject_list() {
     }
   }
   
-  if ($_SESSION['stormproject_list_filter']['billable'] != '-' && $_SESSION['stormproject_list_filter']['billable'] != NULL) {
+  if (isset($_SESSION['stormproject_list_filter']['billable']) && $_SESSION['stormproject_list_filter']['billable'] != '-') {
     $where[] = 'spr.billable=%d';
     $args[] = $_SESSION['stormproject_list_filter']['billable'];
     $filterfields[] = t('Billable');
   }
 
-  if ($_SESSION['stormproject_list_filter']['billed'] != '-' && $_SESSION['stormproject_list_filter']['billed'] != NULL) {
+  if (isset($_SESSION['stormproject_list_filter']['billed']) && $_SESSION['stormproject_list_filter']['billed'] != '-') {
     $where[] = 'spr.billed=%d';
     $args[] = $_SESSION['stormproject_list_filter']['billed'];
     $filterfields[] = t('Billed');
   }
 
-  $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
-  
+  $itemsperpage = isset($_SESSION['stormproject_list_filter']['itemsperpage']) ? $_SESSION['stormproject_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
   }
@@ -221,29 +208,26 @@ function stormproject_list() {
 }
 
 function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
+  $organization_nid = isset($_SESSION['stormproject_list_filter']['organization_nid']) ? $_SESSION['stormproject_list_filter']['organization_nid'] : 0;
 
   $category_list = stormattribute_attributes_bydomain('project category search');
-  $projectcategory = $_SESSION['stormproject_list_filter']['projectcategory'];
+  $projectcategory = isset($_SESSION['stormproject_list_filter']['projectcategory']) ? $_SESSION['stormproject_list_filter']['projectcategory'] : $category_list['default'];
 
   $status_list = stormattribute_attributes_bydomain('project status search');
-  $projectstatus = $_SESSION['stormproject_list_filter']['projectstatus'];
+  $projectstatus = isset($_SESSION['stormproject_list_filter']['projectstatus']) ? $_SESSION['stormproject_list_filter']['projectstatus'] : $status_list['default'];
 
   $priority_list = stormattribute_attributes_bydomain('project priority search');
-  $projectpriority = $_SESSION['stormproject_list_filter']['projectpriority'];
+  $projectpriority = isset($_SESSION['stormproject_list_filter']['projectpriority']) ? $_SESSION['stormproject_list_filter']['projectpriority'] : $priority_list['default'];
 
-  $datebeginfrom = $_SESSION['stormproject_list_filter']['datebeginfrom'];
-  $datebeginto = $_SESSION['stormproject_list_filter']['datebeginto'];
-  $dateendfrom = $_SESSION['stormproject_list_filter']['dateendfrom'];
-  $dateendto = $_SESSION['stormproject_list_filter']['dateendto'];
+  $datebeginfrom = isset($_SESSION['stormproject_list_filter']['datebeginfrom']) ? $_SESSION['stormproject_list_filter']['datebeginfrom'] : NULL;
+  $datebeginto = isset($_SESSION['stormproject_list_filter']['datebeginto']) ? $_SESSION['stormproject_list_filter']['datebeginto'] : NULL;
+  $dateendfrom = isset($_SESSION['stormproject_list_filter']['dateendfrom']) ? $_SESSION['stormproject_list_filter']['dateendfrom'] : NULL;
+  $dateendto = isset($_SESSION['stormproject_list_filter']['dateendto']) ? $_SESSION['stormproject_list_filter']['dateendto'] : NULL;
 
-  $assigned_to = $_SESSION['stormproject_list_filter']['assigned_to'];
+  $assigned_to = isset($_SESSION['stormproject_list_filter']['assigned_to']) ? $_SESSION['stormproject_list_filter']['assigned_to'] : NULL;
   
-  $itemsperpage = $_SESSION['stormproject_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormproject_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormproject_list_filter']['itemsperpage']) ? $_SESSION['stormproject_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormproject_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 
@@ -340,7 +324,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   );
   
   // ASSIGNED TO
-  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $options = isset($node) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : array();
   $form['filter']['group4']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
@@ -352,14 +336,14 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => 'Billable',
     '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
-    '#default_value' => $_SESSION['stormproject_list_filter']['billable'],
+    '#default_value' => isset($_SESSION['stormproject_list_filter']['billable']) ? $_SESSION['stormproject_list_filter']['billable'] : '-',
   );
 
   $form['filter']['group4']['billed'] = array(
     '#type' => 'select',
     '#title' => 'Billed',
     '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
-    '#default_value' => $_SESSION['stormproject_list_filter']['billed'],
+    '#default_value' => isset($_SESSION['stormproject_list_filter']['billed']) ? $_SESSION['stormproject_list_filter']['billed'] : '-',
   );
 
   

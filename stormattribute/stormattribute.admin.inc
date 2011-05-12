@@ -43,19 +43,19 @@ function stormattribute_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormattribute_list_filter']['domain']) {
+  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
     $where[] = "domain='%s'";
     $args[] = $_SESSION['stormattribute_list_filter']['domain'];
     $filterfields[] = t('Domain');
   }
 
-  if ($_SESSION['stormattribute_list_filter']['akey']) {
+  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
     $where[] = "LOWER(akey) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['akey'];
     $filterfields[] = t('Key');
   }
 
-  if ($_SESSION['stormattribute_list_filter']['avalue']) {
+  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
     $where[] = "LOWER(avalue) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
     $filterfields[] = t('Value');
@@ -73,10 +73,7 @@ function stormattribute_list() {
     $filterfields[] = t('Default');
   }
   
-  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+  $itemsperpage = isset($_SESSION['stormattribute_list_filter']['itemsperpage']) ? $_SESSION['stormattribute_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   $tablesort = tablesort_sql($header);
 
@@ -188,17 +185,14 @@ function stormattribute_list_submit($form, &$form_state) {
 }
 
 function stormattribute_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $domain = $_SESSION['stormattribute_list_filter']['domain'];
-  $akey = $_SESSION['stormattribute_list_filter']['akey'];
-  $avalue = $_SESSION['stormattribute_list_filter']['avalue'];
-  $isactive = $_SESSION['stormattribute_list_filter']['isactive'];
-  $isdefault = $_SESSION['stormattribute_list_filter']['isdefault'];
+  $domain = isset($_SESSION['stormattribute_list_filter']['domain']) ? $_SESSION['stormattribute_list_filter']['domain'] : '';
+  $akey = isset($_SESSION['stormattribute_list_filter']['akey']) ? $_SESSION['stormattribute_list_filter']['akey'] : '';
+  $avalue = isset($_SESSION['stormattribute_list_filter']['avalue']) ? $_SESSION['stormattribute_list_filter']['avalue'] : '';
+  $isactive = isset($_SESSION['stormattribute_list_filter']['isactive']) ? $_SESSION['stormattribute_list_filter']['isactive'] : TRUE;
+  $isdefault = isset($_SESSION['stormattribute_list_filter']['isdefault']) ? $_SESSION['stormattribute_list_filter']['isdefault'] : FALSE;
 
-  $itemsperpage = $_SESSION['stormattribute_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormattribute_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormattribute_list_filter']['itemsperpage']) ? $_SESSION['stormattribute_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormattribute_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form['filter'] = array(
     '#type' => 'fieldset',
@@ -394,17 +388,17 @@ function stormattribute_form($attribute = NULL) {
   drupal_set_breadcrumb($breadcrumb);
 
   if (arg(2)=='add') {
-    if (array_key_exists('domain', $_GET) && !$attribute->domain) {
+    if (array_key_exists('domain', $_GET) && !isset($attribute->domain)) {
       $attribute->domain = $_GET['domain'];
     }
 
-    if ($_SESSION['stormattribute_list_filter']['domain'] && !$attribute->domain) {
+    if (isset($_SESSION['stormattribute_list_filter']['domain']) && !isset($attribute->domain)) {
       $attribute->domain = $_SESSION['stormattribute_list_filter']['domain'];
     }
   }
 
   $form = array();
-  if ($attribute->aid) {
+  if (isset($attribute->aid)) {
     $form['aid'] = array(
       '#type' => 'value',
       '#value' => $attribute->aid,
@@ -420,7 +414,7 @@ function stormattribute_form($attribute = NULL) {
     '#type' => 'textfield',
     '#title' => t('Domain'),
     '#required' => TRUE,
-    '#default_value' => $attribute->domain,
+    '#default_value' => isset($attribute->domain) ? $attribute->domain : '',
     '#autocomplete_path' => 'storm/attributes/domain/autocomplete',
     '#size' => 40,
   );
@@ -434,7 +428,7 @@ function stormattribute_form($attribute = NULL) {
     '#type' => 'select',
     '#title' => t('Parent domain'),
     '#required' => FALSE,
-    '#default_value' => $attribute->parent_domain,
+    '#default_value' => isset($attribute->parent_domain) ? $attribute->parent_domain : '',
     '#options' => array(''=>'-') + $domains,
   );
 
@@ -447,7 +441,7 @@ function stormattribute_form($attribute = NULL) {
     '#type' => 'textfield',
     '#title' => t('Key'),
     '#required' => TRUE,
-    '#default_value' => $attribute->akey,
+    '#default_value' => isset($attribute->akey) ? $attribute->akey : '',
     '#size' => 25,
     '#maxlength' => 100,
   );
@@ -456,14 +450,14 @@ function stormattribute_form($attribute = NULL) {
     '#type' => 'textfield',
     '#title' => t('Value'),
     '#required' => TRUE,
-    '#default_value' => $attribute->avalue,
+    '#default_value' => isset($attribute->avalue) ? $attribute->avalue : '',
     '#size' => 25,
   );
 
   $form['group2']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $attribute->weight,
+    '#default_value' => isset($attribute->weight) ? $attribute->weight : 0,
   );
 
   $form['group3'] = array(
@@ -474,13 +468,13 @@ function stormattribute_form($attribute = NULL) {
   $form['group3']['isactive'] = array(
     '#type' => 'checkbox',
     '#title' => t('Active'),
-    '#default_value' => $attribute->isactive,
+    '#default_value' => isset($attribute->isactive) ? $attribute->isactive : TRUE,
   );
 
   $form['group3']['isdefault'] = array(
     '#type' => 'checkbox',
     '#title' => t('Default'),
-    '#default_value' => $attribute->isdefault,
+    '#default_value' => isset($attribute->isdefault) ? $attribute->isdefault : FALSE,
   );
 
   $form['save'] = array(
@@ -488,7 +482,7 @@ function stormattribute_form($attribute = NULL) {
     '#value' => t('Save')
   );
 
-  if ($attribute->aid) {
+  if (isset($attribute->aid)) {
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),

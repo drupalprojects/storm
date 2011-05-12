@@ -96,27 +96,27 @@ function stormexpense_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormexpense_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormexpense_list_filter']['organization_nid'])) {
     $where[] = 'sex.organization_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if ($_SESSION['stormexpense_list_filter']['project_nid']) {
+  if (isset($_SESSION['stormexpense_list_filter']['project_nid'])) {
     $where[] = 'sex.project_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['project_nid'];
     $filterfields[] = 'Project';
   }
-  if ($_SESSION['stormexpense_list_filter']['task_nid']) {
+  if (isset($_SESSION['stormexpense_list_filter']['task_nid'])) {
     $where[] = 'sex.task_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['task_nid'];
     $filterfields[] = 'Task';
   }
-  if ($_SESSION['stormexpense_list_filter']['ticket_nid']) {
+  if (isset($_SESSION['stormexpense_list_filter']['ticket_nid'])) {
     $where[] = 'sex.ticket_nid=%d';
     $args[] = $_SESSION['stormexpense_list_filter']['ticket_nid'];
     $filterfields[] = 'Ticket';
   }
-  if ($_SESSION['stormexpense_list_filter']['datefrom']) {
+  if (isset($_SESSION['stormexpense_list_filter']['datefrom'])) {
     $datefrom = $_SESSION['stormexpense_list_filter']['datefrom'];
     $datefrom['hour'] = 0;
     $datefrom['minute'] = 0;
@@ -124,7 +124,7 @@ function stormexpense_list() {
     $args[] = _storm_datetime_to_gmtimestamp($datefrom);
     $filterfields[] = 'Date';
   }
-  if ($_SESSION['stormexpense_list_filter']['dateto']) {
+  if (isset($_SESSION['stormexpense_list_filter']['dateto'])) {
     $dateto = $_SESSION['stormexpense_list_filter']['dateto'];
     $dateto['hour'] = 23;
     $dateto['minute'] = 59;
@@ -132,23 +132,20 @@ function stormexpense_list() {
     $args[] = _storm_datetime_to_gmtimestamp($dateto);
     $filterfields[] = 'Date';
   }
-  if ($_SESSION['stormexpense_list_filter']['title']) {
+  if (isset($_SESSION['stormexpense_list_filter']['title'])) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormexpense_list_filter']['title'];
     $filterfields[] = 'Title';
   }
-  if ($_SESSION['stormexpense_list_filter']['provider_title']) {
+  if (isset($_SESSION['stormexpense_list_filter']['provider_title'])) {
     $where[] = "LOWER(sex.provider_title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormexpense_list_filter']['provider_title'];
     $filterfields[] = 'Provider';
   }
 
-  $itemsperpage = $_SESSION['stormexpense_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+  $itemsperpage = isset($_SESSION['stormexpense_list_filter']['itemsperpage']) ? $_SESSION['stormexpense_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
-  if ($_SESSION['stormexpense_list_filter']['user']) {
+  if (isset($_SESSION['stormexpense_list_filter']['user'])) {
     $expenseuser = user_load(array('name' => $_SESSION['stormexpense_list_filter']['user']));
     if (!$expenseuser->uid) $expenseuser->uid =  -1;
     $where[] = 'n.uid=%d';
@@ -191,32 +188,25 @@ function stormexpense_list() {
 }
 
 function stormexpense_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['stormexpense_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['stormexpense_list_filter']['project_nid'];
-  $task_nid = $_SESSION['stormexpense_list_filter']['task_nid'];
-  $ticket_nid = $_SESSION['stormexpense_list_filter']['ticket_nid'];
-  $itemsperpage = $_SESSION['stormexpense_list_filter']['itemsperpage'];
-  $title = $_SESSION['stormexpense_list_filter']['title'];
-  $provider_title = $_SESSION['stormexpense_list_filter']['provider_title'];
+  $organization_nid = isset($_SESSION['stormexpense_list_filter']['organization_nid']) ? $_SESSION['stormexpense_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['stormexpense_list_filter']['project_nid']) ? $_SESSION['stormexpense_list_filter']['project_nid'] : 0;
+  $task_nid = isset($_SESSION['stormexpense_list_filter']['task_nid']) ? $_SESSION['stormexpense_list_filter']['task_nid'] : 0;
+  $ticket_nid = isset($_SESSION['stormexpense_list_filter']['ticket_nid']) ? $_SESSION['stormexpense_list_filter']['ticket_nid'] : 0;
+  $itemsperpage = isset($_SESSION['stormexpense_list_filter']['itemsperpage']) ? $_SESSION['stormexpense_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormexpense_list_filter']['itemsperpage'] = $itemsperpage;
+  $title = isset($_SESSION['stormexpense_list_filter']['title']) ? $_SESSION['stormexpense_list_filter']['title'] : '';
+  $provider_title = isset($_SESSION['stormexpense_list_filter']['provider_title']) ? $_SESSION['stormexpense_list_filter']['provider_title'] : '';
 
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormexpense_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $datefrom = isset($_SESSION['stormexpense_list_filter']['datefrom']) ? $_SESSION['stormexpense_list_filter']['datefrom'] : array(
+    'day' => 1,
+    'month' => format_date(time(), 'custom', 'n'),
+    'year' => format_date(time(), 'custom', 'Y'),
+    'hour' => 0,
+    'minute' => 0,
+  );
+  $_SESSION['stormexpense_list_filter']['datefrom'] = $datefrom;
 
-  $datefrom = $_SESSION['stormexpense_list_filter']['datefrom'];
-  if (!$datefrom) {
-    $datefrom = array(
-      'day' => 1,
-      'month' => format_date(time(), 'custom', 'n'),
-      'year' => format_date(time(), 'custom', 'Y'),
-      'hour' => 0,
-      'minute' => 0,
-    );
-    $_SESSION['stormexpense_list_filter']['datefrom'] = $datefrom;
-  }
-
-  $expenseuser = $_SESSION['stormexpense_list_filter']['user'];
+  $expenseuser = isset($_SESSION['stormexpense_list_filter']['user']) ? $_SESSION['stormexpense_list_filter']['user'] : '';
 
   $form = array();
 

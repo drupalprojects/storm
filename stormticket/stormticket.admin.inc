@@ -84,28 +84,27 @@ function stormticket_list() {
 
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
   
-  if ($_SESSION['stormticket_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormticket_list_filter']['organization_nid'])) {
     $where[] = 'sti.organization_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
     $filterfields[] = t('Organization');
   }
-  if ($_SESSION['stormticket_list_filter']['project_nid']) {
+  if (isset($_SESSION['stormticket_list_filter']['project_nid'])) {
     $where[] = 'sti.project_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['project_nid'];
     $filterfields[] = t('Project');
   }
-  if ($_SESSION['stormticket_list_filter']['task_nid']) {
+  if (isset($_SESSION['stormticket_list_filter']['task_nid'])) {
     $where[] = 'sti.task_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
     $filterfields[] = t('Task');
   }
-  $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
-  if (!$ticketcategory) {
-    $category_list = stormattribute_attributes_bydomain('ticket category search');
-    $ticketcategory = $category_list['default'];
-    $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
-  }
-  if ($ticketcategory && $ticketcategory != '-') {
+
+  $category_list = stormattribute_attributes_bydomain('ticket category search');
+  $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter'] : $category_list['default'];
+  $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
+
+  if ($ticketcategory != '-') {
     $category = split(',', $ticketcategory);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
@@ -115,13 +114,12 @@ function stormticket_list() {
     }
     $filterfields[] = t('Category');
   }
-  $ticketstatus = $_SESSION['stormticket_list_filter']['ticketstatus'];
-  if (!$ticketstatus) {
-    $status_list = stormattribute_attributes_bydomain('ticket status search');
-    $ticketstatus = $status_list['default'];
-    $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
-  }
-  if ($ticketstatus && $ticketstatus != '-') {
+
+  $status_list = stormattribute_attributes_bydomain('ticket status search');
+  $ticketstatus = isset($_SESSION['stormticket_list_filter']['ticketstatus']) ? $_SESSION['stormticket_list_filter']['ticketstatus'] : $status_list['default'];
+  $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
+
+  if ($ticketstatus != '-') {
     $status = split(',', $ticketstatus);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
@@ -131,13 +129,12 @@ function stormticket_list() {
     }
     $filterfields[] = t('Status');
   }
-  $ticketpriority = $_SESSION['stormticket_list_filter']['ticketpriority'];
-  if (!$ticketpriority) {
-    $priority_list = stormattribute_attributes_bydomain('ticket priority search');
-    $ticketpriority = $priority_list['default'];
-    $_SESSION['stormticket_list_filter']['ticketpriority'] = $ticketpriority;
-  }
-  if ($ticketpriority && $ticketpriority != '-') {
+
+  $priority_list = stormattribute_attributes_bydomain('ticket priority search');
+  $ticketpriority = isset($_SESSION['stormticket_list_filter']['ticketpriority']) ? $_SESSION['stormticket_list_filter']['ticketpriority'] : $priority_list['default'];
+  $_SESSION['stormticket_list_filter']['ticketpriority'] = $ticketpriority;
+
+  if ($ticketpriority != '-') {
     $priority = split(',', $ticketpriority);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
@@ -148,8 +145,8 @@ function stormticket_list() {
     $filterfields[] = t('Priority');
   }
 
-  $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
-  if ($datebeginfrom) {
+  if (isset($_SESSION['stormticket_list_filter']['datebeginfrom'])) {
+    $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
@@ -160,8 +157,8 @@ function stormticket_list() {
     }
   }
 
-  $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
-  if ($datebeginto) {
+  if (isset($_SESSION['stormticket_list_filter']['datebeginto'])) {
+    $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
@@ -172,8 +169,8 @@ function stormticket_list() {
     }
   }
 
-  $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
-  if ($dateendfrom) {
+  if (isset($_SESSION['stormticket_list_filter']['dateendfrom'])) {
+    $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
@@ -184,8 +181,8 @@ function stormticket_list() {
     }
   }
 
-  $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
-  if ($dateendto) {
+  if (isset($_SESSION['stormticket_list_filter']['dateendto'])) {
+    $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
@@ -196,25 +193,21 @@ function stormticket_list() {
     }
   }
   
-  if ($_SESSION['stormticket_list_filter']['assigned_to']) {
+  if (isset($_SESSION['stormticket_list_filter']['assigned_to'])) {
     if (!is_numeric($_SESSION['stormticket_list_filter']['assigned_to'])) {
       switch ($_SESSION['stormticket_list_filter']['assigned_to']) {
-        
         case 'all':
           // NO FILTER
           break;
-        
         case 'mine':
           // CURRENT USER 
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }
           break;
-          
         case 'none':
           $where[] = '(sti.assigned_nid IS NULL OR sti.assigned_nid = 0) ';
           break;
-          
       }
     }
     else {
@@ -227,23 +220,20 @@ function stormticket_list() {
     }
   }
 
-  if ($_SESSION['stormticket_list_filter']['billable'] != '-' && $_SESSION['stormticket_list_filter']['billable'] != NULL) {
+  if (isset($_SESSION['stormticket_list_filter']['billable']) && $_SESSION['stormticket_list_filter']['billable'] != '-') {
     $where[] = 'sti.billable=%d';
     $args[] = $_SESSION['stormticket_list_filter']['billable'];
     $filterfields[] = t('Billable');
   }
 
-  if ($_SESSION['stormticket_list_filter']['billed'] != '-' && $_SESSION['stormticket_list_filter']['billed'] != NULL) {
+  if (isset($_SESSION['stormticket_list_filter']['billed']) && $_SESSION['stormticket_list_filter']['billed'] != '-') {
     $where[] = 'sti.billed=%d';
     $args[] = $_SESSION['stormticket_list_filter']['billed'];
     $filterfields[] = t('Billed');
   }
 
-  $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormticket_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormticket_list_filter']['itemsperpage']) ? $_SESSION['stormticket_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormticket_list_filter']['itemsperpage'] = $itemsperpage;
 
   if (count($filterfields)==0) {
     $filterdesc = t('Not filtered');
@@ -272,31 +262,28 @@ function stormticket_list() {
 }
 
 function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
-  $organization_nid = $_SESSION['stormticket_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['stormticket_list_filter']['project_nid'];
-  $task_nid = $_SESSION['stormticket_list_filter']['task_nid'];
+  $organization_nid = isset($_SESSION['stormticket_list_filter']['organization_nid']) ? $_SESSION['stormticket_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['stormticket_list_filter']['project_nid']) ? $_SESSION['stormticket_list_filter']['project_nid'] : 0;
+  $task_nid = isset($_SESSION['stormticket_list_filter']['task_nid']) ? $_SESSION['stormticket_list_filter']['task_nid'] : 0;
 
   $category_list = stormattribute_attributes_bydomain('ticket category search');
-  $ticketcategory = $_SESSION['stormticket_list_filter']['ticketcategory'];
+  $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter']['ticketcategory'] : $category_list['default'];
 
   $status_list = stormattribute_attributes_bydomain('ticket status search');
-  $ticketstatus = $_SESSION['stormticket_list_filter']['ticketstatus'];
+  $ticketstatus = isset($_SESSION['stormticket_list_filter']['ticketstatus']) ? $_SESSION['stormticket_list_filter']['ticketstatus'] : $status_list['default'];
 
   $priority_list = stormattribute_attributes_bydomain('ticket priority search');
-  $ticketpriority = $_SESSION['stormticket_list_filter']['ticketpriority'];
+  $ticketpriority = isset($_SESSION['stormticket_list_filter']['ticketpriority']) ? $_SESSION['stormticket_list_filter']['ticketpriority'] : $priority_list['default'];
 
-  $itemsperpage = $_SESSION['stormticket_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormticket_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormticket_list_filter']['itemsperpage']) ? $_SESSION['stormticket_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormticket_list_filter']['itemsperpage'] = $itemsperpage;
 
-  $datebeginfrom = $_SESSION['stormticket_list_filter']['datebeginfrom'];
-  $datebeginto = $_SESSION['stormticket_list_filter']['datebeginto'];
-  $dateendfrom = $_SESSION['stormticket_list_filter']['dateendfrom'];
-  $dateendto = $_SESSION['stormticket_list_filter']['dateendto'];
+  $datebeginfrom = isset($_SESSION['stormticket_list_filter']['datebeginfrom']) ? $_SESSION['stormticket_list_filter']['datebeginfrom'] : NULL;
+  $datebeginto = isset($_SESSION['stormticket_list_filter']['datebeginto']) ? $_SESSION['stormticket_list_filter']['datebeginto'] : NULL;
+  $dateendfrom = isset($_SESSION['stormticket_list_filter']['dateendfrom']) ? $_SESSION['stormticket_list_filter']['dateendfrom'] : NULL;
+  $dateendto = isset($_SESSION['stormticket_list_filter']['dateendto']) ? $_SESSION['stormticket_list_filter']['dateendto'] : NULL;
   
-  $assigned_to = $_SESSION['stormticket_list_filter']['assigned_to'];
+  $assigned_to = isset($_SESSION['stormticket_list_filter']['assigned_to']) ? $_SESSION['stormticket_list_filter']['assigned_to'] : NULL;
 
   $form = array();
 
@@ -436,7 +423,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
   );
   
   // ASSIGNED TO
-  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $options = isset($node) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : array();
   $form['filter']['group4_1']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
@@ -448,14 +435,14 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#type' => 'select',
     '#title' => 'Billable',
     '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
-    '#default_value' => $_SESSION['stormticket_list_filter']['billable'],
+    '#default_value' => isset($_SESSION['stormticket_list_filter']['billable']) ? $_SESSION['stormticket_list_filter']['billable'] : '-',
   );
 
   $form['filter']['group4_1']['billed'] = array(
     '#type' => 'select',
     '#title' => 'Billed',
     '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
-    '#default_value' => $_SESSION['stormticket_list_filter']['billed'],
+    '#default_value' => isset($_SESSION['stormticket_list_filter']['billed']) ? $_SESSION['stormticket_list_filter']['billed'] : '-',
   );
 
   $form['filter']['group5'] = array(

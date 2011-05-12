@@ -480,17 +480,17 @@ function stormtask_list() {
   $filterfields = array();
 
   $s  = "SELECT n.*, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' ";
-  if ($_SESSION['stormtask_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormtask_list_filter']['organization_nid'])) {
     $where[] = 'sta.organization_nid=%d';
     $args[] = $_SESSION['stormtask_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if ($_SESSION['stormtask_list_filter']['project_nid']) {
+  if (isset($_SESSION['stormtask_list_filter']['project_nid'])) {
     $where[] = 'sta.project_nid=%d';
     $args[] = $_SESSION['stormtask_list_filter']['project_nid'];
     $filterfields[] = 'Project';
   }
-  if ($_SESSION['stormtask_list_filter']['taskcategory'] && $_SESSION['stormtask_list_filter']['taskcategory'] != '-') {
+  if (isset($_SESSION['stormtask_list_filter']['taskcategory']) && $_SESSION['stormtask_list_filter']['taskcategory'] != '-') {
     $category = split(',', $_SESSION['stormtask_list_filter']['taskcategory']);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
@@ -500,7 +500,7 @@ function stormtask_list() {
     }
     $filterfields[] = 'Category';
   }
-  if ($_SESSION['stormtask_list_filter']['taskstatus'] && $_SESSION['stormtask_list_filter']['taskstatus'] != '-') {
+  if (isset($_SESSION['stormtask_list_filter']['taskstatus']) && $_SESSION['stormtask_list_filter']['taskstatus'] != '-') {
     $status = split(',', $_SESSION['stormtask_list_filter']['taskstatus']);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
@@ -510,7 +510,7 @@ function stormtask_list() {
     }
     $filterfields[] = 'Status';
   }
-  if ($_SESSION['stormtask_list_filter']['taskpriority'] && $_SESSION['stormtask_list_filter']['taskpriority'] != '-') {
+  if (isset($_SESSION['stormtask_list_filter']['taskpriority']) && $_SESSION['stormtask_list_filter']['taskpriority'] != '-') {
     $priority = split(',', $_SESSION['stormtask_list_filter']['taskpriority']);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
@@ -521,8 +521,8 @@ function stormtask_list() {
     $filterfields[] = 'Priority';
   }
 
-  $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
-  if ($datebeginfrom) {
+  if (isset($_SESSION['stormtask_list_filter']['datebeginfrom'])) {
+    $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
     $datebeginfrom['hour'] = 0;
     $datebeginfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($datebeginfrom);
@@ -533,8 +533,8 @@ function stormtask_list() {
     }
   }
 
-  $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
-  if ($datebeginto) {
+  if (isset($_SESSION['stormtask_list_filter']['datebeginto'])) {
+    $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
     $datebeginto['hour'] = 23;
     $datebeginto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($datebeginto);
@@ -545,8 +545,8 @@ function stormtask_list() {
     }
   }
 
-  $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
-  if ($dateendfrom) {
+  if (isset($_SESSION['stormtask_list_filter']['dateendfrom'])) {
+    $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
     $dateendfrom['hour'] = 0;
     $dateendfrom['minute'] = 0;
     $t = _storm_datetime_to_gmtimestamp($dateendfrom);
@@ -557,8 +557,8 @@ function stormtask_list() {
     }
   }
 
-  $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
-  if ($dateendto) {
+  if (isset($_SESSION['stormtask_list_filter']['dateendto'])) {
+    $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
     $dateendto['hour'] = 23;
     $dateendto['minute'] = 59;
     $t = _storm_datetime_to_gmtimestamp($dateendto);
@@ -569,7 +569,7 @@ function stormtask_list() {
     }
   }
   
-  if ($_SESSION['stormtask_list_filter']['assigned_to']) {
+  if (isset($_SESSION['stormtask_list_filter']['assigned_to'])) {
     if (!is_numeric($_SESSION['stormtask_list_filter']['assigned_to'])) {
       switch ($_SESSION['stormtask_list_filter']['assigned_to']) {
         
@@ -600,22 +600,19 @@ function stormtask_list() {
     }
   }
 
-  if ($_SESSION['stormtask_list_filter']['billable'] != '-' && $_SESSION['stormtask_list_filter']['billable'] != NULL) {
+  if (isset($_SESSION['stormtask_list_filter']['billable']) && $_SESSION['stormtask_list_filter']['billable'] != '-') {
     $where[] = 'sta.billable=%d';
     $args[] = $_SESSION['stormtask_list_filter']['billable'];
     $filterfields[] = t('Billable');
   }
 
-  if ($_SESSION['stormtask_list_filter']['billed'] != '-' && $_SESSION['stormtask_list_filter']['billed'] != NULL) {
+  if (isset($_SESSION['stormtask_list_filter']['billed']) && $_SESSION['stormtask_list_filter']['billed'] != '-') {
     $where[] = 'sta.billed=%d';
     $args[] = $_SESSION['stormtask_list_filter']['billed'];
     $filterfields[] = t('Billed');
   }
 
-  $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+  $itemsperpage = isset($_SESSION['stormtask_list_filter']['itemsperpage']) ? $_SESSION['stormtask_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -640,47 +637,35 @@ function stormtask_list() {
   }
 
   $o .= theme('stormtask_list', $header, $tasks);
-  $o .= theme('pager', NULL, $itemperpage, 0);
+  $o .= theme('pager', NULL, $itemsperpage, 0);
   print theme('page', $o);
 }
 
 function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   $category_list = stormattribute_attributes_bydomain('Task category search');
-  $taskcategory = $_SESSION['stormtask_list_filter']['taskcategory'];
-  if (!$taskcategory) {
-    $taskcategory = $category_list['default'];
-    $_SESSION['stormtask_list_filter']['taskcategory'] = $taskcategory;
-  }
+  $taskcategory = isset($_SESSION['stormtask_list_filter']['taskcategory']) ? $_SESSION['stormtask_list_filter']['taskcategory'] : $taskcategory = $category_list['default'];
+  $_SESSION['stormtask_list_filter']['taskcategory'] = $taskcategory;
 
   $status_list = stormattribute_attributes_bydomain('Task status search');
-  $taskstatus = $_SESSION['stormtask_list_filter']['taskstatus'];
-  if (!$taskstatus) {
-    $taskstatus = $status_list['default'];
-    $_SESSION['stormtask_list_filter']['taskstatus'] = $taskstatus;
-  }
+  $taskstatus = isset($_SESSION['stormtask_list_filter']['taskstatus']) ? $_SESSION['stormtask_list_filter']['taskstatus'] : $status_list['default'];
+  $_SESSION['stormtask_list_filter']['taskstatus'] = $taskstatus;
 
   $priority_list = stormattribute_attributes_bydomain('Task priority search');
-  $taskpriority = $_SESSION['stormtask_list_filter']['taskpriority'];
-  if (!$taskpriority) {
-    $taskpriority = $priority_list['default'];
-    $_SESSION['stormtask_list_filter']['taskpriority'] = $taskpriority;
-  }
+  $taskpriority = isset($_SESSION['stormtask_list_filter']['taskpriority']) ? $_SESSION['stormtask_list_filter']['taskpriority'] : $priority_list['default'];
+  $_SESSION['stormtask_list_filter']['taskpriority'] = $taskpriority;
 
-  $organization_nid = $_SESSION['stormtask_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
+  $organization_nid = isset($_SESSION['stormtask_list_filter']['organization_nid']) ? $_SESSION['stormtask_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['stormtask_list_filter']['project_nid']) ? $_SESSION['stormtask_list_filter']['project_nid'] : 0;
 
-  $datebeginfrom = $_SESSION['stormtask_list_filter']['datebeginfrom'];
-  $datebeginto = $_SESSION['stormtask_list_filter']['datebeginto'];
-  $dateendfrom = $_SESSION['stormtask_list_filter']['dateendfrom'];
-  $dateendto = $_SESSION['stormtask_list_filter']['dateendto'];
+  $datebeginfrom = isset($_SESSION['stormtask_list_filter']['datebeginfrom']) ? $_SESSION['stormtask_list_filter']['datebeginfrom'] : NULL;
+  $datebeginto = isset($_SESSION['stormtask_list_filter']['datebeginto']) ? $_SESSION['stormtask_list_filter']['datebeginto'] : NULL;
+  $dateendfrom = isset($_SESSION['stormtask_list_filter']['dateendfrom']) ? $_SESSION['stormtask_list_filter']['dateendfrom'] : NULL;
+  $dateendto = isset($_SESSION['stormtask_list_filter']['dateendto']) ? $_SESSION['stormtask_list_filter']['dateendfrom'] : NULL;
   
-  $assigned_to = $_SESSION['stormtask_list_filter']['assigned_to'];
+  $assigned_to = isset($_SESSION['stormtask_list_filter']['assigned_to']) ? $_SESSION['stormtask_list_filter']['assigned_to'] : NULL;
 
-  $itemsperpage = $_SESSION['stormtask_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormtask_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormtask_list_filter']['itemsperpage']) ? $_SESSION['stormtask_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormtask_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 
@@ -802,7 +787,7 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   );
 
   // ASSIGNED TO
-  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+  $options = isset($node) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : array();
   $form['filter']['group4_1']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
@@ -814,14 +799,14 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => 'Billable',
     '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
-    '#default_value' => $_SESSION['stormtask_list_filter']['billable'],
+    '#default_value' => isset($_SESSION['stormtask_list_filter']['billable']) ? $_SESSION['stormtask_list_filter']['billable'] : '-',
   );
 
   $form['filter']['group4_1']['billed'] = array(
     '#type' => 'select',
     '#title' => 'Billed',
     '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
-    '#default_value' => $_SESSION['stormtask_list_filter']['billed'],
+    '#default_value' => isset($_SESSION['stormtask_list_filter']['billed']) ? $_SESSION['stormtask_list_filter']['billed'] : '-',
   );
 
   $form['filter']['group5'] = array(

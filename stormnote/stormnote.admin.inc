@@ -41,7 +41,7 @@ function stormnote_list() {
   $i->type = 'stormnote';
 
   $params = $_GET;
-  if ($_SESSION['stormnote_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormnote_list_filter']['organization_nid'])) {
     $params['organization_nid'] = $_SESSION['stormnote_list_filter']['organization_nid'];
   }
 
@@ -74,31 +74,29 @@ function stormnote_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormnote_list_filter']['organization_nid']) {
+  if (isset($_SESSION['stormnote_list_filter']['organization_nid'])) {
     $where[] = 'sno.organization_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if ($_SESSION['stormnote_list_filter']['project_nid']) {
+  if (isset($_SESSION['stormnote_list_filter']['project_nid'])) {
     $where[] = 'sno.project_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['project_nid'];
     $filterfields[] = 'Project';
   }
-  if ($_SESSION['stormnote_list_filter']['task_nid']) {
+  if (isset($_SESSION['stormnote_list_filter']['task_nid'])) {
     $where[] = 'sno.task_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['task_nid'];
     $filterfields[] = 'Task';
   }
-  if ($_SESSION['stormnote_list_filter']['title']) {
+  if (isset($_SESSION['stormnote_list_filter']['title'])) {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormnote_list_filter']['title'];
     $filterfields[] = 'Title';
   }
-  $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    // This section only provides the value for the fieldset label, doesn't control  actual filter
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+
+  // This section only provides the value for the fieldset label, doesn't control actual filter
+  $itemsperpage = isset($_SESSION['stormnote_list_filter']['itemsperpage']) ? $_SESSION['stormnote_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -127,16 +125,13 @@ function stormnote_list() {
 }
 
 function stormnote_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['stormnote_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['stormnote_list_filter']['project_nid'];
-  $task_nid = $_SESSION['stormnote_list_filter']['task_nid'];
-  $title = $_SESSION['stormnote_list_filter']['title'];
+  $organization_nid = isset($_SESSION['stormnote_list_filter']['organization_nid']) ? $_SESSION['stormnote_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['stormnote_list_filter']['project_nid']) ? $_SESSION['stormnote_list_filter']['project_nid'] : 0;
+  $task_nid = isset($_SESSION['stormnote_list_filter']['task_nid']) ? $_SESSION['stormnote_list_filter']['task_nid'] : 0;
+  $title = isset($_SESSION['stormnote_list_filter']['title']) ? $_SESSION['stormnote_list_filter']['title'] : '';
 
-  $itemsperpage = $_SESSION['stormnote_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormnote_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormnote_list_filter']['itemsperpage']) ? $_SESSION['stormnote_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormnote_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 

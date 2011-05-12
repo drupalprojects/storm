@@ -78,38 +78,38 @@ function storminvoice_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['storminvoice_list_filter']['organization_nid']) {
+  if (isset($_SESSION['storminvoice_list_filter']['organization_nid'])) {
     $where[] = 'sin.organization_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if ($_SESSION['storminvoice_list_filter']['project_nid']) {
+  if (isset($_SESSION['storminvoice_list_filter']['project_nid'])) {
     $where[] = 'sin.project_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['project_nid'];
     $filterfields[] = 'Project';
   }
-  if ($_SESSION['storminvoice_list_filter']['reqdatefrom']) {
+  if (isset($_SESSION['storminvoice_list_filter']['reqdatefrom'])) {
     $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
     $where[] = 'sin.requestdate>=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdatefrom);
     $filterfields[] = 'Request Date';
   }
-  if ($_SESSION['storminvoice_list_filter']['reqdateto']) {
+  if (isset($_SESSION['storminvoice_list_filter']['reqdateto'])) {
     $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
     $where[] = 'sin.requestdate<=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdateto);
     $filterfields[] = 'Request Date';
   }
 
-  $status = $_SESSION['storminvoice_list_filter']['status'];
-  if ($status && $status !='-') {
-    if ($status=='to pay') {
+  $status = isset($_SESSION['storminvoice_list_filter']['status']) ? $_SESSION['storminvoice_list_filter']['status'] : '-';
+  if ($status != '-') {
+    if ($status == 'to pay') {
       $where[] = "sin.paymentdate=0";
     }
-    if ($status=='paid') {
+    if ($status == 'paid') {
       $where[] = "sin.paymentdate<>0";
     }
-    if ($status=='overdue') {
+    if ($status == 'overdue') {
       $where[] = "sin.paymentdate=0 AND sin.duedate<". time();
     }
     $where[] = 'sin.requestdate<=%d';
@@ -117,11 +117,8 @@ function storminvoice_list() {
     $filterfields[] = 'Status';
   }
 
-  $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['storminvoice_list_filter']['itemsperpage']) ? $_SESSION['storminvoice_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
     
   $tablesort = tablesort_sql($header);
 
@@ -170,39 +167,29 @@ function storminvoice_list() {
 }
 
 function storminvoice_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['storminvoice_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['storminvoice_list_filter']['project_nid'];
-  $status = $_SESSION['storminvoice_list_filter']['status'];
-  $itemsperpage = $_SESSION['storminvoice_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $organization_nid = isset($_SESSION['storminvoice_list_filter']['organization_nid']) ? $_SESSION['storminvoice_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['storminvoice_list_filter']['project_nid']) ? $_SESSION['storminvoice_list_filter']['project_nid'] : 0;
+  $status = isset($_SESSION['storminvoice_list_filter']['status']) ? $_SESSION['storminvoice_list_filter']['status'] : '';
+  $itemsperpage = isset($_SESSION['storminvoice_list_filter']['itemsperpage']) ? $_SESSION['storminvoice_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
 
-  $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
-  $today = time();
-  if (!$reqdatefrom) {
-    $reqdatefrom = array(
-      'day' => 1,
-      'month' => 1,
-      'year' => format_date($today, 'custom', 'Y'),
-      'hour' => 0,
-      'minute' => 0,
-    );
-    $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $reqdatefrom;
-  }
+  $reqdatefrom = isset($_SESSION['storminvoice_list_filter']['reqdatefrom']) ? $_SESSION['storminvoice_list_filter']['reqdatefrom'] : array(
+    'day' => 1,
+    'month' => 1,
+    'year' => format_date(time(), 'custom', 'Y'),
+    'hour' => 0,
+    'minute' => 0,
+  );
+  $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $reqdatefrom;
 
-  $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
-  if (!$reqdateto) {
-    $reqdateto = array(
-      'day' => 31,
-      'month' => 12,
-      'year' => format_date($today, 'custom', 'Y'),
-      'hour' => 23,
-      'minute' => 59,
-    );
-    $_SESSION['storminvoice_list_filter']['reqdateto'] = $reqdateto;
-  }
+  $reqdateto = isset($_SESSION['storminvoice_list_filter']['reqdateto']) ? $_SESSION['storminvoice_list_filter']['reqdateto'] : array(
+    'day' => 31,
+    'month' => 12,
+    'year' => format_date(time(), 'custom', 'Y'),
+    'hour' => 23,
+    'minute' => 59,
+  );
+  $_SESSION['storminvoice_list_filter']['reqdateto'] = $reqdateto;
 
   $form = array();
 

@@ -1,5 +1,5 @@
 <?php
-class StormorganisationTestCase extends DrupalWebTestCase {
+class StormorganizationTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -14,6 +14,21 @@ Organization module',
     parent::setUp('storm', 'stormattribute', 'stormorganization');
     $privileged_user = $this->drupalCreateUser(array('Storm organization: add'));
     $this->drupalLogin($privileged_user);
+  }
+
+  public function testStormorganizationAccess() {
+    $this->drupalGet('storm/organizations');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Organizations list for anonymous user'));
+
+    $basic_user = $this->drupalCreateUser();
+    $this->drupalLogin($basic_user);
+    $this->drupalGet('storm/organizations');
+    $this->assertResponse(403, t('Make sure access is denied to Storm Organizations list for basic user'));
+
+    $privileged_user = $this->drupalCreateUser(array('Storm organization: access'));
+    $this->drupalLogin($privileged_user);
+    $this->drupalGet('storm/organizations');
+    $this->assertText(t('Organizations'), t('Make sure the correct page has been displayed by checking that the title is "Organizations".'));
   }
 
   public function testStormorganizationCreate() {

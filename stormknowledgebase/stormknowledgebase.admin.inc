@@ -35,22 +35,18 @@ function stormknowledgebase_list() {
   $args = array();
   $filterfields = array();
 
-  $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
-  if(!$topic) {
-    $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
-    $topic = $topic_list['default'];
-    $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
-  }
-  if ($topic && $topic != '-') {
+  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+  $topic = isset($_SESSION['stormknowledgebase_list_filter']['topic']) ? $_SESSION['stormknowledgebase_list_filter']['topic'] : $topic_list['default'];
+  $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
+
+  if ($topic != '-') {
     $where[] = "skb.topic='%s'";
     $args[] = $topic;
     $filterfields[] = 'Topic';
   }
-  $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    // Sets for fieldset label, doesn't affect actal filter.
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+
+  // Sets for fieldset label, doesn't affect actual filter
+  $itemsperpage = isset($_SESSION['stormknowledgebase_list_filter']['itemsperpage']) ? $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -82,11 +78,8 @@ function stormknowledgebase_list_filter(&$form_state, $filterdesc = 'Filter') {
   $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
   $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
 
-  $itemsperpage = $_SESSION['stormknowledgebase_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormknowledgebase_list_filter']['itemsperpage']) ? $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 
