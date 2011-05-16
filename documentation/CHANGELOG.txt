@@ -9,6 +9,9 @@ Version 6.x-2.x:
 - Feature #1018304 by jalama: Added Token support for Storm invoice.
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
+Version 6.x-1.37:
+- Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
+
 Version 6.x-1.36:
 - Bug #1052180 by juliangb | Francewhoa: Fixed Teams disappear when revision activated.
 - Bug #1018448 by minorOffense, juliangb: Fixed Storm Person: Drupal User in Views.
