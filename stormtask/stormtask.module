@@ -192,7 +192,7 @@ function stormtask_storm_rewrite_where_sql($query, $primary_table, $account) {
     }
     if (user_access('Storm task: view if assigned to task')) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'sta1.assigned_nid='. $account->uid;
+      $cond .= 'sta1.assigned_nid='. $account->stormperson_nid;
       
       if (module_exists('stormteam')) {
         // Load teams that the account belongs to
