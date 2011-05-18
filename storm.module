@@ -545,7 +545,7 @@ function _storm_strtotime($timestr='') {
   $ar = explode(':', $timestr);
   if (is_array($ar)) {
     if (array_key_exists(0, $ar)) $time['hour'] = $ar[0];
-    if (array_key_exists(0, $ar)) $time['minute'] = $ar[1];
+    if (array_key_exists(1, $ar)) $time['minute'] = $ar[1];
   }
   return $time;
 }
