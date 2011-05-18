@@ -249,8 +249,8 @@ function stormperson_node_info() {
 function stormperson_content_extra_fields($type_name) {
   if ($type_name == 'stormperson') {
     return array(
-      'group1' => array('label' => 'Organization/Name/User Group', 'weight' => -20),
-      'group2' => array('label' => 'Prefix/Fullname Group', 'weight' => -19),
+      'group1' => array('label' => 'Prefix/Name Group', 'weight' => -20),
+      'group2' => array('label' => 'Organization/User Group', 'weight' => -19),
       'group3' => array('label' => 'Email/WWW Group', 'weight' => -18),
       'group4' => array('label' => 'Phone/IM Group', 'weight' => -17),
     );
@@ -288,38 +288,18 @@ function stormperson_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s);
-  $organizations = array();
-  while ($organization = db_fetch_object($r)) {
-    $organizations[$organization->nid] = $organization->title;
-    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
-  }
-  $form['group1']['organization_nid'] = array(
-    '#type' => 'select',
-    '#title' => t('Organization'),
-    '#default_value' => $node->organization_nid,
-    '#options' => $organizations,
-    '#required' => true,
-    '#attributes' => array('onchange' => "stormperson_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
+  $form['group1']['prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Prefix'),
+    '#size' => 20,
+    '#default_value' => isset($node->prefix) ? $node->prefix : '',
   );
 
-  $form['title'] = array(
+  $form['group1']['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#size' => 40,
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'title') : -21,
-  );
-
-  $form['group1']['user_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('User'),
-    '#default_value' => isset($node->user_name) ? $node->user_name : '',
-    '#autocomplete_path' => 'user/autocomplete',
     '#size' => 40,
   );
 
@@ -329,18 +309,31 @@ function stormperson_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
-  $form['group2']['prefix'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Prefix'),
-    '#size' => 20,
-    '#default_value' => isset($node->prefix) ? $node->prefix : '',
+  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $s = stormorganization_access_sql($s);
+  $s = db_rewrite_sql($s);
+  $r = db_query($s);
+  $organizations = array();
+  while ($organization = db_fetch_object($r)) {
+    $organizations[$organization->nid] = $organization->title;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
+  }
+  $form['group2']['organization_nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Organization'),
+    '#default_value' => $node->organization_nid,
+    '#options' => $organizations,
+    '#required' => true,
+    '#attributes' => array('onchange' => "stormperson_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
-  $form['group2']['fullname'] = array(
+
+  $form['group2']['user_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Fullname'),
+    '#title' => t('User'),
+    '#default_value' => isset($node->user_name) ? $node->user_name : '',
+    '#autocomplete_path' => 'user/autocomplete',
     '#size' => 40,
-    '#default_value' => isset($node->fullname) ? $node->fullname : '',
   );
 
   $form['group3'] = array(
@@ -400,17 +393,12 @@ function stormperson_insert($node) {
 
   db_query("INSERT INTO {stormperson}
           (vid, nid, organization_nid, organization_title,
-          prefix, fullname, email, www,
-          phone, im, user_uid
-          )
+          prefix, email, www, phone, im, user_uid)
           VALUES
           (%d, %d, %d, '%s',
-          '%s', '%s', '%s', '%s',
-          '%s', '%s', %d
-          )",
+          '%s', '%s', '%s', '%s', '%s', %d)",
           $node->vid, $node->nid, $node->organization_nid, $node->organization_title,
-          $node->prefix, $node->fullname, $node->email, $node->www,
-          $node->phone, $node->im, $node->user_uid);
+          $node->prefix, $node->email, $node->www, $node->phone, $node->im, $node->user_uid);
   _stormperson_aftersave($node);
 }
 
@@ -424,11 +412,11 @@ function stormperson_update($node) {
 
     db_query("UPDATE {stormperson} SET
       organization_nid=%d, organization_title='%s',
-      prefix='%s', fullname='%s', email='%s', www='%s',
+      prefix='%s', email='%s', www='%s',
       phone='%s', im='%s', user_uid=%d
       WHERE vid = %d",
       $node->organization_nid, $node->organization_title,
-      $node->prefix, $node->fullname, $node->email, $node->www,
+      $node->prefix, $node->email, $node->www,
       $node->phone, $node->im, $node->user_uid,
       $node->vid);
 

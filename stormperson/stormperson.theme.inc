@@ -50,19 +50,6 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => 1,
   );
-
-  $node->content['group2'] = array(
-    '#prefix' => '<div class="stormfields">',
-    '#suffix' => '</div>',
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
-  );
-
-  $node->content['group2']['fullname'] = array(
-    '#prefix' => '<div id="fullname">',
-    '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Fullname'), check_plain($node->fullname)),
-    '#weight' => 1,
-  );
   
   $node->content['group3'] = array(
     '#prefix' => '<div class="stormfields">',

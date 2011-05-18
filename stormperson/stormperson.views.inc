@@ -54,23 +54,6 @@ function stormperson_views_data() {
     ),
   );
   
-  $data['stormperson']['fullname'] = array(
-    'title' => t('Fullname'),
-    'help' => t('Storm Person Fullname'),
-    'field' => array(
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_string',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_string',
-    ),
-  );
-  
   $data['stormperson']['email'] = array(
     'title' => t('Email'),
     'help' => t('Storm Person Email'),
