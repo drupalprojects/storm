@@ -2,7 +2,6 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
-- Task #918750 by juliangb: Changed Tests for Storm Timetracking.
 - Task #671622 by juliangb | Magnity: Removed fullname field from Storm Person.
 - Task #1042698 by juliangb, pillarsdotnet: Changed Ensure all pages defined by Storm are tested.
 - Task #1052154 by minorOffense, Carsten Müller, kfritsche: Changed schema on Storm Team module.
@@ -12,6 +11,7 @@ Version 6.x-2.x:
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.37:
+- Task #918750 by juliangb: Changed Tests for Storm Timetracking.
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
 Version 6.x-1.36:
