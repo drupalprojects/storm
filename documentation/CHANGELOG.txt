@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Task #671622 by juliangb | Magnity: Removed fullname field from Storm Person.
 - Task #1042698 by juliangb, pillarsdotnet: Changed Ensure all pages defined by Storm are tested.
 - Task #1052154 by minorOffense, Carsten Müller, kfritsche: Changed schema on Storm Team module.
 - Task #685140 by juliangb: Removed prefix and fullname fields from Storm Organization.
