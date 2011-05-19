@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Task #918750 by juliangb: Changed Tests for Storm Timetracking.
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
 Version 6.x-1.36:
