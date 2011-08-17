@@ -51,7 +51,7 @@ function stormproject_list() {
   $args = array();
   $filterfields = array();
 
-  if (isset($_SESSION['stormproject_list_filter']['organization_nid'])) {
+  if (isset($_SESSION['stormproject_list_filter']['organization_nid']) && ($_SESSION['stormproject_list_filter']['organization_nid'] != 0)) {
     $where[] = 'spr.organization_nid=%d';
     $args[] = $_SESSION['stormproject_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';

@@ -84,24 +84,24 @@ function stormticket_list() {
 
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
   
-  if (isset($_SESSION['stormticket_list_filter']['organization_nid'])) {
+  if (isset($_SESSION['stormticket_list_filter']['organization_nid']) && ($_SESSION['stormticket_list_filter']['organization_nid'] != 0)) {
     $where[] = 'sti.organization_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
     $filterfields[] = t('Organization');
   }
-  if (isset($_SESSION['stormticket_list_filter']['project_nid'])) {
+  if (isset($_SESSION['stormticket_list_filter']['project_nid']) && ($_SESSION['stormticket_list_filter']['project_nid'] != 0)) {
     $where[] = 'sti.project_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['project_nid'];
     $filterfields[] = t('Project');
   }
-  if (isset($_SESSION['stormticket_list_filter']['task_nid'])) {
+  if (isset($_SESSION['stormticket_list_filter']['task_nid']) && ($_SESSION['stormticket_list_filter']['task_nid'] != 0)) {
     $where[] = 'sti.task_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['task_nid'];
     $filterfields[] = t('Task');
   }
 
   $category_list = stormattribute_attributes_bydomain('ticket category search');
-  $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter'] : $category_list['default'];
+  $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter']['ticketcategory'] : $category_list['default'];
   $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
 
   if ($ticketcategory != '-') {
@@ -192,7 +192,7 @@ function stormticket_list() {
       $filterfields[] = t('Date');
     }
   }
-  
+
   if (isset($_SESSION['stormticket_list_filter']['assigned_to'])) {
     if (!is_numeric($_SESSION['stormticket_list_filter']['assigned_to'])) {
       switch ($_SESSION['stormticket_list_filter']['assigned_to']) {
