@@ -938,7 +938,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   }
   if ($add_org_people) {
     if (module_exists('stormperson')) {
-      $where = isset($organization_nid) ? 'WHERE spe.organization_nid = %d' : '';
+      $where = (isset($organization_nid) && $organization_nid != 0) ? 'WHERE spe.organization_nid = %d' : '';
       $sql = "SELECT  spe.nid,
                       spe.fullname,
                       n.title

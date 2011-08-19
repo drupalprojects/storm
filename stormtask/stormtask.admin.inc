@@ -787,7 +787,7 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   );
 
   // ASSIGNED TO
-  $options = isset($node) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : array();
+  $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4_1']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
