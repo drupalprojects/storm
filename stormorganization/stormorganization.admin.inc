@@ -48,7 +48,7 @@ function stormorganization_list() {
     $filterfields[] = t('Country');
   }
   
-  if (isset($_SESSION['stormorganization_list_filter']['name'])) {
+  if (isset($_SESSION['stormorganization_list_filter']['name']) && $_SESSION['stormorganization_list_filter']['name'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
     $filterfields[] = t('Name');

@@ -43,19 +43,19 @@ function stormattribute_list() {
   $args = array();
   $filterfields = array();
 
-  if (isset($_SESSION['stormattribute_list_filter']['domain'])) {
+  if (isset($_SESSION['stormattribute_list_filter']['domain']) && $_SESSION['stormattribute_list_filter']['domain'] != '') {
     $where[] = "domain='%s'";
     $args[] = $_SESSION['stormattribute_list_filter']['domain'];
     $filterfields[] = t('Domain');
   }
 
-  if (isset($_SESSION['stormattribute_list_filter']['akey'])) {
+  if (isset($_SESSION['stormattribute_list_filter']['akey']) && $_SESSION['stormattribute_list_filter']['akey'] != '') {
     $where[] = "LOWER(akey) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['akey'];
     $filterfields[] = t('Key');
   }
 
-  if (isset($_SESSION['stormattribute_list_filter']['avalue'])) {
+  if (isset($_SESSION['stormattribute_list_filter']['avalue']) && $_SESSION['stormattribute_list_filter']['avalue'] != '') {
     $where[] = "LOWER(avalue) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormattribute_list_filter']['avalue'];
     $filterfields[] = t('Value');

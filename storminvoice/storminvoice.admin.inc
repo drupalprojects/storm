@@ -78,12 +78,12 @@ function storminvoice_list() {
   $args = array();
   $filterfields = array();
 
-  if (isset($_SESSION['storminvoice_list_filter']['organization_nid'])) {
+  if (isset($_SESSION['storminvoice_list_filter']['organization_nid']) && $_SESSION['storminvoice_list_filter']['organization_nid'] != 0) {
     $where[] = 'sin.organization_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if (isset($_SESSION['storminvoice_list_filter']['project_nid'])) {
+  if (isset($_SESSION['storminvoice_list_filter']['project_nid']) && $_SESSION['storminvoice_list_filter']['project_nid'] != 0) {
     $where[] = 'sin.project_nid=%d';
     $args[] = $_SESSION['storminvoice_list_filter']['project_nid'];
     $filterfields[] = 'Project';
@@ -94,7 +94,7 @@ function storminvoice_list() {
     $args[] = _storm_date_to_gmtimestamp($reqdatefrom);
     $filterfields[] = 'Request Date';
   }
-  if (isset($_SESSION['storminvoice_list_filter']['reqdateto'])) {
+  if (isset($_SESSION['storminvoice_list_filter']['reqdateto']) && $_SESSION['storminvoice_list_filter']['reqdateto']['day'] != -1) {
     $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
     $where[] = 'sin.requestdate<=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdateto);
@@ -250,12 +250,14 @@ function storminvoice_list_filter(&$form_state, $filterdesc = 'Filter') {
   $form['filter']['group2']['reqdatefrom'] = array(
     '#type' => 'dateext',
     '#title' => t('Req. date from'),
+    '#withnull' => true,
     '#default_value' => $reqdatefrom,
   );
 
   $form['filter']['group2']['reqdateto'] = array(
     '#type' => 'dateext',
     '#title' => t('Req. date to'),
+    '#withnull' => true,
     '#default_value' => $reqdateto,
   );
 

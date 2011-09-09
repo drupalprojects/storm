@@ -44,12 +44,12 @@ function stormperson_list() {
   $filterfields = array();
 
   $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' ";
-  if (isset($_SESSION['stormperson_list_filter']['organization_nid'])) {
+  if (isset($_SESSION['stormperson_list_filter']['organization_nid']) && $_SESSION['stormperson_list_filter']['organization_nid'] != 0) {
     $where[] = 'spe.organization_nid=%d';
     $args[] = $_SESSION['stormperson_list_filter']['organization_nid'];
     $filterfields[] = t('Organization');
   }
-  if (isset($_SESSION['stormperson_list_filter']['name'])) {
+  if (isset($_SESSION['stormperson_list_filter']['name']) && $_SESSION['stormperson_list_filter']['name'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
     $args[] = $_SESSION['stormperson_list_filter']['name'];
     $filterfields[] = t('Name');

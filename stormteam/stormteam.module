@@ -507,14 +507,14 @@ function stormteam_list() {
   $args = array();
   $filterfields = array();
 
-  if ($_SESSION['stormteam_list_filter']['name']) {
+  if (isset($_SESSION['stormteam_list_filter']['name']) && $_SESSION['stormteam_list_filter']['name'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormteam_list_filter']['name'];
     $filterfields[] = t('Team Name');
   }
 
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
+  if (!isset($itemsperpage)) {
     // Sets value for fieldset label, does not affect filter itself.
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
   }
@@ -558,7 +558,7 @@ function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
   $name = $_SESSION['stormteam_list_filter']['name'];
 
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
-  if (!$itemsperpage) {
+  if (!isset($itemsperpage)) {
     $itemsperpage = variable_get('storm_default_items_per_page', 10);
     $_SESSION['stormteam_list_filter']['itemsperpage'] = $itemsperpage;
   }

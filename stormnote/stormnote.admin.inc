@@ -74,22 +74,22 @@ function stormnote_list() {
   $args = array();
   $filterfields = array();
 
-  if (isset($_SESSION['stormnote_list_filter']['organization_nid'])) {
+  if (isset($_SESSION['stormnote_list_filter']['organization_nid']) && $_SESSION['stormnote_list_filter']['organization_nid'] != 0) {
     $where[] = 'sno.organization_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['organization_nid'];
     $filterfields[] = 'Organization';
   }
-  if (isset($_SESSION['stormnote_list_filter']['project_nid'])) {
+  if (isset($_SESSION['stormnote_list_filter']['project_nid']) && $_SESSION['stormnote_list_filter']['project_nid'] != 0) {
     $where[] = 'sno.project_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['project_nid'];
     $filterfields[] = 'Project';
   }
-  if (isset($_SESSION['stormnote_list_filter']['task_nid'])) {
+  if (isset($_SESSION['stormnote_list_filter']['task_nid']) && $_SESSION['stormnote_list_filter']['task_nid'] != 0) {
     $where[] = 'sno.task_nid=%d';
     $args[] = $_SESSION['stormnote_list_filter']['task_nid'];
     $filterfields[] = 'Task';
   }
-  if (isset($_SESSION['stormnote_list_filter']['title'])) {
+  if (isset($_SESSION['stormnote_list_filter']['title']) && $_SESSION['stormnote_list_filter']['title'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormnote_list_filter']['title'];
     $filterfields[] = 'Title';
