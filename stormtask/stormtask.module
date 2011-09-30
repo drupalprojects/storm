@@ -783,7 +783,7 @@ function stormtask_update($node) {
       $node->billable, $node->billed, $node->vid
     );
     if (($node->title != $node->title_old) || ($node->stepno != $node->stepno_old)) {
-      module_invoke_all('stormtask_change', $node->nid, $node->stepno, $node->title);
+      module_invoke_all('stormtask_change', $node->nid, $node->title, $node->stepno);
     }
   }
 }
