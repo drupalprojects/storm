@@ -280,18 +280,7 @@ function stormtask_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Enable Gantt Charts (experimental feature)'),
     '#default_value' => variable_get('stormtask_enable_ganttchart', False),
-    //'#description' => t('First get jsgantt.zip from http://jsgantt.com and put jsgantt.js andf jsgantt.css in directory   <i>sites/all/libraries/jsgantt</i> then enable this checkbox.'),
   );
-
-  /*$form['stormtask_jsgantt_location'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Location of jsgantt library'),
-    '#default_value' => variable_get('stormtask_jsgantt_location', t('sites/all/libraries/jsgantt')),
-    '#description' => t('The directory that contains the jsgantt library ( sites/all/libraries/jsgantt is recommended )'),
-    '#size' => 50,
-    '#after_build' => array('jsgantt_check_directory'),
-  );*/
-
 
   $form['stormtask_jsgantt_options'] = array(
     '#type' => 'checkboxes',
@@ -304,7 +293,6 @@ function stormtask_admin_settings() {
     ),
     '#description' => t('Choose display options for gantt chart.'),
   );
-
 
   $form['stormtask_jsgantt_color'] = array(
     '#type' => 'textfield',
