@@ -2,6 +2,10 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Issue #1287456 by juliangb: Clean up of jsgantt comments.
+- Bug #1273072 by kfritsche: Fixed filter not working properly
+- Bug #1198894 by kfritsche: Fixed lists with no persons to choose by assigned to
+- Bug #1174962 by juliangb, kfritsche: Fixed lists do not filter properly
 - Task #671622 by juliangb | Magnity: Removed fullname field from Storm Person.
 - Task #1042698 by juliangb, pillarsdotnet: Changed Ensure all pages defined by Storm are tested.
 - Task #1052154 by minorOffense, Carsten Müller, kfritsche: Changed schema on Storm Team module.
@@ -11,6 +15,7 @@ Version 6.x-2.x:
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.37:
+- Bug #1276564 by juliangb | eighthourlunch: Fixed function stormnote_stormtask_change() calls nonexistent column in stormnote table.
 - Task #918750 by juliangb: Changed Tests for Storm Timetracking.
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
