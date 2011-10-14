@@ -432,9 +432,9 @@ function stormexpense_form(&$node) {
   );
 
   $form['group2']['expensedate'] = array(
-    '#type' => 'date',
+    '#type' => 'dateext',
     '#title' => t('Date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->expensedate),
+    '#default_value' => $node->expensedate,
   );
 
   $form['group2']['provider_title'] = array(

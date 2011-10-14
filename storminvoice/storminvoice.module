@@ -432,21 +432,21 @@ function storminvoice_form(&$node) {
     '#type' => 'dateext',
     '#withnull' => 'true',
     '#title' => t('Request date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->requestdate),
+    '#default_value' => $node->requestdate,
   );
 
   $form['group3']['duedate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
     '#title' => t('Due date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->duedate),
+    '#default_value' => $node->duedate,
   );
 
   $form['group3']['paymentdate'] = array(
     '#type' => 'dateext',
     '#withnull' => 'true',
     '#title' => t('Payment date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->paymentdate),
+    '#default_value' => $node->paymentdate,
   );
   
   $form['group4'] = array(

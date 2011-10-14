@@ -165,3 +165,7 @@ background: transparent url(images/attributes.png) no-repeat top left;
 dt#stormconfiguration {
 background: transparent url(images/configuration.png) no-repeat top left;
 }
+
+.container-inline .container-inline-date div, .container-inline div.container-inline-date, .container-inline .container-inline-date input {
+  display: block;
+}

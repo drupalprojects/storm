@@ -487,14 +487,14 @@ function stormticket_form(&$node) {
     '#type' => 'dateext',
     '#title' => t('Date begin'),
     '#withnull' => TRUE,
-    '#default_value' => _storm_gmtimestamp_to_date($node->datebegin),
+    '#default_value' => $node->datebegin,
   );
 
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
     '#title' => t('Date end'),
     '#withnull' => TRUE,
-    '#default_value' => isset($node->dateend) ? _storm_gmtimestamp_to_date($node->dateend) : NULL,
+    '#default_value' => isset($node->dateend) ? $node->dateend : NULL,
   );
 
   $durationunits = stormattribute_attributes_bydomain('Duration unit');
