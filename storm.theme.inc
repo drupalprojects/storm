@@ -269,6 +269,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     $v = l($list_text, $list_path, $params);
     
     if (!$add_icon_type=='') {
+      $i = new stdClass();
       $i->type = $add_icon_type;
       if ($node_nid == 0) {
         $params = $_GET;
