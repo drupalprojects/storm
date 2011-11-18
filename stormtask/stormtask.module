@@ -52,10 +52,14 @@ function stormtask_access($op, $node, $account=NULL) {
     $account = $user;
   }
 
-  if (is_numeric($node)) $node = node_load($node);
-
   if ($op == 'create') {
     return user_access('Storm task: add');
+  }
+
+  if (is_numeric($node)) $node = node_load($node);
+
+  if (!isset($account->stormorganization_nid) && module_exists('stormperson')) {
+    _stormperson_user_load($account);
   }
 
   if ($op == 'delete') {

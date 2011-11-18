@@ -502,10 +502,25 @@ function stormperson_user($type, &$edit, &$account, $category = NULL) {
 }
 
 function _stormperson_user_load(&$account) {
-  $a = db_fetch_object(db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $account->uid));
-  if ($a) {
-    $account->stormperson_nid = $a->nid;
-    $account->stormorganization_nid = $a->organization_nid;
+  static $loaded_persons = array();
+  if (isset($loaded_persons[$account->uid])) {
+    if (is_object($loaded_persons[$account->uid])) {
+      $account->stormperson_nid = $loaded_persons[$account->uid]->nid;
+      $account->stormorganization_nid = $loaded_persons[$account->uid]->organization_nid;
+    }
+  }
+  else {
+    $a = db_fetch_object(db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $account->uid));
+    if ($a) {
+      $loaded_persons[$account->uid] = new stdClass();
+      $loaded_persons[$account->uid]->nid = $a->nid;
+      $loaded_persons[$account->uid]->organization_nid = $a->organization_nid;
+      $account->stormperson_nid = $loaded_persons[$account->uid]->nid;
+      $account->stormorganization_nid = $loaded_persons[$account->uid]->organization_nid;
+    }
+    else {
+      $loaded_persons[$account->uid] = 0;
+    }
   }
 }
 

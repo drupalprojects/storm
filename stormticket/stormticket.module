@@ -62,6 +62,10 @@ function stormticket_access($op, $node, $account=NULL) {
 
   if (is_numeric($node)) $node = node_load($node);
 
+  if (!isset($account->stormorganization_nid) && module_exists('stormperson')) {
+    _stormperson_user_load($account);
+  }
+
   if ($op == 'delete') {
     if (user_access('Storm ticket: delete all')) {
       return TRUE;
