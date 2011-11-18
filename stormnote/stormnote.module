@@ -206,9 +206,8 @@ function stormnote_stormproject_change($project_nid, $project_title) {
 }
 
 function stormnote_stormtask_change($task_nid, $task_title, $task_stepno) {
-  $s = "UPDATE {stormnote} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
-      (task_title<>'%s' OR task_stepno<>'%s')";
-  db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
+  $s = "UPDATE {stormnote} SET task_title='%s' WHERE task_nid=%d AND task_title<>'%s'";
+  db_query($s, $task_title, $task_nid, $task_title);
 }
 
 function stormnote_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
