@@ -200,11 +200,11 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
     }
     if (user_access('Storm project: view if project manager')) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'spr1.manager_nid='. $account->uid;
+      $cond .= 'spr1.manager_nid='. $account->stormperson_nid;
     }
     if (user_access('Storm project: view if assigned to project')) {
       if ($cond) $cond .= ' OR ';
-      $cond .= 'spr1.assigned_nid='. $account->uid;
+      $cond .= 'spr1.assigned_nid='. $account->stormperson_nid;
       
       if (module_exists('stormteam')) {
         // Load teams that the account belongs to
