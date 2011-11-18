@@ -1009,7 +1009,9 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
           if (module_exists('stormteam')) {
             $options[$teams][$node->nid] = check_plain($node->title);
             foreach ($node->members_array as $nid => $name) {
-              $options[$people][$nid] = check_plain($name);
+              if (!array_key_exists($nid, $node->members_deactivated_array)) {
+                $options[$people][$nid] = check_plain($name);
+              }
             }
           }
         }

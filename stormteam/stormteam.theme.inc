@@ -32,6 +32,9 @@ function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
     foreach ($node->members_array as $nid => $name) {
       $member = node_load($nid);
       if (($member->type == 'stormperson' && stormperson_access('view', $nid)) || ($member->type == 'stormorganization' && stormorganization_access('view', $nid))) {
+        if (array_key_exists($nid, $node->members_deactivated_array)) {
+          $name .= " (".t('disabled').")";
+        }
         $node->members_array[$nid] = l($name, 'node/'. $nid);
     }
   }

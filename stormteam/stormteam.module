@@ -269,7 +269,7 @@ function stormteam_form(&$node) {
 
   $options = array(0 => '-');
 
-  $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
+  $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' AND n.status = 1 ORDER BY n.title";
   $s_per = stormperson_access_sql($s_per);
   $s_per = db_rewrite_sql($s_per);
   $r_per = db_query($s_per);
@@ -280,7 +280,7 @@ function stormteam_form(&$node) {
 
   $options = $options + array(-1 => t('-PEOPLE-')) + $people;
 
-  $s_org = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormorganization' ORDER BY n.title";
+  $s_org = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormorganization' AND n.status = 1 ORDER BY n.title";
   $s_org = stormorganization_access_sql($s_org);
   $s_org = db_rewrite_sql($s_org);
   $r_org = db_query($s_org);
@@ -342,6 +342,9 @@ function stormteam_load($node) {
   while ($members = db_fetch_object($result)) {
     $mnode = node_load($members->mnid);
     $additions->members_array[$members->mnid] = $mnode->title;
+    if ($mnode->status == 0) {
+      $additions->members_deactivated_array[$members->mnid] = $mnode->title;
+    }
   }
   $additions->title_old = $node->title;
   return $additions;
