@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Bug #1344448 by D34dMan: Fixed 'Storm project: view if project manager' and 'Storm project: view if assigned to project' not valid when using Views.
 - Task #918750 by juliangb: Changed Tests for Storm Timetracking.
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
