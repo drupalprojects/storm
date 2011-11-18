@@ -15,6 +15,7 @@ Version 6.x-2.x:
 - Feature #332555 by jalama: Added Token support for Storm project, task and ticket.
 
 Version 6.x-1.37:
+- Bug #1316098 by kfritsche | key4ce: Fixed Permissions Storm organization: view belonged doesn't work. WHEN Menu breadcrumb is enabled.
 - Bug #1344448 by D34dMan: Fixed 'Storm project: view if project manager' and 'Storm project: view if assigned to project' not valid when using Views.
 - Bug #1276564 by juliangb | eighthourlunch: Fixed function stormnote_stormtask_change() calls nonexistent column in stormnote table.
 - Task #918750 by juliangb: Changed Tests for Storm Timetracking.
