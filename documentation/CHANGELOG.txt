@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Task #1318432 by kfritsche: Stormteam: Only add active Persons.
 - Task #1328480 by kfritsche, juliangb | ronline: Check icons directory on saving settings form.
 - Task #1287456 by juliangb: Clean up of jsgantt comments.
 - Bug #1273072 by kfritsche: Fixed filter not working properly
