@@ -650,7 +650,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->SetFont("times", "B", 10);
   $pdf->Cell($pageWidth, 5, t('Payment', array(), $language), 'B', 0, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY(), true, 0, true);
+  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY() + 5, true, 0, true);
 
   if ($status=='paid') {
     $y = $pdf->getY() + 10;
