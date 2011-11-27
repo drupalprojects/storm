@@ -10,6 +10,7 @@ function theme_stormperson_list($header, $people) {
     $n = new stdClass();
     $n->nid = $person->nid;
     $n->uid = $person->uid;
+    $n->user_uid = $person->user_uid;
     $n->organization_nid = $person->organization_nid;
     $n->type = 'stormperson';
 
