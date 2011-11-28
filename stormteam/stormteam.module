@@ -206,7 +206,7 @@ function stormteam_access_sql($sql, $where = array()) {
 function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$primary_table][$account->uid]) {
+  if (isset($conds[$primary_table][$account->uid])) {
     return $conds[$primary_table][$account->uid];
   }
 
