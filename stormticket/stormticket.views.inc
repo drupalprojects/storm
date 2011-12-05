@@ -279,3 +279,25 @@ function stormticket_views_handlers() {
     ),
   );
 }
+
+function stormticket_date_api_fields($field) {
+  $values = array(
+    'sql_type' => DATE_UNIX,
+    'tz_handling' => 'site',
+    'timezone_field' => '',
+    'offset_field' => '',
+    'related_fields' => array(),
+    'granularity' => array('year', 'month', 'day', 'hour', 'minute', 'second'),
+  );
+
+  switch ($field) {
+    case 'stormticket.datebegin':
+    case 'stormticket.dateend':
+      return $values;
+  }
+
+}
+
+function stormticket_date_api_tables() {
+  return array('stormticket');
+}

@@ -401,3 +401,26 @@ function storminvoice_views_handlers() {
     ),
   );
 }
+
+function storminvoice_date_api_fields($field) {
+  $values = array(
+    'sql_type' => DATE_UNIX,
+    'tz_handling' => 'site',
+    'timezone_field' => '',
+    'offset_field' => '',
+    'related_fields' => array(),
+    'granularity' => array('year', 'month', 'day'),
+  );
+
+  switch ($field) {
+    case 'storminvoice.paymentdate':
+    case 'storminvoice.duedate':
+    case 'storminvoice.requestdate':
+      return $values;
+  }
+
+}
+
+function storminvoice_date_api_tables() {
+  return array('storminvoice');
+}

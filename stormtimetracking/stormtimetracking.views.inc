@@ -240,3 +240,24 @@ function stormtimetracking_views_handlers() {
     ),
   );
 }
+
+function stormtimetracking_date_api_fields($field) {
+  $values = array(
+    'sql_type' => DATE_UNIX,
+    'tz_handling' => 'site',
+    'timezone_field' => '',
+    'offset_field' => '',
+    'related_fields' => array(),
+    'granularity' => array('year', 'month', 'day'),
+  );
+
+  switch ($field) {
+    case 'stormtimetracking.trackingdate':
+      return $values;
+  }
+
+}
+
+function stormtimetracking_date_api_tables() {
+  return array('stormtimetracking');
+}

@@ -248,3 +248,25 @@ function stormexpense_views_handlers() {
     ),
   );
 }
+
+function stormexpense_date_api_fields($field) {
+  $values = array(
+    'sql_type' => DATE_UNIX,
+    'tz_handling' => 'site',
+    'timezone_field' => '',
+    'offset_field' => '',
+    'related_fields' => array(),
+    'granularity' => array('year', 'month', 'day'),
+  );
+
+  switch ($field) {
+    case 'stormexpense.expensedate':
+      return $values;
+  }
+
+}
+
+function stormexpense_date_api_tables() {
+  return array('stormexpense');
+}
+
