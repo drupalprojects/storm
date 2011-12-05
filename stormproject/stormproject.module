@@ -248,7 +248,7 @@ function stormproject_menu() {
     'title' => 'Projects',
     'page callback' => '_stormproject_organization_projects_js',
     'page arguments' => array(2),
-    'access arguments' => array('Storm project: access'),
+    'access callback' => TRUE,
     'file' => 'stormproject.admin.inc',
     'type' => MENU_CALLBACK,
   );

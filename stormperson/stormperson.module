@@ -209,7 +209,7 @@ function stormperson_menu() {
     'title' => 'People',
     'page callback' => '_stormperson_organization_people_js',
     'page arguments' => array(2),
-    'access arguments' => array('Storm person: access'),
+    'access callback' => TRUE,
     'file' => 'stormperson.admin.inc',
     'type' => MENU_CALLBACK,
   );

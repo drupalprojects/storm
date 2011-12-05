@@ -235,7 +235,7 @@ function stormtask_menu() {
     'title' => 'Tasks',
     'page callback' => '_stormtask_project_tasks_js',
     'page arguments' => array(2),
-    'access arguments' => array('Storm task: access'),
+    'access callback' => TRUE,
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
   );
@@ -243,7 +243,7 @@ function stormtask_menu() {
     'title' => 'Assignments',
     'page callback' => '_stormtask_project_assignments_js',
     'page arguments' => array(2, 3),
-    'access arguments' => array('Storm task: access'),
+    'access callback' => TRUE,
     'file' => 'stormtask.admin.inc',
     'type' => MENU_CALLBACK,
   );

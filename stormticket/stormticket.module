@@ -241,7 +241,7 @@ function stormticket_menu() {
     'title' => 'Tickets',
     'page callback' => '_stormticket_task_tickets_js',
     'page arguments' => array(2, 3, 4),
-    'access arguments' => array('Storm ticket: access'),
+    'access callback' => TRUE,
     'file' => 'stormticket.admin.inc',
     'type' => MENU_CALLBACK,
   );

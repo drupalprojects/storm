@@ -59,7 +59,7 @@ function storminvoice_menu() {
     'title' => 'Tasks',
     'page callback' => '_storminvoice_project_invoices_js',
     'page arguments' => array(2, 3),
-    'access arguments' => array('Storm invoice: access'),
+    'access callback' => TRUE,
     'file' => 'storminvoice.admin.inc',
     'type' => MENU_CALLBACK,
     'weight' => 8,
