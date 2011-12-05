@@ -189,14 +189,7 @@ function stormexpense_list_filter(&$form_state, $filterdesc = 'Filter') {
   $title = isset($_SESSION['stormexpense_list_filter']['title']) ? $_SESSION['stormexpense_list_filter']['title'] : '';
   $provider_title = isset($_SESSION['stormexpense_list_filter']['provider_title']) ? $_SESSION['stormexpense_list_filter']['provider_title'] : '';
 
-  $datefrom = isset($_SESSION['stormexpense_list_filter']['datefrom']) ? $_SESSION['stormexpense_list_filter']['datefrom'] : array(
-    'day' => 1,
-    'month' => format_date(time(), 'custom', 'n'),
-    'year' => format_date(time(), 'custom', 'Y'),
-    'hour' => 0,
-    'minute' => 0,
-  );
-  $_SESSION['stormexpense_list_filter']['datefrom'] = $datefrom;
+  $datefrom = isset($_SESSION['stormexpense_list_filter']['datefrom']) ? $_SESSION['stormexpense_list_filter']['datefrom'] : NULL;
 
   $expenseuser = isset($_SESSION['stormexpense_list_filter']['user']) ? $_SESSION['stormexpense_list_filter']['user'] : '';
 

@@ -173,23 +173,8 @@ function storminvoice_list_filter(&$form_state, $filterdesc = 'Filter') {
   $itemsperpage = isset($_SESSION['storminvoice_list_filter']['itemsperpage']) ? $_SESSION['storminvoice_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
   $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
 
-  $reqdatefrom = isset($_SESSION['storminvoice_list_filter']['reqdatefrom']) ? $_SESSION['storminvoice_list_filter']['reqdatefrom'] : array(
-    'day' => 1,
-    'month' => 1,
-    'year' => format_date(time(), 'custom', 'Y'),
-    'hour' => 0,
-    'minute' => 0,
-  );
-  $_SESSION['storminvoice_list_filter']['reqdatefrom'] = $reqdatefrom;
-
-  $reqdateto = isset($_SESSION['storminvoice_list_filter']['reqdateto']) ? $_SESSION['storminvoice_list_filter']['reqdateto'] : array(
-    'day' => 31,
-    'month' => 12,
-    'year' => format_date(time(), 'custom', 'Y'),
-    'hour' => 23,
-    'minute' => 59,
-  );
-  $_SESSION['storminvoice_list_filter']['reqdateto'] = $reqdateto;
+  $reqdatefrom = isset($_SESSION['storminvoice_list_filter']['reqdatefrom']) ? $_SESSION['storminvoice_list_filter']['reqdatefrom'] : NULL;
+  $reqdateto = isset($_SESSION['storminvoice_list_filter']['reqdateto']) ? $_SESSION['storminvoice_list_filter']['reqdateto'] : NULL;
 
   $form = array();
 

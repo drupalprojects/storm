@@ -201,30 +201,8 @@ function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
     $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $itemsperpage;
   }
 
-  $datefrom = $_SESSION['stormtimetracking_list_filter']['datefrom'];
-  if (!isset($datefrom)) {
-    $datefrom = array('day' => 1,
-                      'month' => format_date(time(), 'custom', 'n'),
-                      'year' => format_date(time(), 'custom', 'Y'),
-                      'hour' => 0,
-                      'minute' => 0,
-                      );
-    $_SESSION['stormtimetracking_list_filter']['datefrom'] = $datefrom;
-  }
-
-  $dateto = $_SESSION['stormtimetracking_list_filter']['dateto'];
-  if (!isset($dateto)) {
-    $year = format_date(time(), 'custom', 'Y');
-    $month = format_date(time(), 'custom', 'n');
-    $day = format_date(mktime(0, 0, 0, ($month + 1), 0, $year), 'custom', 'd');
-    $dateto = array('day' => $day,
-                     'month' => $month,
-                     'year' => $year,
-                     'hour' => 23,
-                     'minute' => 59,
-    );
-    $_SESSION['stormtimetracking_list_filter']['dateto'] = $dateto;
-  }
+  $datefrom = isset($_SESSION['stormtimetracking_list_filter']['datefrom']) ? $_SESSION['stormtimetracking_list_filter']['datefrom'] : NULL;
+  $dateto = isset($_SESSION['stormtimetracking_list_filter']['dateto']) ? $_SESSION['stormtimetracking_list_filter']['dateto'] : NULL ;
 
   $trackinguser = $_SESSION['stormtimetracking_list_filter']['user'];
 
