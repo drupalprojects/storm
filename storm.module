@@ -118,6 +118,10 @@ function storm_theme() {
       'file'      => 'storm.theme.inc',
       'arguments' => array(),
     ),
+    'storm_number_items' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('number' => ''),
+    )
   );
 }
 
@@ -1103,4 +1107,92 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   }
   
   return $options;
+}
+
+/**
+ * Helper function to count nodes of type destination module with parent nid of type source module.
+ *
+ * @param string $source_module A string of module where the request is comming from
+ * @param string $destination_module A string with name of targeted module
+ * @param int $nid node id of source module
+ * @return ''|int
+ *   empty string if can't be counted or the count of destination nodes in source node
+ * @see theme_storm_link
+ */
+function _storm_number_of_items($source_module, $destination_module, $nid) {
+  global $user;
+  $nmb_of_items = '';
+
+  $valid_destination_modules = array();
+  switch ($source_module) {
+    case "stormorganization":
+      $column_name = 'organization_nid';
+      $valid_destination_modules = array('stormproject', 'stormtask', 'stormticket', 'stormtimetracking', 'stormnote', 'stormperson', 'stormexpense', 'storminvoice');
+      break;
+
+    case "stormproject":
+      $column_name = 'project_nid';
+      $valid_destination_modules = array('stormtask', 'stormticket', 'stormtimetracking', 'stormnote', 'stormexpense', 'storminvoice');
+      break;
+
+    case "stormtask":
+      $column_name = 'task_nid';
+      $valid_destination_modules = array('stormticket', 'stormtimetracking', 'stormnote', 'stormexpense');
+      break;
+
+    case "stormticket":
+      $column_name = 'ticket_nid';
+      $valid_destination_modules = array('stormtimetracking', 'stormexpense');
+      break;
+  }
+
+  if (in_array($destination_module, $valid_destination_modules))
+  {
+    switch ($destination_module) {
+      case 'stormproject':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND
+                n.type='stormproject' and spr.".$column_name." = %d";
+        $sql = stormproject_access_sql($sql);
+        break;
+      case 'stormtask':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND
+                n.type='stormtask' and sta.".$column_name." = %d";
+        $sql = stormtask_access_sql($sql);
+        break;
+      case 'stormticket':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND
+                n.type='stormticket' and sti.".$column_name." = %d";
+        $sql = stormticket_access_sql($sql);
+        break;
+      case 'stormtimetracking':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormtimetracking} AS stt ON n.vid=stt.vid WHERE n.status=1 AND
+                n.type='stormtimetracking' and stt.".$column_name." = %d";
+        $sql = stormtimetracking_access_sql($sql);
+        break;
+      case 'stormperson':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND
+                n.type='stormperson' and spe.".$column_name." = %d";
+        $sql = stormperson_access_sql($sql);
+        break;
+      case 'stormnote':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormnote} AS sno ON n.vid=sno.vid WHERE n.status=1 AND
+                n.type='stormnote' and sno.".$column_name." = %d";
+        $sql = stormnote_access_sql($sql);
+        break;
+      case 'stormexpense':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND
+                n.type='stormexpense' and sex.".$column_name." = %d";
+        $sql = stormexpense_access_sql($sql);
+        break;
+      case 'storminvoice':
+        $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.vid=sin.vid WHERE n.status=1 AND
+                n.type='storminvoice' and sin.".$column_name." = %d";
+        $sql = storminvoice_access_sql($sql);
+        break;
+
+    }
+    $sql = db_rewrite_sql($sql);
+    $nmb_of_items = db_result(db_query($sql, $nid));
+  }
+  return $nmb_of_items;
 }

@@ -138,6 +138,8 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       break;
   }
 
+
+
   switch ($destination_module) {
     case "stormattribute":
       $user_access_check = 'Storm: access administration pages';
@@ -255,7 +257,6 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $node_links_key = 'timetrackings';
       $add_path = 'node/add/'. $destination_module;
       $dt_id = 'stormtimetrackings';
-
       break;
   }
 
@@ -278,7 +279,9 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
         $params = $_GET;
         $params[$params_key] = $node_nid;
       }
-      $v .= storm_icon_add($add_path, $i, $params);
+      $nmb_itms = _storm_number_of_items($source_module, $destination_module, $node_nid);
+      $nmb_itms = theme('storm_number_items', $nmb_itms);
+      $v .= $nmb_itms.storm_icon_add($add_path, $i, $params);
     }
 
     if ($node_nid == 0) {
@@ -296,4 +299,12 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
     }
     return $r;
   }
+}
+
+function theme_storm_number_items($number) {
+  $content = '';
+  if ($number !== '') {
+    $content .= '<span class="stormlinks-count">('.$number.')</span>';
+  }
+  return $content;
 }
