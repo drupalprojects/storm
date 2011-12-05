@@ -2,6 +2,10 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Bug fix by kfritsche: Fixed cannot paginate through expenses, invoiced and timetrackings without filtering date
+- Task #1324864 by juliangb, kfritsche, tchurch: Removed access checks for javascript callbacks
+- Task #1153672 by kfritsche: Added Views dateAPI support for expenses, invoices, tickets and timetrackings
+- Feature #1340444 by ronline, kfritsche: Added number of nodes after storm icons of icon type
 - Task #1318432 by kfritsche: Stormteam: Only add active Persons.
 - Task #1328480 by kfritsche, juliangb | ronline: Check icons directory on saving settings form.
 - Task #1287456 by juliangb: Clean up of jsgantt comments.
