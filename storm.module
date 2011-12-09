@@ -538,7 +538,18 @@ function storm_dateext_validate($element, &$form_state) {
     if (!$element['#withnull'] && empty($element['#value']['popup']['date'])) {
       form_set_error($element, t('Field %field is required.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
     }
-    $element['#value'] = _storm_gmtimestamp_to_date(strtotime($element['#value']['popup']['date']));
+    if (preg_match('/(\d{4})-(\d{2})-(\d{2})/', $element['#value']['popup']['date'], $matches)) {
+      $element['#value'] = array();
+      $element['#value']['day'] = (int) $matches[3];
+      $element['#value']['month'] = (int) $matches[2];
+      $element['#value']['year'] = (int) $matches[1];
+    }
+    else {
+      $element['#value'] = array('day' => -1, 'month' => -1, 'year' => -1);
+      if (!$element['#withnull']) {
+        form_set_error($element, t('Wrong Format for Field %field. Format should be YYYY-MM-DD.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
+      }
+    }
     form_set_value($element, $element['#value'], $form_state);
   }
 
