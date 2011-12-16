@@ -449,11 +449,13 @@ function storm_dateext_expand($element) {
   // but you can force to disable it by set disable_date_popup to true
   if (module_exists('date_popup') && !$element['disable_date_popup']) {
 
+    //value is timestamp
     if (is_numeric($element['#value']) && $element['#value'] != 0) {
-      $element['#value'] = array('popup' => date('Y-m-d',$element['#value']));
+      $element['#value'] = array('popup' => format_date($element['#value'], 'custom', 'Y-m-d'));
     }
+    //value is date array
     elseif (is_array($element['#value']) && !isset($element['#value']['popup']) && $element['#value']['day'] != -1) {
-      $element['#value'] = array('popup' => date('Y-m-d', _storm_date_to_gmtimestamp($element['#value'])));
+      $element['#value'] = array('popup' => sprintf("%4d-%2d-%2d", $element['#value']['year'], $element['#value']['month'], $element['#value']['day']));
     }
     elseif(is_numeric($element['#value']) || !isset($element['#value']['popup']) || $element['#value']['popup']['day'] == -1) {
       $element['#value'] = array('popup' => '');
@@ -545,10 +547,10 @@ function storm_dateext_validate($element, &$form_state) {
       $element['#value']['year'] = (int) $matches[1];
     }
     else {
-      $element['#value'] = array('day' => -1, 'month' => -1, 'year' => -1);
-      if (!$element['#withnull']) {
+      if (!$element['#withnull'] && !empty($element['#value']['popup']['date'])) {
         form_set_error($element, t('Wrong Format for Field %field. Format should be YYYY-MM-DD.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
       }
+      $element['#value'] = array('day' => -1, 'month' => -1, 'year' => -1);
     }
     form_set_value($element, $element['#value'], $form_state);
   }
