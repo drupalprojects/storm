@@ -785,8 +785,10 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
       $c++;
     }
     $query .= 'destination='. urlencode($destination);
+    unset($params['destination']);
   }
 
+  $params = _storm_icon_urlencode_helper($params);
   foreach ($params as $key => $value) {
     if ($query) $query .= '&';
     $query .= $key .'='. urlencode($value);
@@ -794,6 +796,25 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
 
   $o = l($icon, $path, array('attributes' => $attributes, 'query' => $query, 'html' => TRUE));
   return $o;
+}
+
+function _storm_icon_urlencode_helper($params, $org_key = "") {
+  $new_params = array();
+  foreach ($params as $key => $value) {
+    if (!empty($org_key)) {
+      $new_key = $org_key."[".$key."]";
+    }
+    else {
+      $new_key = $key;
+    }
+    if (is_array($value)) {
+      $new_params = array_merge(_storm_icon_urlencode_helper($value, $new_key), $new_params);
+    }
+    else {
+      $new_params[$new_key] = $value;
+    }
+  }
+  return $new_params;
 }
 
 function storm_icon($icon, $title) {

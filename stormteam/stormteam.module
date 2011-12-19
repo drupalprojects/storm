@@ -341,9 +341,11 @@ function stormteam_load($node) {
   $additions = new stdClass();
   while ($members = db_fetch_object($result)) {
     $mnode = node_load($members->mnid);
-    $additions->members_array[$members->mnid] = $mnode->title;
-    if ($mnode->status == 0) {
-      $additions->members_deactivated_array[$members->mnid] = $mnode->title;
+    if (!empty($mnode)) {
+      $additions->members_array[$members->mnid] = $mnode->title;
+      if ($mnode->status == 0) {
+        $additions->members_deactivated_array[$members->mnid] = $mnode->title;
+      }
     }
   }
   $additions->title_old = $node->title;
