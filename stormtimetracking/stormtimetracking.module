@@ -438,7 +438,7 @@ function stormtimetracking_form(&$node) {
   $form['group2']['trackingdate'] = array(
     '#type' => 'dateext',
     '#title' => t('Date'),
-    '#default_value' => _storm_gmtimestamp_to_date($node->trackingdate),
+    '#default_value' => $node->trackingdate,
   );
   
   $form['group3'] = array(

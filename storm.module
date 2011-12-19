@@ -342,11 +342,9 @@ function storm_elements() {
     '#input' => TRUE,
     '#process' => array('storm_dateext_expand'),
     '#element_validate' => array('storm_dateext_validate'),
-    '#default_value' => array(
-      'day' => format_date(time(), 'custom', 'j'),
-      'month' => format_date(time(), 'custom', 'n'),
-      'year' => format_date(time(), 'custom', 'Y'),
-    ),
+    '#default_value' => time(),
+    '#withnull' => false,
+    '#disable_date_popup' => false,
   );
   return $type;
 }
@@ -423,46 +421,123 @@ function storm_dateext_expand($element) {
 
   $element['#tree'] = TRUE;
 
-  // Determine the order of day, month, year in the site's chosen date format.
-  $format = variable_get('date_format_short', 'm/d/Y - H:i');
-  $sort = array();
-  $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
-  $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
-  $sort['year'] = strpos($format, 'Y');
-  asort($sort);
-  $order = array_keys($sort);
+  // If date popup exists, we should use date popup,
+  // but you can force to disable it by set disable_date_popup to true
+  if (module_exists('date_popup') && !$element['disable_date_popup']) {
 
-  // Output multi-selector for date.
-  foreach ($order as $type) {
-    switch ($type) {
-      case 'year':
-        $options = drupal_map_assoc(range(variable_get('storm_yearsrangebegin', 2001), variable_get('storm_yearsrangeend', 2012)));
-        break;
-      case 'month':
-        $options = drupal_map_assoc(range(1, 12), 'map_month');
-        break;
-      case 'day':
-        $options = drupal_map_assoc(range(1, 31));
-        break;
+    //value is timestamp
+    if (is_numeric($element['#value']) && $element['#value'] != 0) {
+      $element['#value'] = array('popup' => format_date($element['#value'], 'custom', 'Y-m-d'));
     }
-    if (isset($element['#withnull'])) {
-      $options = array('-1' => '-') + $options;
+    //value is date array
+    elseif (is_array($element['#value']) && !isset($element['#value']['popup']) && $element['#value']['day'] != -1) {
+      $element['#value'] = array('popup' => sprintf("%4d-%2d-%2d", $element['#value']['year'], $element['#value']['month'], $element['#value']['day']));
+    }
+    elseif(is_numeric($element['#value']) || !isset($element['#value']['popup']) || $element['#value']['popup']['day'] == -1) {
+      $element['#value'] = array('popup' => '');
+    }
+
+    $current_year = date('Y');
+    $begin = variable_get('storm_yearsrangebegin', 2001) - $current_year;
+    if ($begin > 0) {
+      $begin = '+'.$begin;
+    }
+    $end = variable_get('storm_yearsrangeend', 2012) - $current_year;
+    if ($end > 0) {
+      $end = '+'.$end;
     }
 
     $parents = $element['#parents'];
-    $parents[] = $type;
-    $element[$type] = array(
-      '#type' => 'select',
-      '#value' => isset($element['#value'][$type]) ? $element['#value'][$type] : NULL,
+    $parents[] = 'popup';
+    $element['popup'] = array(
+      '#type' => 'date_popup',
+      '#date_timezone' => date_default_timezone_name(),
+      '#date_format' => "Y-m-d",
+      '#date_year_range' => $begin.':'.$end,
+      '#value' => $element['#value']['popup'],
       '#attributes' => $element['#attributes'],
-      '#options' => $options,
-      '#attributes' => array('onchange' => "storm_datext_tonull(this, '". $element['#id'] ."')"),
+      '#withnull' => $element['#withnull'],
     );
+  }
+  //fallback - use select boxes to choose the date
+  else {
+
+    // its a timestamp, convert it to a date format
+    if (is_numeric($element['#value']) && $element['#value'] != 0) {
+      $element['#value'] = _storm_gmtimestamp_to_date($element['#value']);
+    }
+    
+    // Determine the order of day, month, year in the site's chosen date format.
+    $format = variable_get('date_format_short', 'm/d/Y - H:i');
+    $sort = array();
+    $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
+    $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
+    $sort['year'] = strpos($format, 'Y');
+    asort($sort);
+    $order = array_keys($sort);
+
+    // Output multi-selector for date.
+    foreach ($order as $type) {
+      switch ($type) {
+        case 'year':
+          $options = drupal_map_assoc(range(variable_get('storm_yearsrangebegin', 2001), variable_get('storm_yearsrangeend', 2012)));
+          break;
+        case 'month':
+          $options = drupal_map_assoc(range(1, 12), 'map_month');
+          break;
+        case 'day':
+          $options = drupal_map_assoc(range(1, 31));
+          break;
+      }
+      if ($element['#withnull']) {
+        $options = array('-1' => '-') + $options;
+      }
+
+      if (empty($element['#attributes'])) {
+        $element['#attributes'] = array();
+      }
+
+      $parents = $element['#parents'];
+      $parents[] = $type;
+      $element[$type] = array(
+        '#type' => 'select',
+        '#value' => isset($element['#value'][$type]) ? $element['#value'][$type] : NULL,
+        '#options' => $options,
+        '#attributes' => array_merge(array('onchange' => "storm_datext_tonull(this, '". $element['#id'] ."')"), $element['#attributes']),
+      );
+    }
   }
   return $element;
 }
 
-function storm_dateext_validate($form) {
+function storm_dateext_validate($element, &$form_state) {
+  // value is a string, convert it back to array
+  if (is_array($element['#value']) && isset($element['#value']['popup'])) {
+    if (!$element['#withnull'] && empty($element['#value']['popup']['date'])) {
+      form_set_error($element, t('Field %field is required.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
+    }
+    if (preg_match('/(\d{4})-(\d{2})-(\d{2})/', $element['#value']['popup']['date'], $matches)) {
+      $element['#value'] = array();
+      $element['#value']['day'] = (int) $matches[3];
+      $element['#value']['month'] = (int) $matches[2];
+      $element['#value']['year'] = (int) $matches[1];
+    }
+    else {
+      if (!$element['#withnull'] && !empty($element['#value']['popup']['date'])) {
+        form_set_error($element, t('Wrong Format for Field %field. Format should be YYYY-MM-DD.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
+      }
+      $element['#value'] = array('day' => -1, 'month' => -1, 'year' => -1);
+    }
+    form_set_value($element, $element['#value'], $form_state);
+  }
+
+  if ($element['#value']['day'] == -1 && !$element['#withnull']) {
+    form_set_error($element, t('Field %field is required.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
+  }
+  if ($element['#value']['day'] != -1 && !checkdate($element['#value']['month'], $element['#value']['day'], $element['#value']['year'])) {
+    form_error($element, t('The specified date is invalid.'));
+  }
+  return $element;
 }
 
 function storm_dependent_select_process($form, $edit, $form_state, $complete_form) {

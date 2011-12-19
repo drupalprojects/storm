@@ -11,6 +11,7 @@ Version 6.x-1.x-dev:
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
 Version 6.x-1.36:
+- Task #787822 by kfritsche, d34dmen: Added support for date_popup
 - Bug #1052180 by juliangb | Francewhoa: Fixed Teams disappear when revision activated.
 - Bug #1018448 by minorOffense, juliangb: Fixed Storm Person: Drupal User in Views.
 - Bug #1045258 by kfritsche: Fixed Default filter from storm attribute.
