@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #1170658 by D34dMan | AlphaGrowl: Fixed Edit icon not shown despite 'Edit when linked to user account' permission given.
 - Bug #1178948 by davad: Fixed Overlapping text in 'Payment modes' section of pdf invoice.
 - Bug #1276564 by juliangb | eighthourlunch: Fixed function stormnote_stormtask_change() calls nonexistent column in stormnote table.

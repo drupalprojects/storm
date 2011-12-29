@@ -431,7 +431,7 @@ function storm_dateext_expand($element) {
     }
     //value is date array
     elseif (is_array($element['#value']) && !isset($element['#value']['popup']) && $element['#value']['day'] != -1) {
-      $element['#value'] = array('popup' => sprintf("%4d-%2d-%2d", $element['#value']['year'], $element['#value']['month'], $element['#value']['day']));
+      $element['#value'] = array('popup' => sprintf("%04d-%02d-%02d", $element['#value']['year'], $element['#value']['month'], $element['#value']['day']));
     }
     elseif(is_numeric($element['#value']) || !isset($element['#value']['popup']) || $element['#value']['popup']['day'] == -1) {
       $element['#value'] = array('popup' => '');
