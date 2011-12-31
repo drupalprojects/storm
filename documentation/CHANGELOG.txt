@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Bug #758974 by juliangb | alberto56: Fixed Make it possible to remove a line in the invoice without everything disappearing.
 - Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #787822 by kfritsche: Fixed timezone error for date popup fields
 - Bug fix by kfritsche: Fixed cannot paginate through expenses, invoiced and timetrackings without filtering date
