@@ -723,7 +723,7 @@ function _storminvoice_beforesave(&$node) {
   //from linear to array/object combination
   $j = 0;
   $variable = 'items_'. $j . '_description';
-  while (isset($node->$variable) && $node->$variable != '') {
+  while (isset($node->$variable)) {
     $node->items[$j]->description = $node->$variable;
     $variable = 'items_'. $j .'_amount';
     $node->items[$j]->amount = str_replace(',', '.', $node->$variable);
@@ -753,8 +753,7 @@ function _storminvoice_beforesave(&$node) {
 }
 
 function _storminvoice_insert_items($node) {
-  $j = 0;
-  while (isset($node->items[$j])) { //removed is_object for 684016
+  foreach ($node->items as $j => $item) {
     $node->items[$j]->src_nid = (isset($node->items[$j]->src_nid)) ? $node->items[$j]->src_nid : $node->src_nid;
     $node->items[$j]->src_vid = (isset($node->items[$j]->src_vid)) ? $node->items[$j]->src_vid : $node->src_vid;
 
@@ -777,8 +776,8 @@ function _storminvoice_insert_items($node) {
       $node->items[$j]->total, $node->items[$j]->weight,
       $node->items[$j]->src_nid, $node->items[$j]->src_vid
       );
-    $j++;
   }
+  db_query("DELETE FROM {storminvoice_items} WHERE invoice_vid=%d AND total=0 AND description='' ", $node->vid);
 }
 
 function _storminvoice_aftersave($node) {
