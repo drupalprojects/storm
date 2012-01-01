@@ -214,6 +214,14 @@ function stormperson_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['storm/stormperson_js'] = array(
+    'title' => 'Stormperson - User autocomplete',
+    'page callback' => 'stormperson_user_autocomplete',
+    'access callback' => 'user_access',
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -332,7 +340,7 @@ function stormperson_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('User'),
     '#default_value' => isset($node->user_name) ? $node->user_name : '',
-    '#autocomplete_path' => 'user/autocomplete',
+    '#autocomplete_path' => 'storm/stormperson_js',
     '#size' => 40,
   );
 
@@ -386,6 +394,31 @@ function stormperson_form(&$node) {
   );
 
   return $form;
+}
+
+function stormperson_validate($node, &$form) {
+  if (!empty($node->user_name)) {
+    $ass_user = user_load(array('name' => $node->user_name));
+    if (!empty($ass_user)) {
+      $result = db_query("SELECT n.nid, n.title FROM {node} n JOIN {stormperson} stp ON (n.nid = stp.nid) WHERE stp.user_uid = %d", $ass_user->uid);
+      $row = db_fetch_array($result);
+      if ($row && (empty($form['#node']->user_name) || ($form['#node']->user_name != $node->user_name))) {
+        form_set_error('user_name', t('This Drupal user is already assigned to a Storm person (!link). The same Drupal user can not be assigned to two Storm people.', array('!link' => l($row['title'], 'node/'.$row['nid']))));
+      }
+    }
+  }
+}
+
+function stormperson_user_autocomplete($string = '') {
+  $matches = array();
+  if ($string) {
+    $result = db_query_range("SELECT name FROM {users} WHERE name LIKE '%s%%' AND uid NOT IN (SELECT user_uid FROM {stormperson})", $string, 0, 10);
+    while ($user = db_fetch_object($result)) {
+      $matches[$user->name] = check_plain($user->name);
+    }
+  }
+
+  drupal_json($matches);
 }
 
 function stormperson_insert($node) {

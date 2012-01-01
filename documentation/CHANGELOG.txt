@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Feature #1060514 by kfritsche | Francewhoa: Added Storm Person: Remove possibility to assign two persons to one user.
 - Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #787822 by kfritsche: Fixed timezone error for date popup fields
 - Bug fix by kfritsche: Fixed cannot paginate through expenses, invoiced and timetrackings without filtering date
