@@ -714,11 +714,6 @@ function _storminvoice_beforesave(&$node) {
     $node->project_title = (isset($p->title)) ? $p->title : NULL;
   }
 
-
-  if (!$node->totalcustomercurr) {
-    $node->totalcustomercurr = $node->total;
-  }
-  
   // Parse invoice items
   //from linear to array/object combination
   $j = 0;
@@ -791,7 +786,11 @@ function _storminvoice_aftersave($node) {
   $node->tax1 = $t->ttax1;
   $node->tax2 = $t->ttax2;
   $node->total = $t->ttotal;
-  
+
+  if (!$node->totalcustomercurr) {
+    $node->totalcustomercurr = $node->total;
+  }
+
   db_query("UPDATE {storminvoice} SET
     amount=%f, tax1=%f, tax2=%f, total=%f, totalcustomercurr=%f WHERE vid = %d",
     $node->amount, $node->tax1, $node->tax2, $node->total, $node->totalcustomercurr, $node->vid);

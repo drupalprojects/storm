@@ -2,6 +2,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-1.x-dev:
+- Bug #746420 by juliangb | tchurch: Fixed field totalcustomercurr for invoice not set correctly when adding timetracking record to invoice.
 - Bug #758974 by juliangb | alberto56: Fixed Make it possible to remove a line in the invoice without everything disappearing.
 - Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #1170658 by D34dMan | AlphaGrowl: Fixed Edit icon not shown despite 'Edit when linked to user account' permission given.
