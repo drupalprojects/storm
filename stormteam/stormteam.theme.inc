@@ -43,7 +43,6 @@ function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
       '#prefix' => '<div class="members">',
       '#suffix' => '</div>',
       '#value' => theme('storm_view_item', t('Members'), implode(", ", $node->members_array)),
-      '#weight' => $w++,
     );
   }
   

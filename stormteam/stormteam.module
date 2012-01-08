@@ -337,15 +337,14 @@ function stormteam_form(&$node) {
  * Implementation of hook_load
  */
 function stormteam_load($node) {
-  $result = db_query('SELECT mnid FROM {stormteam} WHERE vid = %d', $node->vid);
+  $result = db_query('SELECT ste.mnid, n.title, n.status FROM {stormteam} ste JOIN {node} n ON (ste.mnid = n.nid) WHERE ste.vid = %d', $node->vid);
   $additions = new stdClass();
+  $additions->members_array = array();
+  $additions->members_deactivated_array = array();
   while ($members = db_fetch_object($result)) {
-    $mnode = node_load($members->mnid);
-    if (!empty($mnode)) {
-      $additions->members_array[$members->mnid] = $mnode->title;
-      if ($mnode->status == 0) {
-        $additions->members_deactivated_array[$members->mnid] = $mnode->title;
-      }
+    $additions->members_array[$members->mnid] = $members->title;
+    if ($members->status == 0) {
+      $additions->members_deactivated_array[$members->mnid] = $members->title;
     }
   }
   $additions->title_old = $node->title;

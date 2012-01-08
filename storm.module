@@ -1047,6 +1047,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
           if (module_exists('stormteam')) {
             $options[$teams][$node->nid] = check_plain($node->title);
             foreach ($node->members_array as $nid => $name) {
+              // do not add deactivated persons
               if (!array_key_exists($nid, $node->members_deactivated_array)) {
                 $options[$people][$nid] = check_plain($name);
               }
@@ -1091,32 +1092,35 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     }
   }
   if (module_exists('stormteam')) {
-    $sql = "SELECT DISTINCT(n.nid)
+    $where = array();
+    $args = array();
+    $having = "";
+    // do not add teams, which we already added
+    if (!empty($options[$teams])) {
+      $where[] = "ste.nid NOT IN (".db_placeholders($options[$teams]).")";
+      $args = array_merge($args, array_keys($options[$teams]));
+    }
+    // only add teams, which have at least the same members as persons we added so far
+    if (!empty($organization_nid) && !empty($options[$people])) {
+      // add all persons which should be in the team
+      $where[] = "ste.mnid IN (".db_placeholders($options[$people]).")";
+      $args = array_merge($args, array_keys($options[$people]));
+      // add a count, how many of the given persons should be in the other teams
+      $having = " HAVING COUNT(ste.nid) = %d ";
+      $args[] = count($options[$people]);
+    }
+    $sql = "SELECT n.nid, n.vid, n.title
                 FROM {node} n
                 INNER JOIN {stormteam} ste
                   ON n.vid = ste.vid
                 WHERE n.type = 'stormteam'
+                GROUP BY ste.nid".$having."
                 ORDER BY n.title ASC";
-    $sql = stormteam_access_sql($sql);
+    $sql = stormteam_access_sql($sql, $where);
     $sql = db_rewrite_sql($sql);
-    $result = db_query($sql);
+    $result = db_query($sql, $args);
     while ($team = db_fetch_object($result)) {
-      if (!array_key_exists($team->nid, $options[$teams])) {
-        $team_node = node_load($team->nid);
-        $add_team = TRUE;
-        if (isset($organization_nid)) {
-          //Check if all team members are relevant to current org or project
-          foreach ($team_node->members_array as $nid => $name) {
-            if (!array_key_exists($nid, $options[$people])) {
-              $add_team = FALSE;
-              break;
-            }
-          }
-        }
-        if ($add_team) {
-          $options[$teams][$team_node->nid] = check_plain($team_node->title);
-        }
-      }
+      $options[$teams][$team->nid] = check_plain($team->title);
     }
   }
   if (isset($options[$people]) && array_key_exists(0, $options[$people])) {
