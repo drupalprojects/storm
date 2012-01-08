@@ -243,15 +243,15 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
     );
 
     $form['tasks']['tasks'][$task->nid]['task_category_'. $task->nid] = array(
-      '#value' => storm_icon('category_'. $task->taskcategory, $task->taskcategory),
+      '#value' => storm_icon('category_'. $task->taskcategory, stormattribute_value('Task category', $task->taskcategory)),
     );
 
     $form['tasks']['tasks'][$task->nid]['task_status_'. $task->nid] = array(
-      '#value' => storm_icon('status_'. $task->taskstatus, $task->taskstatus),
+      '#value' => storm_icon('status_'. $task->taskstatus, stormattribute_value('Task status', $task->taskstatus)),
     );
 
     $form['tasks']['tasks'][$task->nid]['task_priority_'. $task->nid] = array(
-      '#value' => storm_icon('priority_'. $task->taskpriority, $task->taskpriority),
+      '#value' => storm_icon('priority_'. $task->taskpriority, stormattribute_value('Task priority', $task->taskpriority)),
     );
 
     $form['tasks']['tasks'][$task->nid]['task_duration_'. $task->nid] = array(

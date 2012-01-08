@@ -15,13 +15,13 @@ function theme_stormticket_list($header, $tickets) {
     $n->type = 'stormticket';
 
     $rows[] = array(
-      storm_icon('category_'. check_plain($ticket->ticketcategory), check_plain($ticket->ticketcategory)),
+      storm_icon('category_'. $ticket->ticketcategory, stormattribute_value('Ticket category', $ticket->ticketcategory)),
       l($ticket->organization_title, 'node/'. $ticket->organization_nid),
       l($ticket->project_title, 'node/'. $ticket->project_nid),
       l($ticket->title, 'node/'. $ticket->nid) . theme('mark', node_mark($ticket->nid, $ticket->changed)),
       format_date($ticket->created, 'small'),
-      storm_icon('status_'. check_plain($ticket->ticketstatus), check_plain($ticket->ticketstatus)),
-      storm_icon('priority_'. check_plain($ticket->ticketpriority), check_plain($ticket->ticketpriority)),
+      storm_icon('status_'. $ticket->ticketstatus, stormattribute_value('Ticket status', $ticket->ticketstatus)),
+      storm_icon('priority_'. $ticket->ticketpriority, stormattribute_value('Ticket priority', $ticket->ticketpriority)),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',

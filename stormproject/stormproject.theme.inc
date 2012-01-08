@@ -10,11 +10,11 @@ function theme_stormproject_list($header, $projects) {
   $rows = array();
   foreach ($projects as $key => $project) {
     $rows[] = array(
-      storm_icon('projectcategory_'. $project->projectcategory, $project->projectcategory),
+      storm_icon('projectcategory_'. $project->projectcategory, stormattribute_value('Project category', $project->projectcategory)),
       l($project->organization_title, 'node/'. $project->organization_nid),
       l($project->title, 'node/'. $project->nid) . theme('mark', node_mark($project->nid, $project->changed)),
-      storm_icon('status_'. check_plain($project->projectstatus), check_plain($project->projectstatus)),
-      storm_icon('priority_'. check_plain($project->projectpriority), check_plain($project->projectpriority)),
+      storm_icon('status_'. $project->projectstatus, stormattribute_value('Project status', $project->projectstatus)),
+      storm_icon('priority_'. $project->projectpriority, stormattribute_value('Project priority', $project->projectpriority)),
       array(
         'data' => storm_icon_edit_node($project, $_GET) .'&nbsp;'. storm_icon_delete_node($project, $_GET),
         'class' => 'storm_list_operations',

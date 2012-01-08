@@ -43,7 +43,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
 
     $rows[] = array(
       array(
-        'data' => storm_icon('invoice_status_'. check_plain($invoice->status), check_plain($invoice->status)),
+        'data' => storm_icon('invoice_status_'. check_plain($invoice->status), stormattribute_value('Invoice status', $invoice->status)),
         'style' => 'text-align: center',
       ),
       array(

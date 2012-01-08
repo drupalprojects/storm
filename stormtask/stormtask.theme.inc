@@ -65,9 +65,9 @@ function theme_stormtask_list($header, $tasks) {
         l($task->organization_title, 'node/'. $task->organization_nid),
         l($task->project_title, 'node/'. $task->project_nid),
         l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
-        storm_icon('category_'. check_plain($task->taskcategory), check_plain($task->taskcategory)),
-        storm_icon('status_'. check_plain($task->taskstatus), check_plain($task->taskstatus)),
-        storm_icon('priority_'. check_plain($task->taskpriority), check_plain($task->taskpriority)),
+        storm_icon('category_'. $task->taskcategory, stormattribute_value('Task category', $task->taskcategory)),
+        storm_icon('status_'. $task->taskstatus, stormattribute_value('Task status', $task->taskstatus)),
+        storm_icon('priority_'. $task->taskpriority, stormattribute_value('Task priority', $task->taskpriority)),
         array(
           'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
           'class' => 'storm_list_operations',
