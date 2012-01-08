@@ -425,6 +425,16 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     }
   }
 
+  if (isset($myorg->currency)) {
+    $currencies = stormattribute_attributes_bydomain('Currency');
+    $node->content['group5']['currency'] = array(
+      '#prefix' => '<div class="currency">',
+      '#suffix' => '</div>',
+      '#value' => t('Unless stated, amounts shown on this invoice are quoted in %currency.', array('%currency' => $currencies['values'][$myorg->currency])),
+      '#weight' => 5,
+    );
+  }
+
   if($node->content['body']['#value']) {
     $node->content['body_field'] = array(
       '#prefix' => '<div class="stormbody">',
