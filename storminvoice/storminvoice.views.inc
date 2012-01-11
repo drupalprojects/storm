@@ -247,6 +247,18 @@ function storminvoice_views_data() {
     ),
   );
 
+  $data['storminvoice']['invoice_status'] = array(
+    'title' => t('Invoice Status'),
+    'help' => t('Storm Invoice Status'),
+    'field' => array(
+      'click sortable' => TRUE,
+      'handler' => 'storminvoice_handler_field_invoice_status'
+    ),
+    'filter' => array(
+      'handler' => 'storminvoice_handler_filter_invoice_status',
+    ),
+  );
+
   // Invoice items
   $data['storminvoice_items']['table']['group']  = t('Storm Invoice Item');
   $data['storminvoice_items']['table']['join'] = array(
@@ -385,6 +397,15 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
+
+  $data['storminvoice']['operation'] = array(
+    'field' => array(
+      'title' => t('Edit/Delete link'),
+      'help' => t('Provide a simple link to edit and delete the node.'),
+      'handler' => 'storm_handler_field_operation',
+      'type' => 'storminvoice',
+    ),
+  );
   
   return $data;
 }
@@ -392,10 +413,21 @@ function storminvoice_views_data() {
 function storminvoice_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'stormattribute'),
+      'path' => drupal_get_path('module', 'storminvoice'),
     ),
     'handlers' => array(
       'stormattribute_handler_filter_attributes_domain' => array(
+        'parent' => 'views_handler_filter_in_operator',
+        'path' => drupal_get_path('module', 'stormattribute'),
+      ),
+      'storm_handler_field_operation' => array(
+        'parent' => 'views_handler_field_node_link',
+        'path' => drupal_get_path('module', 'storm'),
+      ),
+      'storminvoice_handler_field_invoice_status' => array(
+        'parent' => 'views_handler_field',
+      ),
+      'storminvoice_handler_filter_invoice_status' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
     ),

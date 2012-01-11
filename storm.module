@@ -1234,3 +1234,29 @@ function _storm_number_of_items($source_module, $destination_module, $nid) {
   }
   return $nmb_of_items;
 }
+
+/**
+ * Implements hook_views_pre_render to add the storm_icon_add
+ * @param $view
+ */
+function storm_views_pre_render(&$view) {
+  if (isset($view->field['operation'])
+    && $view->field['operation'] instanceof storm_handler_field_operation
+    && isset($view->field['operation']->definition['type'])
+    && $view->field['operation']->options['display_add_icon']
+  ) {
+    $i = new stdClass();
+    $i->type = $view->field['operation']->definition['type'];
+    if ($view->field['operation']->options['display_icons']) {
+      $view->attachment_before .= '<span class="storm-icon-add-view">'.storm_icon_add_node($i, $_GET).'</span>';
+    }
+    else {
+      global $user;
+      $type = $i->type;
+      $af = $type .'_access';
+      if ($af('create', $i, $user)) {
+        $view->attachment_before .= '<span class="storm-icon-add-view">'.l(t('Add'), 'node/add/'.$type).'</span>';
+      }
+    }
+  }
+}

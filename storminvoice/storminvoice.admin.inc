@@ -112,8 +112,6 @@ function storminvoice_list() {
     if ($status == 'overdue') {
       $where[] = "sin.paymentdate=0 AND sin.duedate<". time();
     }
-    $where[] = 'sin.requestdate<=%d';
-    $args[] = _storm_date_to_gmtimestamp($reqdateto);
     $filterfields[] = 'Status';
   }
 

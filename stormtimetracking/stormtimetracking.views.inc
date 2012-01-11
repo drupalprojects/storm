@@ -224,6 +224,15 @@ function stormtimetracking_views_data() {
       'handler' => 'views_handler_filter_numeric',
     ),
   );
+
+  $data['stormtimetracking']['operation'] = array(
+    'field' => array(
+      'title' => t('Edit/Delete link'),
+      'help' => t('Provide a simple link to edit and delete the node.'),
+      'handler' => 'storm_handler_field_operation',
+      'type' => 'stormtimetracking',
+    ),
+  );
   
   return $data;
 }
@@ -236,7 +245,11 @@ function stormtimetracking_views_handlers() {
     'handlers' => array(
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
-    ),
+      ),
+      'storm_handler_field_operation' => array(
+        'parent' => 'views_handler_field_node_link',
+        'path' => drupal_get_path('module', 'storm'),
+      ),
     ),
   );
 }

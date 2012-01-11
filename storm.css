@@ -1,4 +1,3 @@
-
 table.formgroup {
 width: auto;
 margin: 0;
@@ -168,4 +167,8 @@ background: transparent url(images/configuration.png) no-repeat top left;
 
 .container-inline .container-inline-date div, .container-inline div.container-inline-date, .container-inline .container-inline-date input {
   display: block;
+}
+
+.view .attachment .storm-icon-add-view {
+  float: right;
 }

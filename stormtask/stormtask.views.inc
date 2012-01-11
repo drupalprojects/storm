@@ -117,6 +117,7 @@ function stormtask_views_data() {
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
       'domain' => 'Task Status',
+      'icon' => 'status',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -134,6 +135,7 @@ function stormtask_views_data() {
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
       'domain' => 'Task Category',
+      'icon' => 'category',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -151,6 +153,7 @@ function stormtask_views_data() {
       'click sortable' => TRUE,
       'handler' => 'stormattribute_handler_field_attributes_domain',
       'domain' => 'Task Priority',
+      'icon' => 'priority',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -332,6 +335,15 @@ function stormtask_views_data() {
     ),
   );
 
+  $data['stormtask']['operation'] = array(
+    'field' => array(
+      'title' => t('Edit/Delete link'),
+      'help' => t('Provide a simple link to edit and delete the node.'),
+      'handler' => 'storm_handler_field_operation',
+      'type' => 'stormtask',
+    ),
+  );
+
   return $data;
 }
 
@@ -346,7 +358,11 @@ function stormtask_views_handlers() {
       ),
       'stormattribute_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
-    ),
+      ),
+      'storm_handler_field_operation' => array(
+        'parent' => 'views_handler_field_node_link',
+        'path' => drupal_get_path('module', 'storm'),
+      ),
     ),
   );
 }
