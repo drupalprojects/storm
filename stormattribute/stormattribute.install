@@ -436,6 +436,7 @@ function stormattribute_install() {
     $prevdomain = $domain;
   }
 
+  db_query("UPDATE {stormattribute} SET isdefault = 1 WHERE domain = 'Task category' and akey = 'task'");
 }
 
 function stormattribute_uninstall() {
