@@ -41,7 +41,12 @@ function storminvoice_schema() {
       'src_nid'             => array('type' => 'int'),
       'src_vid'             => array('type' => 'int'),
     ),
-    'primary key' => array('vid', 'nid'),
+    'primary key' => array('vid'),
+    'indexes'     => array(
+      'nid'               => array('nid'),
+      'organization_nid'  => array('organization_nid'),
+      'project_nid'       => array('project_nid'),
+    ),
   );
 
   $schema['storminvoice_items'] = array(
@@ -60,6 +65,10 @@ function storminvoice_schema() {
       'total'               => array('type' => 'float'),
       'src_nid'             => array('type' => 'int'),
       'src_vid'             => array('type' => 'int'),
+    ),
+    'indexes'     => array(
+      'invoice_nid'  => array('invoice_nid'),
+      'invoice_vid'  => array('invoice_vid'),
     ),
   );
   
@@ -185,4 +194,16 @@ function storminvoice_update_6106() {
   db_drop_field($ret, 'storminvoice_items', 'vid');
   
   return $ret;
+}
+
+function storminvoice_update_6201() {
+  $return = array();
+  db_drop_primary_key($return, 'storminvoice');
+  db_add_primary_key($return, 'storminvoice', array('vid'));
+  db_add_index($return, 'storminvoice', 'nid', array('nid'));
+  db_add_index($return, 'storminvoice', 'organization_nid', array('organization_nid'));
+  db_add_index($return, 'storminvoice', 'project_nid', array('project_nid'));
+  db_add_index($return, 'storminvoice_items', 'invoice_nid', array('invoice_nid'));
+  db_add_index($return, 'storminvoice_items', 'invoice_vid', array('invoice_vid'));
+  return $return;
 }

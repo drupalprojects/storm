@@ -24,7 +24,10 @@ function stormknowledgebase_schema() {
       'nid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'topic' => array('type' => 'varchar', 'length' => 100),
     ),
-    'primary key' => array('vid', 'nid'),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'nid'     => array('nid')
+    ),
   );
 
   return $schema;
@@ -49,3 +52,10 @@ function stormknowledgebase_update_6102() {
   return $ret;
 }
 
+function stormknowledgebase_update_6201() {
+  $return = array();
+  db_drop_primary_key($return, 'stormknowledgebase');
+  db_add_primary_key($return, 'stormknowledgebase', array('vid'));
+  db_add_index($return, 'stormknowledgebase', 'nid', array('nid'));
+  return $return;
+}

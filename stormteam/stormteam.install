@@ -57,6 +57,11 @@ function stormteam_schema() {
       'nid',
       'mnid',
     ),
+    'indexes'     => array(
+      'vid'  => array('vid'),
+      'nid'  => array('nid'),
+      'mnid' => array('mnid'),
+    ),
   );
 
   return $schema;
@@ -164,4 +169,12 @@ function stormteam_update_6200() {
   db_rename_table($ret, 'stormteam_6200', 'stormteam');
 
   return $ret;
+}
+
+function stormteam_update_6201() {
+  $return = array();
+  db_add_index($return, 'stormteam', 'vid', array('vid'));
+  db_add_index($return, 'stormteam', 'nid', array('nid'));
+  db_add_index($return, 'stormteam', 'mnid', array('mnid'));
+  return $return;
 }

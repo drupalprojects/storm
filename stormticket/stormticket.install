@@ -44,7 +44,14 @@ function stormticket_schema() {
       'billable'            => array('type' => 'int', 'default' => 0),
       'billed'              => array('type' => 'int', 'default' => 0),
     ),
-    'primary key' => array('vid', 'nid'),
+    'primary key' => array('vid'),
+    'indexes'     => array(
+      'nid'               => array('nid'),
+      'organization_nid'  => array('organization_nid'),
+      'project_nid'       => array('project_nid'),
+      'task_nid'          => array('task_nid'),
+      'assigned_nid'      => array('assigned_nid'),
+    ),
   );
 
   return $schema;
@@ -106,3 +113,19 @@ function stormticket_update_6107() {
   return $ret;
 }
 
+function stormticket_update_6201() {
+  $return = array();
+  db_drop_primary_key($return, 'stormticket');
+  db_add_primary_key($return, 'stormticket', array('vid'));
+  $indexes = array(
+    'nid'               => array('nid'),
+    'organization_nid'  => array('organization_nid'),
+    'project_nid'       => array('project_nid'),
+    'task_nid'          => array('task_nid'),
+    'assigned_nid'      => array('assigned_nid'),
+  );
+  foreach($indexes as $name => $fields) {
+    db_add_index($return, 'stormticket', $name, $fields);
+  }
+  return $return;
+}

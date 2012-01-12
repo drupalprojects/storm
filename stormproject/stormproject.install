@@ -41,7 +41,13 @@ function stormproject_schema() {
       'billable'            => array('type' => 'int', 'default' => 0),
       'billed'              => array('type' => 'int', 'default' => 0),
     ),
-    'primary key' => array('vid', 'nid'),
+    'primary key' => array('vid'),
+    'indexes'     => array(
+      'nid'              => array('nid'),
+      'organization_nid' => array('organization_nid'),
+      'manager_nid'      => array('manager_nid'),
+      'assigned_nid'     => array('assigned_nid'),
+    )
   );
 
   return $schema;
@@ -108,3 +114,18 @@ function stormproject_update_6106() {
   return $ret;
 }
 
+function stormproject_update_6201() {
+  $return = array();
+  db_drop_primary_key($return, 'stormproject');
+  db_add_primary_key($return, 'stormproject', array('vid'));
+  $indexes = array(
+    'nid'              => array('nid'),
+    'organization_nid' => array('organization_nid'),
+    'manager_nid'      => array('manager_nid'),
+    'assigned_nid'     => array('assigned_nid'),
+  );
+  foreach($indexes as $name => $fields) {
+    db_add_index($return, 'stormproject', $name, $fields);
+  }
+  return $return;
+}

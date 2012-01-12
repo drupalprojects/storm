@@ -1,7 +1,7 @@
-
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Task #1396238 by kfritsche: Changed Performance - Indexes for storm tables.
 - Feature #1056918 by juliangb | minorOffense: Added Stormtask default category change to task.
 - Feature #902962 by kfritsche: Added views support for storm icon and invoice status
 - Task #1389998 by kfritsche: Performance Issue with stormteam.

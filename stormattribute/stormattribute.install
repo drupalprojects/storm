@@ -456,6 +456,9 @@ function stormattribute_schema() {
       'isactive'      => array('type' => 'int','not null' => FALSE, 'default' => 1, 'size' => 'tiny'),
     ),
     'primary key' => array('aid'),
+    'indexes' => array(
+      'domain'        => array('domain'),
+    ),
   );
 
   return $schema;
@@ -993,5 +996,11 @@ function stormattribute_update_6112() {
   $ret[] = update_sql("DELETE FROM {stormattribute} where domain = 'Price mode' and akey = 'fixed_timetracking'");
 
   return $ret;
+}
+
+function stormattribute_update_6201() {
+  $return = array();
+  db_add_index($return, 'stormattribute', 'domain', array('domain'));
+  return $return;
 }
 
