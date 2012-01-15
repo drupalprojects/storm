@@ -7,6 +7,68 @@
 function stormtask_install() {
   drupal_install_schema('stormtask');
   variable_set('node_options_stormtask', array('status'));
+
+  $attributes = array();
+
+  $attributes['Task status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Task status search'] = array(
+    '-' => 'all',
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Task category'] = array(
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $attributes['Task priority'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Task priority search'] = array(
+    '-' => 'all',
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Task category search'] = array(
+    '-' => 'all',
+    'bug' => 'bug',
+    'feature request' => 'feature request',
+    'support' => 'support',
+    'task' => 'task'
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
+  db_query("UPDATE {stormattribute} SET isdefault = 1 WHERE domain = 'Task category' and akey = 'task'");
 }
 
 function stormtask_disable() {
@@ -15,6 +77,8 @@ function stormtask_disable() {
 
 function stormtask_uninstall() {
   drupal_uninstall_schema('stormtask');
+
+  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Task status', 'Task status search', 'Task category', 'Task category search', 'Task priority', 'Task priority search')");
 }
 
 function stormtask_schema() {
@@ -127,4 +191,66 @@ function stormtask_update_6201() {
     db_add_index($return, 'stormtask', $name, $fields);
   }
   return $return;
+}
+
+/**
+ * Move Storm Attribute module into component modules
+ */
+function stormtask_update_6202() {
+  $attributes = array();
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 1) {
+    $attributes['Task category'] = array(
+      'bug' => 'bug',
+      'feature request' => 'feature request',
+      'support' => 'support',
+      'task' => 'task'
+    );
+
+    $attributes['Task priority'] = array(
+      '1-low' => 'low',
+      '2-normal' => 'normal',
+      '3-high' => 'high',
+      '4-urgent' => 'urgent'
+    );
+
+    $attributes['Task priority search'] = array(
+      '1-low' => 'low',
+      '2-normal' => 'normal',
+      '3-high' => 'high',
+      '4-urgent' => 'urgent'
+    );
+  }
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
+    $attributes['Task category search'] = array(
+      '-' => 'all',
+      'bug' => 'bug',
+      'feature request' => 'feature request',
+      'support' => 'support',
+      'task' => 'task'
+    );
+
+    $attributes['Task status search'] = array('-' => 'all');
+    $attributes['Task priority search'] = array('-' => 'all');
+  }
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+  $ret = array();
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
+    $ret[] = update_sql("UPDATE {stormtask} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+  }
+
+  return $ret;
 }

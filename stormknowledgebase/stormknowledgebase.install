@@ -7,6 +7,29 @@
 function stormknowledgebase_install() {
   drupal_install_schema('stormknowledgebase');
   variable_set('node_options_stormknowledgebase', array('status'));
+
+  $attributes = array();
+
+  $attributes['Knowledge base topic'] = array(
+    'OS' => 'Operating systems',
+    'Linux'=>'-- Linux',
+    'Ubuntu'=>'-- Ubuntu',
+    'DB' => 'Databases',
+    'MySQL'=>'-- MySQL',
+    'PostgreSQL'=>'-- PostgreSQL',
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
 }
 
 function stormknowledgebase_disable() {
@@ -15,6 +38,8 @@ function stormknowledgebase_disable() {
 
 function stormknowledgebase_uninstall() {
   drupal_uninstall_schema('stormknowledgebase');
+
+  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Knowledge base topic')");
 }
 
 function stormknowledgebase_schema() {
@@ -58,4 +83,35 @@ function stormknowledgebase_update_6201() {
   db_add_primary_key($return, 'stormknowledgebase', array('vid'));
   db_add_index($return, 'stormknowledgebase', 'nid', array('nid'));
   return $return;
+}
+
+/**
+ * Move Storm Attribute module into component modules
+ */
+function stormknowledgebase_update_6202() {
+  // Only run this update if was not previously run as part of the legacy stormattribute module
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 3) {
+    $attributes['Knowledge base topic'] = array(
+      'OS' => 'Operating systems',
+      'Linux'=>'-- Linux',
+      'Ubuntu'=>'-- Ubuntu',
+      'DB' => 'Databases',
+      'MySQL'=>'-- MySQL',
+      'PostgreSQL'=>'-- PostgreSQL',
+    );
+
+    $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+    $prevdomain = '';
+    $weight = 0;
+    foreach ($attributes as $domain => $attribute) {
+      if ($domain != $prevdomain) $weight=0;
+      foreach ($attribute as $key => $value) {
+        db_query($s, $domain, $key, $value, $weight);
+        $weight++;
+      }
+      $prevdomain = $domain;
+    }
+  }
+  $ret = array();
+  return $ret;
 }

@@ -7,6 +7,30 @@
 function stormexpense_install() {
   drupal_install_schema('stormexpense');
   variable_set('node_options_stormexpense', array('status'));
+
+  $attributes = array();
+
+  $attributes['Expense status'] = array(
+    'outstanding' => 'Outstanding',
+    'paid' => 'Paid',
+  );
+
+  $attributes['Expense status search'] = array(
+    'outstanding' => 'Outstanding',
+    'paid' => 'Paid',
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
 }
 
 function stormexpense_disable() {
@@ -15,6 +39,8 @@ function stormexpense_disable() {
 
 function stormexpense_uninstall() {
   drupal_uninstall_schema('stormexpense');
+
+  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Expense status', 'Expense status search')");
 }
 
 function stormexpense_schema() {
@@ -99,4 +125,37 @@ function stormexpense_update_6201() {
     db_add_index($return, 'stormexpense', $name, $fields);
   }
   return $return;
+}
+
+/**
+ * Move Storm Attribute module into component modules
+ */
+function stormexpense_update_6202() {
+  // Only run this update if was not previously run as part of the legacy stormattribute module
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6108) {
+    $attributes['Expense status'] = array(
+      'outstanding' => 'Outstanding',
+      'paid' => 'Paid',
+    );
+
+    $attributes['Expense status search'] = array(
+      'outstanding' => 'Outstanding',
+      'paid' => 'Paid',
+    );
+
+    $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('%s', '%s', '%s', %d, 1)";
+    $prevdomain = '';
+    $weight = 0;
+    foreach ($attributes as $domain => $attribute) {
+      if ($domain != $prevdomain) $weight=0;
+      foreach ($attribute as $key => $value) {
+        db_query($s, $domain, $key, $value, $weight);
+        $weight++;
+      }
+      $prevdomain = $domain;
+    }
+  }
+
+  $ret = array();
+  return $ret;
 }

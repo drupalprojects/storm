@@ -7,6 +7,67 @@
 function stormproject_install() {
   drupal_install_schema('stormproject');
   variable_set('node_options_stormproject', array('status'));
+
+  $attributes = array();
+
+  $attributes['Project status'] = array(
+    'inserted' => 'inserted',
+    'in progress' => 'in progress',
+    'on hold' => 'on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project status search'] = array(
+    '-' => 'all',
+    'inserted,in progress,on hold' => 'open',
+    'inserted' => '-- inserted',
+    'in progress' => '-- in progress',
+    'on hold' => '-- on hold',
+    'completed' => 'completed'
+  );
+
+  $attributes['Project category'] = array(
+    'development' => 'development',
+    'support' => 'support',
+  );
+
+  $attributes['Project category search'] = array(
+    '-' => 'all',
+    'development' => 'development',
+    'support' => 'support',
+  );
+
+  $attributes['Project priority'] = array(
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Project priority search'] = array(
+    '-' => 'all',
+    '1-low' => 'low',
+    '2-normal' => 'normal',
+    '3-high' => 'high',
+    '4-urgent' => 'urgent'
+  );
+
+  $attributes['Duration unit'] = array(
+    'hour' => 'Hour',
+    'day' => 'Day',
+  );
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
 }
 
 function stormproject_disable() {
@@ -15,6 +76,8 @@ function stormproject_disable() {
 
 function stormproject_uninstall() {
   drupal_uninstall_schema('stormproject');
+
+  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Project status', 'Project status search', 'Project category', 'Project category search', 'Project priority', 'Project priority search', 'Duration unit')");
 }
 
 function stormproject_schema() {
@@ -128,4 +191,68 @@ function stormproject_update_6201() {
     db_add_index($return, 'stormproject', $name, $fields);
   }
   return $return;
+}
+
+/**
+ * Move Storm Attribute module into component modules
+ */
+function stormproject_update_6202() {
+  $attributes = array();
+
+  // Only run this update if was not previously run as part of the legacy stormattribute module
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 1) {
+    $attributes['Project priority'] = array(
+      '1-low' => 'low',
+      '2-normal' => 'normal',
+      '3-high' => 'high',
+      '4-urgent' => 'urgent'
+    );
+
+    $attributes['Project priority search'] = array(
+      '1-low' => 'low',
+      '2-normal' => 'normal',
+      '3-high' => 'high',
+      '4-urgent' => 'urgent'
+    );
+  }
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 4) {
+    $attributes['Duration unit'] = array(
+      'hour' => 'Hour',
+      'day' => 'Day',
+    );
+  }
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
+    $attributes['Project status search'] = array('-' => 'all');
+    $attributes['Project priority search'] = array('-' => 'all');
+  }
+
+  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
+  $prevdomain = '';
+  $weight = 0;
+  foreach ($attributes as $domain => $attribute) {
+    if ($domain != $prevdomain) $weight=0;
+    foreach ($attribute as $key => $value) {
+      db_query($s, $domain, $key, $value, $weight);
+      $weight++;
+    }
+    $prevdomain = $domain;
+  }
+
+  $ret = array();
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6107) {
+    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'development', 'development', 0, 1)");
+    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'support', 'support', 0, 1)");
+  }
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6109) {
+    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
+  }
+
+  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
+    $ret[] = update_sql("UPDATE {stormproject} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
+  }
+  return $ret;
 }
