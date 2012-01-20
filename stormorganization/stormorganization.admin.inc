@@ -116,7 +116,7 @@ function stormorganization_list() {
 }
 
 function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $country_list = stormattribute_attributes_bydomain('Country');
+  $country_list = storm_attributes_bydomain('Country');
   $country = isset($_SESSION['stormorganization_list_filter']['country']) ? $_SESSION['stormorganization_list_filter']['country'] : '-';
   $_SESSION['stormorganization_list_filter']['country'] = $country;
 

@@ -10,7 +10,7 @@ class StormtaskTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'stormtask');
   }
 
   public function testStormtaskAccess() {

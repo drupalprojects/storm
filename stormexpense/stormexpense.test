@@ -10,7 +10,7 @@ class StormexpenseTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask', 'stormticket', 'stormexpense');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'stormtask', 'stormticket', 'stormexpense');
   }
 
   public function testStormexpenseAccess() {

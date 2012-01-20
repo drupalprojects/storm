@@ -35,7 +35,7 @@ function stormknowledgebase_list() {
   $args = array();
   $filterfields = array();
 
-  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+  $topic_list = storm_attributes_bydomain('Knowledge base topic');
   $topic = isset($_SESSION['stormknowledgebase_list_filter']['topic']) ? $_SESSION['stormknowledgebase_list_filter']['topic'] : $topic_list['default'];
   $_SESSION['stormknowledgebase_list_filter']['topic'] = $topic;
 
@@ -75,7 +75,7 @@ function stormknowledgebase_list() {
 }
 
 function stormknowledgebase_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $topic_list = stormattribute_attributes_bydomain('Knowledge base topic');
+  $topic_list = storm_attributes_bydomain('Knowledge base topic');
   $topic = $_SESSION['stormknowledgebase_list_filter']['topic'];
 
   $itemsperpage = isset($_SESSION['stormknowledgebase_list_filter']['itemsperpage']) ? $_SESSION['stormknowledgebase_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);

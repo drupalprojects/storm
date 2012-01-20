@@ -11,7 +11,7 @@ Knowledge base module',
   }
   
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormknowledgebase');
+    parent::setUp('storm', 'stormknowledgebase');
     $privileged_user = $this->drupalCreateUser(array('Storm knowledgebase: add'));
     $this->drupalLogin($privileged_user);
   }

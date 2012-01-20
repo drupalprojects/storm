@@ -1,6 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Issue #1397960 by juliangb: Combine storm attribute module into the storm module.
 - Task #1397962 by juliangb: Move storm attribute installation into component modules.
 - Task #1396238 by kfritsche: Changed Performance - Indexes for storm tables.
 - Feature #1056918 by juliangb | minorOffense: Added Stormtask default category change to task.

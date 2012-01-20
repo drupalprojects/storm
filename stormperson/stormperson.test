@@ -11,7 +11,7 @@ Person module',
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormperson');
+    parent::setUp('storm', 'stormorganization', 'stormperson');
     $privileged_user = $this->drupalCreateUser(array('Storm organization: add', 'Storm organization: view all', 'Storm person: add'));
     $this->drupalLogin($privileged_user);
   }

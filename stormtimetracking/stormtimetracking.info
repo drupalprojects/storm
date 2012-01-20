@@ -1,7 +1,6 @@
 name = Storm Timetracking
 description = "Allows recording of times worked based on project, task and/or ticket"
-dependencies[] = storm 
-dependencies[] = stormattribute
+dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask

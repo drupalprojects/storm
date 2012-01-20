@@ -1,7 +1,6 @@
 name = Storm Expense
 description = "Allows recording of expenses based on organizations, projects, tasks and tickets."
-dependencies[] = storm 
-dependencies[] = stormattribute
+dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask

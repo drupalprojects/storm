@@ -449,7 +449,7 @@ function stormticket_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
-  $category_list = stormattribute_attributes_bydomain('Ticket category');
+  $category_list = storm_attributes_bydomain('Ticket category');
   $form['group2']['ticketcategory'] = array(
     '#type' => 'select',
     '#title' => t('Category'),
@@ -457,7 +457,7 @@ function stormticket_form(&$node) {
     '#options' => $category_list['values'],
   );
 
-  $status_list = stormattribute_attributes_bydomain('Ticket status');
+  $status_list = storm_attributes_bydomain('Ticket status');
   $form['group2']['ticketstatus'] = array(
     '#type' => 'select',
     '#title' => t('Status'),
@@ -465,7 +465,7 @@ function stormticket_form(&$node) {
     '#options' => $status_list['values'],
   );
 
-  $priority_list = stormattribute_attributes_bydomain('Ticket priority');
+  $priority_list = storm_attributes_bydomain('Ticket priority');
   $form['group2']['ticketpriority'] = array(
     '#type' => 'select',
     '#title' => t('Priority'),
@@ -501,7 +501,7 @@ function stormticket_form(&$node) {
     '#default_value' => isset($node->dateend) ? $node->dateend : NULL,
   );
 
-  $durationunits = stormattribute_attributes_bydomain('Duration unit');
+  $durationunits = storm_attributes_bydomain('Duration unit');
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
     '#title' => t('Duration unit'),
@@ -523,7 +523,7 @@ function stormticket_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
 
-  $pricemodes = stormattribute_attributes_bydomain('Price mode');
+  $pricemodes = storm_attributes_bydomain('Price mode');
   $form['group4']['pricemode'] = array(
     '#type' => 'select',
     '#title' => t('Price mode'),
@@ -538,7 +538,7 @@ function stormticket_form(&$node) {
     '#default_value' => isset($node->price) ? $node->price : NULL,
   );
 
-  $currencies = stormattribute_attributes_bydomain('Currency');
+  $currencies = storm_attributes_bydomain('Currency');
   $form['group4']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Price currency'),
@@ -693,13 +693,13 @@ function stormticket_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
       if (!isset($node->nid)) {
-        $category_list = stormattribute_attributes_bydomain('Ticket category');
+        $category_list = storm_attributes_bydomain('Ticket category');
         $node->ticketcategory = $category_list['default'];
 
-        $status_list = stormattribute_attributes_bydomain('Ticket status');
+        $status_list = storm_attributes_bydomain('Ticket status');
         $node->ticketstatus = $status_list['default'];
 
-        $priority_list = stormattribute_attributes_bydomain('Ticket priority');
+        $priority_list = storm_attributes_bydomain('Ticket priority');
         $node->ticketpriority = $priority_list['default'];
       }
       break;

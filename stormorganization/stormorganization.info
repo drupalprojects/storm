@@ -1,6 +1,5 @@
 name = Storm Organization
 description = "Allows storing of organizations for use within Storm"
 dependencies[] = storm
-dependencies[] = stormattribute
 package = Storm
 core = 6.x

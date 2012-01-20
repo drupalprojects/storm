@@ -57,7 +57,7 @@ function stormproject_list() {
     $filterfields[] = 'Organization';
   }
 
-  $category_list = stormattribute_attributes_bydomain('project category search');
+  $category_list = storm_attributes_bydomain('project category search');
   $projectcategory = isset($_SESSION['stormproject_list_filter']['projectcategory']) ? $_SESSION['stormproject_list_filter']['projectcategory'] : $category_list['default'];
   $_SESSION['stormproject_list_filter']['projectcategory'] = $projectcategory;
 
@@ -67,7 +67,7 @@ function stormproject_list() {
     $filterfields[] = 'Category';
   }
 
-  $status_list = stormattribute_attributes_bydomain('project status search');
+  $status_list = storm_attributes_bydomain('project status search');
   $projectstatus = isset($_SESSION['stormproject_list_filter']['projectstatus']) ? $_SESSION['stormproject_list_filter']['projectstatus'] : $status_list['default'];
   $_SESSION['stormproject_list_filter']['projectstatus'] = $projectstatus;
 
@@ -82,7 +82,7 @@ function stormproject_list() {
     $filterfields[] = 'Status';
   }
 
-  $priority_list = stormattribute_attributes_bydomain('project priority search');
+  $priority_list = storm_attributes_bydomain('project priority search');
   $projectpriority = isset($_SESSION['stormproject_list_filter']['projectpriority']) ? $_SESSION['stormproject_list_filter']['projectpriority'] : $priority_list['default'];
   $_SESSION['stormproject_list_filter']['projectpriority'] = $projectpriority;
 
@@ -210,13 +210,13 @@ function stormproject_list() {
 function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   $organization_nid = isset($_SESSION['stormproject_list_filter']['organization_nid']) ? $_SESSION['stormproject_list_filter']['organization_nid'] : 0;
 
-  $category_list = stormattribute_attributes_bydomain('project category search');
+  $category_list = storm_attributes_bydomain('project category search');
   $projectcategory = isset($_SESSION['stormproject_list_filter']['projectcategory']) ? $_SESSION['stormproject_list_filter']['projectcategory'] : $category_list['default'];
 
-  $status_list = stormattribute_attributes_bydomain('project status search');
+  $status_list = storm_attributes_bydomain('project status search');
   $projectstatus = isset($_SESSION['stormproject_list_filter']['projectstatus']) ? $_SESSION['stormproject_list_filter']['projectstatus'] : $status_list['default'];
 
-  $priority_list = stormattribute_attributes_bydomain('project priority search');
+  $priority_list = storm_attributes_bydomain('project priority search');
   $projectpriority = isset($_SESSION['stormproject_list_filter']['projectpriority']) ? $_SESSION['stormproject_list_filter']['projectpriority'] : $priority_list['default'];
 
   $datebeginfrom = isset($_SESSION['stormproject_list_filter']['datebeginfrom']) ? $_SESSION['stormproject_list_filter']['datebeginfrom'] : NULL;

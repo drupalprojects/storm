@@ -100,7 +100,7 @@ function stormticket_list() {
     $filterfields[] = t('Task');
   }
 
-  $category_list = stormattribute_attributes_bydomain('ticket category search');
+  $category_list = storm_attributes_bydomain('ticket category search');
   $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter']['ticketcategory'] : $category_list['default'];
   $_SESSION['stormticket_list_filter']['ticketcategory'] = $ticketcategory;
 
@@ -115,7 +115,7 @@ function stormticket_list() {
     $filterfields[] = t('Category');
   }
 
-  $status_list = stormattribute_attributes_bydomain('ticket status search');
+  $status_list = storm_attributes_bydomain('ticket status search');
   $ticketstatus = isset($_SESSION['stormticket_list_filter']['ticketstatus']) ? $_SESSION['stormticket_list_filter']['ticketstatus'] : $status_list['default'];
   $_SESSION['stormticket_list_filter']['ticketstatus'] = $ticketstatus;
 
@@ -130,7 +130,7 @@ function stormticket_list() {
     $filterfields[] = t('Status');
   }
 
-  $priority_list = stormattribute_attributes_bydomain('ticket priority search');
+  $priority_list = storm_attributes_bydomain('ticket priority search');
   $ticketpriority = isset($_SESSION['stormticket_list_filter']['ticketpriority']) ? $_SESSION['stormticket_list_filter']['ticketpriority'] : $priority_list['default'];
   $_SESSION['stormticket_list_filter']['ticketpriority'] = $ticketpriority;
 
@@ -266,13 +266,13 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
   $project_nid = isset($_SESSION['stormticket_list_filter']['project_nid']) ? $_SESSION['stormticket_list_filter']['project_nid'] : 0;
   $task_nid = isset($_SESSION['stormticket_list_filter']['task_nid']) ? $_SESSION['stormticket_list_filter']['task_nid'] : 0;
 
-  $category_list = stormattribute_attributes_bydomain('ticket category search');
+  $category_list = storm_attributes_bydomain('ticket category search');
   $ticketcategory = isset($_SESSION['stormticket_list_filter']['ticketcategory']) ? $_SESSION['stormticket_list_filter']['ticketcategory'] : $category_list['default'];
 
-  $status_list = stormattribute_attributes_bydomain('ticket status search');
+  $status_list = storm_attributes_bydomain('ticket status search');
   $ticketstatus = isset($_SESSION['stormticket_list_filter']['ticketstatus']) ? $_SESSION['stormticket_list_filter']['ticketstatus'] : $status_list['default'];
 
-  $priority_list = stormattribute_attributes_bydomain('ticket priority search');
+  $priority_list = storm_attributes_bydomain('ticket priority search');
   $ticketpriority = isset($_SESSION['stormticket_list_filter']['ticketpriority']) ? $_SESSION['stormticket_list_filter']['ticketpriority'] : $priority_list['default'];
 
   $itemsperpage = isset($_SESSION['stormticket_list_filter']['itemsperpage']) ? $_SESSION['stormticket_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);

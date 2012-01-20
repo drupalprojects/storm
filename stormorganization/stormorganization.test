@@ -11,7 +11,7 @@ Organization module',
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization');
+    parent::setUp('storm', 'stormorganization');
     $privileged_user = $this->drupalCreateUser(array('Storm organization: add'));
     $this->drupalLogin($privileged_user);
   }

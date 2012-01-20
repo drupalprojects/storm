@@ -10,7 +10,7 @@ class StormticketTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask', 'stormticket');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'stormtask', 'stormticket');
   }
 
   public function testStormticketAccess() {

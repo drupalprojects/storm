@@ -10,7 +10,7 @@ class StormtimetrackingTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask', 'stormticket', 'stormtimetracking');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'stormtask', 'stormticket', 'stormtimetracking');
   }
 
   public function testStormtimetrackingCreate() {

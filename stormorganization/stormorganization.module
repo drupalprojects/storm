@@ -293,7 +293,7 @@ function stormorganization_form(&$node) {
     '#weight' => 3,
   );
 
-  $country_list = stormattribute_attributes_bydomain('Country');
+  $country_list = storm_attributes_bydomain('Country');
   $form['group3']['country'] = array(
     '#type' => 'select',
     '#title' => t('Country'),
@@ -342,7 +342,7 @@ function stormorganization_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
 
-  $currency_list = stormattribute_attributes_bydomain('Currency');
+  $currency_list = storm_attributes_bydomain('Currency');
   $form['group5']['currency'] = array(
     '#type' => 'select',
     '#title' => t('Currency'),
@@ -350,7 +350,7 @@ function stormorganization_form(&$node) {
     '#default_value' => $node->currency,
   );
 
-  $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+  $pricemode_list = storm_attributes_bydomain('Price mode');
   $form['group5']['pricemode'] = array(
     '#type' => 'select',
     '#title' => t('Price mode'),
@@ -437,13 +437,13 @@ function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
         $node->isprovider = 0;
         $node->isactive = 1;
 
-        $country_list = stormattribute_attributes_bydomain('Country');
+        $country_list = storm_attributes_bydomain('Country');
         $node->country = $country_list['default'];
 
-        $currency_list = stormattribute_attributes_bydomain('Currency');
+        $currency_list = storm_attributes_bydomain('Currency');
         $node->currency = $currency_list['default'];
 
-        $pricemode_list = stormattribute_attributes_bydomain('Price mode');
+        $pricemode_list = storm_attributes_bydomain('Price mode');
         $node->pricemode = $pricemode_list['default'];
       }
       break;

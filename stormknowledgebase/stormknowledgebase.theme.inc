@@ -6,7 +6,7 @@
 
 function theme_stormknowledgebase_list($header, $kbs) {
   $rows = array();
-  $topics = stormattribute_attributes_bydomain('Knowledge base topic');
+  $topics = storm_attributes_bydomain('Knowledge base topic');
 
   foreach ($kbs as $kb) {
     $n = new stdClass();
@@ -47,7 +47,7 @@ function theme_stormknowledgebase_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['topic'] = array(
     '#prefix' => '<div class="topic">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Topic'), stormattribute_value('Knowledge base topic', $node->topic)),
+    '#value' => theme('storm_view_item', t('Topic'), storm_attribute_value('Knowledge base topic', $node->topic)),
     '#weight' => 1,
   );
 

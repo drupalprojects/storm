@@ -10,11 +10,11 @@ function theme_stormproject_list($header, $projects) {
   $rows = array();
   foreach ($projects as $key => $project) {
     $rows[] = array(
-      storm_icon('projectcategory_'. $project->projectcategory, stormattribute_value('Project category', $project->projectcategory)),
+      storm_icon('projectcategory_'. $project->projectcategory, storm_attribute_value('Project category', $project->projectcategory)),
       l($project->organization_title, 'node/'. $project->organization_nid),
       l($project->title, 'node/'. $project->nid) . theme('mark', node_mark($project->nid, $project->changed)),
-      storm_icon('status_'. $project->projectstatus, stormattribute_value('Project status', $project->projectstatus)),
-      storm_icon('priority_'. $project->projectpriority, stormattribute_value('Project priority', $project->projectpriority)),
+      storm_icon('status_'. $project->projectstatus, storm_attribute_value('Project status', $project->projectstatus)),
+      storm_icon('priority_'. $project->projectpriority, storm_attribute_value('Project priority', $project->projectpriority)),
       array(
         'data' => storm_icon_edit_node($project, $_GET) .'&nbsp;'. storm_icon_delete_node($project, $_GET),
         'class' => 'storm_list_operations',
@@ -78,21 +78,21 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['projectcategory'] = array(
     '#prefix' => '<div class="projectcategory">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Category'), check_plain(stormattribute_value('Project category', $node->projectcategory))),
+    '#value' => theme('storm_view_item', t('Category'), check_plain(storm_attribute_value('Project category', $node->projectcategory))),
     '#weight' => 1,
   );
 
   $node->content['group2']['projectstatus'] = array(
     '#prefix' => '<div class="projectstatus">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Status'), check_plain(stormattribute_value('Project status', $node->projectstatus))),
+    '#value' => theme('storm_view_item', t('Status'), check_plain(storm_attribute_value('Project status', $node->projectstatus))),
     '#weight' => 2,
   );
 
   $node->content['group2']['projectpriority'] = array(
     '#prefix' => '<div class="projectpriority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Priority'), check_plain(stormattribute_value('Project priority', $node->projectpriority))),
+    '#value' => theme('storm_view_item', t('Priority'), check_plain(storm_attribute_value('Project priority', $node->projectpriority))),
     '#weight' => 3,
   );
 

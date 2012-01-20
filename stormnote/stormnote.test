@@ -10,7 +10,7 @@ class StormnoteTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'stormtask', 'stormnote');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'stormtask', 'stormnote');
   }
 
   public function testStormnoteAccess() {

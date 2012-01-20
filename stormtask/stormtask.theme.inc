@@ -65,9 +65,9 @@ function theme_stormtask_list($header, $tasks) {
         l($task->organization_title, 'node/'. $task->organization_nid),
         l($task->project_title, 'node/'. $task->project_nid),
         l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
-        storm_icon('category_'. $task->taskcategory, stormattribute_value('Task category', $task->taskcategory)),
-        storm_icon('status_'. $task->taskstatus, stormattribute_value('Task status', $task->taskstatus)),
-        storm_icon('priority_'. $task->taskpriority, stormattribute_value('Task priority', $task->taskpriority)),
+        storm_icon('category_'. $task->taskcategory, storm_attribute_value('Task category', $task->taskcategory)),
+        storm_icon('status_'. $task->taskstatus, storm_attribute_value('Task status', $task->taskstatus)),
+        storm_icon('priority_'. $task->taskpriority, storm_attribute_value('Task priority', $task->taskpriority)),
         array(
           'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
           'class' => 'storm_list_operations',
@@ -143,21 +143,21 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['category'] = array(
     '#prefix' => '<div class="category">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Category'), check_plain(stormattribute_value('Task category', $node->taskcategory))),
+    '#value' => theme('storm_view_item', t('Category'), check_plain(storm_attribute_value('Task category', $node->taskcategory))),
     '#weight' => 1,
   );
 
   $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Status'), check_plain(stormattribute_value('Task status', $node->taskstatus))),
+    '#value' => theme('storm_view_item', t('Status'), check_plain(storm_attribute_value('Task status', $node->taskstatus))),
     '#weight' => 2,
   );
  
   $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Priority'), check_plain(stormattribute_value('Task priority', $node->taskpriority))),
+    '#value' => theme('storm_view_item', t('Priority'), check_plain(storm_attribute_value('Task priority', $node->taskpriority))),
     '#weight' => 3,
   );
   

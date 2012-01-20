@@ -1,7 +1,6 @@
 name = Storm Person
 description = "Allows storage of people within organizations, and linking of these to Drupal user accounts."
-dependencies[] = storm 
-dependencies[] = stormattribute
+dependencies[] = storm
 dependencies[] = stormorganization
 package = Storm
 core = 6.x

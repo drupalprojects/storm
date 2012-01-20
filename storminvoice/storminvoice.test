@@ -10,7 +10,7 @@ class StorminvoiceTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormattribute', 'stormorganization', 'stormproject', 'storminvoice');
+    parent::setUp('storm', 'stormorganization', 'stormproject', 'storminvoice');
   }
 
   public function testStorminvoiceAccess() {

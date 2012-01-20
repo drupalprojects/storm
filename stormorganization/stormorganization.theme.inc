@@ -8,7 +8,7 @@ function theme_stormorganization_list($header, $organizations) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
   $rows = array();
-  $countries = stormattribute_attributes_bydomain('Country');
+  $countries = storm_attributes_bydomain('Country');
   foreach ($organizations as $key => $organization) {
     $n = new stdClass();
     $n->nid = $organization->nid;
