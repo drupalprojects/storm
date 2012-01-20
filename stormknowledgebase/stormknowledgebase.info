@@ -1,8 +1,0 @@
-; Basic information
-name = Storm Knowledge Base
-description = "Provides means of storing and categorising knowledge."
-core = 6.x
-package = Storm
-
-; Dependencies
-dependencies[] = storm
