@@ -92,13 +92,13 @@ function storminvoice_list() {
     $reqdatefrom = $_SESSION['storminvoice_list_filter']['reqdatefrom'];
     $where[] = 'sin.requestdate>=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdatefrom);
-    $filterfields[] = 'Request Date';
+    $filterfields[] = 'Request date';
   }
   if (isset($_SESSION['storminvoice_list_filter']['reqdateto']) && $_SESSION['storminvoice_list_filter']['reqdateto']['day'] != -1) {
     $reqdateto = $_SESSION['storminvoice_list_filter']['reqdateto'];
     $where[] = 'sin.requestdate<=%d';
     $args[] = _storm_date_to_gmtimestamp($reqdateto);
-    $filterfields[] = 'Request Date';
+    $filterfields[] = 'Request date';
   }
 
   $status = isset($_SESSION['storminvoice_list_filter']['status']) ? $_SESSION['storminvoice_list_filter']['status'] : '-';
@@ -117,16 +117,16 @@ function storminvoice_list() {
 
   $itemsperpage = isset($_SESSION['storminvoice_list_filter']['itemsperpage']) ? $_SESSION['storminvoice_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
   $_SESSION['storminvoice_list_filter']['itemsperpage'] = $itemsperpage;
-    
+
   $tablesort = tablesort_sql($header);
 
   if ($tablesort == " ORDER BY  sin.number ASC") {
     $tablesort = " ORDER BY LPAD(sin.number, 10, '0') ASC";
   }
-  else if ($tablesort == " ORDER BY  sin.number DESC") {
+  elseif ($tablesort == " ORDER BY  sin.number DESC") {
     $tablesort = " ORDER BY LPAD(sin.number, 10, '0') DESC";
   }
-  
+
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
   }
@@ -134,9 +134,9 @@ function storminvoice_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('storminvoice_list_filter', $filterdesc);
-  
+
   $s = storminvoice_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
@@ -233,14 +233,14 @@ function storminvoice_list_filter(&$form_state, $filterdesc = 'Filter') {
   $form['filter']['group2']['reqdatefrom'] = array(
     '#type' => 'dateext',
     '#title' => t('Req. date from'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $reqdatefrom,
   );
 
   $form['filter']['group2']['reqdateto'] = array(
     '#type' => 'dateext',
     '#title' => t('Req. date to'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $reqdateto,
   );
 
@@ -322,7 +322,7 @@ function storminvoice_send_page($node, $language) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Invoices'), 'storm/invoices');
-  $breadcrumb[] = l($node->title, 'node/'.$node->nid);
+  $breadcrumb[] = l($node->title, 'node/'. $node->nid);
 
   drupal_set_breadcrumb($breadcrumb);
   drupal_set_html_head('<meta name="robots" content="noindex, nofollow" />');
@@ -354,21 +354,21 @@ function storminvoice_send_form(&$form_state, $path = NULL, $node = NULL, $langu
   );
   $form['message']['yemail'] = array(
     '#type' => 'textfield',
-    '#title' => t('Your Email'),
+    '#title' => t('Your e-mail'),
     '#size' => 58,
     '#maxlength' => 256,
     '#required' => TRUE,
   );
   $form['message']['yname'] = array(
     '#type' => 'textfield',
-    '#title' => t('Your Name'),
+    '#title' => t('Your name'),
     '#size' => 58,
     '#maxlength' => 256,
     '#required' => TRUE,
   );
   $form['message']['recipients'] = array(
     '#type' => 'textfield',
-    '#title' => t('Send To'),
+    '#title' => t('Send to'),
     '#default_value' => $organization_email,
     '#cols' => 50,
     '#rows' => 1,
@@ -391,15 +391,15 @@ function storminvoice_send_form(&$form_state, $path = NULL, $node = NULL, $langu
 
   $form['message']['subject'] = array(
     '#type' => 'textfield',
-    '#title' => t('Message Subject'),
+    '#title' => t('Message subject'),
     '#value' => variable_get('storminvoice_cover_note_subject', ''),
     '#description' => t('Enter subject for email.'),
   );
   $form['message']['body'] = array(
     '#type' => 'textarea',
-    '#title' => t('Message Body'),
+    '#title' => t('Message body'),
     '#value' => variable_get('storminvoice_cover_note', ''),
-    '#description' => 'Cover Note',
+    '#description' => 'Cover note',
     '#cols' => 50,
     '#rows' => 10,
     '#required' => TRUE,
@@ -412,7 +412,7 @@ function storminvoice_send_form(&$form_state, $path = NULL, $node = NULL, $langu
 
   $form['message']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Send Invoice'),
+    '#value' => t('Send invoice'),
   );
 
   if ($user->uid != 0) {
@@ -429,8 +429,8 @@ function storminvoice_send_form_submit($form, &$form_state) {
   $form_filled = $form_state['clicked_button']['#post'];
 
   $to = $form_filled['recipients'];
-  $language = null;
-  $from = $form_state['values']['yname'].'<'.$form_state['values']['yemail'].'>';
+  $language = NULL;
+  $from = $form_state['values']['yname'] .'<'. $form_state['values']['yemail'] .'>';
 
   $params = array();
 
@@ -463,7 +463,7 @@ function storminvoice_send_form_submit($form, &$form_state) {
 
   drupal_mail('storminvoice', 'invoice', $to, $language, $params, $from , True);
 
-  drupal_set_message(variable_get('storminvoice_sent', t('You have sent invoice to !email.', array('!email' => $to ))));
+  drupal_set_message(variable_get('storminvoice_sent', t('You have sent invoice to @email.', array('@email' => $to ))));
 }
 
 /**

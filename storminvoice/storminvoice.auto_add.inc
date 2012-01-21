@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  * Contains functions relating to the Storm Invoice auto_add functionality
  * (creating invoices based on other Storm nodes)
  */
- 
 function storminvoice_auto_add($node, $invoice = NULL) {
   switch ($node->type) {
     case 'stormorganization':
@@ -28,14 +26,14 @@ function storminvoice_auto_add($node, $invoice = NULL) {
       break;
     default:
       drupal_set_message(t('This type of node cannot be automatically added to an invoice'), 'error');
-      //watchdog - add link to record error in more detail?
+      // watchdog - add link to record error in more detail?
       drupal_goto('node/'. $node->nid);
   }
   if($invoice) {
-    drupal_set_message('The '. $node->type .' has been added to the selected invoice');
+    drupal_set_message(t('The @type has been added to the selected invoice.', array('@type' => $node->type)));
   }
   else {
-    drupal_set_message('This invoice was created automatically from the selected '. $node->type .'.');
+    drupal_set_message(t('This invoice was created automatically from the selected @type.', array('@type' => $node->type)));
   }
   drupal_goto('node/'. $invoice_nid);
 }
@@ -46,7 +44,7 @@ function storminvoice_auto_add_select() {
     '#type' => 'hidden',
     '#value' => arg(4),
   );
-    
+
   $form['invoice'] = array(
     '#title' => t('Invoice'),
     '#type' => 'select',
@@ -57,38 +55,38 @@ function storminvoice_auto_add_select() {
   // THIS CODE LOADS OPTIONS INTO THE INVOICE SELECTOR
   // Load the node object, but don't know how to handle it yet because it could be a node of several types.
   $node = node_load(arg(4));
-  /* This function does not know the type of node that is being billed for. To avoid recording all relationships between the Storm nodes, 
+  /* This function does not know the type of node that is being billed for. To avoid recording all relationships between the Storm nodes,
     * we simply check for the existance of a parent node (perhaps project, task, ticket etc). Organization will always be set.
     * The invoices we show in the list are those that match these parents or where these attributes are not set.
     */
-  
+
   if (($node->type == 'stormorganization') && !($node->organization_nid)) {
     $node->organization_nid = $node->nid;
   }
   else if (($node->type == 'stormproject') && !($node->project_nid)) {
     $node->project_nid = $node->nid;
   }
-  
+
   $sql = "SELECT n.nid, n.title, sin.* FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.nid=sin.nid";
   // Ensure node is published, correct type. Always filter by Organization
   $sql .= " WHERE n.status=1 AND n.type='storminvoice' AND sin.organization_nid=". $node->organization_nid;
-  
+
   if ($node->project_nid) {
     $sql .= " AND (sin.project_nid=". $node->project_nid ." OR sin.project_nid=0)";
   }
-  
+
   $sql = storminvoice_access_sql($sql);
   $sql = db_rewrite_sql($sql);
   $r = db_query($sql);
   while ($r_invoice = db_fetch_object($r)) {
     $form['invoice']['#options'][$r_invoice->nid] = $r_invoice->number ." | ". $r_invoice->title;
   }
-    
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Select'),
   );
-  
+
   return $form;
 }
 
