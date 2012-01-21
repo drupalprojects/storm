@@ -48,10 +48,10 @@ function stormexpense_access($op, $node, $account=NULL) {
     if (user_access('Storm expense: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm expense: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm expense: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm expense: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm expense: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -60,10 +60,10 @@ function stormexpense_access($op, $node, $account=NULL) {
     if (user_access('Storm expense: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm expense: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm expense: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm expense: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -72,10 +72,10 @@ function stormexpense_access($op, $node, $account=NULL) {
     if (user_access('Storm expense: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm expense: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm expense: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm expense: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -324,9 +324,9 @@ function stormexpense_form(&$node) {
     if (array_key_exists('ticket_nid', $_GET)) $node->ticket_nid = $_GET['ticket_nid'];
 
     $node->expensedate = time();
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
               ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
-    
+
     // Load tax defaults
     $node->tax1app = variable_get('storm_tax1_app', 1);
     $node->tax1percent = variable_get('storm_tax1_percent', 20);
@@ -334,7 +334,7 @@ function stormexpense_form(&$node) {
     $node->tax2percent = variable_get('storm_tax2_percent', 20);
   }
   else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
               ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
@@ -342,10 +342,10 @@ function stormexpense_form(&$node) {
   if ((arg(2) == 'edit') && ($node->tax1percent == NULL)) {
     $node->tax1percent = $node->tax1 / $node->amount * 100;
   }
-  
+
   $type = node_get_types('type', $node);
   $w = -100;
-  
+
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
   $form['group1'] = array(
@@ -371,7 +371,7 @@ function stormexpense_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
   );
 
@@ -393,7 +393,7 @@ function stormexpense_form(&$node) {
     '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormticket_project_task_tickets(this, 'edit-organization-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
   );
-  
+
   $tree = _stormtask_get_tree((isset($node->project_nid)) ? $node->project_nid : NULL);
   $tasks = _stormtask_plain_tree($tree);
   $tasks = array(0 => '-') + $tasks;
@@ -444,13 +444,13 @@ function stormexpense_form(&$node) {
     '#default_value' => (isset($node->provider_title)) ? $node->provider_title : NULL,
     '#autocomplete_path' => 'storm/expenses/provider_autocomplete',
   );
-  
+
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
-  
+
   $form['group3']['amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Amount'),
@@ -463,7 +463,7 @@ function stormexpense_form(&$node) {
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
-  
+
   $form['group4']['tax1app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 1 Application'),
@@ -473,14 +473,14 @@ function stormexpense_form(&$node) {
     ),
     '#default_value' => $node->tax1app,
   );
-  
+
   $form['group4']['tax1percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1 Percentage'),
     '#default_value' => $node->tax1percent,
     '#size' => 20,
   );
-  
+
   $form['group4']['tax2app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 2 Application'),
@@ -491,14 +491,14 @@ function stormexpense_form(&$node) {
     ),
     '#default_value' => $node->tax2app,
   );
-  
+
   $form['group4']['tax2percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2 Percentage'),
     '#default_value' => $node->tax2percent,
     '#size' => 20,
   );
-  
+
   if (!variable_get('storm_tax_display', TRUE)) {
     $form['group4']['#type'] = 'hidden';
   }
@@ -506,7 +506,7 @@ function stormexpense_form(&$node) {
     $form['group4']['tax2app']['#type'] = 'hidden';
     $form['group4']['tax2percent']['#type'] = 'hidden';
   }
-  
+
   $form['taxnotes'] = array(
     '#type' => 'markup',
     '#value' => t('Totals will be calculated automatically according to your tax selections.'),
@@ -524,7 +524,7 @@ function stormexpense_form(&$node) {
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
-  
+
   return $form;
 }
 
@@ -571,11 +571,11 @@ function _stormexpense_beforesave(&$node) {
   $node->amount = str_replace(',', '.', $node->amount);
   $node->tax1percent = str_replace(',', '.', $node->tax1percent);
   $node->tax2percent = str_replace(',', '.', $node->tax2percent);
-  
+
   $node->expensedate = _storm_date_to_gmtimestamp($node->expensedate);
 
   storm_taxation($node);
-  
+
   $s = "SELECT n.title FROM {node} AS n
     INNER JOIN {stormorganization} AS o ON n.nid=o.nid
     WHERE type='stormorganization' AND n.nid=%d";
@@ -595,7 +595,7 @@ function _stormexpense_beforesave(&$node) {
   $ta = db_fetch_object($r);
   (isset($ta->title)) ? $node->task_title = $ta->title : NULL;
   (isset($ta->stepno)) ? $node->task_stepno = $ta->stepno : NULL;
-  
+
   $s = "SELECT title FROM {node} AS n INNER JOIN {stormticket} AS t ON n.vid=t.vid WHERE n.type='stormticket' AND n.nid=%d";
   (isset($node->ticket_nid)) ? $r = db_query($s, $node->ticket_nid) : NULL;
 
@@ -638,7 +638,7 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
     
       $new_invoice = new StdClass;
       
-      //Code copied with edits from node form
+      // Code copied with edits from node form
       $new_invoice->requestdate = time();
       $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
       $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
@@ -649,25 +649,26 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice->title = $node->title;
       $new_invoice->uid = $user->uid;
       $new_invoice->type = 'storminvoice';
-      //$new_invoice->reference
+      // $new_invoice->reference
       $new_invoice->organization_nid = $node->organization_nid;
       $new_invoice->organization_title = $node->organization_title;
       $new_invoice->project_nid = $node->project_nid;
       $new_invoice->project_title = $node->project_title;
-      //$new_invoice->amount
-      //$new_invoice->tax
-      //$new_invoice->total
-      //$new_invoice->totalcustomercurr
-      //$new_invoice->taxexempt
+      // $new_invoice->amount
+      // $new_invoice->tax
+      // $new_invoice->total
+      // $new_invoice->totalcustomercurr
+      // $new_invoice->taxexempt
       $new_invoice->src_nid = $node->nid;
       $new_invoice->src_vid = $node->vid;
-      
+
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
-    } else {
+    }
+    else {
       $new_invoice = node_load($invoice_nid);
     }
-    
+
     if ($node->ticket_nid) {
       $parent_ticket = node_load($node->ticket_nid);
     }
@@ -680,9 +681,9 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
     else {
       $parent_organization = node_load($node->organization_nid);
     }
-    
+
     $count = count($new_invoice->items);
-    
+
     $new_invoice->items[$count]->description = $node->title;
     $new_invoice->items[$count]->amount = $node->amount;
     // Tax percent uses the values set on the expense.
@@ -695,8 +696,8 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $new_invoice->items[$count]->total = $node->total;
     $new_invoice->items[$count]->src_nid = $node->nid;
     $new_invoice->items[$count]->src_vid = $node->vid;
-    
-    //storm_taxation($new_invoice->items[$count]);
+
+    // storm_taxation($new_invoice->items[$count]);
     storminvoice_update($new_invoice);
   }
   return $invoice_nid;

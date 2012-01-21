@@ -75,7 +75,7 @@ function theme_stormexpense_list($header, $expenses, $totals) {
 
 function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
@@ -89,10 +89,10 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     $v = '';
     $v .= '<strong>'. t('Invoice this item:') .'</strong>';
     $v .= '<ul>';
-    $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
-    $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
+    $v .= '<li>'. l(t('Add to new invoice'), 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
+    $v .= '<li>'. l(t('Add to existing invoice'), 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
     $v .= '</ul>';
-    
+
     $node->content['links']['auto_invoice'] = array(
       '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
       '#suffix' => '</dt>',
@@ -100,7 +100,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => $l_pos++,
     );
   }
-  
+
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -191,7 +191,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => 2,
     );
   }
-  
+
   if ($node->tax1 || $node->tax2) {
     $node->content['group4']['total'] = array(
       '#prefix' => '<div class="total">',
@@ -208,7 +208,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -16,
   );
   unset($node->content['body']);
-  
+
   return $node;
 }
 

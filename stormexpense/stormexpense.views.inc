@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm expense data to views
+ */
 function stormexpense_views_data() {
   $data['stormexpense']['table']['group']  = t('Storm Expense');
   $data['stormexpense']['table']['join'] = array(
@@ -19,7 +22,7 @@ function stormexpense_views_data() {
       'label' => t('Expense -> Organization'),
     ),
   );
-  
+
   $data['stormexpense']['organization_title'] = array(
     'title' => t('Organization'),
     'help' => t('Storm Expense: Organization (title only)'),
@@ -36,7 +39,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormexpense']['project_nid'] = array(
     'title' => t('Project'),
     'help' => t('Expense -> Project'),
@@ -77,7 +80,7 @@ function stormexpense_views_data() {
   );
 
   $data['stormexpense']['task_stepno'] = array(
-    'title' => t('Task Step Number'),
+    'title' => t('Task step number'),
     'help' => t('Storm Expense Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,
@@ -92,7 +95,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormexpense']['task_title'] = array(
     'title' => t('Task'),
     'help' => t('Storm Expense Task (title only)'),
@@ -110,7 +113,6 @@ function stormexpense_views_data() {
     ),
   );
 
-  
   $data['stormexpense']['ticket_nid'] = array(
     'title' => t('Ticket'),
     'help' => t('Expense -> Ticket'),
@@ -138,7 +140,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormexpense']['provider_nid'] = array(
     'title' => t('Provider'),
     'help' => t('Expense -> Provider'),
@@ -166,7 +168,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormexpense']['expensedate'] = array(
     'title' => t('Date'),
     'help' => t('Storm Expense Date'),
@@ -181,7 +183,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
   $data['stormexpense']['amount'] = array(
     'title' => t('Amount'),
     'help' => t('Storm Expense Amount'),
@@ -198,7 +200,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormexpense']['tax'] = array(
     'title' => t('Tax'),
     'help' => t('Storm Expense Tax'),
@@ -215,7 +217,7 @@ function stormexpense_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormexpense']['total'] = array(
     'title' => t('Total'),
     'help' => t('Storm Expense Total'),
@@ -241,7 +243,7 @@ function stormexpense_views_data() {
       'type' => 'stormexpense',
     ),
   );
-  
+
   return $data;
 }
 

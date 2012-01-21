@@ -121,7 +121,7 @@ function stormexpense_update_6201() {
     'ticket_nid'        => array('ticket_nid'),
     'provider_nid'      => array('provider_nid'),
   );
-  foreach($indexes as $name => $fields) {
+  foreach ($indexes as $name => $fields) {
     db_add_index($return, 'stormexpense', $name, $fields);
   }
   return $return;
@@ -132,7 +132,7 @@ function stormexpense_update_6201() {
  */
 function stormexpense_update_6202() {
   // Only run this update if was not previously run as part of the legacy stormattribute module
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6108) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6108) {
     $attributes['Expense status'] = array(
       'outstanding' => 'Outstanding',
       'paid' => 'Paid',

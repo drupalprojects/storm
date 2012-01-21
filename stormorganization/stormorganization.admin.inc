@@ -47,7 +47,7 @@ function stormorganization_list() {
     $args[] = $_SESSION['stormorganization_list_filter']['country'];
     $filterfields[] = t('Country');
   }
-  
+
   if (isset($_SESSION['stormorganization_list_filter']['name']) && $_SESSION['stormorganization_list_filter']['name'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%s')";
     $args[] = $_SESSION['stormorganization_list_filter']['name'];
@@ -97,7 +97,7 @@ function stormorganization_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormorganization_list_filter', $filterdesc);
 
   $s = stormorganization_access_sql($s, $where);

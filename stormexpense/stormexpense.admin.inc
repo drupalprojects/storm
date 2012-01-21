@@ -152,7 +152,7 @@ function stormexpense_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormexpense_list_filter', $filterdesc);
 
   $s = stormexpense_access_sql($s, $where);
@@ -285,7 +285,7 @@ function stormexpense_list_filter(&$form_state, $filterdesc = 'Filter') {
   $form['filter']['group2']['datefrom'] = array(
     '#type' => 'dateext',
     '#title' => t('Date from'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $datefrom,
   );
 
