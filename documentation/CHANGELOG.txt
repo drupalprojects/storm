@@ -1,6 +1,6 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
-Version 6.x-2.x:
+Version 6.x-2.0-beta1:
 - Task #1392484 by juliangb: Separate Storm Knowledgebase into separate project.
 - Task #1397960 by juliangb: Combine storm attribute module into the storm module.
 - Task #1397962 by juliangb: Move storm attribute installation into component modules.
@@ -12,7 +12,6 @@ Version 6.x-2.x:
 - Feature #785372 by juliangb | Minoo: Added Translation : Icons ATL & TITLES.
 - Task #890908 by juliangb: Clean up 'Fixed' price mode attribute.
 - Feature #1060514 by kfritsche | Francewhoa: Added Storm Person: Remove possibility to assign two persons to one user.
-- Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #787822 by kfritsche: Fixed timezone error for date popup fields
 - Bug fix by kfritsche: Fixed cannot paginate through expenses, invoiced and timetrackings without filtering date
 - Task #1324864 by juliangb, kfritsche, tchurch: Removed access checks for javascript callbacks
@@ -35,12 +34,13 @@ Version 6.x-2.x:
 Version 6.x-1.37:
 - Bug #746420 by juliangb | tchurch: Fixed field totalcustomercurr for invoice not set correctly when adding timetracking record to invoice.
 - Bug #758974 by juliangb | alberto56: Fixed Make it possible to remove a line in the invoice without everything disappearing.
+- Bug #787822 by kfritsche: Fixed date popup error with on digit dates
 - Bug #1170658 by D34dMan | AlphaGrowl: Fixed Edit icon not shown despite 'Edit when linked to user account' permission given.
 - Bug #1178948 by davad: Fixed Overlapping text in 'Payment modes' section of pdf invoice.
+- Bug #1276564 by juliangb | eighthourlunch: Fixed function stormnote_stormtask_change() calls nonexistent column in stormnote table.
 - Bug #1316098 by kfritsche | key4ce: Fixed Permissions Storm organization: view belonged doesn't work. WHEN Menu breadcrumb is enabled.
 - Bug #1344448 by D34dMan: Fixed 'Storm project: view if project manager' and 'Storm project: view if assigned to project' not valid when using Views.
-- Bug #1276564 by juliangb | eighthourlunch: Fixed function stormnote_stormtask_change() calls nonexistent column in stormnote table.
-- Task #918750 by juliangb: Changed Tests for Storm Timetracking.
+- Task #918750 by juliangb: Added Tests for Storm Timetracking.
 - Bug #1111202 by juliangb, chertzog: Fixed Permissions issue with views.
 
 Version 6.x-1.36:
