@@ -64,7 +64,7 @@ function stormnote_update_6201() {
     'project_nid'       => array('project_nid'),
     'task_nid'          => array('task_nid'),
   );
-  foreach($indexes as $name => $fields) {
+  foreach ($indexes as $name => $fields) {
     db_add_index($return, 'stormnote', $name, $fields);
   }
   return $return;

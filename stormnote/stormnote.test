@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Test definitions for the Storm note module
+ */
 class StormnoteTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {

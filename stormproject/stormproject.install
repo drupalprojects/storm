@@ -1,9 +1,8 @@
 <?php
-
 /**
  * @file
+ * Installation functions for the Storm project module
  */
-
 function stormproject_install() {
   drupal_install_schema('stormproject');
   variable_set('node_options_stormproject', array('status'));
@@ -137,8 +136,7 @@ function stormproject_update_3() {
 }
 
 /**
- * @function
- * Implementation of hook_update_N to add manager_nid, manager_title, assigned_nid and assigned_title fields.
+ * Add manager_nid, manager_title, assigned_nid and assigned_title fields.
  */
 function stormproject_update_6104() {
   $ret = array();
@@ -187,7 +185,7 @@ function stormproject_update_6201() {
     'manager_nid'      => array('manager_nid'),
     'assigned_nid'     => array('assigned_nid'),
   );
-  foreach($indexes as $name => $fields) {
+  foreach ($indexes as $name => $fields) {
     db_add_index($return, 'stormproject', $name, $fields);
   }
   return $return;
@@ -200,7 +198,7 @@ function stormproject_update_6202() {
   $attributes = array();
 
   // Only run this update if was not previously run as part of the legacy stormattribute module
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 1) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 1) {
     $attributes['Project priority'] = array(
       '1-low' => 'low',
       '2-normal' => 'normal',
@@ -216,14 +214,14 @@ function stormproject_update_6202() {
     );
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 4) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 4) {
     $attributes['Duration unit'] = array(
       'hour' => 'Hour',
       'day' => 'Day',
     );
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
     $attributes['Project status search'] = array('-' => 'all');
     $attributes['Project priority search'] = array('-' => 'all');
   }
@@ -242,16 +240,16 @@ function stormproject_update_6202() {
 
   $ret = array();
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6107) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6107) {
     $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'development', 'development', 0, 1)");
     $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'support', 'support', 0, 1)");
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6109) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6109) {
     $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
     $ret[] = update_sql("UPDATE {stormproject} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
   }
   return $ret;

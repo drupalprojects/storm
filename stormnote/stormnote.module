@@ -48,10 +48,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -60,10 +60,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -72,10 +72,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -182,7 +182,7 @@ function stormnote_node_info() {
       'name' => t('Note'),
       'module' => 'stormnote',
       'description' => t("A note for Storm."),
-      'has_body' => true,
+      'has_body' => TRUE,
     )
   );
 }
@@ -292,7 +292,7 @@ function stormnote_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', '', true, '-')"),
   );
 

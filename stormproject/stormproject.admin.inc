@@ -324,7 +324,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   );
   
   // ASSIGNED TO
-  $options = storm_get_assignment_options(0,0);
+  $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),

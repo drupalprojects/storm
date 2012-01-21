@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose storm note module data to views
+ */
 function stormnote_views_data() {
   $data['stormnote']['table']['group']  = t('Storm Note');
   $data['stormnote']['table']['join'] = array(
