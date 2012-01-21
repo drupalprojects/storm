@@ -7,7 +7,7 @@
 
 /**
  * @function
- * Implementation of hook_install
+ * Implementation of hook_install()
  */
 function stormteam_install() {
   drupal_install_schema('stormteam');
@@ -16,7 +16,7 @@ function stormteam_install() {
 
 /**
  * @function
- * Implementation of hook_disable
+ * Implementation of hook_disable()
  */
 function stormteam_disable() {
   drupal_set_message(t('Nodes of type "Team" have not been deleted on disabling Storm Team. Please note that they will now have reduced functionality, and will not be protected by Storm Team access controls.'), 'warning');
@@ -24,7 +24,7 @@ function stormteam_disable() {
 
 /**
  * @function
- * Implementation of hook_uninstall
+ * Implementation of hook_uninstall()
  */
 function stormteam_uninstall() {
   drupal_uninstall_schema('stormteam');
@@ -32,7 +32,7 @@ function stormteam_uninstall() {
 
 /**
  * @function
- * Implementation of hook_schema
+ * Implementation of hook_schema()
  */
 function stormteam_schema() {
   $schema['stormteam'] = array(
@@ -69,7 +69,7 @@ function stormteam_schema() {
 
 /**
  * @function
- * Implementation of hook_update_N
+ * Implementation of hook_update_N()
  * Removes 0:N from members array
  */
 function stormteam_update_6101() {
@@ -77,7 +77,7 @@ function stormteam_update_6101() {
 
   $sql = "SELECT ste.members, ste.vid FROM {stormteam} ste";
   $results = db_query($sql);
-  while($team = db_fetch_object($results)) {
+  while ($team = db_fetch_object($results)) {
     $members_array = unserialize($team->members);
 
     if (array_key_exists(0, $members_array)) {
@@ -95,10 +95,10 @@ function stormteam_update_6101() {
 }
 
 /**
-* Implements hook_update_N().
-*
-* Migrate members serialized array to member node id
-*/
+ * Implements hook_update_N().
+ *
+ * Migrate members serialized array to member node id
+ */
 function stormteam_update_6200() {
 
   $ret = array();
@@ -137,7 +137,7 @@ function stormteam_update_6200() {
   while ($team = db_fetch_object($result)) {
     $members = unserialize($team->members);
     // Generate the mapping array and save it to the database
-    foreach($members as $nid => $fullname) {
+    foreach ($members as $nid => $fullname) {
       $mapping = new stdClass();
       $mapping->nid = $team->nid;
       $mapping->vid = $team->vid;

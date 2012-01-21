@@ -51,7 +51,7 @@ function stormorganization_access($op, $node, $account = NULL) {
     if (user_access('Storm organization: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm organization: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm organization: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
@@ -60,10 +60,10 @@ function stormorganization_access($op, $node, $account = NULL) {
     if (user_access('Storm organization: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm organization: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm organization: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm organization: edit belonged') && ($account->stormorganization_nid == $node->nid)) {
+    elseif (user_access('Storm organization: edit belonged') && ($account->stormorganization_nid == $node->nid)) {
       return TRUE;
     }
   }
@@ -72,10 +72,10 @@ function stormorganization_access($op, $node, $account = NULL) {
     if (user_access('Storm organization: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm organization: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm organization: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm organization: view belonged') && ($account->stormorganization_nid == $node->nid)) {
+    elseif (user_access('Storm organization: view belonged') && ($account->stormorganization_nid == $node->nid)) {
       return TRUE;
     }
   }
@@ -218,8 +218,8 @@ function stormorganization_content_extra_fields($type_name) {
 
 function stormorganization_form(&$node) {
   $breadcrumb = array();
-  $breadcrumb[] = l('Storm', 'storm');
-  $breadcrumb[] = l('Organizations', 'storm/organizations');
+  $breadcrumb[] = l(t('Storm'), 'storm');
+  $breadcrumb[] = l(t('Organizations'), 'storm/organizations');
   drupal_set_breadcrumb($breadcrumb);
 
   $type = node_get_types('type', $node);
@@ -432,7 +432,7 @@ function stormorganization_update($node) {
 function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!isset($node->nid)) {
+      if (!isset($node->nid)) {
         $node->iscustomer = 1;
         $node->isprovider = 0;
         $node->isactive = 1;
@@ -495,11 +495,12 @@ function stormorganization_admin_settings() {
       '#description' => t('The organization that owns this system'),
       '#weight' => -30,
     );
-  } else {
+  }
+  else {
     $form['storm_organization_nid'] = array(
       '#type' => 'item',
       '#title' => t('Host Organization'),
-      '#value' => t('There are no Storm Organizations in the system. ').'<br />'.l('Create a Storm Organization', 'node/add/stormorganization'),
+      '#value' => t('There are no Storm Organizations in the system.') .'<br />'. l('Create a Storm Organization', 'node/add/stormorganization'),
     );
   }
   return system_settings_form($form);

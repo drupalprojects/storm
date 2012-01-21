@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm organization data to views
+ */
 function stormorganization_views_data() {
   $data['stormorganization']['table']['group']  = 'Storm Organization';
   $data['stormorganization']['table']['join'] = array(
@@ -8,7 +11,7 @@ function stormorganization_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['stormorganization']['prefix'] = array(
     'title' => t('Prefix'),
     'help' => t('Storm Organization Prefix'),
@@ -25,7 +28,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['fullname'] = array(
     'title' => t('Fullname'),
     'help' => t('Storm Organization Fullname'),
@@ -42,7 +45,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['country'] = array(
     'title' => t('Country'),
     'help' => t('Storm Organization Country'),
@@ -59,7 +62,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['orglanguage'] = array(
     'title' => t('Language'),
     'help' => t('Storm Organization Language'),
@@ -76,7 +79,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['provstate'] = array(
     'title' => t('Province / State'),
     'help' => t('Storm Organization Province / State'),
@@ -93,7 +96,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['city'] = array(
     'title' => t('City'),
     'help' => t('Storm Organization City'),
@@ -110,7 +113,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['zip'] = array(
     'title' => t('Zip'),
     'help' => t('Storm Organization Zip'),
@@ -127,7 +130,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['address'] = array(
     'title' => t('Address'),
     'help' => t('Storm Organization Address'),
@@ -144,7 +147,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['taxid'] = array(
     'title' => t('Tax ID'),
     'help' => t('Storm Organization Tax ID'),
@@ -161,7 +164,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['email'] = array(
     'title' => t('Email'),
     'help' => t('Storm Organization Email'),
@@ -178,7 +181,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['www'] = array(
     'title' => t('WWW'),
     'help' => t('Storm Organization WWW'),
@@ -195,7 +198,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['phone'] = array(
     'title' => t('Phone'),
     'help' => t('Storm Organization Phone'),
@@ -212,7 +215,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['currency'] = array(
     'title' => t('Currency'),
     'help' => t('Storm Organization Currency'),
@@ -232,7 +235,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormorganization']['iscustomer'] = array(
     'title' => t('Is Customer'),
     'help' => t('Storm Organization Is Customer'),
@@ -249,7 +252,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormorganization']['isprovider'] = array(
     'title' => t('Is Provider'),
     'help' => t('Storm Organization Is Provider'),
@@ -266,7 +269,7 @@ function stormorganization_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormorganization']['isactive'] = array(
     'title' => t('Is Active'),
     'help' => t('Storm Organization Is Active'),

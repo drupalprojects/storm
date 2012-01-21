@@ -59,7 +59,7 @@ function stormorganization_list() {
     if ($iscustomer == 'yes') {
       $where[] = "sor.iscustomer=1";
     }
-    else if ($iscustomer == 'no') {
+    elseif ($iscustomer == 'no') {
       $where[] = "sor.iscustomer=0";
     }
     $filterfields[] = t('Customer');
@@ -70,7 +70,7 @@ function stormorganization_list() {
     if ($isprovider == 'yes') {
       $where[] = "sor.isprovider=1";
     }
-    else if ($isprovider == 'no') {
+    elseif ($isprovider == 'no') {
       $where[] = "sor.isprovider=0";
     }
     $filterfields[] = t('Provider');
@@ -81,7 +81,7 @@ function stormorganization_list() {
     if ($isactive == 'yes') {
       $where[] = "sor.isactive=1";
     }
-    else if ($isactive == 'no') {
+    elseif ($isactive == 'no') {
       $where[] = "sor.isactive=0";
     }
     $filterfields[] = t('Active');

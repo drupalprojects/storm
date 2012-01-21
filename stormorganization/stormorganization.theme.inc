@@ -30,7 +30,7 @@ function theme_stormorganization_list($header, $organizations) {
 
 function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
@@ -39,7 +39,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#suffix' => '</dl></div>',
     '#weight' => -25,
   );
-  
+
   $node->content['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $l_pos++);
   $node->content['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $l_pos++);
   $node->content['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $l_pos++);
@@ -48,7 +48,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $l_pos++);
   $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $l_pos++);
-  
+
   $node->content['group2'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -122,7 +122,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Email'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
     '#weight' => 3,
   );
-  
+
   $node->content['group5'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -162,8 +162,8 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Note'), $node->content['body']['#value']),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
   );
-  
+
   unset($node->content['body']);
-  
+
   return $node;
 }

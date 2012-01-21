@@ -80,7 +80,7 @@ function stormnote_views_data() {
   );
   
   $data['stormnote']['task_stepno'] = array(
-    'title' => t('Task Step Number'),
+    'title' => t('Task step number'),
     'help' => t('Storm Note Task Step Number'),
     'field' => array(
       'click sortable' => TRUE,

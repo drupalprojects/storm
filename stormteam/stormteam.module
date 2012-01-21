@@ -3,10 +3,13 @@
 /**
  * @file
  * Functionality for the Storm Team module
- * Organized into the following sections: General hooks, node specific hooks, page generation.
+ * Organized into the following sections:
  * - General hooks: (help), menu, perm, theme, views_api
- * - Node specific hooks: node_info, content_extra_fields, access, access_sql, storm_rewrite_where_sql, form, load, view, _beforesave, insert, update, delete, nodeapi
- * - Page generation: list, list_filter, list_filter_filter, list_filter_reset, autocomplete, autocomplete_combo
+ * - Node specific hooks: node_info, content_extra_fields, access, access_sql, 
+ *     storm_rewrite_where_sql, form, load, view, _beforesave, insert, update, 
+ *     delete, nodeapi
+ * - Page generation: list, list_filter, list_filter_filter, list_filter_reset, 
+ *     autocomplete, autocomplete_combo
  */
 
 /**
@@ -18,7 +21,7 @@
 
 /**
  * @function
- * Implementation of hook_menu
+ * Implementation of hook_menu()
  */
 function stormteam_menu() {
   $items = array();
@@ -39,14 +42,12 @@ function stormteam_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  //$items['admin/settings/storm/team'] = array();
-
   return $items;
 }
 
 /**
  * @function
- * Implementation of hook_perm
+ * Implementation of hook_perm()
  */
 function stormteam_perm() {
   return array(
@@ -66,7 +67,7 @@ function stormteam_perm() {
 
 /**
  * @function
- * Implementation of hook_theme
+ * Implementation of hook_theme()
  */
 function stormteam_theme() {
   return array(
@@ -83,7 +84,7 @@ function stormteam_theme() {
 
 /**
  * @function
- * Implementation of hook_views_api
+ * Implementation of hook_views_api()
  */
 function stormteam_views_api() {
   return array(
@@ -94,7 +95,7 @@ function stormteam_views_api() {
 
 /**
  * @function
- * Implementation of hook_node_info
+ * Implementation of hook_node_info()
  */
 function stormteam_node_info() {
   return array(
@@ -110,7 +111,7 @@ function stormteam_node_info() {
 
 /**
  * @function
- * Implementation of hook_content_extra_fields
+ * Implementation of hook_content_extra_fields()
  */
 function stormteam_content_extra_fields($type_name) {
   if ($type_name == 'stormteam') {
@@ -122,7 +123,7 @@ function stormteam_content_extra_fields($type_name) {
 
 /**
  * @function
- * Implementation of hook_access
+ * Implementation of hook_access()
  */
 function stormteam_access($op, $node, $account = NULL) {
   if (empty($account)) {
@@ -138,33 +139,42 @@ function stormteam_access($op, $node, $account = NULL) {
     case 'view':
       if (user_access('Storm team: view all')) {
         return TRUE;
-      } else if (user_access('Storm team: view own') && ($account->uid == $node->uid)) {
+      }
+      elseif (user_access('Storm team: view own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
+      }
+      elseif (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
+      }
+      elseif (user_access('Storm team: view belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
     case 'update':
       if (user_access('Storm team: edit all')) {
         return TRUE;
-      } else if (user_access('Storm team: edit own') && ($account->uid == $node->uid)) {
+      }
+      elseif (user_access('Storm team: edit own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
+      }
+      elseif (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
+      }
+      elseif (user_access('Storm team: edit belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
     case 'delete':
       if (user_access('Storm team: delete all')) {
         return TRUE;
-      } else if (user_access('Storm team: delete own') && ($account->uid == $node->uid)) {
+      }
+      elseif (user_access('Storm team: delete own') && ($account->uid == $node->uid)) {
         return TRUE;
-      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
+      }
+      elseif (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormperson_nid)) {
         return TRUE;
-      } else if (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
+      }
+      elseif (user_access('Storm team: delete belonged') && stormteam_user_belongs_to_team($node->nid, $account->stormorganization_nid)) {
         return TRUE;
       }
       break;
@@ -201,7 +211,7 @@ function stormteam_access_sql($sql, $where = array()) {
 
 /**
  * @function
- * Implementation of hook_storm_rewrite_where_sql
+ * Implementation of hook_storm_rewrite_where_sql()
  */
 function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
@@ -243,12 +253,12 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 /**
  * @function
- * Implementation of hook_form
+ * Implementation of hook_form()
  */
 function stormteam_form(&$node) {
   $breadcrumb = array(
-    l('Storm', 'storm'),
-    l('Teams', 'storm/teams'),
+    l(t('Storm'), 'storm'),
+    l(t('Teams'), 'storm/teams'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -673,7 +683,7 @@ function stormteam_autocomplete_combo($string = '') {
 
 /**
  * @function
- * Function to return whether a user is present in a Storm team based on team $node and user $account
+ * Returns whether user is in a Storm team based on team $node and user $account
  */
 function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
   $node = node_load($team);
@@ -681,15 +691,16 @@ function stormteam_user_belongs_to_team($team, $person_or_organization_nid) {
   // Check for person_or_organization_nid in the team members array and return TRUE / FALSE
   if (is_array($node->members_array)) {
     return array_key_exists($person_or_organization_nid, $node->members_array);
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
 
 /**
-* @function
-* Function to return the teams that a user is a member of
-*/
+ * @function
+ * Function to return the teams that a user is a member of
+ */
 function stormteam_user_return_teams($account = NULL) {
   if (empty($account)) {
     global $user;
