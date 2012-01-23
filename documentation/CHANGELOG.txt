@@ -1,7 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x-dev:
-- No changes yet since 6.x-2.0-beta1.
+- Bug #1397960 by John Franklin: Changed Combine storm attribute module into the storm module missing 3 function calls.
 
 Version 6.x-2.0-beta1:
 - Task #1392484 by juliangb: Separate Storm Knowledgebase into separate project.
