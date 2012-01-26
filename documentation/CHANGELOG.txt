@@ -1,7 +1,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x-dev:
-- Bug #1397960 by John Franklin: Changed Combine storm attribute module into the storm module missing 3 function calls.
+- Task #498108 by kfritsche | Magnity: Changed Refactor Storm dashboard.
+- Bug #1397960 by juliangb, John Franklin: Bug fix follow-ups to Combine storm attribute module into the storm module.
 
 Version 6.x-2.0-beta1:
 - Task #1392484 by juliangb: Separate Storm Knowledgebase into separate project.
