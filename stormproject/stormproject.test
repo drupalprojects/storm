@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Test definitions for the Storm Project module
+ */
 <?php
 class StormprojectTestCase extends DrupalWebTestCase {
 
@@ -32,7 +36,7 @@ class StormprojectTestCase extends DrupalWebTestCase {
     // Create and login user
     $user = $this->drupalCreateUser(array('Storm organization: add', 'Storm organization: view all', 'Storm project: add', 'Storm project: view all'));
     $this->drupalLogin($user);
-  
+
     // Create organization and invoice
     $org = array(
       'title' => $this->randomName(32),

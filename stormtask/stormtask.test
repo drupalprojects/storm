@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Test definitions for the Storm Task module
+ */
 <?php
 class StormtaskTestCase extends DrupalWebTestCase {
 

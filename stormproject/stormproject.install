@@ -149,7 +149,7 @@ function stormproject_update_6104() {
 
 /**
  * Added billable and billed fields to stormproject table for issue 567558
-*/
+ */
 function stormproject_update_6105() {
   $ret = array();
   db_add_field($ret, 'stormproject', 'billable', array('type' => 'int', 'default' => 0));

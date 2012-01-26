@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Functions to expose Storm Project data to the views module
+ */
 <?php
 
 function stormproject_views_data() {
@@ -8,7 +12,7 @@ function stormproject_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['stormproject']['organization_nid'] = array(
     'title' => t('Organization'),
     'help' => t('Project -> Organization'),
@@ -19,7 +23,7 @@ function stormproject_views_data() {
       'label' => t('Project -> Organization'),
     ),
   );
-  
+
   $data['stormproject']['organization_title'] = array(
     'title' => t('Organization'),
     'help' => t('Storm Project Organization (title only)'),
@@ -36,7 +40,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['projectstatus'] = array(
     'title' => t('Status'),
     'help' => t('Storm Project Status'),
@@ -54,7 +58,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-  
+
   $data['stormproject']['projectcategory'] = array(
     'title' => t('Category'),
     'help' => t('Storm Project Category'),
@@ -72,7 +76,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-  
+
   $data['stormproject']['projectpriority'] = array(
     'title' => t('Priority'),
     'help' => t('Storm Project Priority'),
@@ -90,7 +94,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-  
+
   $data['stormproject']['pricemode'] = array(
     'title' => t('Price Mode'),
     'help' => t('Storm Project Price Mode'),
@@ -107,7 +111,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['price'] = array(
     'title' => t('Price'),
     'help' => t('Storm Project Price'),
@@ -124,7 +128,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormproject']['currency'] = array(
     'title' => t('Currency'),
     'help' => t('Storm Project Currency'),
@@ -141,7 +145,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['datebegin'] = array(
     'title' => t('Date Begin'),
     'help' => t('Storm Project Date Begin'),
@@ -156,7 +160,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
   $data['stormproject']['dateend'] = array(
     'title' => t('Date End'),
     'help' => t('Storm Project Date End'),
@@ -171,7 +175,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
   $data['stormproject']['duration unit'] = array(
     'title' => t('Duration Unit'),
     'help' => t('Storm Project Duration Unit'),
@@ -188,7 +192,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['duration'] = array(
     'title' => t('Duration'),
     'help' => t('Storm Project Duration'),
@@ -205,7 +209,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormproject']['manager_nid'] = array(
     'title' => t('Manager'),
     'help' => t('Project -> Manager'),
@@ -216,7 +220,7 @@ function stormproject_views_data() {
       'label' => t('Project -> Manager'),
     ),
   );
-  
+
   $data['stormproject']['manager_title'] = array(
     'title' => t('Project Manager'),
     'help' => t('Storm Project Manager (title only)'),
@@ -233,7 +237,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['assigned_nid'] = array(
     'title' => t('Assigned'),
     'help' => t('Project -> Assigned'),
@@ -244,7 +248,7 @@ function stormproject_views_data() {
       'label' => t('Project -> Assigned'),
     ),
   );
-  
+
   $data['stormproject']['assigned_title'] = array(
     'title' => t('Assigned'),
     'help' => t('Storm Project Assigned (title only)'),
@@ -261,7 +265,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormproject']['billable'] = array(
     'title' => t('Project Billable'),
     'help' => 'Storm Project Billable',
@@ -275,7 +279,7 @@ function stormproject_views_data() {
       'handler' => 'views_handler_filter_numeric',
     ),
   );
-  
+
   $data['stormproject']['billed'] = array(
     'title' => t('Project Billed'),
     'help' => 'Storm Project Billed',
