@@ -586,3 +586,22 @@ function stormperson_primary_email($node) {
     return $node->email;
   }
 }
+
+function stormperson_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('People'),
+      'icon' => 'stormpeople',
+      'path' => 'storm/people',
+      'params' => array(),
+      'access_arguments' => 'Storm person: access',
+      'node_type' => 'stormperson',
+      'add_type' => 'stormperson',
+      'map' => array(),
+      'weight' => 2,
+    );
+  }
+  return $links;
+}

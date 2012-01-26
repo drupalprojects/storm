@@ -717,3 +717,22 @@ function stormteam_user_return_teams($account = NULL) {
 
   return $teams;
 }
+
+function stormteam_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Teams'),
+      'icon' => 'stormteams',
+      'path' => 'storm/teams',
+      'params' => array(),
+      'access_arguments' => 'Storm team: access',
+      'node_type' => 'stormteam',
+      'add_type' => 'stormteam',
+      'map' => array(),
+      'weight' => 3,
+    );
+  }
+  return $links;
+}

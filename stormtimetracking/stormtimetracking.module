@@ -722,3 +722,21 @@ function stormtimetracking_views_api() {
   );
 }
 
+function stormtimetracking_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Timetrackings'),
+      'icon' => 'stormtimetrackings',
+      'path' => 'storm/timetrackings',
+      'params' => array(),
+      'access_arguments' => 'Storm timetracking: access',
+      'node_type' => 'stormtimetracking',
+      'add_type' => 'stormtimetracking',
+      'map' => array(),
+      'weight' => 8,
+    );
+  }
+  return $links;
+}

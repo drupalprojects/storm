@@ -69,14 +69,24 @@ function storm_init() {
 function storm_menu() {
   $items = array();
 
-  $items['storm'] = array(
-    'title' => 'Storm',
-    'description' => 'Storm Dashboard',
-    'page callback' => 'storm_dashboard',
-    'access arguments' => array('Storm: access dashboard'),
-    'parent' => '',
-    'type' => MENU_NORMAL_ITEM,
-  );
+  $dashboard_types = module_invoke_all('storm_dashboard_types');
+  foreach ($dashboard_types as $type => $type_info) {
+    if (isset($type_info['url'])) {
+      $title = isset($type_info['title']) ? $type_info['title'] : 'Storm Dashboard';
+      $items[$type_info['url']] = array(
+        'title' => $title,
+        'description' => $title,
+        'page callback' => 'storm_dashboard',
+        'page arguments' => array($type),
+        'access arguments' => array('Storm: access dashboard'),
+        'parent' => '',
+        'type' => MENU_NORMAL_ITEM,
+      );
+      if (isset($type_info['menu_options'])) {
+        $items[$type_info['url']] = array_merge($items[$type_info['url']], $type_info['menu_options']);
+      }
+    }
+  }
 
   $items['admin/settings/storm'] = array(
     'title' => 'Storm',
@@ -176,7 +186,19 @@ function storm_theme() {
     ),
     'storm_dashboard' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array(),
+      'arguments' => array('links' => array()),
+    ),
+    'storm_dashboard_block' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('links' => array()),
+    ),
+    'storm_dashboard_link' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('link_blocks' => array()),
+    ),
+    'storm_dashboard_links_weight_table' => array(
+      'file'      => 'storm.theme.inc',
+      'arguments' => array('form' => array()),
     ),
     'storm_number_items' => array(
       'file'      => 'storm.theme.inc',
@@ -191,15 +213,209 @@ function storm_theme() {
 
 
 /**
- * @function
- * Function to create dashboard (call to theme function)
+ * Function to create a dashboard (call to theme function)
+ *
+ * @param string $type dashboard type, used for storm_get_dashboard_links
+ * @param null|string $theme Theme function to use, if omitted it uses storm_dashboard
+ * @return string themed string
  */
-function storm_dashboard() {
-  drupal_set_title(t('Storm Dashboard'));
-  drupal_add_css(drupal_get_path('module', 'storm'). '/storm-dashboard.css');
-  return theme('storm_dashboard');
+function storm_dashboard($type = 'page') {
+  $types = module_invoke_all('storm_dashboard_types');
+  //only set Page Title if it has a url, so there is a menu entry for that
+  //The block type has no url and shouldn't change the title!
+  if (isset($types[$type]['url']) && isset($types[$type]['title'])) {
+    drupal_set_title($types[$type]['title']);
+  }
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm-dashboard.css');
+
+  $link_blocks = storm_dashboard_get_links(TRUE, $type);
+  if (!empty($link_blocks)) {
+    // DIVIDE LINKS INTO TWO BLOCKS
+    $count = ceil(count($link_blocks) / 2);
+    $link_blocks = array_chunk($link_blocks, $count);
+  }
+  $theme = isset($types[$type]['theme']) ? $types[$type]['theme'] : 'storm_dashboard';
+  $content = theme($theme, $link_blocks);
+
+  return $content;
 }
 
+/**
+ * Return links array for the storm dashboard.
+ *
+ * @param bool $check_active when FALSE, returns all links, no matter if activated or not (needed for admin settings)
+ * @param string $type
+ * @return array dashboard links
+ */
+function storm_dashboard_get_links($check_active = TRUE, $type = 'page') {
+
+  $links = module_invoke_all('storm_dashboard_links', $type);
+
+  if (!empty($links)) {
+
+    $default_dashboard_settings = variable_get('storm_'.$type.'dashboard_settings', array());
+
+    $weight = 0;
+    foreach ($links as $key => &$link_array) {
+
+      // ACTIVE CHECK
+      if ($check_active && isset($default_dashboard_settings[$link_array['path']]['active']) && $default_dashboard_settings[$link_array['path']]['active'] == FALSE) {
+        unset($links[$key]);
+        continue;
+      }
+
+      // MODULE EXIST CHECK
+      if (isset($link_array['destination_module']) && !module_exists($link_array['destination_module'])) {
+        unset($links[$key]);
+        continue;
+      }
+
+      // ACCESS CHECK
+      if (!empty($link_array['access_callback'])) {
+        if (function_exists($link_array['access_callback'])) {
+          if (!isset($link_array['access_arguments'])) {
+            $link_array['access_arguments'] = "";
+          }
+          // USE THE ACCESS CHECK OF THE MENU API
+          _menu_check_access($link_array, $link_array['map']);
+        }
+      }
+      elseif (isset($link_array['access_arguments'])) {
+        $link_array['access'] = user_access($link_array['access_arguments']);
+      }
+      else {
+        $link_array['access'] = TRUE;
+      }
+
+      if (!$link_array['access']) {
+        unset($links[$key]);
+      }
+
+      if (isset($default_dashboard_settings[$link_array['path']]['weight'])) {
+        $link_array['weight'] = $default_dashboard_settings[$link_array['path']]['weight'];
+      }
+      elseif (!isset($link_array['weight'])) {
+        $link_array['weight'] = $weight;
+        $weight++;
+      }
+
+    }
+
+    // HOOK FOR ALTERING LINKS
+    drupal_alter('storm_dashboard_links', $links, $type);
+
+    // SORT LINKS BY WEIGHT
+    uasort($links, '_storm_dashboard_sort_links');
+
+  }
+  return $links;
+}
+
+/**
+ * Helper function for storm_dashboard_get_links().
+ * Order dashboard links by their weight.
+ * This is a uasort callback function.
+ *
+ * @see uasort
+ * @param array $a dashboard link array
+ * @param array $b dashboard link array
+ * @return int
+ */
+function _storm_dashboard_sort_links($a, $b) {
+  if (intval($a['weight']) == intval($b['weight'])) {
+      return 0;
+  }
+  elseif (intval($a['weight']) < intval($b['weight'])) {
+    return -1;
+  }
+  else {
+    return 1;
+  }
+}
+
+function storm_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'title' => t('Configuration'),
+      'icon' => 'stormconfiguration',
+      'path' => 'admin/settings/storm',
+      'params' => array(),
+      'access_arguments' => 'Storm: access administration pages',
+      'node_type' => '',
+      'add_type' => '',
+      'map' => array(),
+      'weight' => 15,
+    );
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Attributes'),
+      'icon' => 'stormattributes',
+      'path' => 'storm/attributes',
+      'params' => array(),
+      'access_arguments' => 'Storm: access administration pages',
+      'map' => array(),
+      'weight' => 14,
+    );
+  }
+  return $links;
+}
+
+/**
+ * Implementation of hook_storm_dashboard_types()
+ * Defines dashboard types page and block.
+ * This can be used as an example for other types
+ * @return array
+ */
+function storm_storm_dashboard_types() {
+  return array(
+    'page' => array(
+      //URL: menu path which should be used, if omitted no menu item will be created
+      'url'         => 'storm',
+      //title: Required. Title of menu item, page title and title for the storm settings
+      'title'       => 'Storm Dashboard',
+      //description: Required. Description for the fieldset in the storm settings
+      'description' => t('You can disable or reorder the links from the !dashboard here', array('!dashboard' => l(t('dashboard'), 'storm'))),
+      //theme: theme which should be used to display this dashboard. If omitted uses standard theme storm_dashboard
+      'theme'       => 'storm_dashboard',
+      //menu_options: This array will be merged into the default menu item array. If the menu should have special access arguments, title, it can be set here.
+      //page callback and page argument shouldn't been overwritten.
+      'menu_options' => array(
+        'title'       => 'Storm',
+        'description' => 'Storm Dashboard',
+      ),
+    ),
+    'block' => array(
+      'title'       => 'Dashboard Block',
+      'description' => t('You can disable or reorder the links from the dashboard !block here', array('!block' => l(t('block'), 'admin/build/block'))),
+      'theme'       => 'storm_dashboard_block',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_block()
+ */
+function storm_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list' :
+      // DASHBOARD AS TOP NAVIGATION
+      $blocks['storm_dashboard_block']['info'] = t('Storm dashboard block');
+      return $blocks;
+      break;
+    case 'view':
+      switch ($delta) {
+        // DASHBOARD AS BLOCK
+        case 'storm_dashboard_block':
+          $block = array(
+            'subject' => '',
+            'content' => storm_dashboard('block'),
+          );
+          return $block;
+      }
+      break;
+  }
+}
 
 /**
  * @function
@@ -390,6 +606,57 @@ function storm_admin_settings() {
     '#weight' => $w++,
   );
 
+  // DASHBOARD SETTINGS
+  $form['storm_dashboard_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Dashboard Settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $types = module_invoke_all('storm_dashboard_types');
+  foreach($types as $type => $type_data) {
+    $all_links_options = array();
+    $all_links = storm_dashboard_get_links(FALSE, $type);
+    foreach($all_links as $link) {
+      $all_links_options[$link['path']] = l($link['title'], $link['path']);
+    }
+
+    $default_dashboard_settings = variable_get('storm_'.$type.'dashboard_settings', array());
+
+    $form['storm_dashboard_settings'][$type] = array(
+      '#type' => 'fieldset',
+      '#title' => t($type_data['title']),
+      '#description' => $type_data['description'],
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['storm_dashboard_settings'][$type]['dashboard_links'] = array(
+      '#theme' => 'storm_dashboard_links_weight_table',
+      '#infix' => $type,
+    );
+
+    $weight = 0;
+    foreach($all_links_options as $path => $title) {
+      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type.'_storm_dashboard_link_active_'.$path] = array(
+        '#type' => 'checkbox',
+        '#default_value' => isset($default_dashboard_settings[$path]['active']) ? $default_dashboard_settings[$path]['active'] : TRUE,
+      );
+      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type.'_storm_dashboard_link_weight_'.$path] = array(
+        '#type' => 'weight',
+        '#default_value' => isset($default_dashboard_settings[$path]['weight']) ? $default_dashboard_settings[$path]['weight'] : $weight,
+        '#delta' => 30,
+      );
+      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path]['#value'] = $title;
+      $weight++;
+    }
+  }
+
+  if (empty($form['#submit'])) {
+    $form['#submit'] = array();
+  }
+  $form['#submit'] = array('storm_admin_settings_form_submit');
+
   return system_settings_form($form);
 }
 
@@ -410,6 +677,32 @@ function storm_admin_settings_icons_path_validate($form, $form_values) {
   elseif ($icon_path != $icon_path_old) {
     cache_clear_all('storm:icons', 'cache', FALSE);
   }
+}
+
+function storm_admin_settings_form_submit($form, $form_state) {
+  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
+  // RESET
+  if ($op == t('Reset to defaults')) {
+    $types = module_invoke_all('storm_dashboard_types');
+    foreach($types as $type => $type_data) {
+      variable_del('storm_'.$type.'dashboard_settings');
+    };
+    return;
+  }
+
+  // GET OPTIONS
+  $types = module_invoke_all('storm_dashboard_types');
+  foreach($types as $type => $type_data) {
+    $all_links = storm_dashboard_get_links(FALSE, $type);
+    $settings = array();
+    foreach ($all_links as $link) {
+      $path = $link['path'];
+      $settings[$path]['active'] = $form_state['values'][$type.'_storm_dashboard_link_active_'.$path];
+      $settings[$path]['weight'] = $form_state['values'][$type.'_storm_dashboard_link_weight_'.$path];
+    }
+    variable_set('storm_'.$type.'dashboard_settings', $settings);
+  }
+
 }
 
 // DATE / TIME MANIPULATION

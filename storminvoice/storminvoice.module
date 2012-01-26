@@ -1131,3 +1131,22 @@ function storminvoice_token_values ($type, $object = NULL) {
   return $values;
   }
 }
+
+function storminvoice_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Invoices'),
+      'icon' => 'storminvoices',
+      'path' => 'storm/invoices',
+      'params' => array(),
+      'access_arguments' => 'Storm invoice: access',
+      'node_type' => 'storminvoice',
+      'add_type' => 'storminvoice',
+      'map' => array(),
+      'weight' => 10,
+    );
+  }
+  return $links;
+}

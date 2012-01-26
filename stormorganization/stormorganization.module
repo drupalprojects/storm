@@ -512,3 +512,22 @@ function stormorganization_views_api() {
     'path' => drupal_get_path('module', 'stormorganization'),
   );
 }
+
+function stormorganization_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Organizations'),
+      'icon' => 'stormorganizations',
+      'path' => 'storm/organizations',
+      'params' => array(),
+      'access_arguments' => 'Storm organization: access',
+      'node_type' => 'stormorganization',
+      'add_type' => 'stormorganization',
+      'map' => array(),
+      'weight' => 1,
+    );
+  }
+  return $links;
+}

@@ -1079,3 +1079,22 @@ function stormtask_token_values ($type, $object = NULL) {
   }
   return $values;
 }
+
+function stormtask_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Tasks'),
+      'icon' => 'stormtasks',
+      'path' => 'storm/tasks',
+      'params' => array(),
+      'access_arguments' => 'Storm task: access',
+      'node_type' => 'stormtask',
+      'add_type' => 'stormtask',
+      'map' => array(),
+      'weight' => 5,
+    );
+  }
+  return $links;
+}

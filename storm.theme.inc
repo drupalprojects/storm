@@ -89,38 +89,149 @@ function theme_storm_view_item($label, $value) {
   return $o;
 }
 
-// See 498108: Proposed to refactor creation of Storm Dashboard
-function theme_storm_dashboard() {
-  $o = '<div id="stormdashboard">';
-  $o .= '<dl class="stormdashboard">';
-  
-  $o .= '<div class="stormdashboard">';
-  $o .= theme('storm_link', '', 'stormorganization');
-  $o .= theme('storm_link', '', 'stormperson');
-  $o .= theme('storm_link', '', 'stormteam');
-  $o .= theme('storm_link', '', 'stormproject');
-  $o .= theme('storm_link', '', 'stormtask');
-  $o .= theme('storm_link', '', 'stormticket');
-  $o .= theme('storm_link', '', 'stormtimetracking');
-  $o .= '</div>';
+function theme_storm_dashboard($link_blocks) {
+  $content = '<div id="stormdashboard">';
+  if (!empty($link_blocks)) {
+    $content .= '<dl class="stormdashboard clear-block">';
+    foreach ($link_blocks as $block_id => $link_block_array) {
+      $content .= '<div class="stormdashboard">';
+      if (!empty($link_block_array)) {
+        foreach ($link_block_array as $key => $link_array) {
+          if (!empty($link_array['theme'])) {
+            $content .= theme($link_array['theme'], $link_array);
+          }
+          else {
+            $content .= theme('storm_dashboard_link', $link_array);
+          }
+        }
+      }
+      $content .= '</div>';
+    }
+    $content .= '</dl>';
+  }
+  else {
+    $content .= t('No dashboard links available');
+  }
+  $content .= '</div>';
 
-  $o .= '<div class="stormdashboard">';
-  $o .= theme('storm_link', '', 'stormnote');
-  $o .= theme('storm_link', '', 'storminvoice');
-  $o .= theme('storm_link', '', 'stormexpense');
-  $o .= theme('storm_link', '', 'stormknowledgebase');
-  $o .= theme('storm_link', '', 'stormattribute');
-  $o .= theme('storm_link', '', 'stormconfiguration');
-  
-  $o .= '</div>';
-  $o .= '</dl>';
-  $o .= '</div>';
-  return $o;
+  return $content;
+}
+
+function theme_storm_dashboard_block($link_blocks) {
+  $content = '<div id="stormdashboard-block">';
+  if (!empty($link_blocks)) {
+    foreach ($link_blocks as $block_id => $link_block_array) {
+      if (!empty($link_block_array)) {
+        foreach ($link_block_array as $key => $link_array) {
+          $content .= '<div class="stormdashboard-icon">';
+          if (!empty($link_array['theme'])) {
+            $content .= theme($link_array['theme'], $link_array);
+          }
+          else {
+            $content .= theme('storm_dashboard_link', $link_array);
+          }
+          $content .= '</div>';
+        }
+      }
+    }
+  }
+  else {
+    // no links, hide block
+    return '';
+  }
+  $content .= '</div>';
+  return $content;
+}
+
+function theme_storm_dashboard_link($link_array) {
+
+  $content = '';
+
+  // DEFAULT ICON
+  if (empty($link_array['icon'])) {
+    $dt_id = 'stormexpenses';
+  }
+  else {
+    $dt_id = $link_array['icon'];
+  }
+
+  $params = array();
+  if (!empty($link_array['nid'])) {
+    $params_key = $link_array['node_type'] .'_nid';
+    $params['query'] = array($params_key => $link_array['nid']);
+  }
+
+  $link = l($link_array['title'], $link_array['path'], $params);
+
+  // ADD PLUS SIGN (node/add)
+  if (!empty($link_array['add_type'])) {
+    $item = new stdClass();
+    $item->type = $link_array['add_type'];
+    if (empty($link_array['params'])) {
+      $link_array['params'] = array();
+    }
+    $link .= storm_icon_add('node/add/'. str_replace('_', '-', $link_array['add_type']), $item, $link_array['params']);
+  }
+
+
+  if (empty($link_array['nid']) || 0 == $link_array['nid']) {
+    if (variable_get('storm_icons_display', TRUE)) {
+      $content .= '<dt id="'. $dt_id .'" class="stormcomponent">';
+    }
+    else {
+      $content .= '<dt class="stormcomponent">';
+    }
+    $content .= $link;
+    $content .= '</dt>';
+  }
+  else {
+    $content = array(
+      '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="'. $dt_id .'" class="stormcomponent">' : '<dt class="stormcomponent">',
+      '#suffix' => '</dt>',
+      '#value' => $link,
+      '#weight' => $link_array['weight'],
+    );
+  }
+
+
+  return $content;
+}
+
+function theme_storm_dashboard_links_weight_table($form = array()) {
+  $type = $form['#infix'];
+  $rows = array();
+  foreach($form as $id => &$value) {
+    if ($id[0] == '#') {
+      continue;
+    }
+    $value[$type.'_storm_dashboard_link_weight_'.$id]['#attributes']['class'] = $type.'dashboard-link-table-weight';
+
+    $row = array();
+    $row[] = $value['#value'];
+    $row[] = drupal_render($value[$type.'_storm_dashboard_link_active_'.$id]);
+    $row[] = drupal_render($value[$type.'_storm_dashboard_link_weight_'.$id]);
+    unset($value['#value']);
+    if (!empty($row)) {
+      $rows[] = array(
+        'data' => $row,
+        'class' => 'draggable',
+      );
+    }
+  }
+  $headers = array(t('Link'), t('Active'), t('Weight'));
+
+  $output = theme('table', $headers, $rows, array('id' => $type.'dashboard-link-table'));
+
+  drupal_add_tabledrag($type.'dashboard-link-table', 'order', 'sibling', $type.'dashboard-link-table-weight');
+
+  $output .= drupal_render($form);
+
+  return $output;
 }
 
 function theme_storm_link($source_module='', $destination_module='', $node_nid=0, $weight=0) {
   switch ($source_module) {
- 
+
    case "stormorganization":
       $params_key = 'organization_nid';
       break;
@@ -268,7 +379,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       $params = array('query' => array($params_key => $node_nid));
     }
     $v = l($list_text, $list_path, $params);
-    
+
     if (!$add_icon_type=='') {
       $i = new stdClass();
       $i->type = $add_icon_type;

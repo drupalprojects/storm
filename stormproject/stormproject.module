@@ -895,3 +895,22 @@ function stormproject_token_values ($type, $object = NULL) {
   }
   return $values;
 }
+
+function stormproject_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Projects'),
+      'icon' => 'stormprojects',
+      'path' => 'storm/projects',
+      'params' => array(),
+      'access_arguments' => 'Storm project: access',
+      'node_type' => 'stormproject',
+      'add_type' => 'stormproject',
+      'map' => array(),
+      'weight' => 4,
+    );
+  }
+  return $links;
+}

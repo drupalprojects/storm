@@ -710,3 +710,22 @@ function stormexpense_views_api() {
     'path' => drupal_get_path('module', 'stormexpense'),
   );
 }
+
+function stormexpense_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Expenses'),
+      'icon' => 'stormexpenses',
+      'path' => 'storm/expenses',
+      'params' => array(),
+      'access_arguments' => 'Storm expense: access',
+      'node_type' => 'stormexpense',
+      'add_type' => 'stormexpense',
+      'map' => array(),
+      'weight' => 11,
+    );
+  }
+  return $links;
+}

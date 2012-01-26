@@ -431,3 +431,22 @@ function stormnote_views_api() {
     'path' => drupal_get_path('module', 'stormnote'),
   );
 }
+
+function stormnote_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Notes'),
+      'icon' => 'stormnotes',
+      'path' => 'storm/notes',
+      'params' => array(),
+      'access_arguments' => 'Storm note: access',
+      'node_type' => 'stormnote',
+      'add_type' => 'stormnote',
+      'map' => array(),
+      'weight' => 9,
+    );
+  }
+  return $links;
+}

@@ -905,3 +905,22 @@ function stormticket_token_values ($type, $object = NULL) {
   }
   return $values;
 }
+
+function stormticket_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Tickets'),
+      'icon' => 'stormtickets',
+      'path' => 'storm/tickets',
+      'params' => array(),
+      'access_arguments' => 'Storm ticket: access',
+      'node_type' => 'stormticket',
+      'add_type' => 'stormticket',
+      'map' => array(),
+      'weight' => 6,
+    );
+  }
+  return $links;
+}

@@ -92,8 +92,35 @@ function storm_update_6201() {
   }
 
   if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6201) {
-    db_add_index($return, 'stormattribute', 'domain', array('domain'));
+    db_add_index($ret, 'stormattribute', 'domain', array('domain'));
   }
 
   return $ret;
+}
+
+/**
+ * Set storm contrib dashboard settings to the new storm dashboard settings.
+ */
+function storm_update_6202() {
+  $block_settings_old = variable_get('storm_extension_dashboard_activate_top_navigation', array());
+  $page_settings = variable_get('storm_extension_dashboard_settings', array());
+
+  $block_settings_new = array();
+  if (!empty($page_settings)) {
+    // weight of links was combined before
+    foreach ($page_settings as $link) {
+      $block_settings_new[$link['path']] = array();
+      $block_settings_new[$link['path']]['weight'] = $link['weight'];
+      $block_settings_new[$link['path']]['active'] = $link['active'];
+    }
+    foreach ($block_settings_old as $link) {
+      $block_settings_new[$link['path']]['active'] = $link['active'];
+    }
+  }
+
+  variable_set('storm_pagedashboard_settings', $page_settings);
+  variable_set('storm_blockdashboard_settings', $block_settings_new);
+  variable_del('storm_extension_dashboard_activate_top_navigation');
+  variable_del('storm_extension_dashboard_settings');
+  return array(array('success' => TRUE, 'query' => 'Set storm contrib dashboard settings to the new storm dashboard settings.'));
 }
