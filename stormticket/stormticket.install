@@ -32,7 +32,7 @@ function stormticket_install() {
     'feature request' => 'feature request',
     'support' => 'support',
     'task' => 'task'
- );
+  );
 
   $attributes['Ticket category search'] = array(
     '-' => 'all',
@@ -140,7 +140,7 @@ function stormticket_update_2() {
 
 /**
  * @function
- * Implementation of hook_update_N to add assigned_nid and assigned_title fields.
+ * Implementation of hook_update_N: Adds assigned_nid and assigned_title fields
  */
 function stormticket_update_6103() {
   $ret = array();
@@ -151,7 +151,7 @@ function stormticket_update_6103() {
 
 /**
  * Added billable and billed fields to stormticket table for issue 567558
-*/
+ */
 function stormticket_update_6106() {
   $ret = array();
   db_add_field($ret, 'stormticket', 'billable', array('type' => 'int', 'default' => 0));
@@ -173,7 +173,7 @@ function stormticket_update_6107() {
   db_change_field($ret, 'stormticket', 'pricemode', 'pricemode', array('type' => 'varchar', 'length' => 100));
   db_change_field($ret, 'stormticket', 'currency', 'currency', array('type' => 'varchar', 'length' => 100));
   db_change_field($ret, 'stormticket', 'durationunit', 'durationunit', array('type' => 'varchar', 'length' => 100));
-  
+
   return $ret;
 }
 
@@ -188,7 +188,7 @@ function stormticket_update_6201() {
     'task_nid'          => array('task_nid'),
     'assigned_nid'      => array('assigned_nid'),
   );
-  foreach($indexes as $name => $fields) {
+  foreach ($indexes as $name => $fields) {
     db_add_index($return, 'stormticket', $name, $fields);
   }
   return $return;
@@ -200,7 +200,7 @@ function stormticket_update_6201() {
 function stormticket_update_6202() {
   $attributes = array();
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 5) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 5) {
     $attributes['Ticket category search'] = array(
       'bug' => 'bug',
       'feature request' => 'feature request',
@@ -209,7 +209,7 @@ function stormticket_update_6202() {
     );
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
     $attributes['Ticket status search'] = array('-' => 'all');
     $attributes['Ticket category search'] = array('-' => 'all');
     $attributes['Ticket priority search'] = array('-' => 'all');
@@ -221,7 +221,7 @@ function stormticket_update_6202() {
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-     db_query($s, $domain, $key, $value, $weight);
+      db_query($s, $domain, $key, $value, $weight);
       $weight++;
     }
     $prevdomain = $domain;
@@ -229,7 +229,7 @@ function stormticket_update_6202() {
 
   $ret = array();
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
     $ret[] = update_sql("UPDATE {stormticket} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
   }
 

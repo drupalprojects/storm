@@ -50,7 +50,7 @@ function stormtimetracking_list() {
     $_SESSION['stormtimetracking_list_filter']['project_nid'] = $ti->project_nid;
     $_SESSION['stormtimetracking_list_filter']['task_nid'] = $ti->task_nid;
   }
-  
+
   $i = new stdClass();
   $i->type = 'stormtimetracking';
 
@@ -163,9 +163,9 @@ function stormtimetracking_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $_SESSION['stormtimetracking_list_filter']['itemsperpage']));
-  
+
   $o = drupal_get_form('stormtimetracking_list_filter', $filterdesc);
-  
+
   $s = stormtimetracking_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
@@ -175,7 +175,7 @@ function stormtimetracking_list() {
   $s_duration = stormtimetracking_access_sql($s_duration, $where);
   $s_duration = db_rewrite_sql($s_duration);
   $duration = db_result(db_query($s_duration, $args));
-  
+
   $_SESSION['stormtimetracking_list_filter']['sql'] = $s . $tablesort;
   $_SESSION['stormtimetracking_list_filter']['args'] = $args;
 
@@ -298,14 +298,14 @@ function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
   $form['filter']['group2']['datefrom'] = array(
     '#type' => 'dateext',
     '#title' => t('Date from'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $datefrom,
   );
 
   $form['filter']['group2']['dateto'] = array(
     '#type' => 'dateext',
     '#title' => t('Date to'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $dateto,
   );
 

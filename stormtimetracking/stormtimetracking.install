@@ -79,7 +79,7 @@ function stormtimetracking_update_6201() {
     'ticket_nid'        => array('ticket_nid'),
     'trackingdate'      => array('trackingdate'),
   );
-  foreach($indexes as $name => $fields) {
+  foreach ($indexes as $name => $fields) {
     db_add_index($return, 'stormtimetracking', $name, $fields);
   }
   return $return;

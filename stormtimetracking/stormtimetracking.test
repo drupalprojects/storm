@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Test definitions for the Storm Timetracking module.
+ */
 <?php
 class StormtimetrackingTestCase extends DrupalWebTestCase {
 
