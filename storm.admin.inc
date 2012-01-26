@@ -104,7 +104,7 @@ function storm_attribute_list() {
 function storm_attribute_list_form($form_id, $header, $attributes) {
   $form = array();
 
-  $form['attributes']['#theme'] = 'stormattribute_list';
+  $form['attributes']['#theme'] = 'storm_attribute_list';
 
   $form['attributes']['header'] = array (
     '#value' => $header,
@@ -112,7 +112,7 @@ function storm_attribute_list_form($form_id, $header, $attributes) {
 
   foreach ($attributes as $attribute) {
     $i = new stdClass();
-    $i->type = 'stormattribute';
+    $i->type = 'storm_attribute';
 
     $form['attributes']['attributes'][$attribute->aid]['attribute_domain_'. $attribute->aid] = array (
       '#value' => $attribute->domain,
