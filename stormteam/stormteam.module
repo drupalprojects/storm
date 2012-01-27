@@ -522,7 +522,7 @@ function stormteam_list() {
   $filterfields = array();
 
   if (isset($_SESSION['stormteam_list_filter']['name']) && $_SESSION['stormteam_list_filter']['name'] != '') {
-    $where[] = "LOWER(n.title) LIKE LOWER('%s')";
+    $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
     $args[] = $_SESSION['stormteam_list_filter']['name'];
     $filterfields[] = t('Team Name');
   }
@@ -546,8 +546,10 @@ function stormteam_list() {
   $s = stormteam_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
-  $teams = array();
+  //default count replacement doesn't work, because we need the distinct
+  $count_query = preg_replace('/SELECT.*?FROM /As', 'SELECT COUNT(DISTINCT(n.nid)) FROM ', $s);
+  $r = pager_query($s . $tablesort, $itemsperpage, 0, $count_query, $args);
+  $rows = array();
   while ($team = db_fetch_object($r)) {
     $rows[] = array(
       l($team->title, 'node/'. $team->nid),
