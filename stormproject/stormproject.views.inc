@@ -1,8 +1,8 @@
+<?php
 /**
  * @file
  * Functions to expose Storm Project data to the views module
  */
-<?php
 
 function stormproject_views_data() {
   $data['stormproject']['table']['group']  = 'Storm Project';
