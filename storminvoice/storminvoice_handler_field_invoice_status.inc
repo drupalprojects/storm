@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Handler for the Storm Invoice status field in Views
+ */
 class storminvoice_handler_field_invoice_status extends views_handler_field {
 
   function construct() {
@@ -20,7 +23,7 @@ class storminvoice_handler_field_invoice_status extends views_handler_field {
     if ($paymentdate) {
       $status = 'paid';
     }
-    else if ($duedate < time()) {
+    elseif ($duedate < time()) {
       $status = 'overdue';
     }
     return storm_icon('invoice_status_'. check_plain($status), storm_attribute_value('Invoice status', $status));

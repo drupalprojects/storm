@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @file storminvoice.theme.inc
+ * @file
  * Themable functions for Storm invoice component.
  */
 
@@ -37,7 +36,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     if ($invoice->paymentdate) {
       $invoice->status = 'paid';
     }
-    else if ($invoice->duedate < time()) {
+    elseif ($invoice->duedate < time()) {
       $invoice->status = 'overdue';
     }
 
@@ -74,7 +73,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  
+
   $header[] = array(
     'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
     'style' => 'text-align: right;',
@@ -111,7 +110,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     'data' => sprintf('%.2f', $totals_topay->total),
     'style' => 'text-align: right;',
   );
-    
+
   $rows[] = array(
     array(
       'data' => t('Total paid'),
@@ -134,7 +133,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
     'data' => sprintf('%.2f', $totals_paid->total),
     'style' => 'text-align: right;',
   );
-    
+
   $rows[] = array(
     array(
       'data' => t('Total'),
@@ -179,11 +178,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   // Add generic Storm node CSS
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
   // Adds CSS for Storm Invoice node view
-  drupal_add_css(drupal_get_path('module', 'storminvoice') . '/storminvoice-nodeview.css');  
-  
+  drupal_add_css(drupal_get_path('module', 'storminvoice') . '/storminvoice-nodeview.css');
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
-  
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
@@ -191,10 +190,10 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   );
 
   // Bodge fix to keep html and pdf invoices working. Without language, menu items default to /storm
-  if(!$node->language) {
+  if (!$node->language) {
     $node->language = 'en';
   }
-  
+
   $node->content['links']['print']['html'] = array(
     '#prefix' => '<dt class="stormcomponent print_html">',
     '#suffix' => '</dt>',
@@ -204,7 +203,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
 
   // Display link to tcpdf library only if library is installed.
   $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
-  if(file_exists($tcpdf_dir .'/tcpdf.php')) {
+  if (file_exists($tcpdf_dir .'/tcpdf.php')) {
     $node->content['links']['print']['pdf'] = array(
       '#prefix' => '<dt class="stormcomponent print_pdf">',
       '#suffix' => '</dt>',
@@ -219,7 +218,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => $l_pos++,
     );
   }
-  
+
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -253,7 +252,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 2,
   );
 
-  if($node->reference) {
+  if ($node->reference) {
     $node->content['group2']['reference'] = array(
       '#prefix' => '<div class="reference">',
       '#suffix' => '</div>',
@@ -282,7 +281,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 2,
   );
 
-  if($node->paymentdate) {
+  if ($node->paymentdate) {
     $node->content['group3']['paymentdate'] = array(
       '#prefix' => '<div class="paymentdate">',
       '#suffix' => '</div>',
@@ -290,12 +289,12 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => 3,
     );
   }
-    
+
   $status = 'open';
   if ($node->paymentdate) {
     $status = 'paid';
   }
-  else if ($node->duedate < time()) {
+  elseif ($node->duedate < time()) {
     $status = 'overdue';
   }
   $node->content['group3']['status'] = array(
@@ -304,7 +303,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Status'), $status),
     '#weight' => 4,
   );
-  
+
   // Processing for invoice items.
   $header = array(
     array(
@@ -312,29 +311,29 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     ),
     array(
       'data' => t('Amount'),
-      //'style' => 'text-align: right;',
+      // 'style' => 'text-align: right;',
     ),
   );
-  
+
   if ($node->tax1) {
     $header[] = array(
       'data' => t(variable_get('storm_tax1_name', 'Tax 1')),
-      //'style' => 'text-align: right;',
+      // 'style' => 'text-align: right;',
     );
   }
-  
+
   if ($node->tax2) {
     $header[] = array(
       'data' => t(variable_get('storm_tax2_name', 'Tax 2')),
-      //'style' => 'text-align: right;',
+      // 'style' => 'text-align: right;',
     );
   }
-  
+
   $header[] = array(
       'data' => t('Total'),
-      //'style' => 'text-align: right;',
+      // 'style' => 'text-align: right;',
     );
-    
+
   $where = array();
   $s  = "SELECT sit.description, sit.amount, ";
   if ($node->tax1) {
@@ -352,7 +351,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     $invoice_items[$i] = $invoice_item;
     $i++;
   }
-  
+
   foreach ($invoice_items as $key => $inv_item) {
     // PHP4 compatibility - for D7 change this to use the original array by reference
     $invoice_items[$key]['amount'] = sprintf("%.2f", $inv_item['amount']);
@@ -368,14 +367,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     }
     unset($invoice_items[$key]['src_nid']);
   }
-  
+
   $node->content['group4'] = array(
     '#prefix' => '<div class="stormfields">',
     '#value' => theme('table', $header, $invoice_items),
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
-  
+
   $node->content['group5'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -397,7 +396,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 2,
   );
   }
-  
+
   if ($node->tax2) {
   $node->content['group5']['tax2'] = array(
     '#prefix' => '<div class="tax">',
@@ -406,14 +405,14 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => 3,
   );
   }
-  
+
   $node->content['group5']['total'] = array(
     '#prefix' => '<div class="total">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Total'), sprintf('%.2f', $node->total)),
     '#weight' => 4,
   );
-  
+
   $organization = node_load($node->organization_nid);
   $myorg = node_load(variable_get('storm_organization_nid', 0));
   if (isset($myorg->orglanguage)) {
@@ -435,7 +434,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
     );
   }
 
-  if($node->content['body']['#value']) {
+  if ($node->content['body']['#value']) {
     $node->content['body_field'] = array(
       '#prefix' => '<div class="stormbody">',
       '#suffix' => '</div>',
@@ -449,11 +448,11 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
 }
 
 function theme_storminvoice_report($node, $report, $language) {
-  if($report=='html') {
-    print theme('storminvoice_report_html', $node, $language); 
+  if ($report=='html') {
+    print theme('storminvoice_report_html', $node, $language);
   }
-  else if ($report=='pdf') {
-    theme('storminvoice_report_pdf', $node, $language); 
+  elseif ($report=='pdf') {
+    theme('storminvoice_report_pdf', $node, $language);
   }
 }
 
@@ -461,11 +460,11 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $tcpdf_dir = variable_get('storminvoice_tcpdf_location', 'sites/all/libraries/tcpdf');
 
   // Performs simple check for existance of tcpdf library . If it doesn't exist,  revert to node display with message about tcpdf library.
-  if(!file_exists($tcpdf_dir .'/tcpdf.php')) {
+  if (!file_exists($tcpdf_dir .'/tcpdf.php')) {
     drupal_set_message(t('The tcpdf library has not been installed. See the Storm module README.txt for more details.'));
     drupal_goto('node/'. $node->nid);
   }
-  
+
   require_once($tcpdf_dir .'/config/lang/eng.php');
   require_once($tcpdf_dir .'/tcpdf.php');
   $languages = explode(',', $language);
@@ -479,7 +478,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($node->paymentdate) {
     $status = 'paid';
   }
-  else if ($node->duedate < time()) {
+  elseif ($node->duedate < time()) {
     $status = 'overdue';
   }
 
@@ -497,7 +496,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $title = t('Invoice', array(), $language);
   $complete_title = $title .' '. $myorg->title .' : '. $organization->title .' - '. $node->number;
 
-  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
+  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, TRUE);
   $pdf->SetCreator(PDF_CREATOR);
   $pdf->SetAuthor("Storm");
   $pdf->SetTitle($complete_title);
@@ -515,9 +514,9 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
 
   $pdf->SetFont("times", "B", 14);
   $headerleft = variable_get('site_name', '') .'<br />'. variable_get('site_slogan', '');
-  $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 ,0, false, 'L');
+  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 , 0, FALSE, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->writeHTMLCell($pageWidth *.5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 ,1 ,0, false, 'R');
+  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 , 1 , 0, FALSE, 'R');
   $pdf->SetFont("times", "B", 14);
   $o = $title;
   if ($language1) $o .= "\n". t('Invoice', array(), $language1);
@@ -528,7 +527,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->SetFont("times", "B", 10);
   $o = t('Bill to', array(), $language);
   if ($language1) $o .= "\n". t('Bill to', array(), $language1);
-  $pdf->MultiCell($pageWidth *.4, 0, $o, 'B', 'L', 0, 1, PDF_MARGIN_LEFT, $y);
+  $pdf->MultiCell($pageWidth * .4, 0, $o, 'B', 'L', 0, 1, PDF_MARGIN_LEFT, $y);
   $o =  $organization->fullname ."\n";
   $o .= $organization->address ."\n";
   $o .= $organization->city ."\n";
@@ -564,7 +563,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
 
   $pdf->SetFont("times", "N", 10);
   $h = $pdf->getY();
-  $pdf->MultiCell($w, 0, $node->reference?$node->reference:'-' , 1, 'L', 0, 1, PDF_MARGIN_LEFT + $pageWidth*.5 + $w*3);
+  $pdf->MultiCell($w, 0, $node->reference?$node->reference:'-' , 1, 'L', 0, 1, PDF_MARGIN_LEFT + $pageWidth * .5 + $w * 3);
   $h = $pdf->getY() - $h;
   $pdf->MultiCell($w-2, $h, $node->number, 1, 'L', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5, $pdf->getY() - $h);
   $pdf->MultiCell($w-3, $h, $mycurrency, 1, 'L', 0, 0);
@@ -589,13 +588,13 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($organization->currency != $myorg->currency) {
     $o .= "\n". $organization->currency .' '. sprintf('%.2f', $node->totalcustomercurr);
   }
-  $pdf->MultiCell($w*2 - 5, 12, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth *.5);
+  $pdf->MultiCell($w * 2 - 5, 12, $o, 1, 'C', 0, 0, PDF_MARGIN_LEFT + $pageWidth * .5);
   $pdf->SetFont("times", "N", 10);
   $pdf->MultiCell($w + 5, 12, format_date($node->duedate, 'custom', 'Y-m-d'), 1, 'L', 0, 0);
   $pdf->MultiCell($w, 12, variable_get('storminvoice_payment_terms', ''), 1, 'L', 0, 1);
 
   $y = $pdf->getY();
-  if($destY > $y) $y = $destY;
+  if ($destY > $y) $y = $destY;
   $pdf->setY($y+10);
 
   $pdf->setX(PDF_MARGIN_LEFT);
@@ -652,7 +651,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($node->taxexempt && $language1=='it') {
     $o = t('Tax exempt art. 7', array(), $language);
     if ($language1) $o .= "\n". t('Tax exempt art. 7', array(), $language1);
-    $pdf->MultiCell($pageWidth, 0, $o,0 , 'L' ,0, 1, $pdf->getX(), $pdf->getY() + 5);
+    $pdf->MultiCell($pageWidth, 0, $o, 0 , 'L' ,0, 1, $pdf->getX(), $pdf->getY() + 5);
   }
 
   $y = $pdf->getY() + 10;
@@ -660,26 +659,26 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->SetFont("times", "B", 10);
   $pdf->Cell($pageWidth, 5, t('Payment', array(), $language), 'B', 0, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' ,0, 1, PDF_MARGIN_LEFT, $pdf->getY() + 5, true, 0, true);
+  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' , 0, 1, PDF_MARGIN_LEFT, $pdf->getY() + 5, true, 0, TRUE);
 
   if ($status=='paid') {
     $y = $pdf->getY() + 10;
     $pdf->setY($y);
     $pdf->SetFont("times", "B", 14);
-    $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0 ,1,'C');
+    $pdf->Cell(0, 12, t('Paid in full', array(), $language), 0, 1, 'C');
   }
 
-  $filename = strtolower('invoice_'. str_replace('/', '-', $node->number)) .'.pdf';
+  $filename = drupal_strtolower('invoice_'. str_replace('/', '-', $node->number)) .'.pdf';
 
-  //Close and output PDF document
+  // Close and output PDF document
   if ($output == 'screen') {
     $pdf->Output($filename, "I");
   }
-  else if ($output == 'email') {
-    $dir = file_directory_path().'/';
-    variable_set('storminvoice_email_pdf_file_path', $dir.$filename);
+  elseif ($output == 'email') {
+    $dir = file_directory_path() .'/';
+    variable_set('storminvoice_email_pdf_file_path', $dir . $filename);
     variable_set('storminvoice_email_pdf_file_name', $filename);
-    return $pdf->Output($dir.$filename, "S");
+    return $pdf->Output($dir . $filename, "S");
   }
 }
 
@@ -695,7 +694,7 @@ function theme_storminvoice_report_html($node, $language) {
   if ($node->paymentdate) {
     $status = 'paid';
   }
-  else if ($node->duedate < time()) {
+  elseif ($node->duedate < time()) {
     $status = 'overdue';
   }
 
@@ -800,7 +799,7 @@ function theme_storminvoice_report_html($node, $language) {
   $tax1 = variable_get('storm_tax1_name', 'Tax 1');
   if ($language1) $tax1 .= '<br />'. variable_get('storm_tax1_name', 'Tax 1');
   }
-  
+
   if ($node->tax2) {
   $tax2 = variable_get('storm_tax2_name', 'Tax 2');
   if ($language1) $tax2 .= '<br />'. variable_get('storm_tax2_name', 'Tax 2');
@@ -874,7 +873,7 @@ function theme_storminvoice_report_html($node, $language) {
       'style' => 'text-align: right;',
     ),
   );
-    
+
   if ($node->tax1) {
     $rows[end(array_keys($rows))][] = array(
       'data' => sprintf('%.2f', $node->tax1),
@@ -922,11 +921,12 @@ function theme_storminvoice_report_html($node, $language) {
   return theme('storm_report', $header, $o, $title, $footer, $headtitle);
 }
 
- /* Code to create invoice auto_add link
- * Input billable and billed to determine what the link is.
- * 
- * @return
- * html coding for the link
+/**
+ * @function
+ * Code to create invoice auto_add link
+ *
+ * @return varchar
+ *   html coding for the link
  */
 function theme_storminvoice_autoadd_links($nid, $billable, $billed) {
   if (user_access('Storm invoice: add')) {
@@ -934,8 +934,8 @@ function theme_storminvoice_autoadd_links($nid, $billable, $billed) {
       $v = '';
       $v = '<strong>'. t('Invoice this item:') .'</strong>';
       $v .= '<ul>';
-      $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $nid) .'</li>';
-      $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $nid) .'</li>';
+      $v .= '<li>'. l(t('Add to new invoice'), 'storm/invoice/auto_add/new/'. $nid) .'</li>';
+      $v .= '<li>'. l(t('Add to existing invoice'), 'storm/invoice/auto_add/existing/'. $nid) .'</li>';
       $v .= '</ul>';
     }
     elseif ($billed) {

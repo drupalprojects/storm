@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm Invoice module data to the views module
+ */
 function storminvoice_views_data() {
   // Invoice core fields
   $data['storminvoice']['table']['group']  = t('Storm Invoice');
@@ -9,7 +12,7 @@ function storminvoice_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['storminvoice']['number'] = array(
     'title' => t('Number'),
     'help' => t('Storm Invoice Number'),
@@ -43,7 +46,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['storminvoice']['organization_nid'] = array(
     'title' => t('Organization'),
     'help' => t('Invoice -> Organization'),
@@ -54,7 +57,7 @@ function storminvoice_views_data() {
       'label' => t('Invoice -> Organization'),
     ),
   );
-  
+
   $data['storminvoice']['organization_title'] = array(
     'title' => t('Organization'),
     'help' => t('Storm Invoice Organization (title only)'),
@@ -82,7 +85,7 @@ function storminvoice_views_data() {
       'label' => t('Invoice -> Project'),
     ),
   );
-  
+
   $data['storminvoice']['project_title'] = array(
     'title' => t('Project'),
     'help' => t('Storm Invoice Project (title only)'),
@@ -114,7 +117,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
   $data['storminvoice']['duedate'] = array(
     'title' => t('Due Date'),
     'help' => t('Storm Invoice Due Date'),
@@ -144,7 +147,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
   $data['storminvoice']['amount'] = array(
     'title' => t('Amount'),
     'help' => t('Storm Invoice Amount'),
@@ -161,7 +164,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice']['tax1'] = array(
     'title' => t('Tax 1'),
     'help' => t('Storm Invoice Tax 1'),
@@ -195,7 +198,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice']['total'] = array(
     'title' => t('Total'),
     'help' => t('Storm Invoice Total'),
@@ -212,7 +215,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice']['totalcustomercurr'] = array(
     'title' => t('Total in Customer Currency'),
     'help' => t('Storm Invoice Total in Customer Currency'),
@@ -229,7 +232,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice']['taxexempt'] = array(
     'title' => t('Tax Exempt'),
     'help' => t('Storm Invoice Tax Exempt'),
@@ -267,7 +270,7 @@ function storminvoice_views_data() {
       'field' => 'invoice_nid',
     ),
   );
-  
+
   $data['storminvoice_items']['invoice_nid'] = array(
     'title' => t('Invoice'),
     'help' => t('Invoiceitem -> Invoice'),
@@ -295,7 +298,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice_items']['amount'] = array(
     'title' => t('Amount'),
     'help' => t('Storm Invoiceitem Amount'),
@@ -312,7 +315,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice_items']['tax1percent'] = array(
     'title' => t('Tax 1 Percent'),
     'help' => t('Storm Invoiceitem Tax 1 Percent'),
@@ -380,7 +383,7 @@ function storminvoice_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['storminvoice_items']['total'] = array(
     'title' => t('Total'),
     'help' => t('Storm Invoiceitem Total'),
@@ -406,7 +409,7 @@ function storminvoice_views_data() {
       'type' => 'storminvoice',
     ),
   );
-  
+
   return $data;
 }
 

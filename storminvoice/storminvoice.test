@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Test definitions for the Storm Invoice module.
+ */
 class StorminvoiceTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
@@ -32,7 +36,7 @@ class StorminvoiceTestCase extends DrupalWebTestCase {
     // Create and login user
     $user = $this->drupalCreateUser(array('Storm organization: add', 'Storm organization: view all', 'Storm invoice: add', 'Storm invoice: view all'));
     $this->drupalLogin($user);
-  
+
     // Create organization and invoice
     $org = array(
       'title' => $this->randomName(32),

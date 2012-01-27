@@ -1,6 +1,8 @@
 <?php
-
-
+/**
+ * @file
+ * Handler for the Storm Invoice status filter in views
+ */
 class storminvoice_handler_filter_invoice_status extends views_handler_filter_in_operator {
   var $value_form_type = 'radios';
 
@@ -46,16 +48,16 @@ class storminvoice_handler_filter_invoice_status extends views_handler_filter_in
 
     $args = array();
     if ($this->value == 'to pay') {
-      $where = $this->table_alias.".paymentdate=%d AND ".$this->table_alias.".duedate >= %d";
+      $where = $this->table_alias .".paymentdate=%d AND ". $this->table_alias .".duedate >= %d";
       $args[] = 0;
       $args[] = time();
     }
     elseif ($this->value == 'paid') {
-      $where = $this->table_alias.".paymentdate<>%d";
+      $where = $this->table_alias .".paymentdate<>%d";
       $args[] = 0;
     }
-    else { //if ($this->value == 'overdue') {
-      $where = $this->table_alias.".paymentdate=%d AND ".$this->table_alias.".duedate < %d";
+    else { // if ($this->value == 'overdue') {
+      $where = $this->table_alias .".paymentdate=%d AND ". $this->table_alias .".duedate < %d";
       $args[] = 0;
       $args[] = time();
     }
