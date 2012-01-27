@@ -29,7 +29,7 @@ function storminvoice_auto_add($node, $invoice = NULL) {
       // watchdog - add link to record error in more detail?
       drupal_goto('node/'. $node->nid);
   }
-  if($invoice) {
+  if ($invoice) {
     drupal_set_message(t('The @type has been added to the selected invoice.', array('@type' => $node->type)));
   }
   else {
@@ -51,7 +51,7 @@ function storminvoice_auto_add_select() {
     '#options' => array(),
     '#description' => t('Please choose the invoice that you would like to add to'),
   );
-  
+
   // THIS CODE LOADS OPTIONS INTO THE INVOICE SELECTOR
   // Load the node object, but don't know how to handle it yet because it could be a node of several types.
   $node = node_load(arg(4));
@@ -63,7 +63,7 @@ function storminvoice_auto_add_select() {
   if (($node->type == 'stormorganization') && !($node->organization_nid)) {
     $node->organization_nid = $node->nid;
   }
-  else if (($node->type == 'stormproject') && !($node->project_nid)) {
+  elseif (($node->type == 'stormproject') && !($node->project_nid)) {
     $node->project_nid = $node->nid;
   }
 

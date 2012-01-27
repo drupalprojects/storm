@@ -443,7 +443,7 @@ function storminvoice_send_form_submit($form, &$form_state) {
   $headers['Content-Type'] = "multipart/mixed; boundary=$trenner";
   $params['body']  = "\n--$trenner\n";
   $params['body'] .= "Content-Type: text/plain; charset=UTF-8; format=flowed;"."\n\n"; // sets the mime type
-  $params['body'] .= $form_filled['body']."\n";
+  $params['body'] .= $form_filled['body'] ."\n";
   $params['body'] .= "\n\n";
   $params['body'] .= "\n\n";
 
@@ -476,7 +476,7 @@ function storminvoice_mail($key, &$message, $params) {
   $message['body'][] = $params['body'];
   $message['headers']['MIME-Version'] = '1.0';
   $message['headers']['Content-Type'] = "multipart/mixed; boundary=$trenner";
-  if ($params['bcc']){
+  if ($params['bcc']) {
     $message['headers']['Bcc'] = $message['headers']['From'];
   }
 }
