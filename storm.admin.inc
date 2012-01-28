@@ -157,7 +157,7 @@ function storm_attribute_list_form($form_id, $header, $attributes) {
 function storm_attribute_list_submit($form, &$form_state) {
   $attributes = array();
   $default_for_domain = array();
-  foreach ($_POST as $key=>$value) {
+  foreach ($_POST as $key => $value) {
     $ar = explode('_', $key);
     if ($ar[0]=='attribute') {
       if ($ar[1]=='weight') $attributes[$ar[2]]['weight'] = $value;
@@ -170,7 +170,7 @@ function storm_attribute_list_submit($form, &$form_state) {
   }
 
   $s = "UPDATE {stormattribute} SET isactive=%d, weight=%d WHERE aid=%d";
-  foreach ($attributes as $aid=>$values) {
+  foreach ($attributes as $aid => $values) {
     db_query($s, $values['isactive'], $values['weight'], $aid);
   }
 
@@ -244,7 +244,7 @@ function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => t('Default'),
     '#default_value' => $isdefault,
-    '#options' => array('-'=>'-', '0'=>t('No'), '1'=>t('Yes')),
+    '#options' => array('-' => '-', '0' => t('No'), '1' => t('Yes')),
   );
 
   $form['filter']['group3'] = array(
@@ -362,7 +362,7 @@ function storm_attribute_delete($form_state, $aid) {
 
   return confirm_form($form,
   t('Are you sure you want to delete the attribute %title?', array('%title' => $title)),
-  array('path'=>'storm/attributes/edit/'. $aid, 'query' => $destination),
+  array('path' => 'storm/attributes/edit/'. $aid, 'query' => $destination),
   t('This action cannot be undone.'),
   t('Delete'), t('Cancel'));
 }

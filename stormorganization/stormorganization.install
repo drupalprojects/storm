@@ -641,11 +641,11 @@ function stormorganization_update_6202() {
 
   $ret = array();
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6110) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6110) {
     $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'not applicable', 'Not Applicable', 0, 1)");
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
     $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Price mode', 'fixed_price', 'Fixed Price', 0, 1)");
     $ret[] = update_sql("UPDATE {stormorganization} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
     $ret[] = update_sql("DELETE FROM {stormattribute} where domain = 'Price mode' and akey = 'fixed_timetracking'");
