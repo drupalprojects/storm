@@ -514,13 +514,13 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
 
   $pdf->SetFont("times", "B", 14);
   $headerleft = variable_get('site_name', '') .'<br />'. variable_get('site_slogan', '');
-  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 ,0 , 0, FALSE, 'L');
+  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), $headerleft, 0 , 0 , 0, FALSE, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 , 1 , 0, FALSE, 'R');
+  $pdf->writeHTMLCell($pageWidth * .5, 0, $pdf->getX(), $pdf->getY(), variable_get('storm_report_header', ''), 0 , 1, 0, FALSE, 'R');
   $pdf->SetFont("times", "B", 14);
   $o = $title;
   if ($language1) $o .= "\n". t('Invoice', array(), $language1);
-  $pdf->MultiCell(0, 0, $o, 0 ,'C', 0, 1,$pdf->getX(), $pdf->getY() + 10);
+  $pdf->MultiCell(0, 0, $o, 0 , 'C', 0, 1, $pdf->getX(), $pdf->getY() + 10);
 
   $y = $pdf->getY() + 10;
 
@@ -540,7 +540,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     $o .= ' : '. $organization->taxid;
   }
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth *.4, 0, $o,0 , 'L' ,0, 1, PDF_MARGIN_LEFT);
+  $pdf->MultiCell($pageWidth * .4, 0, $o, 0 , 'L' , 0, 1, PDF_MARGIN_LEFT);
   $destY = $pdf->getY();
 
   $w = ($pageWidth *.5) / 4;
@@ -651,7 +651,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   if ($node->taxexempt && $language1=='it') {
     $o = t('Tax exempt art. 7', array(), $language);
     if ($language1) $o .= "\n". t('Tax exempt art. 7', array(), $language1);
-    $pdf->MultiCell($pageWidth, 0, $o, 0 , 'L' ,0, 1, $pdf->getX(), $pdf->getY() + 5);
+    $pdf->MultiCell($pageWidth, 0, $o, 0, 'L', 0, 1, $pdf->getX(), $pdf->getY() + 5);
   }
 
   $y = $pdf->getY() + 10;
@@ -659,7 +659,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $pdf->SetFont("times", "B", 10);
   $pdf->Cell($pageWidth, 5, t('Payment', array(), $language), 'B', 0, 'L');
   $pdf->SetFont("times", "N", 10);
-  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0 , 'L' , 0, 1, PDF_MARGIN_LEFT, $pdf->getY() + 5, true, 0, TRUE);
+  $pdf->MultiCell($pageWidth, 0, variable_get('storminvoice_payment_modes', ''), 0, 'L', 0, 1, PDF_MARGIN_LEFT, $pdf->getY() + 5, TRUE, 0, TRUE);
 
   if ($status=='paid') {
     $y = $pdf->getY() + 10;

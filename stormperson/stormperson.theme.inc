@@ -30,9 +30,9 @@ function theme_stormperson_list($header, $people) {
 
 function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
-  
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
@@ -51,7 +51,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
     '#weight' => 1,
   );
-  
+
   $node->content['group3'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -71,7 +71,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('WWW'), l($node->www, $node->www, array('absolute' => TRUE))),
     '#weight' => 2,
   );
-  
+
   $node->content['group4'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -98,7 +98,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
-  
+
   unset($node->content['body']);
 
   return $node;

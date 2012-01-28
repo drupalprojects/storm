@@ -41,9 +41,9 @@ function storm_schema() {
       'akey'          => array('type' => 'varchar', 'length' => 100),
       'avalue'        => array('type' => 'varchar', 'length' => 100),
       'parent_domain' => array('type' => 'varchar', 'length' => 100),
-      'weight'        => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'small'),
-      'isdefault'     => array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
-      'isactive'      => array('type' => 'int','not null' => FALSE, 'default' => 1, 'size' => 'tiny'),
+      'weight'        => array('type' => 'int', 'not null' => FALSE, 'default' => 0, 'size' => 'small'),
+      'isdefault'     => array('type' => 'int', 'not null' => FALSE, 'default' => 0, 'size' => 'tiny'),
+      'isactive'      => array('type' => 'int', 'not null' => FALSE, 'default' => 1, 'size' => 'tiny'),
     ),
     'primary key' => array('aid'),
     'indexes' => array(
@@ -56,16 +56,16 @@ function storm_schema() {
 
 /**
  * @function
- * Implementation of hook_update_N
+ * Implementation of hook_update_N().
  * Removes stormteammember table if it exists, cleanup from stormteam transition
  */
 function storm_update_6101() {
   $ret = array();
-  
+
   if (db_table_exists('stormteammember')) {
     db_drop_table($ret, 'stormteammember');
   }
-    
+
   return $ret;
 }
 
@@ -73,13 +73,13 @@ function storm_update_6201() {
   $ret = array();
 
   // Only run this update if was not previously run as part of the legacy stormattribute module
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 5) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 5) {
     db_add_field($ret, 'stormattribute', 'parent_domain', array('type' => 'varchar', 'length' => 100));
-    db_add_field($ret, 'stormattribute', 'isactive', array('type' => 'int','not null' => FALSE, 'default' => 1, 'size' => 'tiny'));
-    db_add_field($ret, 'stormattribute', 'isdefault', array('type' => 'int','not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
+    db_add_field($ret, 'stormattribute', 'isactive', array('type' => 'int', 'not null' => FALSE, 'default' => 1, 'size' => 'tiny'));
+    db_add_field($ret, 'stormattribute', 'isdefault', array('type' => 'int', 'not null' => FALSE, 'default' => 0, 'size' => 'tiny'));
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
     switch ($GLOBALS['db_type']) {
       case 'mysql':
       case 'mysqli':
@@ -91,7 +91,7 @@ function storm_update_6201() {
     }
   }
 
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6201) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6201) {
     db_add_index($ret, 'stormattribute', 'domain', array('domain'));
   }
 

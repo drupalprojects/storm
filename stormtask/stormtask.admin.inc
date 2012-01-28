@@ -111,9 +111,15 @@ function stormtask_tasks($project) {
   $jsgantt_dir = drupal_get_path('module', 'stormtask') .'/jsgantt';
 
   $dispOpt=variable_get('stormtask_jsgantt_options', array());
-  if ($dispOpt['ShowStartDate']) {$dispOpt['ShowStartDate']=1;}
-  if ($dispOpt['ShowEndDate']) {$dispOpt['ShowEndDate']=1;}
-  if ($dispOpt['ShowDur']) {$dispOpt['ShowDur']=1;}
+  if ($dispOpt['ShowStartDate']) {
+    $dispOpt['ShowStartDate']=1;
+  }
+  if ($dispOpt['ShowEndDate']) {
+    $dispOpt['ShowEndDate']=1;
+  }
+  if ($dispOpt['ShowDur']) {
+    $dispOpt['ShowDur']=1;
+  }
 
   if (variable_get('stormtask_enable_ganttchart', 0)) {
     drupal_add_js($jsgantt_dir ."/jsgantt.js");
@@ -140,7 +146,7 @@ function stormtask_tasks($project) {
       $pID = $task->nid;
       $pName = check_plain($task->title);
       $pCaption = $pName;
-      $pLink = base_path() ."node/".$task->nid;
+      $pLink = base_path() ."node/". $task->nid;
       $pStart = date("n/j/Y", $task->datebegin);
       $pEnd = date("n/j/Y", $task->dateend);
       $pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); // $task->taskstatus;
@@ -197,7 +203,7 @@ function stormtask_tasks($project) {
 // Parameters (pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes,  pComp, pGroup, pParent, pOpen)
 ". $js ."
 
-// use the XML file parser 
+// use the XML file parser
 //    JSGantt.parseXML('http://localhost/services/sites/default/files/project.xml',g)
 
     g.Draw();
@@ -206,7 +212,7 @@ function stormtask_tasks($project) {
       else
       {
     alert('not defined');
-      }", 'inline', 'footer'); //end drupal_add_js
+      }", 'inline', 'footer'); // end drupal_add_js
   }
 
   $o .= drupal_get_form('stormtask_tasks_form', $header, $taskstree, $project);
@@ -576,7 +582,7 @@ function stormtask_list() {
           break;
 
         case 'mine':
-          // CURRENT USER 
+          // CURRENT USER
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }

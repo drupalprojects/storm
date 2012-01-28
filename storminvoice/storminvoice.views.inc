@@ -104,7 +104,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['requestdate'] = array(
-    'title' => t('Request Date'),
+    'title' => t('Request date'),
     'help' => t('Storm Invoice Request Date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -119,7 +119,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['duedate'] = array(
-    'title' => t('Due Date'),
+    'title' => t('Due date'),
     'help' => t('Storm Invoice Due Date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -134,7 +134,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['paymentdate'] = array(
-    'title' => t('Payment Date'),
+    'title' => t('Payment date'),
     'help' => t('Storm Invoice Payment Date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -217,7 +217,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['totalcustomercurr'] = array(
-    'title' => t('Total in Customer Currency'),
+    'title' => t('Total in customer currency'),
     'help' => t('Storm Invoice Total in Customer Currency'),
     'field' => array(
       'click sortable' => TRUE,
@@ -234,7 +234,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['taxexempt'] = array(
-    'title' => t('Tax Exempt'),
+    'title' => t('Tax exempt'),
     'help' => t('Storm Invoice Tax Exempt'),
     'field' => array(
       'click sortable' => TRUE,
@@ -251,7 +251,7 @@ function storminvoice_views_data() {
   );
 
   $data['storminvoice']['invoice_status'] = array(
-    'title' => t('Invoice Status'),
+    'title' => t('Invoice status'),
     'help' => t('Storm Invoice Status'),
     'field' => array(
       'click sortable' => TRUE,

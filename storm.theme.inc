@@ -7,7 +7,7 @@
 
 function theme_storm_form_group($form) {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-  $output = null; // Variable set as per issue 684016.
+  $output = NULL; // Variable set as per issue 684016.
 
   $row = array();
   foreach (element_children($form) as $key) {
@@ -200,16 +200,16 @@ function theme_storm_dashboard_link($link_array) {
 function theme_storm_dashboard_links_weight_table($form = array()) {
   $type = $form['#infix'];
   $rows = array();
-  foreach($form as $id => &$value) {
+  foreach ($form as $id => &$value) {
     if ($id[0] == '#') {
       continue;
     }
-    $value[$type.'_storm_dashboard_link_weight_'.$id]['#attributes']['class'] = $type.'dashboard-link-table-weight';
+    $value[$type .'_storm_dashboard_link_weight_'. $id]['#attributes']['class'] = $type .'dashboard-link-table-weight';
 
     $row = array();
     $row[] = $value['#value'];
-    $row[] = drupal_render($value[$type.'_storm_dashboard_link_active_'.$id]);
-    $row[] = drupal_render($value[$type.'_storm_dashboard_link_weight_'.$id]);
+    $row[] = drupal_render($value[$type .'_storm_dashboard_link_active_'. $id]);
+    $row[] = drupal_render($value[$type .'_storm_dashboard_link_weight_'. $id]);
     unset($value['#value']);
     if (!empty($row)) {
       $rows[] = array(
@@ -220,9 +220,9 @@ function theme_storm_dashboard_links_weight_table($form = array()) {
   }
   $headers = array(t('Link'), t('Active'), t('Weight'));
 
-  $output = theme('table', $headers, $rows, array('id' => $type.'dashboard-link-table'));
+  $output = theme('table', $headers, $rows, array('id' => $type .'dashboard-link-table'));
 
-  drupal_add_tabledrag($type.'dashboard-link-table', 'order', 'sibling', $type.'dashboard-link-table-weight');
+  drupal_add_tabledrag($type .'dashboard-link-table', 'order', 'sibling', $type .'dashboard-link-table-weight');
 
   $output .= drupal_render($form);
 
@@ -232,7 +232,7 @@ function theme_storm_dashboard_links_weight_table($form = array()) {
 function theme_storm_link($source_module='', $destination_module='', $node_nid=0, $weight=0) {
   switch ($source_module) {
 
-   case "stormorganization":
+    case "stormorganization":
       $params_key = 'organization_nid';
       break;
 
@@ -392,7 +392,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
       }
       $nmb_itms = _storm_number_of_items($source_module, $destination_module, $node_nid);
       $nmb_itms = theme('storm_number_items', $nmb_itms);
-      $v .= $nmb_itms.storm_icon_add($add_path, $i, $params);
+      $v .= $nmb_itms . storm_icon_add($add_path, $i, $params);
     }
 
     if ($node_nid == 0) {
@@ -415,7 +415,7 @@ function theme_storm_link($source_module='', $destination_module='', $node_nid=0
 function theme_storm_number_items($number) {
   $content = '';
   if ($number !== '') {
-    $content .= '<span class="stormlinks-count">('.$number.')</span>';
+    $content .= '<span class="stormlinks-count">('. $number .')</span>';
   }
   return $content;
 }
@@ -430,27 +430,27 @@ function theme_storm_attribute_list($form) {
   $header = $form['header']['#value'];
   unset($form['header']);
 
-  if(isset($form['attributes'])) {
+  if (isset($form['attributes'])) {
     foreach (element_children($form['attributes']) as $key) {
       $form['attributes'][$key]['attribute_weight_'. $key]['#attributes']['class'] = 'attribute-weight';
       $domain = check_markup(drupal_render($form['attributes'][$key]['attribute_domain_'. $key]));
       $isdefault = $form['attributes'][$key]['attribute_default_'. $key]['#default_value'];
-      if($isdefault) {
+      if ($isdefault) {
         $ischecked = 'checked="checked"';
       }
       else {
         $ischecked = '';
       }
-      $domain_name = 'attribute_default_'. str_replace(' ','|', $domain);
+      $domain_name = 'attribute_default_'. str_replace(' ', '|', $domain);
       $default_ctl = '<input type="radio" name="'. $domain_name .'" value="'. $key .'" '. $ischecked .'"/>';
-      $data = array (
+      $data = array(
         $domain,
         check_markup(drupal_render($form['attributes'][$key]['attribute_akey_'. $key])),
         check_markup(drupal_render($form['attributes'][$key]['attribute_avalue_'. $key])),
         drupal_render($form['attributes'][$key]['attribute_isactive_'. $key]),
         $default_ctl,
         drupal_render($form['attributes'][$key]['attribute_weight_'. $key]),
-        array (
+        array(
           'data' => drupal_render($form['attributes'][$key]['attribute_operations_'. $key]),
           'class' => 'storm_list_operations',
         ),

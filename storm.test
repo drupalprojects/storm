@@ -28,7 +28,7 @@ class StormTestCase extends DrupalWebTestCase {
     $privileged_user = $this->drupalCreateUser(array('Storm: access dashboard'));
     $this->drupalLogin($privileged_user);
     $this->drupalGet('storm');
-    $this->assertText(t('Storm Dashboard'), t('Make sure the correct page has been displayed by checking that the title is "Storm Dashboard".'));
+    $this->assertText(t('Storm dashboard'), t('Make sure the correct page has been displayed by checking that the title is "Storm dashboard".'));
   }
 
   public function testStormAccessSettings() {

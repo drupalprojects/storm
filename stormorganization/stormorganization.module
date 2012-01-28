@@ -485,7 +485,7 @@ function stormorganization_admin_settings() {
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
   }
-  
+
   if (count($organizations) > 0) {
     $form['storm_organization_nid'] = array(
       '#type' => 'select',

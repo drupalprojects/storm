@@ -106,7 +106,7 @@ function storm_attribute_list_form($form_id, $header, $attributes) {
 
   $form['attributes']['#theme'] = 'storm_attribute_list';
 
-  $form['attributes']['header'] = array (
+  $form['attributes']['header'] = array(
     '#value' => $header,
   );
 
@@ -114,33 +114,33 @@ function storm_attribute_list_form($form_id, $header, $attributes) {
     $i = new stdClass();
     $i->type = 'storm_attribute';
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_domain_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_domain_'. $attribute->aid] = array(
       '#value' => $attribute->domain,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_akey_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_akey_'. $attribute->aid] = array(
       '#value' => $attribute->akey,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_avalue_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_avalue_'. $attribute->aid] = array(
       '#value' => $attribute->avalue,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_isactive_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_isactive_'. $attribute->aid] = array(
       '#type' => 'checkbox',
       '#default_value' => $attribute->isactive,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_default_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_default_'. $attribute->aid] = array(
       '#default_value' => $attribute->isdefault,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_weight_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_weight_'. $attribute->aid] = array(
       '#type' => 'weight',
       '#default_value' => $attribute->weight,
     );
 
-    $form['attributes']['attributes'][$attribute->aid]['attribute_operations_'. $attribute->aid] = array (
+    $form['attributes']['attributes'][$attribute->aid]['attribute_operations_'. $attribute->aid] = array(
       '#value' => storm_icon_edit('storm/attributes/edit/'. $attribute->aid, $i, $_GET) .'&nbsp;'.  storm_icon_delete('storm/attributes/delete/'. $attribute->aid, $i, $_GET),
     );
   }
@@ -157,24 +157,24 @@ function storm_attribute_list_form($form_id, $header, $attributes) {
 function storm_attribute_list_submit($form, &$form_state) {
   $attributes = array();
   $default_for_domain = array();
-  foreach($_POST as $key=>$value) {
+  foreach ($_POST as $key=>$value) {
     $ar = explode('_', $key);
-    if($ar[0]=='attribute') {
-      if($ar[1]=='weight') $attributes[$ar[2]]['weight'] = $value;
-      if($ar[1]=='isactive') $attributes[$ar[2]]['isactive'] = $value;
-      if($ar[1]=='default') {
-        $domain = str_replace('|',' ',$ar[2]);
+    if ($ar[0]=='attribute') {
+      if ($ar[1]=='weight') $attributes[$ar[2]]['weight'] = $value;
+      if ($ar[1]=='isactive') $attributes[$ar[2]]['isactive'] = $value;
+      if ($ar[1]=='default') {
+        $domain = str_replace('|', ' ', $ar[2]);
         $default_for_domain[$domain] = $value;
       }
     }
   }
 
   $s = "UPDATE {stormattribute} SET isactive=%d, weight=%d WHERE aid=%d";
-  foreach($attributes as $aid=>$values) {
+  foreach ($attributes as $aid=>$values) {
     db_query($s, $values['isactive'], $values['weight'], $aid);
   }
 
-  foreach($default_for_domain as $domain=>$aid) {
+  foreach ($default_for_domain as $domain => $aid) {
     $s = "UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'";
     db_query($s, $domain);
     $s = "UPDATE {stormattribute} SET isdefault=1 WHERE aid=%d";
@@ -237,7 +237,7 @@ function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => t('Active'),
     '#default_value' => $isactive,
-    '#options' => array('-'=>'-', '0'=>t('No'), '1'=>t('Yes')),
+    '#options' => array('-' => '-', '0' => t('No'), '1' => t('Yes')),
   );
 
   $form['filter']['group2']['isdefault'] = array(
@@ -295,7 +295,7 @@ function storm_attribute_add() {
 }
 
 function storm_attribute_add_submit($form, &$form_state) {
-  if($form_state['values']['isdefault']) {
+  if ($form_state['values']['isdefault']) {
     db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
   }
 
@@ -323,7 +323,7 @@ function storm_attribute_edit($form_state, $aid) {
 }
 
 function storm_attribute_edit_submit($form, &$form_state) {
-  if($form_state['values']['isdefault']) {
+  if ($form_state['values']['isdefault']) {
     db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
   }
 
@@ -343,13 +343,13 @@ function storm_attribute_edit_submit($form, &$form_state) {
 
 function storm_attribute_form_delete($form, &$form_state) {
   $destination = drupal_get_destination();
-  if(array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
+  if (array_key_exists('destination', $_REQUEST)) unset($_REQUEST['destination']);
   drupal_goto('storm/attributes/delete/'. $form_state['values']['aid'], $destination);
 }
 
 function storm_attribute_delete($form_state, $aid) {
   $destination = drupal_get_destination();
-  if(array_key_exists('destination', $_REQUEST)) {
+  if (array_key_exists('destination', $_REQUEST)) {
     $destination = $_REQUEST['destination'];
     unset($_REQUEST['destination']);
     $form['destination'] = array('#type' => 'value', '#value' => $destination);
@@ -362,7 +362,7 @@ function storm_attribute_delete($form_state, $aid) {
 
   return confirm_form($form,
   t('Are you sure you want to delete the attribute %title?', array('%title' => $title)),
-  array('path'=>'storm/attributes/edit/'. $aid, 'query'=>$destination),
+  array('path'=>'storm/attributes/edit/'. $aid, 'query' => $destination),
   t('This action cannot be undone.'),
   t('Delete'), t('Cancel'));
 }
@@ -370,7 +370,7 @@ function storm_attribute_delete($form_state, $aid) {
 function storm_attribute_delete_submit($form, &$form_state) {
   if ($form_state['values']['aid']) {
     db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_state['values']['aid']);
-    drupal_set_message('Storm attribute deleted');
+    drupal_set_message(t('Storm attribute deleted'));
     if ($form_state['values']['destination']) {
       $destination = $form_state['values']['destination'];
     }
@@ -421,7 +421,7 @@ function storm_attribute_form($attribute = NULL) {
 
   $domains = array();
   $r = db_query("SELECT DISTINCT(domain) d FROM {stormattribute} ORDER BY domain");
-  while($i=db_fetch_object($r)) {
+  while ($i=db_fetch_object($r)) {
     $domains[$i->d] = $i->d;
   }
   $form['group1']['parent_domain'] = array(
@@ -429,7 +429,7 @@ function storm_attribute_form($attribute = NULL) {
     '#title' => t('Parent domain'),
     '#required' => FALSE,
     '#default_value' => isset($attribute->parent_domain) ? $attribute->parent_domain : '',
-    '#options' => array(''=>'-') + $domains,
+    '#options' => array('' => '-') + $domains,
   );
 
   $form['group2'] = array(
@@ -508,26 +508,26 @@ function _storm_attibute_domain_options() {
 function _storm_attribute_domain_autocomplete($string = '') {
   static $default_domains;
   if (!$default_domains) {
-    $default_domains = array (
-      'Country'=>'Country',
-      'Currency'=>'Currency',
-      'Task status'=>'Task status',
-      'Project category'=>'Project category',
-      'Project status search'=>'Project status search',
-      'Project status'=>'Project status',
-      'Ticket priority search'=>'Ticket priority search',
-      'Ticket priority'=>'Ticket priority',
-      'Ticket category'=>'Ticket category',
-      'Ticket status search'=>'Ticket status search',
-      'Ticket status'=>'Ticket status',
-      'Task status search'=>'Task status search',
-      'Price mode'=>'Price mode',
-      'Project priority'=>'Project priority',
-      'Project priority search'=>'Project priority search',
-      'Task category'=>'Task category',
-      'Task priority'=>'Task priority',
-      'Task priority search'=>'Task priority search',
-      'Duration unit'=>'Duration unit',
+    $default_domains = array(
+      'Country' => 'Country',
+      'Currency' => 'Currency',
+      'Task status' => 'Task status',
+      'Project category' => 'Project category',
+      'Project status search' => 'Project status search',
+      'Project status' => 'Project status',
+      'Ticket priority search' => 'Ticket priority search',
+      'Ticket priority' => 'Ticket priority',
+      'Ticket category' => 'Ticket category',
+      'Ticket status search' => 'Ticket status search',
+      'Ticket status' => 'Ticket status',
+      'Task status search' => 'Task status search',
+      'Price mode' => 'Price mode',
+      'Project priority' => 'Project priority',
+      'Project priority search' => 'Project priority search',
+      'Task category' => 'Task category',
+      'Task priority' => 'Task priority',
+      'Task priority search' => 'Task priority search',
+      'Duration unit' => 'Duration unit',
     );
   }
 
@@ -542,7 +542,7 @@ function _storm_attribute_domain_autocomplete($string = '') {
   }
 
   foreach ($default_domains as $domain) {
-    if (strpos(strtoupper($domain), strtoupper($string))===false) {
+    if (strpos(drupal_strtoupper($domain), drupal_strtoupper($string))===FALSE) {
     }
     else {
       $matches[$domain] = $domain;

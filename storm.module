@@ -3,7 +3,7 @@
 /**
  * @file
  * Main module file for the Storm module.
- * Basic Storm module provides a dashboard to access other Storm modules from and some API functions.
+ * Basic Storm module provides a dashboard and some API functions.
  * 1: Hooks (help, perm,  init, menu, theme)
  * 2: Dashboard
  * 3: Admin Settings
@@ -12,12 +12,12 @@
  * 6: Storm Icons
  * 7: SQL Functions
  * 8: Node form theming
-*/
+ */
 
 // HOOKS
 /**
  * @function
- * Implementation of hook_help
+ * Implementation of hook_help().
  */
 function storm_help($path, $arg) {
   $output = '';
@@ -47,7 +47,7 @@ function storm_help($path, $arg) {
 
 /**
  * @function
- * Implementation of hook_perm
+ * Implementation of hook_perm().
  */
 function storm_perm() {
   return array(
@@ -64,7 +64,7 @@ function storm_init() {
 
 /**
  * @function
- * Implementation of hook_menu
+ * Implementation of hook_menu().
  */
 function storm_menu() {
   $items = array();
@@ -90,16 +90,16 @@ function storm_menu() {
 
   $items['admin/settings/storm'] = array(
     'title' => 'Storm',
-    'description' => 'Storm Administration Page',
+    'description' => 'Storm administration page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   $items['admin/settings/storm/storm'] = array(
     'title' => 'Storm',
-    'description' => 'Storm Administration Page',
+    'description' => 'Storm administration page',
     'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -100,
@@ -107,7 +107,7 @@ function storm_menu() {
 
   $items['storm/attributes'] = array(
     'title' => 'Attributes',
-    'description' => 'Storm Attributes',
+    'description' => 'Storm attributes',
     'page callback' => 'storm_attribute_list',
     'access arguments' => array('Storm: access administration pages'),
     'file' => 'storm.admin.inc',
@@ -117,7 +117,7 @@ function storm_menu() {
 
   $items['storm/attributes/add'] = array(
     'title' => 'Add a new attribute',
-    'description' => 'Storm Attributes',
+    'description' => 'Storm attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_attribute_add'),
     'access arguments' => array('Storm: access administration pages'),
@@ -126,16 +126,16 @@ function storm_menu() {
 
   $items['storm/attributes/edit/%'] = array(
     'title' => 'Edit an attribute',
-    'description' => 'Storm Attributes',
+    'description' => 'Storm attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_attribute_edit', 3),
     'access arguments' => array('Storm: access administration pages'),
     'file' => 'storm.admin.inc',
     'type' => MENU_CALLBACK);
-  
+
   $items['storm/attributes/delete/%'] = array(
     'title' => 'Delete an attribute',
-    'description' => 'Storm Attributes',
+    'description' => 'Storm attributes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('storm_attribute_delete', 3),
     'access arguments' => array('Storm: access administration pages'),
@@ -144,7 +144,7 @@ function storm_menu() {
 
   $items['storm/attributes/domain/autocomplete'] = array(
     'title' => 'List of attributes',
-    'description' => 'Storm Attributes',
+    'description' => 'Storm attributes',
     'page callback' => '_storm_attribute_domain_autocomplete',
     'page arguments' => array(4),
     'access arguments' => array('Storm: access administration pages'),
@@ -221,8 +221,8 @@ function storm_theme() {
  */
 function storm_dashboard($type = 'page') {
   $types = module_invoke_all('storm_dashboard_types');
-  //only set Page Title if it has a url, so there is a menu entry for that
-  //The block type has no url and shouldn't change the title!
+  // only set Page Title if it has a url, so there is a menu entry for that
+  // The block type has no url and shouldn't change the title!
   if (isset($types[$type]['url']) && isset($types[$type]['title'])) {
     drupal_set_title($types[$type]['title']);
   }
@@ -253,7 +253,7 @@ function storm_dashboard_get_links($check_active = TRUE, $type = 'page') {
 
   if (!empty($links)) {
 
-    $default_dashboard_settings = variable_get('storm_'.$type.'dashboard_settings', array());
+    $default_dashboard_settings = variable_get('storm_'. $type .'dashboard_settings', array());
 
     $weight = 0;
     foreach ($links as $key => &$link_array) {
@@ -316,7 +316,7 @@ function storm_dashboard_get_links($check_active = TRUE, $type = 'page') {
  * Order dashboard links by their weight.
  * This is a uasort callback function.
  *
- * @see uasort
+ * @see uasort()
  * @param array $a dashboard link array
  * @param array $b dashboard link array
  * @return int
@@ -362,7 +362,7 @@ function storm_storm_dashboard_links($type) {
 }
 
 /**
- * Implementation of hook_storm_dashboard_types()
+ * Implementation of hook_storm_dashboard_types().
  * Defines dashboard types page and block.
  * This can be used as an example for other types
  * @return array
@@ -370,23 +370,23 @@ function storm_storm_dashboard_links($type) {
 function storm_storm_dashboard_types() {
   return array(
     'page' => array(
-      //URL: menu path which should be used, if omitted no menu item will be created
+      // URL: menu path which should be used, if omitted no menu item will be created
       'url'         => 'storm',
-      //title: Required. Title of menu item, page title and title for the storm settings
-      'title'       => 'Storm Dashboard',
-      //description: Required. Description for the fieldset in the storm settings
+      // title: Required. Title of menu item, page title and title for the storm settings
+      'title'       => 'Storm dashboard',
+      // description: Required. Description for the fieldset in the storm settings
       'description' => t('You can disable or reorder the links from the !dashboard here', array('!dashboard' => l(t('dashboard'), 'storm'))),
-      //theme: theme which should be used to display this dashboard. If omitted uses standard theme storm_dashboard
+      // theme: theme which should be used to display this dashboard. If omitted uses standard theme storm_dashboard
       'theme'       => 'storm_dashboard',
-      //menu_options: This array will be merged into the default menu item array. If the menu should have special access arguments, title, it can be set here.
-      //page callback and page argument shouldn't been overwritten.
+      // menu_options: This array will be merged into the default menu item array. If the menu should have special access arguments, title, it can be set here.
+      // page callback and page argument shouldn't been overwritten.
       'menu_options' => array(
         'title'       => 'Storm',
-        'description' => 'Storm Dashboard',
+        'description' => 'Storm dashboard',
       ),
     ),
     'block' => array(
-      'title'       => 'Dashboard Block',
+      'title'       => 'Dashboard block',
       'description' => t('You can disable or reorder the links from the dashboard !block here', array('!block' => l(t('block'), 'admin/build/block'))),
       'theme'       => 'storm_dashboard_block',
     ),
@@ -394,7 +394,7 @@ function storm_storm_dashboard_types() {
 }
 
 /**
- * Implementation of hook_block()
+ * Implementation of hook_block().
  */
 function storm_block($op = 'list', $delta = 0) {
   switch ($op) {
@@ -432,7 +432,7 @@ function storm_admin_settings() {
     '#collapsible' => TRUE,
     '#weight' => $w++,
   );
-  
+
   $form['icons']['storm_icons_display'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display Storm icons'),
@@ -457,7 +457,7 @@ function storm_admin_settings() {
     '#collapsible' => TRUE,
     '#weight' => $w++,
   );
-  
+
   $form['lists']['storm_default_items_per_page'] = array(
     '#type' => 'textfield',
     '#title' => t('Default Items per Page'),
@@ -466,7 +466,7 @@ function storm_admin_settings() {
     '#size' => 5,
     '#weight' => $w++
   );
-  
+
   $form['reports'] = array(
     '#type' => 'fieldset',
     '#title' => t('Reports'),
@@ -474,7 +474,7 @@ function storm_admin_settings() {
     '#collapsible' => TRUE,
     '#weight' => $w++,
   );
-  
+
   $form['reports']['storm_report_header'] = array(
     '#type' => 'textarea',
     '#title' => t('Report header'),
@@ -482,7 +482,7 @@ function storm_admin_settings() {
     '#description' => t('The header that will appear on Storm reports'),
     '#weight' => $w++,
   );
-  
+
   $form['yearsrange'] = array(
     '#type' => 'fieldset',
     '#title' => t('Years range in dates'),
@@ -490,7 +490,7 @@ function storm_admin_settings() {
     '#collapsible' => TRUE,
     '#weight' => $w++,
   );
-  
+
   $form['yearsrange']['group0'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -518,7 +518,7 @@ function storm_admin_settings() {
     '#collapsible' => TRUE,
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['storm_tax1_app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 1: Application'),
@@ -530,13 +530,13 @@ function storm_admin_settings() {
     ),
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group0'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group0']['storm_tax1_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Name'),
@@ -544,7 +544,7 @@ function storm_admin_settings() {
     '#description' => t('The name to use for Tax 1'),
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group0']['storm_tax1_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 1: Default percentage'),
@@ -553,7 +553,7 @@ function storm_admin_settings() {
     '#size' => 20,
     '#weight' => $w++
   );
-  
+
   $form['taxation']['storm_tax2_app'] = array(
     '#type' => 'select',
     '#title' => t('Tax 2: Application'),
@@ -566,13 +566,13 @@ function storm_admin_settings() {
     ),
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group1']['storm_tax2_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Name'),
@@ -580,7 +580,7 @@ function storm_admin_settings() {
     '#description' => t('The name to use for Tax 2'),
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['group1']['storm_tax2_percent'] = array(
     '#type' => 'textfield',
     '#title' => t('Tax 2: Default percentage'),
@@ -589,7 +589,7 @@ function storm_admin_settings() {
     '#size' => 20,
     '#weight' => $w++,
   );
-  
+
   $form['taxation']['storm_tax_display'] = array(
    '#type' => 'checkbox',
    '#title' => t('Display tax edit fields'),
@@ -597,7 +597,7 @@ function storm_admin_settings() {
    '#description' => t('If disabled, all tax fields will use the default values and you will not be able to override them for any nodes until this setting is enabled again.'),
    '#weight' => $w++,
   );
-  
+
   $form['taxation']['storm_tax2_display'] = array(
    '#type' => 'checkbox',
    '#title' => t('Display tax 2 edit fields'),
@@ -609,20 +609,20 @@ function storm_admin_settings() {
   // DASHBOARD SETTINGS
   $form['storm_dashboard_settings'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Dashboard Settings'),
+    '#title' => t('Dashboard settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
 
   $types = module_invoke_all('storm_dashboard_types');
-  foreach($types as $type => $type_data) {
+  foreach ($types as $type => $type_data) {
     $all_links_options = array();
     $all_links = storm_dashboard_get_links(FALSE, $type);
-    foreach($all_links as $link) {
+    foreach ($all_links as $link) {
       $all_links_options[$link['path']] = l($link['title'], $link['path']);
     }
 
-    $default_dashboard_settings = variable_get('storm_'.$type.'dashboard_settings', array());
+    $default_dashboard_settings = variable_get('storm_'. $type .'dashboard_settings', array());
 
     $form['storm_dashboard_settings'][$type] = array(
       '#type' => 'fieldset',
@@ -637,12 +637,12 @@ function storm_admin_settings() {
     );
 
     $weight = 0;
-    foreach($all_links_options as $path => $title) {
-      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type.'_storm_dashboard_link_active_'.$path] = array(
+    foreach ($all_links_options as $path => $title) {
+      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type .'_storm_dashboard_link_active_'. $path] = array(
         '#type' => 'checkbox',
         '#default_value' => isset($default_dashboard_settings[$path]['active']) ? $default_dashboard_settings[$path]['active'] : TRUE,
       );
-      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type.'_storm_dashboard_link_weight_'.$path] = array(
+      $form['storm_dashboard_settings'][$type]['dashboard_links'][$path][$type .'_storm_dashboard_link_weight_'. $path] = array(
         '#type' => 'weight',
         '#default_value' => isset($default_dashboard_settings[$path]['weight']) ? $default_dashboard_settings[$path]['weight'] : $weight,
         '#delta' => 30,
@@ -684,23 +684,23 @@ function storm_admin_settings_form_submit($form, $form_state) {
   // RESET
   if ($op == t('Reset to defaults')) {
     $types = module_invoke_all('storm_dashboard_types');
-    foreach($types as $type => $type_data) {
-      variable_del('storm_'.$type.'dashboard_settings');
+    foreach ($types as $type => $type_data) {
+      variable_del('storm_'. $type .'dashboard_settings');
     };
     return;
   }
 
   // GET OPTIONS
   $types = module_invoke_all('storm_dashboard_types');
-  foreach($types as $type => $type_data) {
+  foreach ($types as $type => $type_data) {
     $all_links = storm_dashboard_get_links(FALSE, $type);
     $settings = array();
     foreach ($all_links as $link) {
       $path = $link['path'];
-      $settings[$path]['active'] = $form_state['values'][$type.'_storm_dashboard_link_active_'.$path];
-      $settings[$path]['weight'] = $form_state['values'][$type.'_storm_dashboard_link_weight_'.$path];
+      $settings[$path]['active'] = $form_state['values'][$type .'_storm_dashboard_link_active_'. $path];
+      $settings[$path]['weight'] = $form_state['values'][$type .'_storm_dashboard_link_weight_'. $path];
     }
-    variable_set('storm_'.$type.'dashboard_settings', $settings);
+    variable_set('storm_'. $type .'dashboard_settings', $settings);
   }
 
 }
@@ -724,8 +724,8 @@ function storm_elements() {
     '#process' => array('storm_dateext_expand'),
     '#element_validate' => array('storm_dateext_validate'),
     '#default_value' => time(),
-    '#withnull' => false,
-    '#disable_date_popup' => false,
+    '#withnull' => FALSE,
+    '#disable_date_popup' => FALSE,
   );
   return $type;
 }
@@ -806,15 +806,15 @@ function storm_dateext_expand($element, $edit, $form_state, $form) {
   // but you can force to disable it by set disable_date_popup to true
   if (module_exists('date_popup') && !$element['disable_date_popup']) {
 
-    //value is timestamp
+    // value is timestamp
     if (is_numeric($element['#value']) && $element['#value'] != 0) {
       $element['#value'] = array('popup' => format_date($element['#value'], 'custom', 'Y-m-d'));
     }
-    //value is date array
+    // value is date array
     elseif (is_array($element['#value']) && !isset($element['#value']['popup']) && $element['#value']['day'] != -1) {
       $element['#value'] = array('popup' => sprintf("%04d-%02d-%02d", $element['#value']['year'], $element['#value']['month'], $element['#value']['day']));
     }
-    elseif(is_numeric($element['#value']) || !isset($element['#value']['popup']) || $element['#value']['popup']['day'] == -1) {
+    elseif (is_numeric($element['#value']) || !isset($element['#value']['popup']) || $element['#value']['popup']['day'] == -1) {
       $element['#value'] = array('popup' => '');
     }
 
@@ -828,11 +828,11 @@ function storm_dateext_expand($element, $edit, $form_state, $form) {
     $current_year = date('Y');
     $begin = variable_get('storm_yearsrangebegin', 2001) - $current_year;
     if ($begin > 0) {
-      $begin = '+'.$begin;
+      $begin = '+'. $begin;
     }
     $end = variable_get('storm_yearsrangeend', 2012) - $current_year;
     if ($end > 0) {
-      $end = '+'.$end;
+      $end = '+'. $end;
     }
 
     $parents = $element['#parents'];
@@ -841,13 +841,13 @@ function storm_dateext_expand($element, $edit, $form_state, $form) {
       '#type' => 'date_popup',
       '#date_timezone' => date_default_timezone_name(),
       '#date_format' => "Y-m-d",
-      '#date_year_range' => $begin.':'.$end,
+      '#date_year_range' => $begin .':'. $end,
       '#default_value' => $value,
       '#attributes' => $element['#attributes'],
       '#withnull' => $element['#withnull'],
     );
   }
-  //fallback - use select boxes to choose the date
+  // fallback - use select boxes to choose the date
   else {
 
     // its a timestamp, convert it to a date format
@@ -1037,7 +1037,7 @@ function storm_taxation(&$node) {
   if (!isset($node->tax2percent)) {
     $node->tax2percent = variable_get('storm_tax2_percent', '20');
   }
-    
+
   switch ($node->tax1app) {
     case 0:
       $node->tax1 = 0;
@@ -1047,11 +1047,11 @@ function storm_taxation(&$node) {
       break;
     default:
       // ERROR
-      drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
+      drupal_set_message(t('Error during tax calculations (Storm module)'), 'error');
   }
-  
+
   $node->subtotal = $node->amount + $node->tax1;
-  
+
   switch ($node->tax2app) {
     case 0:
       $node->tax2 = 0;
@@ -1064,9 +1064,9 @@ function storm_taxation(&$node) {
       break;
     default:
       // ERROR
-      drupal_set_message(t('Error during tax calculations (Storm Module)'), 'error');
+      drupal_set_message(t('Error during tax calculations (Storm module)'), 'error');
   }
-  
+
   $node->total = $node->subtotal + $node->tax2;
 }
 
@@ -1166,7 +1166,7 @@ function _storm_icon_urlencode_helper($params, $org_key = "") {
   $new_params = array();
   foreach ($params as $key => $value) {
     if (!empty($org_key)) {
-      $new_key = $org_key."[".$key."]";
+      $new_key = $org_key ."[". $key ."]";
     }
     else {
       $new_key = $key;
@@ -1218,7 +1218,7 @@ function storm_icon_recache() {
   $available = array();
 
   // For PHP5, replace with scandir() function
-  $dir = variable_get('storm_icons_path', drupal_get_path('module', 'storm'). '/icons');
+  $dir = variable_get('storm_icons_path', drupal_get_path('module', 'storm') . '/icons');
 
   $files = file_scan_directory($dir, '.*');
   foreach ($files as $file) {
@@ -1322,7 +1322,7 @@ function storm_form_alter(&$form, $form_state, $form_id) {
   }
 
   if ($form_id == $form['type']['#value'] .'_node_form') {
-    $class = null;
+    $class = NULL;
     if (isset($form['#attributes']['class'])) $class = $form['#attributes']['class'];
     if ($class) $class .= ' ';
     $class .= $form_id;
@@ -1356,7 +1356,6 @@ function storm_form_alter(&$form, $form_state, $form_id) {
  *      contain members that are already selected
  *    If $organization_nid is provided but $project_nid is omitted, then the logic is as
  *    above, just for all projects of the given organization.
- *
  */
 function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   $teams = t('Teams:');
@@ -1461,13 +1460,13 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
     $having = "";
     // do not add teams, which we already added
     if (!empty($options[$teams])) {
-      $where[] = "ste.nid NOT IN (".db_placeholders($options[$teams]).")";
+      $where[] = "ste.nid NOT IN (". db_placeholders($options[$teams]) .")";
       $args = array_merge($args, array_keys($options[$teams]));
     }
     // only add teams, which have at least the same members as persons we added so far
     if (!empty($organization_nid) && !empty($options[$people])) {
       // add all persons which should be in the team
-      $where[] = "ste.mnid IN (".db_placeholders($options[$people]).")";
+      $where[] = "ste.mnid IN (". db_placeholders($options[$people]) .")";
       $args = array_merge($args, array_keys($options[$people]));
       // add a count, how many of the given persons should be in the other teams
       $having = " HAVING COUNT(ste.nid) = %d ";
@@ -1478,7 +1477,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
                 INNER JOIN {stormteam} ste
                   ON n.vid = ste.vid
                 WHERE n.type = 'stormteam'
-                GROUP BY ste.nid".$having."
+                GROUP BY ste.nid". $having ."
                 ORDER BY n.title ASC";
     $sql = stormteam_access_sql($sql, $where);
     $sql = db_rewrite_sql($sql);
@@ -1499,15 +1498,15 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
   if (isset($options[$teams]) && !sizeof($options[$teams])) {
     unset($options[$teams]);
   }
-  
+
   // SORT OPTIONS
   if (!empty($options[$people]) && is_array($options[$people])) {
     asort($options[$people], SORT_LOCALE_STRING);
-  } 
+  }
   if (!empty($options[$teams]) && is_array($options[$teams])) {
     asort($options[$teams], SORT_LOCALE_STRING);
   }
-  
+
   return $options;
 }
 
@@ -1519,7 +1518,7 @@ function storm_get_assignment_options($organization_nid = 0, $project_nid = 0) {
  * @param int $nid node id of source module
  * @return ''|int
  *   empty string if can't be counted or the count of destination nodes in source node
- * @see theme_storm_link
+ * @see theme_storm_link()
  */
 function _storm_number_of_items($source_module, $destination_module, $nid) {
   global $user;
@@ -1548,47 +1547,46 @@ function _storm_number_of_items($source_module, $destination_module, $nid) {
       break;
   }
 
-  if (in_array($destination_module, $valid_destination_modules))
-  {
+  if (in_array($destination_module, $valid_destination_modules)) {
     switch ($destination_module) {
       case 'stormproject':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND
-                n.type='stormproject' and spr.".$column_name." = %d";
+                n.type='stormproject' and spr.". $column_name ." = %d";
         $sql = stormproject_access_sql($sql);
         break;
       case 'stormtask':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND
-                n.type='stormtask' and sta.".$column_name." = %d";
+                n.type='stormtask' and sta.". $column_name ." = %d";
         $sql = stormtask_access_sql($sql);
         break;
       case 'stormticket':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND
-                n.type='stormticket' and sti.".$column_name." = %d";
+                n.type='stormticket' and sti.". $column_name ." = %d";
         $sql = stormticket_access_sql($sql);
         break;
       case 'stormtimetracking':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormtimetracking} AS stt ON n.vid=stt.vid WHERE n.status=1 AND
-                n.type='stormtimetracking' and stt.".$column_name." = %d";
+                n.type='stormtimetracking' and stt.". $column_name ." = %d";
         $sql = stormtimetracking_access_sql($sql);
         break;
       case 'stormperson':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND
-                n.type='stormperson' and spe.".$column_name." = %d";
+                n.type='stormperson' and spe.". $column_name ." = %d";
         $sql = stormperson_access_sql($sql);
         break;
       case 'stormnote':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormnote} AS sno ON n.vid=sno.vid WHERE n.status=1 AND
-                n.type='stormnote' and sno.".$column_name." = %d";
+                n.type='stormnote' and sno.". $column_name ." = %d";
         $sql = stormnote_access_sql($sql);
         break;
       case 'stormexpense':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {stormexpense} AS sex ON n.vid=sex.vid WHERE n.status=1 AND
-                n.type='stormexpense' and sex.".$column_name." = %d";
+                n.type='stormexpense' and sex.". $column_name ." = %d";
         $sql = stormexpense_access_sql($sql);
         break;
       case 'storminvoice':
         $sql = "SELECT COUNT(*) FROM {node} AS n INNER JOIN {storminvoice} AS sin ON n.vid=sin.vid WHERE n.status=1 AND
-                n.type='storminvoice' and sin.".$column_name." = %d";
+                n.type='storminvoice' and sin.". $column_name ." = %d";
         $sql = storminvoice_access_sql($sql);
         break;
 
@@ -1601,6 +1599,7 @@ function _storm_number_of_items($source_module, $destination_module, $nid) {
 
 /**
  * Implements hook_views_pre_render to add the storm_icon_add
+ *
  * @param $view
  */
 function storm_views_pre_render(&$view) {
@@ -1612,14 +1611,14 @@ function storm_views_pre_render(&$view) {
     $i = new stdClass();
     $i->type = $view->field['operation']->definition['type'];
     if ($view->field['operation']->options['display_icons']) {
-      $view->attachment_before .= '<span class="storm-icon-add-view">'.storm_icon_add_node($i, $_GET).'</span>';
+      $view->attachment_before .= '<span class="storm-icon-add-view">'. storm_icon_add_node($i, $_GET) .'</span>';
     }
     else {
       global $user;
       $type = $i->type;
       $af = $type .'_access';
       if ($af('create', $i, $user)) {
-        $view->attachment_before .= '<span class="storm-icon-add-view">'.l(t('Add'), 'node/add/'.$type).'</span>';
+        $view->attachment_before .= '<span class="storm-icon-add-view">'. l(t('Add'), 'node/add/'. $type) .'</span>';
       }
     }
   }
