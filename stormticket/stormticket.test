@@ -1,8 +1,8 @@
+<?php
 /**
  * @file
  * Test definitions for the Storm Ticket module.
  */
-<?php
 class StormticketTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {

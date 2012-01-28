@@ -34,9 +34,9 @@ function theme_stormticket_list($header, $tickets) {
 
 function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
-  
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
@@ -96,7 +96,7 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Category'), check_plain(storm_attribute_value('Ticket category', $node->ticketcategory))),
     '#weight' => 1,
   );
-  
+
   $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
@@ -110,19 +110,19 @@ function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Priority'), check_plain(storm_attribute_value('Ticket priority', $node->ticketpriority))),
     '#weight' => 3,
   );
-  
+
   $node->content['group5'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -16,
   );
-  
+
   $node->content['group5']['assigned'] = array(
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
   );
-  
+
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
