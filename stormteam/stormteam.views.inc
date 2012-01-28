@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm Team module data to the Views module.
+ */
 function stormteam_views_data() {
   $data['stormteam']['table']['group']  = 'Storm Team';
   $data['stormteam']['table']['join'] = array(
@@ -8,9 +11,9 @@ function stormteam_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['stormteam']['mnid'] = array(
-    'title' => t('Team Member Nid'),
+    'title' => t('Team member nid'),
     'help' => 'Storm Team Members',
     'field' => array(
       'handler' => 'views_handler_field_node',
@@ -46,7 +49,7 @@ function stormteam_views_data() {
       'type' => 'stormteam',
     ),
   );
-  
+
   return $data;
 }
 

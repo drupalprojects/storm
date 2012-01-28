@@ -5,9 +5,9 @@
  */
 
 function stormticket_list() {
-  
+
   global $user;
-  
+
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   drupal_set_breadcrumb($breadcrumb);
@@ -39,7 +39,7 @@ function stormticket_list() {
     $_SESSION['stormticket_list_filter']['organization_nid'] = $t->organization_nid;
     $_SESSION['stormticket_list_filter']['project_nid'] = $t->project_nid;
   }
-  
+
   $i = new stdClass();
   $i->type = 'stormticket';
 
@@ -83,7 +83,7 @@ function stormticket_list() {
   $filterfields = array();
 
   $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
-  
+
   if (isset($_SESSION['stormticket_list_filter']['organization_nid']) && ($_SESSION['stormticket_list_filter']['organization_nid'] != 0)) {
     $where[] = 'sti.organization_nid=%d';
     $args[] = $_SESSION['stormticket_list_filter']['organization_nid'];
@@ -123,7 +123,7 @@ function stormticket_list() {
     $status = split(',', $ticketstatus);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
-    $where[] = "sti.ticketstatus IN ('". implode("','",$v) ."')";
+    $where[] = "sti.ticketstatus IN ('". implode("','", $v) ."')";
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
@@ -138,7 +138,7 @@ function stormticket_list() {
     $priority = split(',', $ticketpriority);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
-    $where[] = "sti.ticketpriority IN ('". implode("','",$v) ."')";
+    $where[] = "sti.ticketpriority IN ('". implode("','", $v) ."')";
     foreach ($priority as $key => $value) {
       $args[] = $value;
     }
@@ -200,7 +200,7 @@ function stormticket_list() {
           // NO FILTER
           break;
         case 'mine':
-          // CURRENT USER 
+          // CURRENT USER
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }
@@ -282,7 +282,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
   $datebeginto = isset($_SESSION['stormticket_list_filter']['datebeginto']) ? $_SESSION['stormticket_list_filter']['datebeginto'] : NULL;
   $dateendfrom = isset($_SESSION['stormticket_list_filter']['dateendfrom']) ? $_SESSION['stormticket_list_filter']['dateendfrom'] : NULL;
   $dateendto = isset($_SESSION['stormticket_list_filter']['dateendto']) ? $_SESSION['stormticket_list_filter']['dateendto'] : NULL;
-  
+
   $assigned_to = isset($_SESSION['stormticket_list_filter']['assigned_to']) ? $_SESSION['stormticket_list_filter']['assigned_to'] : NULL;
 
   $form = array();
@@ -416,12 +416,12 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#title' => t('Date end to'),
     '#default_value' => $dateendto,
   );
-  
+
   $form['filter']['group4_1'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
   );
-  
+
   // ASSIGNED TO
   $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4_1']['assigned_to'] = array(
@@ -430,7 +430,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#default_value' => $assigned_to,
     '#options' => $options,
   );
-  
+
   $form['filter']['group4_1']['billable'] = array(
     '#type' => 'select',
     '#title' => 'Billable',

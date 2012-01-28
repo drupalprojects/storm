@@ -57,7 +57,7 @@ function stormperson_list() {
 
   // Sets $itemsperpage for fieldset label, but this section does not control storing of session variable.
   $itemsperpage = isset($_SESSION['stormperson_list_filter']['itemsperpage']) ? $_SESSION['stormperson_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
-  
+
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
   }
@@ -65,9 +65,9 @@ function stormperson_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormperson_list_filter', $filterdesc);
-  
+
   $s = stormperson_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 

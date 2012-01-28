@@ -8,8 +8,7 @@ class StormorganizationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Storm Organization functionality',
-      'description' => 'Test the functionality of the Storm 
-Organization module',
+      'description' => 'Test the functionality of the Storm Organization module',
       'group' => 'Storm',
     );
   }

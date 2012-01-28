@@ -48,10 +48,10 @@ function stormtimetracking_access($op, $node, $account=NULL) {
     if (user_access('Storm timetracking: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm timetracking: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm timetracking: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -60,10 +60,10 @@ function stormtimetracking_access($op, $node, $account=NULL) {
     if (user_access('Storm timetracking: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm timetracking: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm timetracking: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -72,10 +72,10 @@ function stormtimetracking_access($op, $node, $account=NULL) {
     if (user_access('Storm timetracking: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm timetracking: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm timetracking: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -150,36 +150,36 @@ function stormtimetracking_storm_rewrite_where_sql($query, $primary_table, $acco
 
 function stormtimetracking_menu() {
   $items = array();
-  
+
   $items['storm/timetrackings'] = array(
     'title' => 'Timetrackings',
-    'description' => 'Storm Timetrackings',
+    'description' => 'Storm timetrackings',
     'page callback' => 'stormtimetracking_list',
     'access arguments' => array('Storm timetracking: access'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'stormtimetracking.admin.inc',
     'weight' => 6,
   );
-  
+
   $items['storm/timetrackings/report/%/%'] = array(
     'title' => 'Timetrackings',
-    'description' => 'Storm Timetrackings',
+    'description' => 'Storm timetrackings',
     'page arguments' => array(3, 4),
     'page callback' => 'stormtimetracking_list_report',
     'access arguments' => array('Storm timetracking: access'),
     'type' => MENU_CALLBACK,
     'file' => 'stormtimetracking.admin.inc',
   );
-  
+
   $items['admin/settings/storm/timetracking'] = array(
-    'title' => 'Storm Timetracking',
-    'description' => 'Storm Timetracking Administration Page',
+    'title' => 'Storm timetracking',
+    'description' => 'Storm timetracking administration page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormtimetracking_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   return $items;
 }
 
@@ -328,7 +328,7 @@ function stormtimetracking_form(&$node) {
     $node->trackingdate = time();
 
     $today = _storm_gmtimestamp_without_time(time());
-    $s = 'SELECT MAX(stt.timeend) FROM {node} n LEFT JOIN {stormtimetracking} stt ON n.nid=stt.nid 
+    $s = 'SELECT MAX(stt.timeend) FROM {node} n LEFT JOIN {stormtimetracking} stt ON n.nid=stt.nid
     WHERE stt.trackingdate>=%d AND stt.trackingdate<=%d AND n.uid=%d';
     $timebegin = db_result(db_query($s, $today, $today, $node->uid));
     $node->timebegin = $timebegin;
@@ -341,13 +341,13 @@ function stormtimetracking_form(&$node) {
     }
     $node->billable = variable_get('stormtimetracking_billable_default', FALSE);
   }
-  $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+  $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
     ON so.nid=n.nid WHERE n.status=1 AND (so.isactive=1 OR n.nid=%d) AND n.type='stormorganization' ORDER BY n.title";
 
   $type = node_get_types('type', $node);
 
   $form['#attributes']['class'] = 'stormcomponent_node_form';
-  
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -375,7 +375,7 @@ function stormtimetracking_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormticket_organization_project_task_tickets(this, 'edit-project-nid', 'edit-task-nid', 'edit-ticket-nid', true, '-')"),
     '#weight' => 1,
   );
@@ -440,13 +440,13 @@ function stormtimetracking_form(&$node) {
     '#title' => t('Date'),
     '#default_value' => $node->trackingdate,
   );
-  
+
   $form['group3'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
-  
+
   $form['group3']['timebegin'] = array(
     '#type' => 'textfield',
     '#title' => t('Time begin'),
@@ -484,7 +484,7 @@ function stormtimetracking_form(&$node) {
     '#maxlength' => 5,
     '#weight' => 4,
   );
-    
+
   $form['group4'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -497,14 +497,14 @@ function stormtimetracking_form(&$node) {
     '#default_value' => isset($node->billable) ? $node->billable : TRUE,
     '#weight' => 1,
   );
-  
+
   $form['group4']['billed'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billed'),
     '#default_value' => isset($node->billed) ? $node->billed : FALSE,
     '#weight' => 2,
   );
-  
+
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
@@ -515,7 +515,7 @@ function stormtimetracking_form(&$node) {
 function stormtimetracking_insert($node) {
   _stormtimetracking_beforesave($node);
 
-  db_query("INSERT INTO {stormtimetracking} 
+  db_query("INSERT INTO {stormtimetracking}
     (vid, nid,
     organization_nid, organization_title, project_nid, project_title,
     task_nid, task_title, task_stepno, ticket_nid, ticket_title,
@@ -560,7 +560,7 @@ function _stormtimetracking_beforesave(&$node) {
 
   $node->timebegin = _timetostr($timebegin);
   $node->timeend = _timetostr($timeend);
-  
+
   $node->duration = ($timeend['hour'] - $timebegin['hour'] + ($timeend['minute'] - $timebegin['minute']) / 60);
   if ($node->timeend < $node->timebegin) {
     $node->duration += 24;
@@ -622,7 +622,7 @@ function stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
 // ADMIN SETTINGS
 function stormtimetracking_admin_settings() {
   $form = array();
-  
+
   $form['stormtimetracking_auto_duration'] = array(
     '#type' => 'checkbox',
     '#title' => t('Always set billing duration to duration value.'),
@@ -630,7 +630,7 @@ function stormtimetracking_admin_settings() {
     '#description' => t('When checked, Storm will set the billing duration equal to the duration each time the node is saved. The duration is always calculated from the start and end times.'),
     '#size' => 5,
   );
-  
+
   $form['stormtimetracking_billable_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Default Value for billable field.'),
@@ -638,7 +638,7 @@ function stormtimetracking_admin_settings() {
     '#description' => t('When checked, Storm will set the timetracking to billable by default'),
     '#size' => 5,
   );
-  
+
   return system_settings_form($form);
 }
 
@@ -647,20 +647,23 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
   if (!module_exists('storminvoice')) {
     drupal_set_message(t('This function should only be called from within Storm Invoice'));
     return;
-  } elseif ($node->billed) {
+  }
+  elseif ($node->billed) {
     drupal_set_message(t('This timetracking has already been billed!'));
     return;
-  } elseif (!$node->billable) {
+  }
+  elseif (!$node->billable) {
     drupal_set_message(t('This timetracking is marked unbillable!'));
     return;
-  } else {
+  }
+  else {
     global $user;
-    
+
     if (!$invoice_nid) {
-    
+
       $new_invoice = new StdClass;
-      
-      //Code copied with edits from node form
+
+      // Code copied with edits from node form
       $new_invoice->requestdate = time();
       $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
       $new_invoice->number = storminvoice_get_invoice_number($new_invoice->requestdate);
@@ -668,49 +671,50 @@ function stormtimetracking_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice->title = $node->title;
       $new_invoice->uid = $user->uid;
       $new_invoice->type = 'storminvoice';
-      //$new_invoice->reference
+      // $new_invoice->reference
       $new_invoice->organization_nid = $node->organization_nid;
       $new_invoice->organization_title = $node->organization_title;
       $new_invoice->project_nid = $node->project_nid;
       $new_invoice->project_title = $node->project_title;
-      //$new_invoice->amount
-      //$new_invoice->tax
-      //$new_invoice->total
-      //$new_invoice->totalcustomercurr
-      //$new_invoice->taxexempt
+      // $new_invoice->amount
+      // $new_invoice->tax
+      // $new_invoice->total
+      // $new_invoice->totalcustomercurr
+      // $new_invoice->taxexempt
       $new_invoice->src_nid = $node->nid;
       $new_invoice->src_vid = $node->vid;
-      
+
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
-    } else {
+    }
+    else {
       $new_invoice = node_load($invoice_nid);
     }
 
     $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
-    
+
     $rate_array = storminvoice_get_rate($node);
-    
+
     $count = count($new_invoice->items);
-    
+
     $new_invoice->items[$count]->description = storminvoice_get_item_desc($rate_array, $node);
 
     $new_invoice->items[$count]->amount = storminvoice_get_item_amount($rate_array, $node);
 
     // Tax percent simply uses default at the moment
     $new_invoice->items[$count]->tax1percent = variable_get('storm_tax1_percent', 20);
-    //$new_invoice_item->items[$count]->tax1
-    //$new_invoice_item->items[$count]->total
+    // $new_invoice_item->items[$count]->tax1
+    // $new_invoice_item->items[$count]->total
     $new_invoice->items[$count]->src_nid = $node->nid;
     $new_invoice->items[$count]->src_vid = $node->vid;
-    
+
     storm_taxation($new_invoice->items[$count]);
     storminvoice_update($new_invoice);
   }
-  
+
   // Mark timetracking as billed.
   db_query("UPDATE {stormtimetracking} SET billed=%d WHERE vid=%d", 1, $node->vid);
-  
+
   return $invoice_nid;
 }
 

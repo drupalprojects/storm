@@ -533,13 +533,13 @@ function stormexpense_insert($node) {
   _stormexpense_beforesave($node);
 
   db_query("INSERT INTO {stormexpense}
-    (vid, nid, organization_nid, organization_title, project_nid, project_title, 
-    task_nid, task_title, task_stepno, ticket_nid, ticket_title, 
-    provider_nid, provider_title, expensedate, amount, tax1app, tax1percent, 
+    (vid, nid, organization_nid, organization_title, project_nid, project_title,
+    task_nid, task_title, task_stepno, ticket_nid, ticket_title,
+    provider_nid, provider_title, expensedate, amount, tax1app, tax1percent,
     tax1, subtotal, tax2app, tax2percent, tax2, total) VALUES
     (%d, %d, %d, '%s', %d, '%s',
     %d, '%s', '%s', %d, '%s',
-    %d, '%s', %d, %f, %d, %f, 
+    %d, '%s', %d, %f, %d, %f,
     %f, %f, %d, %f, %f, %f)",
     $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, (isset($node->project_title)) ? $node->project_title : NULL,
     (isset($node->task_nid)) ? $node->task_nid : NULL, (isset($node->task_title)) ? $node->task_title : NULL, (isset($node->task_stepno)) ? $node->task_stepno : NULL, $node->ticket_nid, (isset($node->ticket_title)) ? $node->ticket_title : NULL,
@@ -583,7 +583,7 @@ function _stormexpense_beforesave(&$node) {
   $o = db_fetch_object($r);
   $o ? $node->organization_title = $o->title : NULL;
 
-  $s = "SELECT n.title, p.organization_title 
+  $s = "SELECT n.title, p.organization_title
     FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
     WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
@@ -630,14 +630,14 @@ function stormexpense_storminvoice_auto_add($node, $invoice_nid = NULL) {
   if (!module_exists('storminvoice')) {
     drupal_set_message(t('This function should only be called from within Storm Invoice'));
     return;
-  } 
+  }
   else {
     global $user;
-    
+
     if (!$invoice_nid) {
-    
+
       $new_invoice = new StdClass;
-      
+
       // Code copied with edits from node form
       $new_invoice->requestdate = time();
       $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
