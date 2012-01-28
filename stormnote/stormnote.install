@@ -47,9 +47,9 @@ function stormnote_schema() {
  */
 function stormnote_update_6101() {
   $ret = array();
-  
+
   db_drop_field($ret, 'stormnote', 'task_stepno');
-  
+
   return $ret;
 }
 

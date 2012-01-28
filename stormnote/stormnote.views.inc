@@ -11,7 +11,7 @@ function stormnote_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['stormnote']['organization_nid'] = array(
     'title' => t('Organization'),
     'help' => t('Note -> Organization'),
@@ -22,7 +22,7 @@ function stormnote_views_data() {
       'label' => t('Note -> Organization'),
     ),
   );
-  
+
   $data['stormnote']['organization_title'] = array(
     'title' => t('Organization'),
     'help' => t('Storm Note Organization (title only)'),
@@ -39,7 +39,7 @@ function stormnote_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormnote']['project_nid'] = array(
     'title' => t('Project'),
     'help' => t('Note -> Project'),
@@ -50,7 +50,7 @@ function stormnote_views_data() {
       'label' => t('Note -> Project'),
     ),
   );
-  
+
   $data['stormnote']['project_title'] = array(
     'title' => t('Project'),
     'help' => t('Storm Note Project (title only)'),
@@ -67,7 +67,7 @@ function stormnote_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormnote']['task_nid'] = array(
     'title' => t('Task'),
     'help' => t('Note -> Task'),
@@ -78,7 +78,7 @@ function stormnote_views_data() {
       'label' => t('Note -> Task'),
     ),
   );
-  
+
   $data['stormnote']['task_stepno'] = array(
     'title' => t('Task step number'),
     'help' => t('Storm Note Task Step Number'),
@@ -95,7 +95,7 @@ function stormnote_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormnote']['task_title'] = array(
     'title' => t('Task'),
     'help' => t('Storm Note Task (title only)'),
@@ -121,7 +121,7 @@ function stormnote_views_data() {
       'type' => 'stormnote',
     ),
   );
-  
+
   return $data;
 }
 

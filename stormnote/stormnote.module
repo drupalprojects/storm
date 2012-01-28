@@ -261,11 +261,11 @@ function stormnote_form(&$node) {
     if (isset($_SESSION['stormnote_list_filter']['task_nid']) && !$node->task_nid) {
       $node->task_nid = $_SESSION['stormnote_list_filter']['task_nid'];
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
               ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
   }
   else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
               ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 

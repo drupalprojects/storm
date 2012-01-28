@@ -27,7 +27,7 @@ function theme_stormproject_list($header, $projects) {
 
 function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
@@ -101,21 +101,21 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
-  
+
   $node->content['group5']['manager'] = array(
     '#prefix' => '<div class="manager">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Project Manager'), l($node->manager_title, 'node/'. $node->manager_nid)),
     '#weight' => 1,
   );
-  
+
   $node->content['group5']['assigned'] = array(
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
     '#weight' => 2,
   );
-  
+
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
@@ -123,6 +123,6 @@ function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
-  
+
   return $node;
 }

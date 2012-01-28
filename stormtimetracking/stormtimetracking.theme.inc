@@ -34,10 +34,10 @@ function theme_stormtimetracking_list($header, $timetrackings, $billing_duration
 
 function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
-  
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
@@ -88,14 +88,14 @@ function theme_stormtimetracking_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Ticket'), l($node->ticket_title, 'node/'. $node->ticket_nid)),
     '#weight' => 4,
   );
-  
+
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
   );
-  
+
   unset($node->content['body']);
 
   return $node;

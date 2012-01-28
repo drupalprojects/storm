@@ -14,7 +14,7 @@ function stormproject_list() {
       $_SESSION['stormproject_list_filter']['organization_nid'] = $_GET['organization_nid'];
     }
   }
-  
+
   $i = new stdClass();
   $i->type = 'stormproject';
 
@@ -125,7 +125,7 @@ function stormproject_list() {
       $where[] = 'spr.dateend>=%d';
       $args[] = $t;
       $filterfields[] = 'Date';
-    }      
+    }
   }
 
   if (isset($_SESSION['stormproject_list_filter']['dateendto'])) {
@@ -147,7 +147,7 @@ function stormproject_list() {
           // NO FILTER
           break;
         case 'mine':
-          // CURRENT USER 
+          // CURRENT USER
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }
@@ -166,7 +166,7 @@ function stormproject_list() {
       $filterfields[] = t('Assigned to');
     }
   }
-  
+
   if (isset($_SESSION['stormproject_list_filter']['billable']) && $_SESSION['stormproject_list_filter']['billable'] != '-') {
     $where[] = 'spr.billable=%d';
     $args[] = $_SESSION['stormproject_list_filter']['billable'];
@@ -225,7 +225,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
   $dateendto = isset($_SESSION['stormproject_list_filter']['dateendto']) ? $_SESSION['stormproject_list_filter']['dateendto'] : NULL;
 
   $assigned_to = isset($_SESSION['stormproject_list_filter']['assigned_to']) ? $_SESSION['stormproject_list_filter']['assigned_to'] : NULL;
-  
+
   $itemsperpage = isset($_SESSION['stormproject_list_filter']['itemsperpage']) ? $_SESSION['stormproject_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
   $_SESSION['stormproject_list_filter']['itemsperpage'] = $itemsperpage;
 
@@ -322,7 +322,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
   );
-  
+
   // ASSIGNED TO
   $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4']['assigned_to'] = array(
@@ -346,7 +346,6 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#default_value' => isset($_SESSION['stormproject_list_filter']['billed']) ? $_SESSION['stormproject_list_filter']['billed'] : '-',
   );
 
-  
   $form['filter']['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',

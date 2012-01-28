@@ -7,7 +7,7 @@
 function theme_stormtask_tasks($form) {
   if (count($form['tasks'])>0 && stormproject_access('update', $form['project']['#value'])) {
     drupal_add_tabledrag('tasks', 'match', 'parent', 'task-parent-nid', 'task-parent-nid', 'task-nid', TRUE);
-    drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight'); 
+    drupal_add_tabledrag('tasks', 'order', 'sibling', 'task-weight');
   }
 
   $header = array();
@@ -28,7 +28,7 @@ function theme_stormtask_tasks($form) {
       drupal_render($form['tasks'][$key]['task_status_'. $key]),
       drupal_render($form['tasks'][$key]['task_priority_'. $key]),
       array(
-        'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) .' '. substr($durationunit, 0, 1), 
+        'data' => sprintf('%.2f', drupal_render($form['tasks'][$key]['task_duration_'. $key])) .' '. substr($durationunit, 0, 1),
         'style' => 'text-align: right'),
       drupal_render($form['tasks'][$key]['task_parent-nid_'. $key]) . drupal_render($form['tasks'][$key]['task_nid_'. $key]),
       drupal_render($form['tasks'][$key]['task_weight_'. $key]),
@@ -57,7 +57,7 @@ function theme_stormtask_list($header, $tasks) {
     $rows[] = array(
       // Add classes to each row in table.
       // Allows customisation of row via css depending on the task's attributes (category, status, priority)
-      'class' => 
+      'class' =>
         'storm_category_'. preg_replace('/[^a-zA-Z]/', '', $task->taskcategory) . ' ' .
         'storm_status_'. preg_replace('/[^a-zA-Z]/', '', $task->taskstatus) . ' ' .
         'storm_priority_'. preg_replace('/[^a-zA-Z]/', '', $task->taskpriority),
@@ -81,7 +81,7 @@ function theme_stormtask_list($header, $tasks) {
 
 function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
@@ -95,7 +95,7 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['links']['notes'] = theme('storm_link', 'stormtask', 'stormnote', $node->nid, $l_pos++);
   $node->content['links']['tickets'] = theme('storm_link', 'stormtask', 'stormticket', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormtask', 'stormtimetracking', $node->nid, $l_pos++);
-  
+
   // Code to create invoice auto_add link
   if (module_exists('storminvoice')) {
 
@@ -153,27 +153,27 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
     '#value' => theme('storm_view_item', t('Status'), check_plain(storm_attribute_value('Task status', $node->taskstatus))),
     '#weight' => 2,
   );
- 
+
   $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Priority'), check_plain(storm_attribute_value('Task priority', $node->taskpriority))),
     '#weight' => 3,
   );
-  
+
   $node->content['group5'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
-  
+
   $node->content['group5']['assigned'] = array(
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
     '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
     '#weight' => 2,
   );
-  
+
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',

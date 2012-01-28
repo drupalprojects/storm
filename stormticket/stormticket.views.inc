@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm Ticket module data to the Views module.
+ */
 function stormticket_views_data() {
   $data['stormticket']['table']['group']  = 'Storm Ticket';
   $data['stormticket']['table']['join'] = array(
@@ -148,7 +151,7 @@ function stormticket_views_data() {
   );
 
   $data['stormticket']['datebegin'] = array(
-    'title' => t('Date Begin'),
+    'title' => t('Date begin'),
     'help' => t('Storm Ticket begin date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -163,7 +166,7 @@ function stormticket_views_data() {
   );
 
   $data['stormticket']['dateend'] = array(
-    'title' => t('Date End'),
+    'title' => t('Date end'),
     'help' => t('Storm Ticket end date'),
     'field' => array(
       'click sortable' => TRUE,
@@ -178,7 +181,7 @@ function stormticket_views_data() {
   );
 
   $data['stormticket']['durationunit'] = array(
-    'title' => t('Duration Unit'),
+    'title' => t('Duration unit'),
     'help' => t('Storm Ticket duration unit'),
     'field' => array(
       'click sortable' => TRUE,
@@ -237,7 +240,7 @@ function stormticket_views_data() {
   );
 
   $data['stormticket']['billable'] = array(
-    'title' => t('Ticket Billable'),
+    'title' => t('Ticket billable'),
     'help' => 'Storm Ticket Billable',
     'field' => array(
       'click sortable' => TRUE,
@@ -251,7 +254,7 @@ function stormticket_views_data() {
   );
 
   $data['stormticket']['billed'] = array(
-    'title' => t('Ticket Billed'),
+    'title' => t('Ticket billed'),
     'help' => 'Storm Ticket Billed',
     'field' => array(
       'click sortable' => TRUE,

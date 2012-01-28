@@ -32,10 +32,10 @@ function theme_stormnote_list($header, $notes) {
 
 function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
-  
+
   $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
-  
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
@@ -47,7 +47,7 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
-  
+
   $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
@@ -76,6 +76,6 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
-  
+
   return $node;
 }

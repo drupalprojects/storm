@@ -229,7 +229,7 @@ function stormticket_menu() {
 
   $items['storm/tickets'] = array(
     'title' => 'Tickets',
-    'description' => 'Storm Tickets',
+    'description' => 'Storm tickets',
     'page callback' => 'stormticket_list',
     'access arguments' => array('Storm ticket: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -247,8 +247,8 @@ function stormticket_menu() {
   );
 
   $items['admin/settings/storm/ticket'] = array(
-    'title' => 'Storm Ticket',
-    'description' => 'Storm Ticket Administration Page',
+    'title' => 'Storm ticket',
+    'description' => 'Storm ticket administration page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormticket_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
@@ -804,9 +804,9 @@ function stormticket_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
 
     $rate_array = storminvoice_get_rate($node);
-    
+
     $count = count($new_invoice->items);
-    
+
     $new_invoice->items[$count]->description = storminvoice_get_item_desc($rate_array, $node);
 
     $new_invoice->items[$count]->amount = storminvoice_get_item_amount($rate_array, $node);

@@ -105,9 +105,9 @@ function stormnote_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormnote_list_filter', $filterdesc);
-  
+
   $s = stormnote_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
