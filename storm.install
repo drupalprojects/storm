@@ -69,6 +69,9 @@ function storm_update_6101() {
   return $ret;
 }
 
+/**
+ * Move Storm Attribute updates into Storm.module
+ */
 function storm_update_6201() {
   $ret = array();
 

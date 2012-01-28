@@ -176,6 +176,9 @@ function stormtask_update_6107() {
   return $ret;
 }
 
+/**
+ * Improve primary keys and indexes
+ */
 function stormtask_update_6201() {
   $return = array();
   db_drop_primary_key($return, 'stormtask');

@@ -53,6 +53,9 @@ function stormnote_update_6101() {
   return $ret;
 }
 
+/**
+ * Improve primary keys and indexes
+ */
 function stormnote_update_6201() {
   $return = array();
   db_drop_primary_key($return, 'stormnote');

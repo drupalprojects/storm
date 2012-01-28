@@ -362,6 +362,9 @@ function stormorganization_update_6105() {
   return $ret;
 }
 
+/**
+ * Improve primary keys and indexes
+ */
 function stormorganization_update_6201() {
   $return = array();
   db_drop_primary_key($return, 'stormorganization');

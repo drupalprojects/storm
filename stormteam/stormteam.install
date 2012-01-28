@@ -171,6 +171,9 @@ function stormteam_update_6200() {
   return $ret;
 }
 
+/**
+ * Improve primary keys and indexes
+ */
 function stormteam_update_6201() {
   $return = array();
   db_add_index($return, 'stormteam', 'vid', array('vid'));

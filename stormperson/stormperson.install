@@ -43,6 +43,9 @@ function stormperson_schema() {
   return $schema;
 }
 
+/**
+ * Improve primary keys and indexes
+ */
 function stormperson_update_6201() {
   $return = array();
   db_drop_primary_key($return, 'stormperson');
