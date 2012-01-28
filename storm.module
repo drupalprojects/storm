@@ -410,7 +410,7 @@ function storm_datetime_validate($form) {
   }
 }
 
-function storm_dateext_expand($element) {
+function storm_dateext_expand($element, $edit, $form_state, $form) {
   if (empty($element['#value']) && !$element['#withnull']) {
     $element['#value'] = array(
       'day' => format_date(time(), 'custom', 'j'),
@@ -437,6 +437,13 @@ function storm_dateext_expand($element) {
       $element['#value'] = array('popup' => '');
     }
 
+    if (is_array($element['#value']['popup']) && isset($element['#value']['popup']['date'])) {
+      $value = $element['#value']['popup']['date'];
+    }
+    else {
+      $value = $element['#value']['popup'];
+    }
+
     $current_year = date('Y');
     $begin = variable_get('storm_yearsrangebegin', 2001) - $current_year;
     if ($begin > 0) {
@@ -454,7 +461,7 @@ function storm_dateext_expand($element) {
       '#date_timezone' => date_default_timezone_name(),
       '#date_format' => "Y-m-d",
       '#date_year_range' => $begin.':'.$end,
-      '#value' => $element['#value']['popup'],
+      '#default_value' => $value,
       '#attributes' => $element['#attributes'],
       '#withnull' => $element['#withnull'],
     );

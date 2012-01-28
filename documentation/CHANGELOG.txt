@@ -1,5 +1,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
+Version 6.x-1.x:
+- Bug #1418656 by kfritsche: Fixed Date popup fields get wiped out.
+
 Version 6.x-1.37:
 - Bug #746420 by juliangb | tchurch: Fixed field totalcustomercurr for invoice not set correctly when adding timetracking record to invoice.
 - Bug #758974 by juliangb | alberto56: Fixed Make it possible to remove a line in the invoice without everything disappearing.
