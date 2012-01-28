@@ -6,7 +6,7 @@
 
 /**
  * @function
- * Implementation of hook_help
+ * Implementation of hook_help().
  */
 function stormproject_help($path, $arg) {
   $o = '';
@@ -22,7 +22,7 @@ function stormproject_help($path, $arg) {
 
 /**
  * @function
- * Implementation of hook_perm
+ * Implementation of hook_perm().
  */
 function stormproject_perm() {
   return array(
@@ -48,7 +48,7 @@ function stormproject_perm() {
 
 /**
  * @function
- * Implementation of hook_init
+ * Implementation of hook_init().
  */
 function stormproject_init() {
   $settings = array(
@@ -67,7 +67,7 @@ function stormproject_access($op, $node, $account=NULL) {
     global $user;
     $account = $user;
   }
-    
+
   if ($op == 'create') {
     return user_access('Storm project: add');
   }
@@ -83,53 +83,71 @@ function stormproject_access($op, $node, $account=NULL) {
   if ($op == 'delete') {
     if (user_access('Storm project: delete all')) {
       return TRUE;
-    } else if (user_access('Storm project: delete own') && ($account->uid == $node->uid)) {
+    }
+    elseif (user_access('Storm project: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
-    } else if (user_access('Storm project: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    }
+    elseif (user_access('Storm project: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: delete if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
+    }
+    elseif (user_access('Storm project: delete if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project' && ($account->stormperson_nid == $node->assigned_nid))) {
+    }
+    elseif (user_access('Storm project: delete if assigned to project' && ($account->stormperson_nid == $node->assigned_nid))) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
+    }
+    elseif (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
       return TRUE;
-    } else if (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
+    }
+    elseif (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
       return TRUE;
     }
   }
-  
+
   if ($op == 'update') {
     if (user_access('Storm project: edit all')) {
       return TRUE;
-    } else if (user_access('Storm project: edit own') && ($account->uid == $node->uid)) {
+    }
+    elseif (user_access('Storm project: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    }
+    elseif (user_access('Storm project: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
+    }
+    elseif (user_access('Storm project: edit if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
+    }
+    elseif (user_access('Storm project: edit if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
+    }
+    elseif (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
+    }
+    elseif (user_access('Storm project: edit if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
-  
+
   if ($op == 'view') {
     if (user_access('Storm project: view all')) {
       return TRUE;
-    } else if (user_access('Storm project: view own') && ($account->uid == $node->uid)) {
+    }
+    elseif (user_access('Storm project: view own') && ($account->uid == $node->uid)) {
       return TRUE;
-    } else if (user_access('Storm project: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    }
+    elseif (user_access('Storm project: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
+    }
+    elseif (user_access('Storm project: view if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
+    }
+    elseif (user_access('Storm project: view if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
+    }
+    elseif (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
-    } else if (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
+    }
+    elseif (user_access('Storm project: view if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
@@ -159,7 +177,7 @@ function stormproject_access_sql($sql, $where = array()) {
   if (user_access('Storm project: view if assigned to project')) {
     if (!empty($cond)) $cond .= ' OR ';
     $cond .= 'spr.assigned_nid='. $user->stormperson_nid;
-    
+
     if (module_exists('stormteam')) {
       // Load teams that the account belongs to
       $belonged_teams = stormteam_user_return_teams($account);
@@ -169,7 +187,7 @@ function stormproject_access_sql($sql, $where = array()) {
       }
     }
   }
-  
+
   if (empty($cond)) $cond = '0=1';
   $where[] = $cond;
 
@@ -209,7 +227,7 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
     if (user_access('Storm project: view if assigned to project')) {
       if ($cond) $cond .= ' OR ';
       $cond .= 'spr1.assigned_nid='. $account->stormperson_nid;
-      
+
       if (module_exists('stormteam')) {
         // Load teams that the account belongs to
         $belonged_teams = stormteam_user_return_teams($account);
@@ -236,7 +254,7 @@ function stormproject_menu() {
 
   $items['storm/projects'] = array(
     'title' => 'Projects',
-    'description' => 'Storm Projects',
+    'description' => 'Storm projects',
     'page callback' => 'stormproject_list',
     'access arguments' => array('Storm project: access'),
     'file' => 'stormproject.admin.inc',
@@ -254,8 +272,8 @@ function stormproject_menu() {
   );
 
   $items['admin/settings/storm/project'] = array(
-    'title' => 'Storm Project',
-    'description' => 'Storm Project Administration Page',
+    'title' => 'Storm project',
+    'description' => 'Storm project administration page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormproject_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
@@ -338,7 +356,7 @@ function stormproject_form(&$node) {
 
   }
   else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
         ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
@@ -372,7 +390,7 @@ function stormproject_form(&$node) {
     '#type' => 'hidden',
     '#default_value' => $node->organization_nid,
   );
-  
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -420,17 +438,17 @@ function stormproject_form(&$node) {
   $form['group3']['datebegin'] = array(
     '#type' => 'dateext',
     '#title' => t('Date begin'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $node->datebegin,
   );
-  
+
   $form['group3']['dateend'] = array(
     '#type' => 'dateext',
     '#title' => t('Date end'),
-    '#withnull' => true,
+    '#withnull' => TRUE,
     '#default_value' => $node->dateend,
   );
-  
+
   $durationunit_list = storm_attributes_bydomain('Duration unit');
   $form['group3']['durationunit'] = array(
     '#type' => 'select',
@@ -474,13 +492,13 @@ function stormproject_form(&$node) {
     '#default_value' => $node->currency,
     '#options' => $currency_list['values'],
   );
-  
+
   $form['group5'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
-  
+
   if (module_exists('stormperson')) {
     $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
     $s_per = stormperson_access_sql($s_per);
@@ -490,7 +508,7 @@ function stormproject_form(&$node) {
     while ($person = db_fetch_object($r_per)) {
       $people[$person->nid] = $person->title;
     }
-    
+
     $options = array(0 => '- none -', 'People:' => $people);
   }
   else {
@@ -499,11 +517,11 @@ function stormproject_form(&$node) {
   
   $form['group5']['manager_nid'] = array(
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
-    '#title' => t('Project Manager'),
+    '#title' => t('Project manager'),
     '#options' => $options,
     '#default_value' => isset($node->manager_nid) ? $node->manager_nid : 0,
   );
-  
+
   if (module_exists('stormteam')) {
     $s_team = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormteam} ste ON n.vid=ste.vid WHERE n.type='stormteam' ORDER BY n.title";
     $s_team = stormteam_access_sql($s_team);
@@ -513,20 +531,20 @@ function stormproject_form(&$node) {
     while ($team = db_fetch_object($r_team)) {
       $teams[$team->nid] = $team->title;
     }
-    
+
     $options = array(0 => '- unassigned -', 'Teams:' => $teams, 'People:' => $people);
   }
   else {
     $options = array(0 => '- unassigned -');
   }
-  
+
   $form['group5']['assigned_nid'] = array(
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Assigned to'),
     '#options' => $options,
     '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : 0,
   );
-  
+
   $form['group6'] = array(
     '#type' => 'markup',
     '#theme' => 'storm_form_group',
@@ -539,7 +557,7 @@ function stormproject_form(&$node) {
     '#default_value' => isset($node->billable) ? $node->billable : 0,
     '#weight' => 1,
   );
-  
+
   $form['group6']['billed'] = array(
     '#type' => 'checkbox',
     '#title' => t('Billed'),
@@ -565,27 +583,27 @@ function stormproject_insert($node) {
   $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
   $r = db_query($s, $node->organization_nid);
   $organization = db_fetch_object($r);
-  
+
   $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
   $r = db_query($s, $node->manager_nid);
   $manager = db_fetch_object($r);
   if (!$manager) {
     $manager->title = '';
   }
-  
+
   $assigned = node_load($node->assigned_nid);
   if (!$assigned) {
     $assigned->title = '';
   }
-  
+
   db_query("INSERT INTO {stormproject}
-    (vid, nid, organization_nid, organization_title, projectcategory, projectstatus, 
+    (vid, nid, organization_nid, organization_title, projectcategory, projectstatus,
     projectpriority, pricemode, price, currency, datebegin, dateend, durationunit, duration,
     manager_nid, manager_title, assigned_nid, assigned_title, billable, billed)
     VALUES
     (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d, '%s', %f, %d, '%s', %d, '%s', %d, %d)",
     $node->vid, $node->nid, $node->organization_nid, $organization->title, $node->projectcategory,
-    $node->projectstatus, $node->projectpriority, $node->pricemode, 
+    $node->projectstatus, $node->projectpriority, $node->pricemode,
     $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
     $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, $node->billable, $node->billed);
 }
@@ -597,12 +615,12 @@ function stormproject_update($node) {
   $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
   $r = db_query($s, $node->organization_nid);
   $organization = db_fetch_object($r);
-  
+
   // If the project has been moved to a different organization, all nodes that reference the project should be updated.
   if ($node->organization_nid != $node->organization_nid_old) {
     module_invoke_all('stormproject_change_hierarchy', $node->nid, $node->organization_nid, $organization->title);
   }
-  
+
   // if this is a new node or we're adding a new revision,
   if ($node->revision) {
     stormproject_insert($node);
@@ -611,21 +629,21 @@ function stormproject_update($node) {
     $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
     $r = db_query($s, $node->manager_nid);
     $manager = db_fetch_object($r);
-    
+
     $assigned = node_load($node->assigned_nid);
-    
+
     db_query("UPDATE {stormproject} SET
       organization_nid=%d, organization_title='%s',
-      projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s', 
+      projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s',
       price=%f, currency='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
       manager_nid=%d, manager_title='%s', assigned_nid=%d, assigned_title='%s',
       billable=%d, billed=%d WHERE vid = %d",
       $node->organization_nid, $organization->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
       $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, 
+      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title,
       $node->billable, $node->billed, $node->vid
     );
-    
+
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);
     }
@@ -636,15 +654,15 @@ function _stormproject_beforesave(&$node) {
   // Allow use of comma when inputting numerical values - str_replace with period decimal
   $node->duration = str_replace(',', '.', $node->duration);
   $node->price = str_replace(',', '.', $node->price);
-  
-  if (is_array($node->datebegin)){
+
+  if (is_array($node->datebegin)) {
       $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }
   else {
       $node->datebegin = strtotime($node->datebegin);
   }
- 
-  if (is_array($node->dateend)){
+
+  if (is_array($node->dateend)) {
       $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
   }
   else {
@@ -655,7 +673,7 @@ function _stormproject_beforesave(&$node) {
 function stormproject_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'prepare':
-      if(!isset($node->nid)) {
+      if (!isset($node->nid)) {
         $category_list = storm_attributes_bydomain('Project category');
         $node->projectcategory = $category_list['default'];
 
@@ -720,7 +738,7 @@ function stormproject_admin_settings() {
     '#description' => t('When checked, Storm will set the project to billable by default'),
     '#size' => 5,
   );
-  
+
   return system_settings_form($form);
 }
 
@@ -729,20 +747,23 @@ function stormproject_storminvoice_auto_add($node, $invoice_nid = NULL) {
   if (!module_exists('storminvoice')) {
     drupal_set_message(t('This function should only be called from within Storm Invoice'));
     return;
-  } elseif ($node->billed) {
+  }
+  elseif ($node->billed) {
     drupal_set_message(t('This project has already been billed!'));
     return;
-  } elseif (!$node->billable) {
+  }
+  elseif (!$node->billable) {
     drupal_set_message(t('This project is marked unbillable!'));
     return;
-  } else {
+  }
+  else {
     global $user;
-    
+
     if (!$invoice_nid) {
-    
+
       $new_invoice = new StdClass;
-      
-      //Code copied with edits from node form
+
+      // Code copied with edits from node form
       $new_invoice->requestdate = time();
       $new_invoice->duedate = $new_invoice->requestdate + (variable_get('storminvoice_payment_days', 30) * 86400);
       $new_invoice->number = storminvoice_get_invoice_number($new_invoice->requestdate);
@@ -750,29 +771,30 @@ function stormproject_storminvoice_auto_add($node, $invoice_nid = NULL) {
       $new_invoice->title = $node->title;
       $new_invoice->uid = $user->uid;
       $new_invoice->type = 'storminvoice';
-      //$new_invoice->reference
+      // $new_invoice->reference
       $new_invoice->organization_nid = $node->organization_nid;
       $new_invoice->organization_title = $node->organization_title;
       $new_invoice->project_nid = $node->nid;
       $new_invoice->project_title = $node->title;
-      //$new_invoice->amount
-      //$new_invoice->tax
-      //$new_invoice->total
-      //$new_invoice->totalcustomercurr
-      //$new_invoice->taxexempt
+      // $new_invoice->amount
+      // $new_invoice->tax
+      // $new_invoice->total
+      // $new_invoice->totalcustomercurr
+      // $new_invoice->taxexempt
       $new_invoice->src_nid = $node->nid;
       $new_invoice->src_vid = $node->vid;
-      
+
       node_save($new_invoice);
       $invoice_nid = $new_invoice->nid;
-    } else {
+    }
+    else {
       $new_invoice = node_load($invoice_nid);
     }
 
     $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
-    
+
     $rate_array = storminvoice_get_rate($node);
-    
+
     $count = count($new_invoice->items);
     
     $new_invoice->items[$count]->description = storminvoice_get_item_desc($rate_array, $node);
@@ -781,24 +803,24 @@ function stormproject_storminvoice_auto_add($node, $invoice_nid = NULL) {
 
     // Tax percent simply uses default at the moment
     $new_invoice->items[$count]->tax1percent = variable_get('storm_tax1_percent', 20);
-    //$new_invoice_item->items[$count]->tax1
-    //$new_invoice_item->items[$count]->total
+    // $new_invoice_item->items[$count]->tax1
+    // $new_invoice_item->items[$count]->total
     $new_invoice->items[$count]->src_nid = $node->nid;
     $new_invoice->items[$count]->src_vid = $node->vid;
-    
+
     storm_taxation($new_invoice->items[$count]);
     storminvoice_update($new_invoice);
   }
-  
+
   // Mark project as billed.
   db_query("UPDATE {stormproject} SET billed=%d WHERE vid=%d", 1, $node->vid);
-  
+
   return $invoice_nid;
 }
 
 /**
-*  Implementation of hook_token_list().
-*/
+ * Implementation of hook_token_list().
+ */
 function stormproject_token_list($type='all') {
   $tokens = array();
   if (($type == 'node') || ($type == 'all')) {
@@ -813,7 +835,7 @@ function stormproject_token_list($type='all') {
     $tokens['node']['stormproject-billed'] = t('Storm Project: Project Billed.');
     $tokens['node']['stormproject-price'] = t('Storm Project: Project Price.');
     $tokens['node']['stormproject-pricemode'] = t('Storm Project: Project Price Mode.');
-    if(module_exists('stormorganization')) {
+    if (module_exists('stormorganization')) {
       $tokens['node']['stormproject-organization-nid'] = t('Storm Project: Organization Node ID.');
       $tokens['node']['stormproject-organization-title'] = t('Storm Project: Organization Title.');
     }
@@ -833,9 +855,9 @@ function stormproject_token_list($type='all') {
 }
 
 /**
-*  Implementation of hook_token_values().
-*/
-function stormproject_token_values ($type, $object = NULL) {
+ * Implementation of hook_token_values().
+ */
+function stormproject_token_values($type, $object = NULL) {
   $values = array();
   $node = $object;
   if ((($type == 'node') || ($type == 'all')) && ($node->type === 'stormproject')) {
@@ -844,13 +866,13 @@ function stormproject_token_values ($type, $object = NULL) {
     $values['stormproject-projectcategory'] = $node->projectcategory;
     $values['stormproject-durationunit'] = $node->durationunit;
     $values['stormproject-duration'] = $node->duration;
-    $values['stormproject-datebegin'] = format_date($node->datebegin,'medium','',variable_get('date_default_timezone',NULL));
-    $values['stormproject-dateend'] = format_date($node->dateend,'medium','',variable_get('date_default_timezone',NULL));
+    $values['stormproject-datebegin'] = format_date($node->datebegin, 'medium', '', variable_get('date_default_timezone', NULL));
+    $values['stormproject-dateend'] = format_date($node->dateend, 'medium', '', variable_get('date_default_timezone', NULL));
     $values['stormproject-price'] = $node->price;
     $values['stormproject-pricemode'] = $node->pricemode;
     $values['stormproject-billable'] = $node->billable;
     $values['stormproject-billed'] = $node->billed;
-    if(module_exists('stormorganization')) {
+    if (module_exists('stormorganization')) {
       $values['stormproject-organization-nid'] = $node->organization_nid;
       $values['stormproject-organization-title'] = $node->organization_title;
     }

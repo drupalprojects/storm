@@ -53,7 +53,7 @@ function stormtask_tasks($project) {
     unset($header[5]);
     unset($header[6]);
   }
-  
+
   $where = array();
   $args = array();
 
@@ -67,7 +67,7 @@ function stormtask_tasks($project) {
     $category = split(',', $taskcategory);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
-    $where[] = "sta.taskcategory IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskcategory IN ('". implode("','", $v) ."')";
     foreach ($category as $key => $value) {
       $args[] = $value;
     }
@@ -83,7 +83,7 @@ function stormtask_tasks($project) {
     $status = split(',', $taskstatus);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
-    $where[] = "sta.taskstatus IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskstatus IN ('". implode("','", $v) ."')";
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
@@ -99,28 +99,28 @@ function stormtask_tasks($project) {
     $priority = split(',', $taskpriority);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
-    $where[] = "sta.taskpriority IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskpriority IN ('". implode("','", $v) ."')";
     foreach ($priority as $key => $value) {
       $args[] = $value;
     }
   }
 
   $taskstree = _stormtask_get_tree($project->nid, 0, -1, NULL, $where, $args);
-  
+
   $o_gantt ="";
-  $jsgantt_dir = drupal_get_path('module', 'stormtask'). '/jsgantt';
+  $jsgantt_dir = drupal_get_path('module', 'stormtask') .'/jsgantt';
 
   $dispOpt=variable_get('stormtask_jsgantt_options', array());
-  if ($dispOpt['ShowStartDate']){$dispOpt['ShowStartDate']=1;}
-  if ($dispOpt['ShowEndDate']){$dispOpt['ShowEndDate']=1;}
-  if ($dispOpt['ShowDur']){$dispOpt['ShowDur']=1;}
+  if ($dispOpt['ShowStartDate']) {$dispOpt['ShowStartDate']=1;}
+  if ($dispOpt['ShowEndDate']) {$dispOpt['ShowEndDate']=1;}
+  if ($dispOpt['ShowDur']) {$dispOpt['ShowDur']=1;}
 
-  if(variable_get('stormtask_enable_ganttchart', 0)) {
-    drupal_add_js($jsgantt_dir."/jsgantt.js");
-    drupal_add_css($jsgantt_dir."/jsgantt.css");
+  if (variable_get('stormtask_enable_ganttchart', 0)) {
+    drupal_add_js($jsgantt_dir ."/jsgantt.js");
+    drupal_add_css($jsgantt_dir ."/jsgantt.css");
     drupal_add_css(drupal_get_path('module', 'stormtask') . '/stormtask-gantt.css');
-    
-    //version w/o xml file
+
+    // version w/o xml file
     $pMile = 0;
     $pRes = "";
     $pComp = 50;
@@ -130,35 +130,35 @@ function stormtask_tasks($project) {
     $js = "";
     $pDepend = 0;
     $pParent = 0;
-    
+
     $now = time();
     $one_day = (24 * 60 * 60);
     $pColor_default = variable_get('stormtask_jsgantt_color', '00CCFF');
     $pColor_overdue = variable_get('stormtask_jsgantt_color_overdue', 'FF0D0D');
 
-    foreach($taskstree as $task ) {
+    foreach ($taskstree as $task ) {
       $pID = $task->nid;
       $pName = check_plain($task->title);
       $pCaption = $pName;
-      $pLink = base_path()."node/".$task->nid;
-      $pStart = date("n/j/Y",$task->datebegin);
-      $pEnd = date("n/j/Y",$task->dateend);
-      $pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); //$task->taskstatus;
-      //$pDepend = $task->parents[0];
-      //$pParent = $task->parents[0];
+      $pLink = base_path() ."node/".$task->nid;
+      $pStart = date("n/j/Y", $task->datebegin);
+      $pEnd = date("n/j/Y", $task->dateend);
+      $pColor = variable_get('stormtask_jsgantt_color', '00CCFF'); // $task->taskstatus;
+      // $pDepend = $task->parents[0];
+      // $pParent = $task->parents[0];
 
       // theme by task status
       $pColor = variable_get('stormtask_jsgantt_color_' . str_replace(' ', '_', $task->taskstatus), $pColor_default);
       $pComp = 0;
-      switch($task->taskstatus) {
+      switch ($task->taskstatus) {
         case 'completed':
           $pComp = 100;
           break;
-          
+
         case 'on hold':
           $pComp = 50;
           break;
-          
+
         case 'in progress':
           // percent complete as f($now), end date inclusive
           if ($now > $task->datebegin && $task->dateend > $task->datebegin) {
@@ -171,13 +171,13 @@ function stormtask_tasks($project) {
           }
           break;
       }
-      
+
       // show tasks with depth
       if ($task->depth) {
         $pName = str_repeat('--', $task->depth) .' '. $pName;
       }
-      
-      $js .= "g.AddTaskItem(new JSGantt.TaskItem(".$pID.",'".$pName."','".$pStart."','".$pEnd."','".$pColor."','".$pLink."',".$pMile.",'".$pRes."',".$pComp.",".$pGroup.",".$pParent.",".$pOpen.",".$pDepend.",'".$pCaption."'));\n";
+
+      $js .= "g.AddTaskItem(new JSGantt.TaskItem(". $pID .",'". $pName ."','". $pStart ."','". $pEnd ."','". $pColor ."','". $pLink ."',". $pMile .",'". $pRes ."',". $pComp .",". $pGroup .",". $pParent .",". $pOpen .",". $pDepend .",'". $pCaption ."'));\n";
     }
 
     $o_gantt .= "<div style='position:relative' class='gantt' id='GanttChartDIV'></div>";
@@ -188,14 +188,14 @@ function stormtask_tasks($project) {
       var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
         g.setShowRes(0); // Show/Hide Responsible (0/1)
         g.setShowComp(0); // Show/Hide % Complete(0/1)
-        g.setShowDur('".$dispOpt['ShowDur']."'); // Show/Hide Duration (0/1)
-        g.setShowStartDate('".$dispOpt['ShowStartDate']."'); // Show/Hide Start Date(0/1)
-        g.setShowEndDate('".$dispOpt['ShowEndDate']."'); // Show/Hide End Date(0/1)
-        //g.setFormatArr('day','week','month') 
+        g.setShowDur('". $dispOpt['ShowDur'] ."'); // Show/Hide Duration (0/1)
+        g.setShowStartDate('". $dispOpt['ShowStartDate'] ."'); // Show/Hide Start Date(0/1)
+        g.setShowEndDate('". $dispOpt['ShowEndDate'] ."'); // Show/Hide End Date(0/1)
+        //g.setFormatArr('day','week','month')
         g.setCaptionType('Resource');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
       if( g ) {
 // Parameters (pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes,  pComp, pGroup, pParent, pOpen)
-".$js."
+". $js ."
 
 // use the XML file parser 
 //    JSGantt.parseXML('http://localhost/services/sites/default/files/project.xml',g)
@@ -208,7 +208,7 @@ function stormtask_tasks($project) {
     alert('not defined');
       }", 'inline', 'footer'); //end drupal_add_js
   }
-  
+
   $o .= drupal_get_form('stormtask_tasks_form', $header, $taskstree, $project);
   $o .= $o_gantt;
   return $o;
@@ -278,13 +278,13 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
       '#type' => 'weight',
       '#default_value' => $task->weight,
     );
-    
+
     $params['task_nid'] = $task->nid;
-    
+
     $v = storm_icon_edit_node($task, $params);
     $v .= '&nbsp;'. storm_icon_delete_node($task, $params);
     $v .= '&nbsp;'. storm_icon_add_node($task, $params);
-    
+
     $form['tasks']['tasks'][$task->nid]['task_operations_'. $task->nid] = array(
       '#value' => $v,
     );
@@ -294,7 +294,7 @@ function stormtask_tasks_form($form_id, $header, $tasks, $project) {
     '#type' => 'hidden',
     '#value' => $project->nid,
   );
-  
+
   if (stormproject_access('update', $project->nid)) {
     // This form is displayed for users which may not have edit permissions for the nodes displayed.
     // Furthermore, permissions can mean that the user could have edit permissions for some nodes displayed and not others.
@@ -319,8 +319,8 @@ function stormtask_tasks_submit($form, &$form_state) {
     }
   }
 
-  $s = "UPDATE {stormtask} SET weight=%d, parent_nid=%d WHERE nid=%d";  
-  foreach ($tasks as $nid=>$values) {
+  $s = "UPDATE {stormtask} SET weight=%d, parent_nid=%d WHERE nid=%d";
+  foreach ($tasks as $nid => $values) {
     db_query($s, $values['weight'], $values['parent-nid'], $nid);
   }
 
@@ -416,9 +416,9 @@ function _stormtask_project_assignments_js($organization_nid, $project_nid) {
 }
 
 function stormtask_list() {
-  
+
   global $user;
-  
+
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   drupal_set_breadcrumb($breadcrumb);
@@ -438,7 +438,7 @@ function stormtask_list() {
     $_SESSION['stormtask_list_filter']['organization_nid'] = $p->organization_nid;
 
   }
-  
+
   $i = new stdClass();
   $i->type = 'stormtask';
 
@@ -492,7 +492,7 @@ function stormtask_list() {
     $category = split(',', $_SESSION['stormtask_list_filter']['taskcategory']);
     $v = array();
     foreach ($category as $item) $v[] = '%s';
-    $where[] = "sta.taskcategory IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskcategory IN ('". implode("','", $v) ."')";
     foreach ($category as $key => $value) {
       $args[] = $value;
     }
@@ -502,7 +502,7 @@ function stormtask_list() {
     $status = split(',', $_SESSION['stormtask_list_filter']['taskstatus']);
     $v = array();
     foreach ($status as $item) $v[] = '%s';
-    $where[] = "sta.taskstatus IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskstatus IN ('". implode("','", $v) ."')";
     foreach ($status as $key => $value) {
       $args[] = $value;
     }
@@ -512,7 +512,7 @@ function stormtask_list() {
     $priority = split(',', $_SESSION['stormtask_list_filter']['taskpriority']);
     $v = array();
     foreach ($priority as $item) $v[] = '%s';
-    $where[] = "sta.taskpriority IN ('". implode("','",$v) ."')";
+    $where[] = "sta.taskpriority IN ('". implode("','", $v) ."')";
     foreach ($priority as $key => $value) {
       $args[] = $value;
     }
@@ -566,26 +566,26 @@ function stormtask_list() {
       $filterfields[] = 'Date';
     }
   }
-  
+
   if (isset($_SESSION['stormtask_list_filter']['assigned_to'])) {
     if (!is_numeric($_SESSION['stormtask_list_filter']['assigned_to'])) {
       switch ($_SESSION['stormtask_list_filter']['assigned_to']) {
-        
+
         case 'all':
           // NO FILTER
           break;
-        
+
         case 'mine':
           // CURRENT USER 
           if (!empty($user->stormperson_nid) && is_numeric($user->stormperson_nid)) {
             $assigned_to_nid = $user->stormperson_nid;
           }
           break;
-          
+
         case 'none':
           $where[] = '(sta.assigned_nid IS NULL OR sta.assigned_nid = 0) ';
           break;
-          
+
       }
     }
     else {
@@ -619,10 +619,9 @@ function stormtask_list() {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
-  
+
   $o = drupal_get_form('stormtask_list_filter', $filterdesc);
-  
-  
+
   $s = stormtask_access_sql($s, $where);
   $s = db_rewrite_sql($s);
 
@@ -659,7 +658,7 @@ function stormtask_list_filter(&$form_state, $filterdesc = 'Filter') {
   $datebeginto = isset($_SESSION['stormtask_list_filter']['datebeginto']) ? $_SESSION['stormtask_list_filter']['datebeginto'] : NULL;
   $dateendfrom = isset($_SESSION['stormtask_list_filter']['dateendfrom']) ? $_SESSION['stormtask_list_filter']['dateendfrom'] : NULL;
   $dateendto = isset($_SESSION['stormtask_list_filter']['dateendto']) ? $_SESSION['stormtask_list_filter']['dateendfrom'] : NULL;
-  
+
   $assigned_to = isset($_SESSION['stormtask_list_filter']['assigned_to']) ? $_SESSION['stormtask_list_filter']['assigned_to'] : NULL;
 
   $itemsperpage = isset($_SESSION['stormtask_list_filter']['itemsperpage']) ? $_SESSION['stormtask_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);

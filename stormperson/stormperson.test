@@ -1,11 +1,14 @@
 <?php
+/**
+ * @file
+ * Test definitions for the Storm Person module.
+ */
 class StormpersonTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
       'name' => 'Storm Person functionality',
-      'description' => 'Test the functionality of the Storm 
-Person module',
+      'description' => 'Test the functionality of the Storm Person module',
       'group' => 'Storm',
     );
   }

@@ -237,7 +237,7 @@ function stormorganization_views_data() {
   );
 
   $data['stormorganization']['iscustomer'] = array(
-    'title' => t('Is Customer'),
+    'title' => t('Is customer'),
     'help' => t('Storm Organization Is Customer'),
     'field' => array(
       'click sortable' => TRUE,
@@ -254,7 +254,7 @@ function stormorganization_views_data() {
   );
 
   $data['stormorganization']['isprovider'] = array(
-    'title' => t('Is Provider'),
+    'title' => t('Is provider'),
     'help' => t('Storm Organization Is Provider'),
     'field' => array(
       'click sortable' => TRUE,
@@ -271,7 +271,7 @@ function stormorganization_views_data() {
   );
 
   $data['stormorganization']['isactive'] = array(
-    'title' => t('Is Active'),
+    'title' => t('Is active'),
     'help' => t('Storm Organization Is Active'),
     'field' => array(
       'click sortable' => TRUE,
@@ -295,7 +295,7 @@ function stormorganization_views_data() {
       'type' => 'stormorganization',
     ),
   );
-  
+
   return $data;
 }
 
