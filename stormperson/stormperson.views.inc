@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Functions to expose Storm Person module data to the Views module.
+ */
 function stormperson_views_data() {
   $data['stormperson']['table']['group']  = 'Storm Person';
   $data['stormperson']['table']['join'] = array(
@@ -8,7 +11,7 @@ function stormperson_views_data() {
       'field' => 'vid',
     ),
   );
-  
+
   $data['stormperson']['organization_nid'] = array(
     'title' => t('Organization'),
     'help' => t('Person -> Organization'),
@@ -19,7 +22,7 @@ function stormperson_views_data() {
       'label' => t('Person -> Organization'),
     ),
   );
-  
+
   $data['stormperson']['organization_title'] = array(
     'title' => t('Organization'),
     'help' => t('Storm Person Organization (title only)'),
@@ -36,7 +39,7 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormperson']['prefix'] = array(
     'title' => t('Prefix'),
     'help' => t('Storm Person Prefix'),
@@ -53,7 +56,7 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormperson']['email'] = array(
     'title' => t('Email'),
     'help' => t('Storm Person Email'),
@@ -70,7 +73,7 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormperson']['www'] = array(
     'title' => t('WWW'),
     'help' => t('Storm Person WWW'),
@@ -87,7 +90,7 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormperson']['phone'] = array(
     'title' => t('Phone'),
     'help' => t('Storm Person Phone'),
@@ -104,7 +107,7 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
   $data['stormperson']['im'] = array(
     'title' => t('IM'),
     'help' => t('Storm Person IM'),
@@ -121,9 +124,9 @@ function stormperson_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   $data['stormperson']['user_uid'] = array(
-    'title' => t('Drupal User'),
+    'title' => t('Drupal user'),
     'help' => t('Storm Person -> Drupal User'),
     'relationship' => array(
       'base' => 'users',
@@ -141,7 +144,7 @@ function stormperson_views_data() {
       'type' => 'stormperson',
     ),
   );
-  
+
   return $data;
 }
 

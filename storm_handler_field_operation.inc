@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file
  * Field handler to present a link node edit.
  */
 class storm_handler_field_operation extends views_handler_field_node_link {
@@ -11,14 +12,14 @@ class storm_handler_field_operation extends views_handler_field_node_link {
   }
 
   function option_definition() {
-    //$options = parent::option_definition();
-    $options['display_add_icon'] = array('default' => true);
-    $options['display_icons'] = array('default' => true);
+    // $options = parent::option_definition();
+    $options['display_add_icon'] = array('default' => TRUE);
+    $options['display_icons'] = array('default' => TRUE);
     return $options;
   }
 
   function options_form(&$form, &$form_state) {
-    //parent::options_form($form, $form_state);
+    // parent::options_form($form, $form_state);
     $form['display_icons'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display icon links'),

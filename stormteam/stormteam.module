@@ -5,30 +5,30 @@
  * Functionality for the Storm Team module
  * Organized into the following sections:
  * - General hooks: (help), menu, perm, theme, views_api
- * - Node specific hooks: node_info, content_extra_fields, access, access_sql, 
- *     storm_rewrite_where_sql, form, load, view, _beforesave, insert, update, 
+ * - Node specific hooks: node_info, content_extra_fields, access, access_sql,
+ *     storm_rewrite_where_sql, form, load, view, _beforesave, insert, update,
  *     delete, nodeapi
- * - Page generation: list, list_filter, list_filter_filter, list_filter_reset, 
+ * - Page generation: list, list_filter, list_filter_filter, list_filter_reset,
  *     autocomplete, autocomplete_combo
  */
 
 /**
  * @function
- * Implementation of hook_help
+ * Implementation of hook_help().
  */
-/*function stormteam_help($path, $arg) {
+/* function stormteam_help($path, $arg) {
 }*/
 
 /**
  * @function
- * Implementation of hook_menu()
+ * Implementation of hook_menu().
  */
 function stormteam_menu() {
   $items = array();
 
   $items['storm/teams'] = array(
     'title' => 'Teams',
-    'description' => 'Storm Teams',
+    'description' => 'Storm teams',
     'page callback' => 'stormteam_list',
     'access arguments' => array('Storm team: access'),
     'type' => MENU_NORMAL_ITEM,
@@ -36,7 +36,7 @@ function stormteam_menu() {
   );
 
   $items['storm/teams/autocomplete'] = array(
-    'title' => 'Teams Autocomplete',
+    'title' => 'Teams autocomplete',
     'page callback' => 'stormteam_autocomplete',
     'access arguments' => array('Storm team: access'),
     'type' => MENU_CALLBACK,
@@ -47,7 +47,7 @@ function stormteam_menu() {
 
 /**
  * @function
- * Implementation of hook_perm()
+ * Implementation of hook_perm().
  */
 function stormteam_perm() {
   return array(
@@ -67,7 +67,7 @@ function stormteam_perm() {
 
 /**
  * @function
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function stormteam_theme() {
   return array(
@@ -84,7 +84,7 @@ function stormteam_theme() {
 
 /**
  * @function
- * Implementation of hook_views_api()
+ * Implementation of hook_views_api().
  */
 function stormteam_views_api() {
   return array(
@@ -95,7 +95,7 @@ function stormteam_views_api() {
 
 /**
  * @function
- * Implementation of hook_node_info()
+ * Implementation of hook_node_info().
  */
 function stormteam_node_info() {
   return array(
@@ -111,7 +111,7 @@ function stormteam_node_info() {
 
 /**
  * @function
- * Implementation of hook_content_extra_fields()
+ * Implementation of hook_content_extra_fields().
  */
 function stormteam_content_extra_fields($type_name) {
   if ($type_name == 'stormteam') {
@@ -123,7 +123,7 @@ function stormteam_content_extra_fields($type_name) {
 
 /**
  * @function
- * Implementation of hook_access()
+ * Implementation of hook_access().
  */
 function stormteam_access($op, $node, $account = NULL) {
   if (empty($account)) {
@@ -211,7 +211,7 @@ function stormteam_access_sql($sql, $where = array()) {
 
 /**
  * @function
- * Implementation of hook_storm_rewrite_where_sql()
+ * Implementation of hook_storm_rewrite_where_sql().
  */
 function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
@@ -253,7 +253,7 @@ function stormteam_storm_rewrite_where_sql($query, $primary_table, $account) {
 
 /**
  * @function
- * Implementation of hook_form()
+ * Implementation of hook_form().
  */
 function stormteam_form(&$node) {
   $breadcrumb = array(
@@ -306,7 +306,7 @@ function stormteam_form(&$node) {
 
   // Add rows for existing team members
   if (isset($node->members_array) && is_array($node->members_array)) {
-    foreach($node->members_array as $node->$variable => $name) {
+    foreach ($node->members_array as $node->$variable => $name) {
       $form['group1'][$variable] = array(
         '#type' => 'select',
         '#title' => t('Team Member @num', array('@num' => $i)),
@@ -319,7 +319,7 @@ function stormteam_form(&$node) {
   }
 
   // Add placeholder rows
-  for($j = 0; $j < 3; $j++) {
+  for ($j = 0; $j < 3; $j++) {
     $variable = 'members_array_'. $i;
     $form['group1'][$variable] = array(
       '#type' => 'select',
@@ -344,7 +344,7 @@ function stormteam_form(&$node) {
 
 /**
  * @function
- * Implementation of hook_load
+ * Implementation of hook_load().
  */
 function stormteam_load($node) {
   $result = db_query('SELECT ste.mnid, n.title, n.status FROM {stormteam} ste JOIN {node} n ON (ste.mnid = n.nid) WHERE ste.vid = %d', $node->vid);
@@ -363,12 +363,12 @@ function stormteam_load($node) {
 
 /**
  * @function
- * Implementation of hook_view
+ * Implementation of hook_view().
  */
 function stormteam_view($node, $teaser, $page) {
   $breadcrumb = array(
-    l('Storm', 'storm'),
-    l('Teams', 'storm/teams'),
+    l(t('Storm'), 'storm'),
+    l(t('Teams'), 'storm/teams'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -402,7 +402,7 @@ function _stormteam_beforesave(&$node) {
 
 /**
  * @function
- * Implementation of hook_insert
+ * Implementation of hook_insert().
  */
 function stormteam_insert($node) {
   _stormteam_beforesave($node);
@@ -410,7 +410,7 @@ function stormteam_insert($node) {
     $member = new stdClass();
     $member->nid = $node->nid;
     $member->vid = $node->vid;
-    foreach($node->members_array as $mnid => $member_name) {
+    foreach ($node->members_array as $mnid => $member_name) {
       $member->mnid = $mnid;
       drupal_write_record('stormteam', $member);
     }
@@ -419,7 +419,7 @@ function stormteam_insert($node) {
 
 /**
  * @function
- * Implementation of hook_update
+ * Implementation of hook_update().
  */
 function stormteam_update($node) {
   _stormteam_beforesave($node);
@@ -437,7 +437,7 @@ function stormteam_update($node) {
       $member = new stdClass();
       $member->nid = $node->nid;
       $member->vid = $node->vid;
-      foreach($node->members_array as $mnid => $member_name) {
+      foreach ($node->members_array as $mnid => $member_name) {
         $member->mnid = $mnid;
         drupal_write_record('stormteam', $member);
       }
@@ -452,7 +452,7 @@ function stormteam_update($node) {
 
 /**
  * @function
- * Implementation of hook_delete
+ * Implementation of hook_delete().
  */
 function stormteam_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
@@ -461,7 +461,7 @@ function stormteam_delete($node) {
 
 /**
  * @function
- * Implementation of hook_nodeapi
+ * Implementation of hook_nodeapi().
  */
 function stormteam_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
@@ -484,7 +484,7 @@ function stormteam_list() {
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
   $breadcrumb = array(
-    l('Storm', 'storm'),
+    l(t('Storm'), 'storm'),
   );
   drupal_set_breadcrumb($breadcrumb);
 
@@ -524,7 +524,7 @@ function stormteam_list() {
   if (isset($_SESSION['stormteam_list_filter']['name']) && $_SESSION['stormteam_list_filter']['name'] != '') {
     $where[] = "LOWER(n.title) LIKE LOWER('%%%s%%')";
     $args[] = $_SESSION['stormteam_list_filter']['name'];
-    $filterfields[] = t('Team Name');
+    $filterfields[] = t('Team name');
   }
 
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
@@ -546,7 +546,7 @@ function stormteam_list() {
   $s = stormteam_access_sql($s, $where);
   $s = db_rewrite_sql($s);
   $tablesort = tablesort_sql($header);
-  //default count replacement doesn't work, because we need the distinct
+  // default count replacement doesn't work, because we need the distinct
   $count_query = preg_replace('/SELECT.*?FROM /As', 'SELECT COUNT(DISTINCT(n.nid)) FROM ', $s);
   $r = pager_query($s . $tablesort, $itemsperpage, 0, $count_query, $args);
   $rows = array();

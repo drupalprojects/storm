@@ -151,7 +151,7 @@ function stormorganization_menu() {
   $items = array();
   $items['storm/organizations'] = array(
     'title' => 'Organizations',
-    'description' => 'Storm Organizations',
+    'description' => 'Storm organizations',
     'page callback' => 'stormorganization_list',
     'access arguments' => array('Storm organization: access'),
     'file' => 'stormorganization.admin.inc',
@@ -166,10 +166,10 @@ function stormorganization_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'stormorganization.admin.inc',
   );
-  
+
   $items['admin/settings/storm/organization'] = array(
-    'title' => 'Storm Organization',
-    'description' => 'Storm Organization Administration Page',
+    'title' => 'Storm organization',
+    'description' => 'Storm organization administration page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stormorganization_admin_settings'),
     'access arguments' => array('Storm: access administration pages'),
@@ -269,7 +269,7 @@ function stormorganization_form(&$node) {
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
-  
+
   $form['group3']['address'] = array(
     '#type' => 'textfield',
     '#title' => t('Address'),
@@ -321,7 +321,7 @@ function stormorganization_form(&$node) {
     '#title' => t('Phone'),
     '#default_value' => isset($node->phone) ? $node->phone : NULL,
   );
-  
+
   $form['group4']['www'] = array(
     '#type' => 'textfield',
     '#title' => t('WWW'),
@@ -383,7 +383,7 @@ function stormorganization_form(&$node) {
     '#size' => 20,
     '#default_value' => isset($node->taxid) ? $node->taxid : NULL,
   );
-  
+
   if ($type->has_body) {
     $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
@@ -405,7 +405,7 @@ function stormorganization_insert($node) {
            '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %f
            )",
             $node->vid, $node->nid, $node->country, $node->www, $node->phone, $node->email, $node->currency,
-            $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, 
+            $node->provstate, $node->zip, $node->city, $node->address, $node->taxid,
             $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive, $node->pricemode, $node->price
             );
 }
@@ -489,7 +489,7 @@ function stormorganization_admin_settings() {
   if (count($organizations) > 0) {
     $form['storm_organization_nid'] = array(
       '#type' => 'select',
-      '#title' => t('Host Organization'),
+      '#title' => t('Host organization'),
       '#options' => $organizations,
       '#default_value' => variable_get('storm_organization_nid', 0),
       '#description' => t('The organization that owns this system'),
@@ -499,8 +499,8 @@ function stormorganization_admin_settings() {
   else {
     $form['storm_organization_nid'] = array(
       '#type' => 'item',
-      '#title' => t('Host Organization'),
-      '#value' => t('There are no Storm Organizations in the system.') .'<br />'. l('Create a Storm Organization', 'node/add/stormorganization'),
+      '#title' => t('Host organization'),
+      '#value' => t('There are no Storm Organizations in the system.') .'<br />'. l(t('Create a Storm Organization'), 'node/add/stormorganization'),
     );
   }
   return system_settings_form($form);

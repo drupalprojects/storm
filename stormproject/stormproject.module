@@ -349,7 +349,7 @@ function stormproject_form(&$node) {
     if (isset($_SESSION['stormproject_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
               ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
 
     $node->billable = variable_get('stormproject_billable_default', FALSE);
@@ -514,7 +514,7 @@ function stormproject_form(&$node) {
   else {
     $options = array(0 => '- none -');
   }
-  
+
   $form['group5']['manager_nid'] = array(
     '#type' => module_exists('stormperson') ? 'select' : 'hidden',
     '#title' => t('Project manager'),
@@ -796,7 +796,7 @@ function stormproject_storminvoice_auto_add($node, $invoice_nid = NULL) {
     $rate_array = storminvoice_get_rate($node);
 
     $count = count($new_invoice->items);
-    
+
     $new_invoice->items[$count]->description = storminvoice_get_item_desc($rate_array, $node);
 
     $new_invoice->items[$count]->amount = storminvoice_get_item_amount($rate_array, $node);

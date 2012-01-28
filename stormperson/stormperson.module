@@ -75,13 +75,13 @@ function stormperson_access($op, $node, $account=NULL) {
     if (user_access('Storm person: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm person: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm person: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm person: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: delete when linked to own user account') && ($account->uid == $node->user_uid)) {
+    elseif (user_access('Storm person: delete when linked to own user account') && ($account->uid == $node->user_uid)) {
       return TRUE;
     }
   }
@@ -90,13 +90,13 @@ function stormperson_access($op, $node, $account=NULL) {
     if (user_access('Storm person: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm person: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm person: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm person: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: edit when linked to own user account') && ($account->uid == $node->user_uid)) {
+    elseif (user_access('Storm person: edit when linked to own user account') && ($account->uid == $node->user_uid)) {
       return TRUE;
     }
   }
@@ -105,13 +105,13 @@ function stormperson_access($op, $node, $account=NULL) {
     if (user_access('Storm person: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm person: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm person: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm person: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
-    else if (user_access('Storm person: view when linked to own user account') && ($account->uid == $node->user_uid)) {
+    elseif (user_access('Storm person: view when linked to own user account') && ($account->uid == $node->user_uid)) {
       return TRUE;
     }
   }
@@ -181,7 +181,7 @@ function stormperson_storm_rewrite_where_sql($query, $primary_table, $account) {
       }
       $cond .= ' spe1.user_uid='. $account->uid;
     }
-    
+
     if ($cond) {
       $cond = " WHEN 'stormperson' THEN (SELECT IF($cond,1,0) FROM {stormperson} spe1 WHERE spe1.vid=${primary_table}.vid) ";
     }
@@ -331,7 +331,7 @@ function stormperson_form(&$node) {
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormperson_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
   );
 
@@ -403,7 +403,7 @@ function stormperson_validate($node, &$form) {
       $result = db_query("SELECT n.nid, n.title FROM {node} n JOIN {stormperson} stp ON (n.nid = stp.nid) WHERE stp.user_uid = %d", $ass_user->uid);
       $row = db_fetch_array($result);
       if ($row && (empty($form['#node']->user_name) || ($form['#node']->user_name != $node->user_name))) {
-        form_set_error('user_name', t('This Drupal user is already assigned to a Storm person (!link). The same Drupal user can not be assigned to two Storm people.', array('!link' => l($row['title'], 'node/'.$row['nid']))));
+        form_set_error('user_name', t('This Drupal user is already assigned to a Storm person (!link). The same Drupal user can not be assigned to two Storm people.', array('!link' => l($row['title'], 'node/'. $row['nid']))));
       }
     }
   }

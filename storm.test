@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Tests for the Storm module
@@ -20,7 +19,7 @@ class StormTestCase extends DrupalWebTestCase {
   public function testStormAccess() {
     $this->drupalGet('storm');
     $this->assertResponse(403, t('Make sure access is denied to Storm dashboard for anonymous user'));
-    
+
     $basic_user = $this->drupalCreateUser();
     $this->drupalLogin($basic_user);
     $this->drupalGet('storm');
