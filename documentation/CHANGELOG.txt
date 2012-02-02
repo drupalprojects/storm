@@ -1,6 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x-dev:
+- Bug #1425394 by John Franklin | yurtboy: Fixed Error when printing an invoice.
 - Task #1412116 by juliangb: Ensure that Storm complies with Drupal coding standards.
 - Task #1412206 by juliangb: Ensure all database updates have descriptions.
 

@@ -425,7 +425,7 @@ function theme_storminvoice_view($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if (isset($myorg->currency)) {
-    $currencies = stormattribute_attributes_bydomain('Currency');
+    $currencies = storm_attributes_bydomain('Currency');
     $node->content['group5']['currency'] = array(
       '#prefix' => '<div class="currency">',
       '#suffix' => '</div>',
@@ -482,9 +482,9 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
     $status = 'overdue';
   }
 
-  $countries = stormattribute_attributes_bydomain('Country');
+  $countries = storm_attributes_bydomain('Country');
   $countries = $countries['values'];
-  $currencies = stormattribute_attributes_bydomain('Currency');
+  $currencies = storm_attributes_bydomain('Currency');
   $currencies = $currencies['values'];
   $myorg = node_load(variable_get('storm_organization_nid', 0));
   $mycurrency = $currencies[$myorg->currency];
@@ -698,9 +698,9 @@ function theme_storminvoice_report_html($node, $language) {
     $status = 'overdue';
   }
 
-  $countries = stormattribute_attributes_bydomain('Country');
+  $countries = storm_attributes_bydomain('Country');
   $countries = $countries['values'];
-  $currencies = stormattribute_attributes_bydomain('Currency');
+  $currencies = storm_attributes_bydomain('Currency');
   $currencies = $currencies['values'];
   $myorg = node_load(variable_get('storm_organization_nid', 0));
   $mycurrency = $currencies[$myorg->currency];
