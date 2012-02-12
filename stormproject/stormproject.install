@@ -4,7 +4,6 @@
  * Installation functions for the Storm project module
  */
 function stormproject_install() {
-  drupal_install_schema('stormproject');
   variable_set('node_options_stormproject', array('status'));
 
   $attributes = array();

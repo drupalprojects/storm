@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  */
 
 function stormexpense_install() {
-  drupal_install_schema('stormexpense');
   variable_set('node_options_stormexpense', array('status'));
 
   $attributes = array();

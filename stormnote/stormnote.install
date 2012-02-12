@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  */
 
 function stormnote_install() {
-  drupal_install_schema('stormnote');
   variable_set('node_options_stormnote', array('status'));
 }
 

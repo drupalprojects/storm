@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  */
 
 function stormticket_install() {
-  drupal_install_schema('stormticket');
   variable_set('node_options_stormticket', array('status'));
 
   $attributes = array();

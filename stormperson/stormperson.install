@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  */
 
 function stormperson_install() {
-  drupal_install_schema('stormperson');
   variable_set('node_options_stormperson', array('status'));
 }
 

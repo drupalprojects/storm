@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, update and uninstall functions for the Storm module.
@@ -15,8 +14,6 @@ function storm_install() {
   variable_set('storm_organization_nid', 0);
   variable_set('storm_yearsrangebegin', 2001);
   variable_set('storm_yearsrangeend', 2012);
-
-  drupal_install_schema('storm');
 }
 
 /**

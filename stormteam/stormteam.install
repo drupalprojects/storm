@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, uninstall and update functions for the Storm Team module
@@ -10,7 +9,6 @@
  * Implementation of hook_install().
  */
 function stormteam_install() {
-  drupal_install_schema('stormteam');
   variable_set('node_options_stormteam', array('status'));
 }
 

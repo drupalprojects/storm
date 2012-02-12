@@ -1,11 +1,9 @@
 <?php
-
 /**
  * @file
  */
 
 function storminvoice_install() {
-  drupal_install_schema('storminvoice');
   variable_set('node_options_storminvoice', array('status'));
   variable_set('node_options_storminvoiceitem', array('status'));
 }
