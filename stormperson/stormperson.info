@@ -1,11 +1,6 @@
 name = Storm Person
 description = "Allows storage of people within organizations, and linking of these to Drupal user accounts."
-dependencies[] = storm 
+dependencies[] = storm
 dependencies[] = stormorganization
 package = Storm
-core = 7.x
-
-files[] = stormperson.admin.inc
-files[] = stormperson.install
-files[] = stormperson.module
-files[] = stormperson.theme.inc
+core = 6.x

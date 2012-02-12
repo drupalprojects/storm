@@ -1,15 +1,7 @@
 name = Storm Invoice
 description = "Allows invoices to be created based on organizations and projects."
-package = Storm
-core = 7.x
-configure = admin/config/system/storm/invoice
-
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
-
-files[] = storminvoice.admin.inc
-files[] = storminvoice.auto_add.inc
-files[] = storminvoice.install
-files[] = storminvoice.module
-files[] = storminvoice.theme.inc
+package = Storm
+core = 6.x

@@ -4,10 +4,80 @@
  * @file
  */
 
+function theme_stormexpense_list($header, $expenses, $totals) {
+  $rows = array();
+  foreach ($expenses as $expense) {
+    $n = new stdClass();
+    $n->nid = $expense->nid;
+    $n->uid = $expense->uid;
+    $n->organization_nid = $expense->organization_nid;
+    $n->project_nid = $expense->project_nid;
+    $n->task_nid = $expense->task_nid;
+    $n->ticket_nid = $expense->ticket_nid;
+    $n->type = 'stormexpense';
+    $rows[] = array(
+      l($expense->organization_title, 'node/'. $expense->organization_nid),
+      l($expense->project_title, 'node/'. $expense->project_nid),
+      l($expense->title, 'node/'. $expense->nid),
+      format_date($expense->expensedate, 'custom', 'Y-m-d'),
+      array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
+      array(
+        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'class' => 'storm_list_operations',
+      ),
+    );
+  }
+  $o = theme('table', $header, $rows);
+
+  $header = array(
+    array(
+      'data' => t('Amount'),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => variable_get('storm_tax1_name', 'VAT'),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => variable_get('storm_tax2_name', 'Tax 2'),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => t('Total'),
+      'style' => 'text-align: right;',
+    ),
+  );
+
+  $rows = array();
+  $rows[] = array(
+    array(
+      'data' => sprintf('%.2f', $totals->t_amount),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals->t_tax1),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals->t_tax2),
+      'style' => 'text-align: right;',
+    ),
+    array(
+      'data' => sprintf('%.2f', $totals->t_total),
+      'style' => 'text-align: right;',
+    ),
+  );
+
+  $o .= theme('table', $header, $rows);
+
+  return $o;
+}
+
 function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
-  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
-  
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+
   $node = node_prepare($node, $teaser);
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -19,18 +89,18 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     $v = '';
     $v .= '<strong>'. t('Invoice this item:') .'</strong>';
     $v .= '<ul>';
-    $v .= '<li>'. l('Add to new invoice', 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
-    $v .= '<li>'. l('Add to existing invoice', 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
+    $v .= '<li>'. l(t('Add to new invoice'), 'storm/invoice/auto_add/new/'. $node->nid) .'</li>';
+    $v .= '<li>'. l(t('Add to existing invoice'), 'storm/invoice/auto_add/existing/'. $node->nid) .'</li>';
     $v .= '</ul>';
-    
+
     $node->content['links']['auto_invoice'] = array(
       '#prefix' => '<dt id="storminvoices" class="stormcomponent">',
       '#suffix' => '</dt>',
       '#value' => $v,
-      '#weight' => $w++,
+      '#weight' => $l_pos++,
     );
   }
-  
+
   $node->content['group1'] = array(
     '#prefix' => '<div class="stormfields">',
     '#suffix' => '</div>',
@@ -121,7 +191,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
       '#weight' => 2,
     );
   }
-  
+
   if ($node->tax1 || $node->tax2) {
     $node->content['group4']['total'] = array(
       '#prefix' => '<div class="total">',
@@ -138,7 +208,7 @@ function theme_stormexpense_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -16,
   );
   unset($node->content['body']);
-  
+
   return $node;
 }
 
@@ -163,11 +233,12 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
         t('Date', array(), $language),
         t('Total', array(), $language));
       $expenses_total = 0;
+      $rows = array();
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->organization_title,
-          $expense->project_title,
-          $expense->title,
+          check_plain($expense->organization_title),
+          check_plain($expense->project_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -185,8 +256,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $expenses_total = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->project_title,
-          $expense->title,
+          check_plain($expense->project_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -206,9 +277,9 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $total_duration = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->project_title,
-          $expense->task_title,
-          $expense->title,
+          check_plain($expense->project_title),
+          check_plain($expense->task_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );
@@ -229,8 +300,8 @@ function theme_stormexpense_list_report($report, $language, $expenses) {
       $total_duration = 0;
       foreach ($expenses as $expense) {
         $rows[] = array(
-          $expense->task_title,
-          $expense->title,
+          check_plain($expense->task_title),
+          check_plain($expense->title),
           format_date($expense->expensedate, 'custom', 'Y-m-d'),
           array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
         );

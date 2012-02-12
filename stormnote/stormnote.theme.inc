@@ -4,15 +4,42 @@
  * @file
  */
 
+function theme_stormnote_list($header, $notes) {
+  $rows = array();
+
+  foreach ($notes as $note) {
+    $n = new stdClass();
+    $n->nid = $note->nid;
+    $n->uid = $note->uid;
+    $n->organization_nid = $note->organization_nid;
+    $n->project_nid = $note->project_nid;
+    $n->task_nid = $note->task_nid;
+    $n->type = 'stormnote';
+    $rows[] = array(
+      l($note->organization_title, 'node/'. $note->organization_nid),
+      l($note->project_title, 'node/'. $note->project_nid),
+      l($note->task_title, 'node/'. $note->task_nid),
+      l($note->title, 'node/'. $note->nid),
+      array(
+        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'class' => 'storm_list_operations',
+      ),
+    );
+  }
+  $o = theme('table', $header, $rows);
+  return $o;
+}
+
 function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
-  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
-  
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+
   $node = node_prepare($node, $teaser);
-  
+  $l_pos = 1; // Used to increase the link position number (see issue 814820)
+
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
     '#suffix' => '</dl></div>',
-    '#weight' => $w++,
+    '#weight' => $l_pos++,
   );
 
   $node->content['group1'] = array(
@@ -20,7 +47,7 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
     '#suffix' => '</div>',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
-  
+
   $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
@@ -49,6 +76,6 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
   unset($node->content['body']);
-  
+
   return $node;
 }

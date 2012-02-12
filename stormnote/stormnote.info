@@ -1,15 +1,8 @@
 name = Storm Note
 description = "Allows creation of notes about organizations, projects or tasks."
-package = Storm
-core = 7.x
-
-; Dependencies
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
-
-; Files registry
-files[] = stormnote.install
-files[] = stormnote.module
-files[] = stormnote.theme.inc
+package = Storm
+core = 6.x

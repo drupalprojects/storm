@@ -22,12 +22,16 @@ div.stormfields div.label, div.stormbody div.label, div.field div.field-label-in
 }
 
 div.stormlinks {
-  float: right;
+  float:right;
   width: 30%;
 }
 
 div.stormbody div.value p {
-  margin: 0;
+  clear: left;
+  margin: 1.2em;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
 }
 
 table#attachments {

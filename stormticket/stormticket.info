@@ -1,14 +1,8 @@
 name = Storm Ticket
 description = "Allows creation of tickets for Storm Projects and Tasks"
-package = Storm
-core = 7.x
-
-dependencies[] = storm 
+dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
-
-files[] = stormticket.admin.inc
-files[] = stormticket.install
-files[] = stormticket.module
-files[] = stormticket.theme.inc
+package = Storm
+core = 6.x

@@ -48,10 +48,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: delete all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: delete own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: delete own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -60,10 +60,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: edit all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: edit own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: edit own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: edit of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -72,10 +72,10 @@ function stormnote_access($op, $node, $account=NULL) {
     if (user_access('Storm note: view all')) {
       return TRUE;
     }
-    else if (user_access('Storm note: view own') && ($account->uid == $node->uid)) {
+    elseif (user_access('Storm note: view own') && ($account->uid == $node->uid)) {
       return TRUE;
     }
-    else if (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
+    elseif (user_access('Storm note: view of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
   }
@@ -108,7 +108,7 @@ function stormnote_access_sql($sql, $where = array()) {
 function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   static $conds = array();
 
-  if ($conds[$primary_table][$account->uid]) {
+  if (isset($conds[$primary_table][$account->uid])) {
     return $conds[$primary_table][$account->uid];
   }
 
@@ -147,15 +147,21 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   return $cond;
 }
 
-/**
- * @function
- * Implementation of hook_menu
- * Not currently implemented
- */
-/*function stormnote_menu() {
+function stormnote_menu() {
   $items = array();
+
+  $items['storm/notes'] = array(
+    'title' => 'Notes',
+    'description' => 'Storm notes',
+    'page callback' => 'stormnote_list',
+    'access arguments' => array('Storm note: access'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'stormnote.admin.inc',
+    'weight' => 7,
+  );
+
   return $items;
-}*/
+}
 
 function stormnote_theme() {
   return array(
@@ -176,7 +182,7 @@ function stormnote_node_info() {
       'name' => t('Note'),
       'module' => 'stormnote',
       'description' => t("A note for Storm."),
-      'has_body' => true,
+      'has_body' => TRUE,
     )
   );
 }
@@ -200,9 +206,8 @@ function stormnote_stormproject_change($project_nid, $project_title) {
 }
 
 function stormnote_stormtask_change($task_nid, $task_title, $task_stepno) {
-  $s = "UPDATE {stormnote} SET task_title='%s', task_stepno='%s' WHERE task_nid=%d AND
-      (task_title<>'%s' OR task_stepno<>'%s')";
-  db_query($s, $task_title, $task_stepno, $task_nid, $task_title, $task_stepno);
+  $s = "UPDATE {stormnote} SET task_title='%s' WHERE task_nid=%d AND task_title<>'%s'";
+  db_query($s, $task_title, $task_nid, $task_title);
 }
 
 function stormnote_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
@@ -240,28 +245,28 @@ function stormnote_form(&$node) {
       $node->organization_nid = $t->organization_nid;
       $node->project_nid = $t->project_nid;
       // $project_access deals with the case whereby the project could be blank, hence access rules not required
-      $project_access = $node->project_nid ? stormproject_node_access('view', $node->project_nid) : TRUE;
+      $project_access = $node->project_nid ? stormproject_access('view', $node->project_nid) : TRUE;
       if (!stormorganization_access('view', $node->organization_nid) || !stormproject_access('view', $node->project_nid)) {
         drupal_set_message(t("You cannot add a note for this task, as you do not have access to view the both the organization and project's profile"));
         drupal_goto('node/'. $node->task_nid);
       }
     }
 
-    if ($_SESSION['stormnote_list_filter']['organization_nid'] && !$node->organization_nid) {
+    if (isset($_SESSION['stormnote_list_filter']['organization_nid']) && !$node->organization_nid) {
       $node->organization_nid = $_SESSION['stormnote_list_filter']['organization_nid'];
     }
-    if ($_SESSION['stormnote_list_filter']['project_nid'] && !$node->project_nid) {
+    if (isset($_SESSION['stormnote_list_filter']['project_nid']) && !$node->project_nid) {
       $node->project_nid = $_SESSION['stormnote_list_filter']['project_nid'];
     }
-    if ($_SESSION['stormnote_list_filter']['task_nid'] && !$node->task_nid) {
+    if (isset($_SESSION['stormnote_list_filter']['task_nid']) && !$node->task_nid) {
       $node->task_nid = $_SESSION['stormnote_list_filter']['task_nid'];
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
+              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
   }
   else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n 
-              ON so.nid=n.nid WHERE n.status=1 AND so.iscustomer=1 AND n.type='stormorganization' ORDER BY n.title";
+    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
+              ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_get_types('type', $node);
@@ -278,14 +283,16 @@ function stormnote_form(&$node) {
   $organizations = array();
   while ($organization = db_fetch_object($r)) {
     $organizations[$organization->nid] = $organization->title;
-    if (!$node->organization_nid) $node->organization_nid = $organization->nid;
+    if (!isset($node->organization_nid)) {
+      $node->organization_nid = $organization->nid;
+    }
   }
   $form['group1']['organization_nid'] = array(
     '#type' => 'select',
     '#title' => t('Organization'),
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
-    '#required' => true,
+    '#required' => TRUE,
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', '', true, '-')"),
   );
 
@@ -300,18 +307,18 @@ function stormnote_form(&$node) {
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project'),
-    '#default_value' => $node->project_nid,
+    '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
     '#options' => array(0 => '-') + $projects,
     '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', '', true, '-')"),
   );
 
-  $tree = _stormtask_get_tree($node->project_nid);
+  $tree = isset($node->project_nid) ? _stormtask_get_tree($node->project_nid) : array();
   $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
     '#title' => t('Task'),
-    '#default_value' => $node->task_nid,
+    '#default_value' => isset($node->task_nid) ? $node->task_nid : NULL,
     '#options' => array(0 => '-') + $tasks,
     '#process' => array('storm_dependent_select_process'),
   );
@@ -338,17 +345,17 @@ function stormnote_insert($node) {
            (vid, nid,
            organization_nid, organization_title,
            project_nid, project_title,
-           task_nid, task_title, task_stepno
+           task_nid, task_title
            ) VALUES
            (%d, %d,
            %d, '%s',
            %d, '%s',
-           %d, '%s', '%s'
+           %d, '%s'
            )",
             $node->vid, $node->nid,
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno
+            $node->task_nid, $node->task_title
             );
 }
 
@@ -362,11 +369,11 @@ function stormnote_update($node) {
     db_query("UPDATE {stormnote} SET
             organization_nid=%d, organization_title='%s',
             project_nid=%d, project_title='%s',
-            task_nid=%d, task_title='%s', task_stepno='%s'
+            task_nid=%d, task_title='%s'
             WHERE vid = %d",
             $node->organization_nid, $node->organization_title,
             $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title, $node->task_stepno,
+            $node->task_nid, $node->task_title,
             $node->vid);
   }
 }
@@ -382,13 +389,13 @@ function _stormnote_beforesave(&$node) {
         WHERE type='stormproject' AND n.nid=%d";
   $r = db_query($s, $node->project_nid);
   $p = db_fetch_object($r);
-  $node->project_title = $p->title;
+  $node->project_title = isset($p->title) ? $p->title : '';
 
   $s = "SELECT n.title FROM {node} n INNER JOIN {stormtask} p ON n.nid=p.nid
         WHERE type='stormtask' AND n.nid=%d";
   $r = db_query($s, $node->task_nid);
   $t = db_fetch_object($r);
-  $node->task_title = $t->title;
+  $node->task_title = isset($t->title) ? $t->title : '';
 }
 
 function stormnote_nodeapi(&$node, $op, $teaser, $page) {
@@ -423,4 +430,23 @@ function stormnote_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'stormnote'),
   );
+}
+
+function stormnote_storm_dashboard_links($type) {
+  $links = array();
+  if ($type == 'page' || $type == 'block') {
+    $links[] = array(
+      'theme' => 'storm_dashboard_link',
+      'title' => t('Notes'),
+      'icon' => 'stormnotes',
+      'path' => 'storm/notes',
+      'params' => array(),
+      'access_arguments' => 'Storm note: access',
+      'node_type' => 'stormnote',
+      'add_type' => 'stormnote',
+      'map' => array(),
+      'weight' => 9,
+    );
+  }
+  return $links;
 }

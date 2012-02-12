@@ -15,7 +15,7 @@ function stormtask_project_tasks(_organization_select_id, _project_select, _task
       storm_fill_select(task_select, items, _with_all_option, _all_text);
     }
   });
-  
+
   var organization_select = $("#" + _organization_select_id).get(0);
   var organization_nid = organization_select.value;
   if (!organization_nid) organization_nid=0;
@@ -41,3 +41,4 @@ function stormtask_organization_project_tasks(_organization_select, _project_sel
   var _organization_select_id = $(_organization_select).attr('id');
   stormtask_project_tasks(_organization_select_id, project_select, _task_select_id, _assign_select_id, _with_all_option, _all_text);
 };
+

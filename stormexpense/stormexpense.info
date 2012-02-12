@@ -1,15 +1,9 @@
 name = Storm Expense
 description = "Allows recording of expenses based on organizations, projects, tasks and tickets."
-package = Storm
-core = 7.x
-
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormproject
 dependencies[] = stormtask
 dependencies[] = stormticket
-
-files[] = stormexpense.admin.inc
-files[] = stormexpense.install
-files[] = stormexpense.module
-files[] = stormexpense.theme.inc
+package = Storm
+core = 6.x

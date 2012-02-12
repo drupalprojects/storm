@@ -1,16 +1,4 @@
-
-; Basic information
 name = Storm
 description = "Project Management Application (base module - utility for other Storm modules)."
-core = 7.x
+core = 6.x
 package = Storm
-configure = admin/config/system/storm
-
-; Dependencies
-
-; Files registry
-files[] = storm.install
-files[] = storm.module
-files[] = storm.theme.inc
-files[] = storm.test
-

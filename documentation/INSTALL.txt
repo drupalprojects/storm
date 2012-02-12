@@ -1,12 +1,12 @@
 
-Storm module for Drupal 7.x
+Storm module for Drupal 6.x
 
 INSTALLATION:
 
 1) Copy this 'storm' directory into the /sites/all/modules directory of your Drupal installation.
 (Multisite installations may wish to use a different directory - see http://drupal.org/node/53705)
 
-2) Enable Storm (and whatever submodules of Storm that you wish), by visiting http://example.com/admin/build/modules. You will (almost) always need 'Storm' and 'Storm Organization'.
+2) Enable Storm (and whatever submodules of Storm that you wish), by visiting http://example.com/admin/build/modules. You will (almost) always need 'Storm', 'Storm Attribute' and 'Storm Organization'.
 
 3) To enable the pdf invoice feature, you must separately install the tcpdf library (http://www.tcpdf.org). The install directory can be set at /admin/settings/storm/invoice. If you do not install the tcpdf library, Storm will still work, but you will not be able to view pdf versions of invoices.
 
