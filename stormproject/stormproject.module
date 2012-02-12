@@ -271,7 +271,7 @@ function stormproject_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/settings/storm/project'] = array(
+  $items['admin/config/storm/project'] = array(
     'title' => 'Storm project',
     'description' => 'Storm project administration page',
     'page callback' => 'drupal_get_form',

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  */
@@ -257,7 +256,7 @@ function stormtask_menu() {
     'weight' => 4,
   );
 
-  $items['admin/settings/storm/task'] = array(
+  $items['admin/config/storm/task'] = array(
     'title' => 'Storm task',
     'description' => 'Storm task administration page',
     'page callback' => 'drupal_get_form',

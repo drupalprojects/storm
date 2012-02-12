@@ -246,7 +246,7 @@ function stormticket_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/settings/storm/ticket'] = array(
+  $items['admin/config/storm/ticket'] = array(
     'title' => 'Storm ticket',
     'description' => 'Storm ticket administration page',
     'page callback' => 'drupal_get_form',
