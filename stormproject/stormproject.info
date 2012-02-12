@@ -3,4 +3,4 @@ description = "Allows recording of projects based on Storm Organizations"
 dependencies[] = storm
 dependencies[] = stormorganization
 package = Storm
-core = 6.x
+core = 7.x

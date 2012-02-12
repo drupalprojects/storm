@@ -6,4 +6,4 @@ dependencies[] = stormproject
 dependencies[] = stormtask
 dependencies[] = stormticket
 package = Storm
-core = 6.x
+core = 7.x
