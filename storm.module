@@ -339,7 +339,7 @@ function storm_storm_dashboard_links($type) {
     $links[] = array(
       'title' => t('Configuration'),
       'icon' => 'stormconfiguration',
-      'path' => 'admin/settings/storm',
+      'path' => 'admin/config/storm',
       'params' => array(),
       'access_arguments' => 'Storm: access administration pages',
       'node_type' => '',
