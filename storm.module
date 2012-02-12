@@ -55,6 +55,7 @@ function storm_permission() {
     ),
     'Storm: access administration pages' => array(
       'title' => t('Administer Storm'),
+    ),
   );
 }
 
