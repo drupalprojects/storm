@@ -376,7 +376,7 @@ function stormorganization_update_6201() {
  */
 function stormorganization_update_6202() {
   // Only run this update if was not previously run as part of the legacy stormattribute module
-  if(db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 2) {
+  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 2) {
     $attributes['Currency'] = array(
       'USD' => 'US Dollar',
       'CAD' => 'Canadian Dollar',
