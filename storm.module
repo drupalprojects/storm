@@ -209,7 +209,7 @@ function storm_theme() {
     ),
     'storm_attribute_list' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array('form'),
+      'render element' => 'form',
     ),
   );
 }
