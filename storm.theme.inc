@@ -427,8 +427,8 @@ function theme_storm_attribute_list($form) {
   $row = array();
   $rows = array();
 
-  $header = $form['header']['#value'];
-  unset($form['header']);
+  $header = $form['form']['header']['#value'];
+  unset($form['form']['header']);
 
   if (isset($form['attributes'])) {
     foreach (element_children($form['attributes']) as $key) {
@@ -460,6 +460,6 @@ function theme_storm_attribute_list($form) {
       $rows[] = $row;
     }
   }
-  $o = theme('table', $header, $rows, array('id' => 'attributes'));
+  $o = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'attributes')));
   return $o;
 }
