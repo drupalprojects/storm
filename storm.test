@@ -69,7 +69,7 @@ class StormTestCase extends DrupalWebTestCase {
     $this->drupalLogin($privileged_user);
     $this->drupalGet('storm/attributes');
 //    $this->assertText(t('Attributes'), t('Make sure the correct page has been displayed by checking that the title is "Attributes".'));
-//    $this->drupalGet('storm/attributes/add');
-//    $this->assertText(t('Add a new attribute'), t('Make sure the correct page has been displayed by checking that the title is "Add a new attribute".'));
+    $this->drupalGet('storm/attributes/add');
+    $this->assertText(t('Add a new attribute'), t('Make sure the correct page has been displayed by checking that the title is "Add a new attribute".'));
   }
 }
