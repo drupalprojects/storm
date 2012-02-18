@@ -496,7 +496,7 @@ function storm_admin_settings() {
 
   $form['yearsrange']['group0'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
 
@@ -536,7 +536,7 @@ function storm_admin_settings() {
 
   $form['taxation']['group0'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
 
@@ -572,7 +572,7 @@ function storm_admin_settings() {
 
   $form['taxation']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => $w++,
   );
 
@@ -635,7 +635,7 @@ function storm_admin_settings() {
       '#collapsed' => TRUE,
     );
     $form['storm_dashboard_settings'][$type]['dashboard_links'] = array(
-      '#theme' => 'storm_dashboard_links_weight_table',
+//      '#theme' => 'storm_dashboard_links_weight_table',
       '#infix' => $type,
     );
 
