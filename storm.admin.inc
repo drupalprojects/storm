@@ -38,7 +38,9 @@ function storm_attribute_list() {
     ),
   );
 
-  $s = "SELECT * FROM {stormattribute}";
+  $query = db_select('stormattribute', 'sa')
+    ->fields('sa');
+
   $where = array();
   $args = array();
   $filterfields = array();
@@ -75,7 +77,9 @@ function storm_attribute_list() {
 
   $itemsperpage = isset($_SESSION['stormattribute_list_filter']['itemsperpage']) ? $_SESSION['stormattribute_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
-  $tablesort = tablesort_sql($header);
+  $query = $query
+    ->extend('TableSort')
+    ->orderByHeader($header);
 
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -85,23 +89,21 @@ function storm_attribute_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_get_form('storm_attribute_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('storm_attribute_list_filter', $filterdesc));
 
-  $s = db_rewrite_sql($s, 'stormattribute', 'aid');
-  $s = storm_rewrite_sql($s, $where) . $tablesort;
-  $r = pager_query($s, $itemsperpage, 0, NULL, $args);
+  $result = $query->execute();
 
   $attributes = array();
-  while ($attribute = db_fetch_object($r)) {
+  while ($attribute = $result->fetchObject()) {
     $attributes[] = $attribute;
   }
 
-  $o .= drupal_get_form('storm_attribute_list_form', $header, $attributes);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
+  $o .= drupal_render(drupal_get_form('storm_attribute_list_form', $header, $attributes));
+  $o .= theme('pager', array());
   return $o;
 }
 
-function storm_attribute_list_form($form_id, $header, $attributes) {
+function storm_attribute_list_form($form, &$form_state, $header, $attributes) {
   $form = array();
 
   $form['attributes']['#theme'] = 'storm_attribute_list';
@@ -184,7 +186,7 @@ function storm_attribute_list_submit($form, &$form_state) {
   drupal_set_message(t('Attributes saved'));
 }
 
-function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
+function storm_attribute_list_filter($form, &$form_state, $filterdesc = 'Filter') {
   $domain = isset($_SESSION['stormattribute_list_filter']['domain']) ? $_SESSION['stormattribute_list_filter']['domain'] : '';
   $akey = isset($_SESSION['stormattribute_list_filter']['akey']) ? $_SESSION['stormattribute_list_filter']['akey'] : '';
   $avalue = isset($_SESSION['stormattribute_list_filter']['avalue']) ? $_SESSION['stormattribute_list_filter']['avalue'] : '';
@@ -203,7 +205,7 @@ function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group1']['domain'] = array(
@@ -230,7 +232,7 @@ function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group2']['isactive'] = array(
@@ -249,7 +251,7 @@ function storm_attribute_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group3']['itemsperpage'] = array(
