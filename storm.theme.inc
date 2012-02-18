@@ -220,7 +220,7 @@ function theme_storm_dashboard_links_weight_table($form = array()) {
   }
   $headers = array(t('Link'), t('Active'), t('Weight'));
 
-  $output = theme('table', $headers, $rows, array('id' => $type .'dashboard-link-table'));
+  $output = theme('table', array('headers' => $headers, 'rows' => $rows, 'attributes' => array('id' => $type .'dashboard-link-table')));
 
   drupal_add_tabledrag($type .'dashboard-link-table', 'order', 'sibling', $type .'dashboard-link-table-weight');
 
