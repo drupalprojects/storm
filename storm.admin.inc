@@ -409,7 +409,7 @@ function storm_attribute_form($attribute = NULL) {
 
   $form['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['group1']['domain'] = array(
@@ -422,8 +422,13 @@ function storm_attribute_form($attribute = NULL) {
   );
 
   $domains = array();
-  $r = db_query("SELECT DISTINCT(domain) d FROM {stormattribute} ORDER BY domain");
-  while ($i=db_fetch_object($r)) {
+  $result = db_select('stormattribute', 'sa')
+    ->fields('sa', array('domain'))
+    ->orderBy('domain', 'ASC')
+    ->distinct()
+    ->execute();
+
+  foreach ($result as $i) {
     $domains[$i->d] = $i->d;
   }
   $form['group1']['parent_domain'] = array(
@@ -436,7 +441,7 @@ function storm_attribute_form($attribute = NULL) {
 
   $form['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['group2']['akey'] = array(
@@ -464,7 +469,7 @@ function storm_attribute_form($attribute = NULL) {
 
   $form['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['group3']['isactive'] = array(
