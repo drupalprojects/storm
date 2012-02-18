@@ -301,12 +301,19 @@ function storm_attribute_add_submit($form, &$form_state) {
     db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
   }
 
-  db_query("INSERT INTO {stormattribute} (domain, akey, avalue, parent_domain, weight, isactive, isdefault)
-  VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)",
-  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'], $form_state['values']['parent_domain'],
-  $form_state['values']['weight'], $form_state['values']['isactive'], $form_state['values']['isdefault']);
+  $query = db_insert('stormattribute')
+    ->fields(array(
+      'domain' => $form_state['values']['domain'],
+      'akey' => $form_state['values']['akey'],
+      'avalue' => $form_state['values']['avalue'],
+      'parent_domain' => $form_state['values']['parent_domain'],
+      'weight' => $form_state['values']['weight'],
+      'isactive' => $form_state['values']['isactive'],
+      'isdefault' => $form_state['values']['isdefault'],
+    ))
+    ->execute();
 
-  if ($_REQUEST['destination']) {
+  if (isset($_REQUEST['destination'])) {
     $destination = urldecode($_REQUEST['destination']);
   }
   else {
@@ -429,7 +436,7 @@ function storm_attribute_form($attribute = NULL) {
     ->execute();
 
   foreach ($result as $i) {
-    $domains[$i->d] = $i->d;
+    $domains[$i->domain] = $i->domain;
   }
   $form['group1']['parent_domain'] = array(
     '#type' => 'select',
