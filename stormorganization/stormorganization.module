@@ -476,12 +476,19 @@ function stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
 function stormorganization_admin_settings() {
   $form = array();
 
-  $s = "SELECT n.nid, n.title FROM  {node} AS n INNER JOIN {stormorganization} AS sor ON sor.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s);
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('status', 1)
+    ->condition('type', 'stormorganization')
+    ->orderBy('title', 'ASC');
+
+  $query->addTag('node_access');
+//  $query->addTag('stormorganization_node_access'); // @TODO
+
+  $result = $query->execute();
+
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  while ($organization = $result->fetchObject()) {
     $organizations[$organization->nid] = $organization->title;
   }
 
@@ -499,7 +506,7 @@ function stormorganization_admin_settings() {
     $form['storm_organization_nid'] = array(
       '#type' => 'item',
       '#title' => t('Host organization'),
-      '#value' => t('There are no Storm Organizations in the system.') .'<br />'. l(t('Create a Storm Organization'), 'node/add/stormorganization'),
+      '#markup' => t('There are no Storm Organizations in the system.') .'<br />'. l(t('Create a Storm Organization'), 'node/add/stormorganization'),
     );
   }
   return system_settings_form($form);
