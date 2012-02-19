@@ -338,15 +338,23 @@ function storm_attribute_edit($form, $form_state, $aid) {
 
 function storm_attribute_edit_submit($form, &$form_state) {
   if ($form_state['values']['isdefault']) {
-    db_query("UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'", $form_state['values']['domain']);
+    $query = db_update('stormattribute')
+      ->fields(array('isdefault' => 0))
+      ->condition('domain', $form_state['values']['domain']);
   }
 
-  db_query("UPDATE {stormattribute} SET domain='%s', akey='%s', avalue='%s',
-  parent_domain='%s', weight=%d, isactive=%d, isdefault=%d WHERE aid=%d",
-  $form_state['values']['domain'], $form_state['values']['akey'], $form_state['values']['avalue'],
-  $form_state['values']['parent_domain'], $form_state['values']['weight'], $form_state['values']['isactive'], $form_state['values']['isdefault'], $form_state['values']['aid']);
+  $query_main = db_update('stormattribute')
+    ->fields(array(
+      'domain' => $form_state['values']['domain'],
+      'akey' => $form_state['values']['akey'],
+      'avalue' => $form_state['values']['avalue'],
+      'parent_domain' => $form_state['values']['parent_domain'],
+      'weight' => $form_state['values']['weight'],
+      'isactive' => $form_state['values']['isactive'],
+      'isdefault' => $form_state['values']['isdefault']))
+    ->condition('aid', $form_state['values']['aid']);
 
-  if ($_REQUEST['destination']) {
+  if (isset($_REQUEST['destination'])) {
     $destination = urldecode($_REQUEST['destination']);
   }
   else {
