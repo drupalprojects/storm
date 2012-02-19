@@ -430,11 +430,11 @@ function theme_storm_attribute_list($form) {
   $header = $form['form']['header']['#value'];
   unset($form['form']['header']);
 
-  if (isset($form['attributes'])) {
-    foreach (element_children($form['attributes']) as $key) {
-      $form['attributes'][$key]['attribute_weight_'. $key]['#attributes']['class'] = 'attribute-weight';
-      $domain = check_markup(drupal_render($form['attributes'][$key]['attribute_domain_'. $key]));
-      $isdefault = $form['attributes'][$key]['attribute_default_'. $key]['#default_value'];
+  if (isset($form['form']['attributes'])) {
+    foreach (element_children($form['form']['attributes']) as $key) {
+      $form['form']['attributes'][$key]['attribute_weight_'. $key]['#attributes']['class'] = array('attribute-weight');
+      $domain = check_markup($form['form']['attributes'][$key]['attribute_domain_'. $key]['#value']);
+      $isdefault = $form['form']['attributes'][$key]['attribute_default_'. $key]['#default_value'];
       if ($isdefault) {
         $ischecked = 'checked="checked"';
       }
@@ -445,18 +445,18 @@ function theme_storm_attribute_list($form) {
       $default_ctl = '<input type="radio" name="'. $domain_name .'" value="'. $key .'" '. $ischecked .'"/>';
       $data = array(
         $domain,
-        check_markup(drupal_render($form['attributes'][$key]['attribute_akey_'. $key])),
-        check_markup(drupal_render($form['attributes'][$key]['attribute_avalue_'. $key])),
-        drupal_render($form['attributes'][$key]['attribute_isactive_'. $key]),
+        check_markup($form['form']['attributes'][$key]['attribute_akey_'. $key]['#value']),
+        check_markup($form['form']['attributes'][$key]['attribute_avalue_'. $key]['#value']),
+        drupal_render($form['form']['attributes'][$key]['attribute_isactive_'. $key]),
         $default_ctl,
-        drupal_render($form['attributes'][$key]['attribute_weight_'. $key]),
+        drupal_render($form['form']['attributes'][$key]['attribute_weight_'. $key]),
         array(
-          'data' => drupal_render($form['attributes'][$key]['attribute_operations_'. $key]),
+          'data' => $form['form']['attributes'][$key]['attribute_operations_'. $key]['#value'],
           'class' => 'storm_list_operations',
         ),
       );
       $row['data'] = $data;
-      $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
+//      $row['class'] = empty($row['class']) ? array('draggable') : $row['class'][] = ' draggable';
       $rows[] = $row;
     }
   }
