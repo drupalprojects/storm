@@ -1161,7 +1161,7 @@ function storm_icon_l($icon, $path, $title, $permission='', $params=array(), $at
     $query .= $key .'='. urlencode($value);
   }
 
-  $o = l($icon, $path, array('attributes' => $attributes, 'query' => $query, 'html' => TRUE));
+  $o = l($icon, $path, array('attributes' => $attributes, 'html' => TRUE)); // @TODO add back query
   return $o;
 }
 
