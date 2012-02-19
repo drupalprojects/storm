@@ -369,7 +369,7 @@ function storm_attribute_form_delete($form, &$form_state) {
   drupal_goto('storm/attributes/delete/'. $form_state['values']['aid'], $destination);
 }
 
-function storm_attribute_delete($form_state, $aid) {
+function storm_attribute_delete($form, $form_state, $aid) {
   $destination = drupal_get_destination();
   if (array_key_exists('destination', $_REQUEST)) {
     $destination = $_REQUEST['destination'];
@@ -380,7 +380,7 @@ function storm_attribute_delete($form_state, $aid) {
   $form['aid'] = array('#type' => 'value', '#value' => $aid);
   $result = db_select('stormattribute', 'sa')
     ->fields('sa')
-    ->conditional('sa.aid', $aid)
+    ->condition('sa.aid', $aid)
     ->execute();
 
   $a = $result->fetchObject();
@@ -395,7 +395,10 @@ function storm_attribute_delete($form_state, $aid) {
 
 function storm_attribute_delete_submit($form, &$form_state) {
   if ($form_state['values']['aid']) {
-    db_query('DELETE FROM {stormattribute} WHERE aid=%d', $form_state['values']['aid']);
+    $query = db_delete('stormattribute')
+      ->condition('aid', $form_state['values']['aid'])
+      ->execute();
+
     drupal_set_message(t('Storm attribute deleted'));
     if ($form_state['values']['destination']) {
       $destination = $form_state['values']['destination'];
