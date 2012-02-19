@@ -340,7 +340,8 @@ function storm_attribute_edit_submit($form, &$form_state) {
   if ($form_state['values']['isdefault']) {
     $query = db_update('stormattribute')
       ->fields(array('isdefault' => 0))
-      ->condition('domain', $form_state['values']['domain']);
+      ->condition('domain', $form_state['values']['domain'])
+      ->execute();
   }
 
   $query_main = db_update('stormattribute')
@@ -352,7 +353,8 @@ function storm_attribute_edit_submit($form, &$form_state) {
       'weight' => $form_state['values']['weight'],
       'isactive' => $form_state['values']['isactive'],
       'isdefault' => $form_state['values']['isdefault']))
-    ->condition('aid', $form_state['values']['aid']);
+    ->condition('aid', $form_state['values']['aid'])
+    ->execute();
 
   if (isset($_REQUEST['destination'])) {
     $destination = urldecode($_REQUEST['destination']);
