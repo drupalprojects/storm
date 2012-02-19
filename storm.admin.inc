@@ -322,12 +322,17 @@ function storm_attribute_add_submit($form, &$form_state) {
   drupal_goto($destination);
 }
 
-function storm_attribute_edit($form_state, $aid) {
+function storm_attribute_edit($form, $form_state, $aid) {
   $attribute = array();
   if ($aid) {
-    $r = db_query("SELECT * FROM {stormattribute} WHERE aid=%d", $aid);
-    $attribute = db_fetch_object($r);
+    $result = db_select('stormattribute', 'sa')
+      ->fields('sa')
+      ->condition('sa.aid', $aid)
+      ->execute();
+
+    $attribute = $result->fetchObject();
   }
+
   return storm_attribute_form($attribute);
 }
 
