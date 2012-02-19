@@ -365,8 +365,12 @@ function storm_attribute_delete($form_state, $aid) {
   }
 
   $form['aid'] = array('#type' => 'value', '#value' => $aid);
-  $r = db_query("SELECT * FROM {stormattribute} WHERE aid=%d", $aid);
-  $a = db_fetch_object($r);
+  $result = db_select('stormattribute', 'sa')
+    ->fields('sa')
+    ->conditional('sa.aid', $aid)
+    ->execute();
+
+  $a = $result->fetchObject();
   $title = $a->domain .' : '. $a->avalue;
 
   return confirm_form($form,
