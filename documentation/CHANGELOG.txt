@@ -1,5 +1,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
+Version 6.x-2.x:
+- Bug #1397960 by kfritsche: Bug fix follow-up to Combine storm attribute module into the storm module.
+
 Version 6.x-2.0:
 - No changes since 6.x-2.0-rc1.
 
