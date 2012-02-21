@@ -182,7 +182,7 @@ function stormorganization_theme() {
   return array(
     'stormorganization_list' => array(
       'file'      => 'stormorganization.theme.inc',
-      'arguments' => array('header', 'organizations'),
+      'variables' => array('header', 'organizations'),
     ),
     'stormorganization_view' => array(
       'file'      => 'stormorganization.theme.inc',
