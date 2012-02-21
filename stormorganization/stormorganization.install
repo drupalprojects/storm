@@ -263,13 +263,19 @@ function stormorganization_install() {
     'ZW' => 'Zimbabwe',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight))
+        ->execute();
+
       $weight++;
     }
     $prevdomain = $domain;
