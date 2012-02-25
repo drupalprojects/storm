@@ -55,13 +55,19 @@ function stormproject_install() {
     'day' => 'Day',
   );
 
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
   $prevdomain = '';
   $weight = 0;
   foreach ($attributes as $domain => $attribute) {
     if ($domain != $prevdomain) $weight=0;
     foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
+      db_insert('stormattribute')
+        ->fields(array(
+          'domain' => $domain,
+          'akey' => $key,
+          'avalue' => $value,
+          'weight' => $weight,
+        ))
+        ->execute();
       $weight++;
     }
     $prevdomain = $domain;
@@ -114,145 +120,6 @@ function stormproject_schema() {
   return $schema;
 }
 
-function stormproject_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'projectpriority', array('type' => 'varchar', 'length' => 20));
-  return $ret;
-}
-
-function stormproject_update_2() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'datebegin', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormproject', 'dateend', array('type' => 'int', 'default' => 0));
-  return $ret;
-}
-
-function stormproject_update_3() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'durationunit', array('type' => 'varchar', 'length' => 20));
-  db_add_field($ret, 'stormproject', 'duration', array('type' => 'float', 'default' => 0));
-  return $ret;
-}
-
-/**
- * Add manager_nid, manager_title, assigned_nid and assigned_title fields.
- */
-function stormproject_update_6104() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'manager_nid', array('type' => 'int'));
-  db_add_field($ret, 'stormproject', 'manager_title', array('type' => 'varchar', 'length' => 100));
-  db_add_field($ret, 'stormproject', 'assigned_nid', array('type' => 'int'));
-  db_add_field($ret, 'stormproject', 'assigned_title', array('type' => 'varchar', 'length' => 100));
-  return $ret;
-}
-
-/**
- * Added billable and billed fields to stormproject table for issue 567558
- */
-function stormproject_update_6105() {
-  $ret = array();
-  db_add_field($ret, 'stormproject', 'billable', array('type' => 'int', 'default' => 0));
-  db_add_field($ret, 'stormproject', 'billed', array('type' => 'int', 'default' => 0));
-  return $ret;
-}
-
-
-/*
- * @function
- * Database update for issue #899970
- */
-function stormproject_update_6106() {
-  $ret = array();
-
-  db_change_field($ret, 'stormproject', 'projectstatus', 'projectstatus', array('type' => 'varchar', 'length' => 100));
-  db_change_field($ret, 'stormproject', 'projectcategory', 'projectcategory', array('type' => 'varchar', 'length' => 100));
-  db_change_field($ret, 'stormproject', 'projectpriority', 'projectpriority', array('type' => 'varchar', 'length' => 100));
-  db_change_field($ret, 'stormproject', 'pricemode', 'pricemode', array('type' => 'varchar', 'length' => 100));
-  db_change_field($ret, 'stormproject', 'currency', 'currency', array('type' => 'varchar', 'length' => 100));
-  db_change_field($ret, 'stormproject', 'durationunit', 'durationunit', array('type' => 'varchar', 'length' => 100));
-
-  return $ret;
-}
-
-/**
- * Improve primary keys and indexes
- */
-function stormproject_update_6201() {
-  $return = array();
-  db_drop_primary_key($return, 'stormproject');
-  db_add_primary_key($return, 'stormproject', array('vid'));
-  $indexes = array(
-    'nid'              => array('nid'),
-    'organization_nid' => array('organization_nid'),
-    'manager_nid'      => array('manager_nid'),
-    'assigned_nid'     => array('assigned_nid'),
-  );
-  foreach ($indexes as $name => $fields) {
-    db_add_index($return, 'stormproject', $name, $fields);
-  }
-  return $return;
-}
-
-/**
- * Move Storm Attribute module into component modules
- */
-function stormproject_update_6202() {
-  $attributes = array();
-
-  // Only run this update if was not previously run as part of the legacy stormattribute module
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 1) {
-    $attributes['Project priority'] = array(
-      '1-low' => 'low',
-      '2-normal' => 'normal',
-      '3-high' => 'high',
-      '4-urgent' => 'urgent'
-    );
-
-    $attributes['Project priority search'] = array(
-      '1-low' => 'low',
-      '2-normal' => 'normal',
-      '3-high' => 'high',
-      '4-urgent' => 'urgent'
-    );
-  }
-
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 4) {
-    $attributes['Duration unit'] = array(
-      'hour' => 'Hour',
-      'day' => 'Day',
-    );
-  }
-
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6) {
-    $attributes['Project status search'] = array('-' => 'all');
-    $attributes['Project priority search'] = array('-' => 'all');
-  }
-
-  $s = "INSERT INTO {stormattribute} (domain, akey, avalue, weight) VALUES ('%s', '%s', '%s', %d)";
-  $prevdomain = '';
-  $weight = 0;
-  foreach ($attributes as $domain => $attribute) {
-    if ($domain != $prevdomain) $weight=0;
-    foreach ($attribute as $key => $value) {
-      db_query($s, $domain, $key, $value, $weight);
-      $weight++;
-    }
-    $prevdomain = $domain;
-  }
-
-  $ret = array();
-
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6107) {
-    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'development', 'development', 0, 1)");
-    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', 'support', 'support', 0, 1)");
-  }
-
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6109) {
-    $ret[] = update_sql("INSERT INTO {stormattribute} (domain, akey, avalue, weight, isactive) VALUES ('Project category search', '-', 'all', 0, 1)");
-  }
-
-  if (db_result(db_query("SELECT schema_version FROM {system} WHERE name = 'stormattribute'")) < 6112) {
-    $ret[] = update_sql("UPDATE {stormproject} set pricemode='fixed_price' where pricemode='fixed_timetracking'");
-  }
-  return $ret;
+function stormproject_update_last_removed() {
+  return 6202;
 }
