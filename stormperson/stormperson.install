@@ -42,14 +42,9 @@ function stormperson_schema() {
 }
 
 /**
- * Improve primary keys and indexes
+ * @function
+ * Implements hook_update_last_removed()
  */
-function stormperson_update_6201() {
-  $return = array();
-  db_drop_primary_key($return, 'stormperson');
-  db_add_primary_key($return, 'stormperson', array('vid'));
-  db_add_index($return, 'stormperson', 'nid', array('nid'));
-  db_add_index($return, 'stormperson', 'organization_nid', array('organization_nid'));
-  db_add_index($return, 'stormperson', 'user_uid', array('user_uid'));
-  return $return;
+function stormperson_update_last_removed() {
+  return 6201;
 }
