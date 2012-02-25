@@ -287,7 +287,7 @@ function stormproject_theme() {
   return array(
     'stormproject_list' => array(
       'file'      => 'stormproject.theme.inc',
-      'arguments' => array('header', 'projects'),
+      'variables' => array('header', 'projects'),
     ),
     'stormproject_view' => array(
       'file'      => 'stormproject.theme.inc',
