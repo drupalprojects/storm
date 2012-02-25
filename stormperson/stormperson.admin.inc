@@ -43,7 +43,13 @@ function stormperson_list() {
   $args = array();
   $filterfields = array();
 
-  $s  = "SELECT n.*, spe.* FROM {node} AS n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' ";
+  $query = db_select('node', 'n')
+    ->fields('n')
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormperson');
+//INNER JOIN {stormperson} AS spe ON n.vid = spe.vid
+
+
   if (isset($_SESSION['stormperson_list_filter']['organization_nid']) && $_SESSION['stormperson_list_filter']['organization_nid'] != 0) {
     $where[] = 'spe.organization_nid=%d';
     $args[] = $_SESSION['stormperson_list_filter']['organization_nid'];
@@ -66,25 +72,27 @@ function stormperson_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_get_form('stormperson_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('stormperson_list_filter', $filterdesc));
 
-  $s = stormperson_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
+//  $s = stormperson_access_sql($s, $where);
+//  $s = db_rewrite_sql($s);
 
-  $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+//  $tablesort = tablesort_sql($header);
+//  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+
+  $result = $query->execute();
 
   $people = array();
-  while ($person = db_fetch_object($r)) {
+  foreach ($result as $person) {
     $people[] = $person;
   }
 
-  $o .= theme('stormperson_list', $header, $people);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('stormperson_list', array('header' => $header, 'people' => $people));
+//  $o .= theme('pager', NULL, $itemsperpage, 0);
+  return $o;
 }
 
-function stormperson_list_filter(&$form_state, $filterdesc = 'Filter') {
+function stormperson_list_filter($form, &$form_state, $filterdesc = 'Filter') {
   $organization_nid = isset($_SESSION['stormperson_list_filter']['organization_nid']) ? $_SESSION['stormperson_list_filter']['organization_nid'] : 0;
   $name = isset($_SESSION['stormperson_list_filter']['name']) ? $_SESSION['stormperson_list_filter']['name'] : '';
 
@@ -102,16 +110,23 @@ function stormperson_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => -20,
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormorganization} sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s);
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization')
+    ->orderBy('title', 'ASC');
+
+//  $s = stormorganization_access_sql($s);
+//  $s = db_rewrite_sql($s);
+
+  $result = $query->execute();
+
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($result as $organization) {
     $organizations[$organization->nid] = $organization->title;
   }
   $organizations = array(0 => t('All')) + $organizations;
@@ -131,7 +146,7 @@ function stormperson_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group2']['submit'] = array(
