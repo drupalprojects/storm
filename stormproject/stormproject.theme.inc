@@ -4,7 +4,10 @@
  * @file
  */
 
-function theme_stormproject_list($header, $projects) {
+function theme_stormproject_list($variables) {
+  $header = $variables['header'];
+  $projects = $variables['projects'];
+
   drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
 
   $rows = array();
@@ -21,8 +24,7 @@ function theme_stormproject_list($header, $projects) {
       ),
     );
   }
-  $o  = theme('table', $header, $rows);
-  return $o;
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 function theme_stormproject_view($node, $teaser = FALSE, $page = FALSE) {
