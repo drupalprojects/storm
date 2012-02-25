@@ -229,7 +229,7 @@ function stormperson_theme() {
   return array(
     'stormperson_list' => array(
       'file'      => 'stormperson.theme.inc',
-      'arguments' => array('header', 'people'),
+      'variables' => array('header', 'people'),
     ),
     'stormperson_people' => array(
       'file'      => 'stormperson.theme.inc',
