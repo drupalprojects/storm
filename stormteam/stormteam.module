@@ -514,8 +514,12 @@ function stormteam_list() {
     ),
   );
 
-  $s = "SELECT DISTINCT(n.nid), n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid
-    WHERE n.status=1 AND n.type='stormteam'";
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title', 'type'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormteam')
+    ->distinct();
+// nre.teaser FROM INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid";
 
   $where = array();
   $args = array();
@@ -541,16 +545,17 @@ function stormteam_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_get_form('stormteam_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('stormteam_list_filter', $filterdesc));
 
-  $s = stormteam_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
-  $tablesort = tablesort_sql($header);
+//  $s = stormteam_access_sql($s, $where);
+//  $s = db_rewrite_sql($s);
+//  $tablesort = tablesort_sql($header);
   // default count replacement doesn't work, because we need the distinct
-  $count_query = preg_replace('/SELECT.*?FROM /As', 'SELECT COUNT(DISTINCT(n.nid)) FROM ', $s);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, $count_query, $args);
+//  $count_query = preg_replace('/SELECT.*?FROM /As', 'SELECT COUNT(DISTINCT(n.nid)) FROM ', $s);
+//  $r = pager_query($s . $tablesort, $itemsperpage, 0, $count_query, $args);
+  $result = $query->execute();
   $rows = array();
-  while ($team = db_fetch_object($r)) {
+  foreach ($result as $team) {
     $rows[] = array(
       l($team->title, 'node/'. $team->nid),
       check_markup($team->teaser),
@@ -561,16 +566,16 @@ function stormteam_list() {
     );
   }
 
-  $o .= theme('table', $header, $rows);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('table', array('header' => $header, 'rows' => $rows));
+//  $o .= theme('pager', NULL, $itemsperpage, 0);
+  return $o;
 }
 
 /**
  * @function
  * Function to define form for setting Storm Team list filter.
  */
-function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
+function stormteam_list_filter($form, &$form_state, $filterdesc = 'Filter') {
   $name = $_SESSION['stormteam_list_filter']['name'];
 
   $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
@@ -598,7 +603,7 @@ function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group1']['submit'] = array(
