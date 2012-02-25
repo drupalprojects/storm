@@ -4,7 +4,10 @@
  * @file
  */
 
-function theme_stormperson_list($header, $people) {
+function theme_stormperson_list($variables) {
+  $header = $variables['header'];
+  $people = $variables['people'];
+
   $rows = array();
   foreach ($people as $person) {
     $n = new stdClass();
@@ -24,8 +27,7 @@ function theme_stormperson_list($header, $people) {
       ),
     );
   }
-  $o = theme('table', $header, $rows);
-  return $o;
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
