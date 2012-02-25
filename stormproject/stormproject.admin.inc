@@ -45,7 +45,11 @@ function stormproject_list() {
     ),
   );
 
-  $s  = "SELECT n.*, spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject'";
+  $query = db_select('node', 'n')
+    ->fields('n')
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormproject');
+//spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid
 
   $where = array();
   $args = array();
@@ -189,25 +193,26 @@ function stormproject_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_get_form('stormproject_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('stormproject_list_filter', $filterdesc));
 
-  $tablesort = tablesort_sql($header);
+//  $tablesort = tablesort_sql($header);
 
-  $s = stormproject_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+//  $s = stormproject_access_sql($s, $where);
+//  $s = db_rewrite_sql($s);
+//  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+  $result = $query->execute();
 
   $projects = array();
-  while ($project = db_fetch_object($r)) {
+  foreach ($result as $project) {
     $projects[] = $project;
   }
 
-  $o .= theme('stormproject_list', $header, $projects);
-  $o .= theme('pager', NULL, 10, 0);
-  print theme('page', $o);
+  $o .= theme('stormproject_list', array('header' => $header, 'projects' => $projects));
+//  $o .= theme('pager', NULL, 10, 0);
+  return $o;
 }
 
-function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
+function stormproject_list_filter($form, &$form_state, $filterdesc = 'Filter') {
   $organization_nid = isset($_SESSION['stormproject_list_filter']['organization_nid']) ? $_SESSION['stormproject_list_filter']['organization_nid'] : 0;
 
   $category_list = storm_attributes_bydomain('project category search');
@@ -238,13 +243,19 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
         '#collapsed' => TRUE,
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title ";
-  $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s);
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization')
+    ->orderBy('title', 'ASC');
+//INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid
+
+//  $s = stormorganization_access_sql($s);
+//  $s = db_rewrite_sql($s);
+  $result = $query->execute();
 
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($result as $organization) {
     $organizations[$organization->nid] = $organization->title;
   }
   $form['filter']['organization_nid'] = array(
@@ -256,7 +267,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group1']['projectcategory'] = array(
@@ -282,7 +293,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group2']['datebeginfrom'] = array(
@@ -301,7 +312,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group3']['dateendfrom'] = array(
@@ -320,11 +331,11 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group4'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   // ASSIGNED TO
-  $options = storm_get_assignment_options(0, 0);
+//  $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
@@ -348,7 +359,7 @@ function stormproject_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group5'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group5']['itemsperpage'] = array(
