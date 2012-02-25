@@ -35,7 +35,11 @@ function stormorganization_list() {
     ),
   );
 
-  $s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization'";
+  $query = db_select('node', 'n')
+    ->fields('n')
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization');
+  //INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid 
 
   $where = array();
   $args = array();
@@ -98,24 +102,25 @@ function stormorganization_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_get_form('stormorganization_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('stormorganization_list_filter', $filterdesc));
 
-  $s = stormorganization_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
+//  $s = stormorganization_access_sql($s, $where);
+//  $s = db_rewrite_sql($s);
 
-  $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+//  $tablesort = tablesort_sql($header);
+//  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  $result = $query->execute();
+  foreach ($result as $organization) {
     $organizations[] = $organization;
   }
 
-  $o .= theme('stormorganization_list', $header, $organizations);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('stormorganization_list', array('header' => $header, 'organizations' => $organizations));
+//  $o .= theme('pager', NULL, $itemsperpage, 0);
+  return $o;
 }
 
-function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
+function stormorganization_list_filter($form, &$form_state, $filterdesc = 'Filter') {
   $country_list = storm_attributes_bydomain('Country');
   $country = isset($_SESSION['stormorganization_list_filter']['country']) ? $_SESSION['stormorganization_list_filter']['country'] : '-';
   $_SESSION['stormorganization_list_filter']['country'] = $country;
@@ -175,7 +180,7 @@ function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group0'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $options = array(
@@ -206,7 +211,7 @@ function stormorganization_list_filter(&$form_state, $filterdesc = 'Filter') {
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group1']['submit'] = array(
