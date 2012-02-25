@@ -1653,10 +1653,18 @@ function storm_attributes_bydomain($domain) {
 
   if (array_key_exists($domain, $attributes_cache)) return $attributes_cache[$domain];
 
-  $s = "SELECT * FROM {stormattribute} WHERE LOWER(domain) LIKE LOWER('%s') AND isactive=1 ORDER BY weight, avalue";
-  $r = db_query($s, $domain);
+  $query = db_select('stormattribute', 'sa')
+    ->fields('sa')
+    ->condition('sa.isactive', 1)
+    ->condition('sa.domain', $domain, 'LIKE')
+//    ->where("lower(domain) like lower(':domain')", array(':domain' => $domain))
+    ->orderBy('weight', 'ASC')
+    ->orderBy('avalue', 'ASC');
+
+  $result = $query->execute();
+
   $attributes['values'] = array();
-  while ($attribute = db_fetch_object($r)) {
+  foreach ($result as $attribute) {
     // The variable is deliberately passed through t() for translatability
     $attributes['values'][$attribute->akey] = t($attribute->avalue);
     if ($attribute->isdefault) {
@@ -1669,6 +1677,7 @@ function storm_attributes_bydomain($domain) {
   }
 
   $attributes_cache[$domain] = $attributes;
+
   return $attributes;
 }
 
