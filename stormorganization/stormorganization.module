@@ -448,29 +448,26 @@ function stormorganization_update($node) {
   }
 }
 
-function stormorganization_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if (!isset($node->nid)) {
-        $node->iscustomer = 1;
-        $node->isprovider = 0;
-        $node->isactive = 1;
+function stormorganization_node_prepare($node) {
+  if (!isset($node->nid)) {
+    $node->iscustomer = 1;
+    $node->isprovider = 0;
+    $node->isactive = 1;
 
-        $country_list = storm_attributes_bydomain('Country');
-        $node->country = $country_list['default'];
+    $country_list = storm_attributes_bydomain('Country');
+    $node->country = $country_list['default'];
 
-        $currency_list = storm_attributes_bydomain('Currency');
-        $node->currency = $currency_list['default'];
+    $currency_list = storm_attributes_bydomain('Currency');
+    $node->currency = $currency_list['default'];
 
-        $pricemode_list = storm_attributes_bydomain('Price mode');
-        $node->pricemode = $pricemode_list['default'];
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
-      break;
+    $pricemode_list = storm_attributes_bydomain('Price mode');
+    $node->pricemode = $pricemode_list['default'];
   }
+}
+
+function stormorganization_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
 }
 
 function stormorganization_delete($node) {
