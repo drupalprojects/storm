@@ -15,18 +15,38 @@ function stormorganization_help($path, $arg) {
   return $output;
 }
 
-function stormorganization_perm() {
+function stormorganization_permission() {
   return array(
-    'Storm organization: access',
-    'Storm organization: add',
-    'Storm organization: delete all',
-    'Storm organization: delete own',
-    'Storm organization: edit all',
-    'Storm organization: edit own',
-    'Storm organization: edit belonged',
-    'Storm organization: view all',
-    'Storm organization: view own',
-    'Storm organization: view belonged',
+    'Storm organization: access' => array(
+      'title' => t('Access Storm Organization'),
+    ),
+    'Storm organization: add' => array(
+      'title' => t('Add Storm Organization'),
+    ),
+    'Storm organization: delete all' => array(
+      'title' => t('Delete Any Storm Organization'),
+    ),
+    'Storm organization: delete own' => array(
+      'title' => t('Delete Authored Storm Organizations'),
+    ),
+    'Storm organization: edit all' => array(
+      'title' => t('Edit Any Storm Organization'),
+    ),
+    'Storm organization: edit own' => array(
+      'title' => t('Edit Authored Storm Organizations'),
+    ),
+    'Storm organization: edit belonged' => array(
+      'title' => t('Edit Belonged Storm Organization'),
+    ),
+    'Storm organization: view all' => array(
+      'title' => t('View Any Storm Organization'),
+    ),
+    'Storm organization: view own' => array(
+      'title' => t('View Authored Storm Organizations'),
+    ),
+    'Storm organization: view belonged' => array(
+      'title' => t('View Belonged Storm Organization'),
+    ),
   );
 }
 
