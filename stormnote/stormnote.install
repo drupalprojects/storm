@@ -41,33 +41,8 @@ function stormnote_schema() {
 
 /**
  * @function
- * Update function to remove task_stepno field from stormnote table
+ * Implements hook_update_last_removed()
  */
-function stormnote_update_6101() {
-  $ret = array();
-
-  db_drop_field($ret, 'stormnote', 'task_stepno');
-
-  return $ret;
+function stormnote_update_last_removed() {
+  return 6201;
 }
-
-/**
- * Improve primary keys and indexes
- */
-function stormnote_update_6201() {
-  $return = array();
-  db_drop_primary_key($return, 'stormnote');
-  db_add_primary_key($return, 'stormnote', array('vid'));
-
-  $indexes = array(
-    'nid'               => array('nid'),
-    'organization_nid'  => array('organization_nid'),
-    'project_nid'       => array('project_nid'),
-    'task_nid'          => array('task_nid'),
-  );
-  foreach ($indexes as $name => $fields) {
-    db_add_index($return, 'stormnote', $name, $fields);
-  }
-  return $return;
-}
-
