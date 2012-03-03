@@ -51,37 +51,6 @@ function stormtimetracking_schema() {
   return $schema;
 }
 
-function stormtimetracking_update_1() {
-  $ret = array();
-  db_add_field($ret, 'stormtimetracking', 'billable', array('type' => 'int'));
-  return $ret;
-}
-
-function stormtimetracking_update_6102() {
-  $ret = array();
-  db_add_field($ret, 'stormtimetracking', 'billed', array('type' => 'int'));
-  db_change_field($ret, 'stormtimetracking', 'duration', 'billing_duration', array('type' => 'float'));
-  db_add_field($ret, 'stormtimetracking', 'duration', array('type' => 'float'));
-  return $ret;
-}
-
-/**
- * Improve primary keys and indexes
- */
-function stormtimetracking_update_6201() {
-  $return = array();
-  db_drop_primary_key($return, 'stormtimetracking');
-  db_add_primary_key($return, 'stormtimetracking', array('vid'));
-  $indexes = array(
-    'nid'               => array('nid'),
-    'organization_nid'  => array('organization_nid'),
-    'project_nid'       => array('project_nid'),
-    'task_nid'          => array('task_nid'),
-    'ticket_nid'        => array('ticket_nid'),
-    'trackingdate'      => array('trackingdate'),
-  );
-  foreach ($indexes as $name => $fields) {
-    db_add_index($return, 'stormtimetracking', $name, $fields);
-  }
-  return $return;
+function stormtimetracking_update_last_removed() {
+  return 6201;
 }
