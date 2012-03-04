@@ -348,9 +348,9 @@ function stormorganization_form(&$node) {
     '#default_value' => isset($node->www) ? $node->www : NULL,
   );
 
-  $form['group4']['email'] = array(
+  $form['group4']['mail'] = array(
     '#type' => 'textfield',
-    '#title' => t('Email'),
+    '#title' => t('E-mail'),
     '#size' => 30,
     '#default_value' => isset($node->email) ? $node->email : NULL,
   );
@@ -494,7 +494,7 @@ function stormorganization_load($nodes) {
       ->execute();
     $record = $result->fetchAssoc();
 
-    foreach($record as $key => $value) {
+    foreach ($record as $key => $value) {
       $node->$key = $value;
     }
 
