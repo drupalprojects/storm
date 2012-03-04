@@ -35,11 +35,13 @@ function stormorganization_list() {
     ),
   );
 
-  $query = db_select('node', 'n')
+  $query = db_select('node', 'n');
+  $query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+  $query
     ->fields('n')
+    ->fields('sor', array('country'))
     ->condition('n.status', 1)
     ->condition('n.type', 'stormorganization');
-  //INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid 
 
   $where = array();
   $args = array();
