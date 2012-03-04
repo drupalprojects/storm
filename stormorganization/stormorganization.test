@@ -37,7 +37,7 @@ class StormorganizationTestCase extends DrupalWebTestCase {
   public function testStormorganizationCreate() {
     $edit = array(
       'title' => $this->randomName(32),
-      'body' => $this->randomName(64),
+//      'body' => $this->randomName(64),
     );
     $this->drupalPost('node/add/stormorganization', $edit, t('Save'));
     $this->assertText(t('Organization @title has been created.', array('@title' => $edit['title'])));
