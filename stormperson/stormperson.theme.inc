@@ -63,7 +63,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group3']['email'] = array(
     '#prefix' => '<div id="email">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Email'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#value' => theme('storm_view_item', t('E-mail'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
     '#weight' => 1,
   );
 
