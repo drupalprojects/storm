@@ -122,10 +122,10 @@ function theme_stormorganization_view($variables) {
     '#weight' => 2,
   );
 
-  $node->content['group4']['email'] = array(
-    '#prefix' => '<div class="email">',
+  $node->content['group4']['mail'] = array(
+    '#prefix' => '<div class="mail">',
     '#suffix' => '</div>',
-    '#markup' => theme('storm_view_item', array('label' => t('Email'), 'value' => l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)))),
+    '#markup' => theme('storm_view_item', array('label' => t('E-mail'), 'value' => l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)))),
     '#weight' => 3,
   );
 
