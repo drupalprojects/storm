@@ -416,17 +416,28 @@ function stormorganization_form(&$node) {
 }
 
 function stormorganization_insert($node) {
-  db_query("INSERT INTO {stormorganization}
-           (vid, nid, country, www, phone, email, currency,
-           provstate, zip, city, address, taxid, orglanguage, iscustomer, isprovider, isactive, pricemode, price
-           ) VALUES
-           (%d, %d, '%s', '%s', '%s', '%s', '%s',
-           '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %f
-           )",
-            $node->vid, $node->nid, $node->country, $node->www, $node->phone, $node->email, $node->currency,
-            $node->provstate, $node->zip, $node->city, $node->address, $node->taxid,
-            $node->orglanguage, $node->iscustomer, $node->isprovider, $node->isactive, $node->pricemode, $node->price
-            );
+  db_insert('stormorganization')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'country' => $node->country,
+      'www' => $node->www,
+      'phone' => $node->phone,
+      'email' => $node->email,
+      'currency' => $node->currency,
+      'provstate' => $node->provstate,
+      'zip' => $node->zip,
+      'city' => $node->city,
+      'address' =>$node->address,
+      'taxid' => $node->taxid,
+      'orglanguage' => $node->orglanguage,
+      'iscustomer' => $node->iscustomer,
+      'isprovider' => $node->isprovider,
+      'isactive' => $node->isactive,
+      'pricemode' => $node->pricemode,
+//      'price' => $node->price,
+    ))
+    ->execute();
 }
 
 function stormorganization_update($node) {
