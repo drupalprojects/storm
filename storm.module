@@ -185,7 +185,7 @@ function storm_theme() {
     ),
     'storm_view_item' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array('label', 'value'),
+      'variables' => array('label', 'value'),
     ),
     'storm_dashboard' => array(
       'file'      => 'storm.theme.inc',
