@@ -3,3 +3,5 @@ description = "Allows storing of organizations for use within Storm"
 dependencies[] = storm
 package = Storm
 core = 7.x
+configure = admin/config/storm/stormorganization
+files[] = stormorganization.test
