@@ -428,7 +428,7 @@ function stormorganization_insert($node) {
       'provstate' => $node->provstate,
       'zip' => $node->zip,
       'city' => $node->city,
-      'address' =>$node->address,
+      'address' => $node->address,
       'taxid' => $node->taxid,
       'orglanguage' => $node->orglanguage,
       'iscustomer' => $node->iscustomer,
