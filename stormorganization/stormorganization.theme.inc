@@ -31,10 +31,11 @@ function theme_stormorganization_list($variables) {
   return $o;
 }
 
-function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
+function theme_stormorganization_view($variables) {
+  $node = $variables['node'];
+
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
 
-  $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
   $node->content['links'] = array(
@@ -43,6 +44,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => -25,
   );
 
+/*
   $node->content['links']['expenses'] = theme('storm_link', 'stormorganization', 'stormexpense', $node->nid, $l_pos++);
   $node->content['links']['invoices'] = theme('storm_link', 'stormorganization', 'storminvoice', $node->nid, $l_pos++);
   $node->content['links']['notes'] = theme('storm_link', 'stormorganization', 'stormnote', $node->nid, $l_pos++);
@@ -51,6 +53,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $l_pos++);
   $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $l_pos++);
+*/
 
   $node->content['group2'] = array(
     '#prefix' => '<div class="stormfields">',
@@ -67,35 +70,35 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group3']['address'] = array(
     '#prefix' => '<div class="address">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Address'), check_plain($node->address)),
+    '#markup' => theme('storm_view_item', array('label' => t('Address'), 'value' => check_plain($node->address))),
     '#weight' => 1,
   );
 
   $node->content['group3']['city'] = array(
     '#prefix' => '<div class="city">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('City'), check_plain($node->city)),
+    '#markup' => theme('storm_view_item', array('label' => t('City'), 'value' => check_plain($node->city))),
     '#weight' => 2,
   );
 
   $node->content['group3']['provstate'] = array(
     '#prefix' => '<div class="provstate">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Province / State'), check_plain($node->provstate)),
+    '#markup' => theme('storm_view_item', array('label' => t('Province / State'), 'value' => check_plain($node->provstate))),
     '#weight' => 3,
   );
 
   $node->content['group3'] ['country'] = array(
     '#prefix' => '<div class="country">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Country'), check_plain($node->country)),
+    '#markup' => theme('storm_view_item', array('label' => t('Country'), 'value' => check_plain($node->country))),
     '#weight' => 4,
   );
 
   $node->content['group3'] ['zip'] = array(
     '#prefix' => '<div class="zip">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Zip'), check_plain($node->zip)),
+    '#markup' => theme('storm_view_item', array('label' => t('Zip'), 'value' => check_plain($node->zip))),
     '#weight' => 5,
   );
 
@@ -108,21 +111,21 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group4']['phone'] = array(
     '#prefix' => '<div class="phone">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Phone'), check_plain($node->phone)),
+    '#markup' => theme('storm_view_item', array('label' => t('Phone'), 'value' => check_plain($node->phone))),
     '#weight' => 1,
   );
 
   $node->content['group4']['www'] = array(
     '#prefix' => '<div class="www">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('WWW'), l($node->www, 'http://'. $node->www, array('absolute' => TRUE))),
+    '#markup' => theme('storm_view_item', array('label' => t('WWW'), 'value' => l($node->www, 'http://'. $node->www, array('absolute' => TRUE)))),
     '#weight' => 2,
   );
 
   $node->content['group4']['email'] = array(
     '#prefix' => '<div class="email">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Email'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#markup' => theme('storm_view_item', array('label' => t('Email'), 'value' => l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)))),
     '#weight' => 3,
   );
 
@@ -135,7 +138,7 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['currency'] = array(
     '#prefix' => '<div class="currency">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Currency'), check_plain($node->currency)),
+    '#markup' => theme('storm_view_item', array('label' => t('Currency'), 'value' => check_plain($node->currency))),
     '#weight' => 1,
   );
 
@@ -148,21 +151,21 @@ function theme_stormorganization_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['language'] = array(
     '#prefix' => '<div class="language">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Language'), check_plain($languages_options[$node->orglanguage])),
+    '#markup' => theme('storm_view_item', array('label' => t('Language'), 'value' => check_plain($languages_options[$node->orglanguage]))),
     '#weight' => 2,
   );
 
   $node->content['group5'] ['taxid'] = array(
     '#prefix' => '<div class="taxid">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Tax ID'), check_plain($node->taxid)),
+    '#markup' => theme('storm_view_item', array('label' => t('Tax ID'), 'value' => check_plain($node->taxid))),
     '#weight' => 3,
   );
 
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Note'), $node->content['body']['#value']),
+    '#markup' => theme('storm_view_item', array('label' => t('Note'), 'value' => $node->content['body']['#value'])),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
   );
 
