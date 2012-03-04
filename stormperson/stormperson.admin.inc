@@ -43,12 +43,12 @@ function stormperson_list() {
   $args = array();
   $filterfields = array();
 
-  $query = db_select('node', 'n')
+  $query = db_select('node', 'n');
+  $query->join('stormperson', 'spe', 'n.vid = spe.vid');
+  $query
     ->fields('n')
     ->condition('n.status', 1)
     ->condition('n.type', 'stormperson');
-//INNER JOIN {stormperson} AS spe ON n.vid = spe.vid
-
 
   if (isset($_SESSION['stormperson_list_filter']['organization_nid']) && $_SESSION['stormperson_list_filter']['organization_nid'] != 0) {
     $where[] = 'spe.organization_nid=%d';
