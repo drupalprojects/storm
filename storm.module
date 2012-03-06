@@ -1099,7 +1099,7 @@ function storm_icon_edit($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
   $af = $type .'_access';
-  if (!$af('update', $item, $user)) return '';
+//  if (!$af('update', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_edit', $path, t('Edit'), '', $params, $attributes);
 }
@@ -1108,7 +1108,7 @@ function storm_icon_delete($path, $item, $params=array()) {
   global $user;
   $type = $item->type;
   $af = $type .'_access';
-  if (!$af('delete', $item, $user)) return '';
+//  if (!$af('delete', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_delete', $path, t('Delete'), '', $params, $attributes);
 }
