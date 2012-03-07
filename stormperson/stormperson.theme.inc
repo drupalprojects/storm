@@ -19,7 +19,7 @@ function theme_stormperson_list($variables) {
 
     $rows[] = array(
       l($person->organization_title, 'node/'. $person->organization_nid),
-      l($person->title, 'node/'. $person->nid) . theme('mark', node_mark($person->nid, $person->changed)),
+      l($person->title, 'node/'. $person->nid) . theme('mark', array('type' => node_mark($person->nid, $person->changed))),
       l($person->email, 'mailto:'. $person->email),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
