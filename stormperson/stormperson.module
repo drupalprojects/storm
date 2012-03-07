@@ -317,15 +317,23 @@ function stormperson_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
-//  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+  $query = db_select('node', 'n');
+  $query->join('stormorganization', 'sor', 'sor.vid = n.vid');
+  $result = $query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization')
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
 //  $s = stormorganization_access_sql($s);
 //  $s = db_rewrite_sql($s);
 //  $r = db_query($s);
   $organizations = array();
-//  while ($organization = db_fetch_object($r)) {
-//    $organizations[$organization->nid] = $organization->title;
-//    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
-//  }
+  foreach($result as $organization) {
+    $organizations[$organization->nid] = $organization->title;
+    if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
+  }
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
     '#title' => t('Organization'),
