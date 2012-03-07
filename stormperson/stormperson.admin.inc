@@ -47,6 +47,7 @@ function stormperson_list() {
   $query->join('stormperson', 'spe', 'n.vid = spe.vid');
   $query
     ->fields('n')
+    ->fields('spe', array('user_uid', 'organization_nid', 'organization_title'))
     ->condition('n.status', 1)
     ->condition('n.type', 'stormperson');
 
