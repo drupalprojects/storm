@@ -358,7 +358,7 @@ function stormperson_form(&$node) {
 
   $form['group3']['email'] = array(
     '#type' => 'textfield',
-    '#title' => t('Email'),
+    '#title' => t('E-mail'),
     '#size' => 30,
     '#default_value' => isset($node->email) ? $node->email : '',
   );
@@ -531,7 +531,7 @@ function stormperson_load($nodes) {
     foreach ($record as $key => $value) {
       $node->$key = $value;
     }
-  
+
     $ass_user = user_load(array('uid' => $node->user_uid));
     $node->user_name = $ass_user->name;
     $node->title_old = $node->title;
