@@ -517,7 +517,10 @@ function stormperson_nodeapi(&$node, $op, $teaser, $page) {
 
 function stormperson_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormperson} WHERE nid = %d', $node->nid);
+  db_delete('stormperson')
+    ->condition('nid', $node->nid)
+    ->execute();
+
   global $user;
   if ($user->uid == $node->user_uid) {
     $user->stormperson_nid = -1;
@@ -537,7 +540,7 @@ function stormperson_load($nodes) {
       $node->$key = $value;
     }
 
-    $ass_user = user_load(array('uid' => $node->user_uid));
+    $ass_user = user_load($node->user_uid);
     $node->user_name = $ass_user->name;
     $node->title_old = $node->title;
   }
