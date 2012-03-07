@@ -30,10 +30,10 @@ function theme_stormperson_list($variables) {
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
-function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
-  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+function theme_stormperson_view($variables) {
+  $node = $variables['node'];
 
-  $node = node_prepare($node, $teaser);
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
 
   $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -50,7 +50,7 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['organization'] = array(
     '#prefix' => '<div id="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#markup' => theme('storm_view_item', array('label' => t('Organization'), 'value' => l($node->organization_title, 'node/'. $node->organization_nid))),
     '#weight' => 1,
   );
 
@@ -63,14 +63,14 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group3']['email'] = array(
     '#prefix' => '<div id="email">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('E-mail'), l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE))),
+    '#markup' => theme('storm_view_item', array('label' => t('E-mail'), 'value' => l($node->email, 'mailto:'. $node->email, array('absolute' => TRUE)))),
     '#weight' => 1,
   );
 
   $node->content['group3']['www'] = array(
     '#prefix' => '<div id="www">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('WWW'), l($node->www, $node->www, array('absolute' => TRUE))),
+    '#markup' => theme('storm_view_item', array('label' => t('WWW'), 'value' => l($node->www, $node->www, array('absolute' => TRUE)))),
     '#weight' => 2,
   );
 
@@ -83,21 +83,21 @@ function theme_stormperson_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group4']['phone'] = array(
     '#prefix' => '<div id="phone">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Phone'), check_plain($node->phone)),
+    '#markup' => theme('storm_view_item', array('label' => t('Phone'), 'value' => check_plain($node->phone))),
     '#weight' => 1,
   );
 
   $node->content['group4']['im'] = array(
     '#prefix' => '<div id="im">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('IM'), check_plain($node->im)),
+    '#markup' => theme('storm_view_item', array('label' => t('IM'), 'value' => check_plain($node->im))),
     '#weight' => 2,
   );
 
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
+    '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => $node->content['body']['#value'])),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
   );
 

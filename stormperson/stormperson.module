@@ -237,7 +237,7 @@ function stormperson_theme() {
     ),
     'stormperson_view' => array(
       'file'      => 'stormperson.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
+      'variables' => array('node', 'view_mode'),
     ),
   );
 }
@@ -538,13 +538,13 @@ function stormperson_load($nodes) {
   }
 }
 
-function stormperson_view($node, $teaser = FALSE, $page = FALSE) {
+function stormperson_view($node, $view_mode) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('People'), 'storm/people');
   drupal_set_breadcrumb($breadcrumb);
 
-  return theme('stormperson_view', $node, $teaser, $page);
+  return theme('stormperson_view', array('node' => $node, 'view_mode' => $view_mode));
 }
 
 function _stormperson_people_access($node=NULL) {
