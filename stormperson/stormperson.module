@@ -456,15 +456,19 @@ function stormperson_update($node) {
   else {
     _stormperson_beforesave($node);
 
-    db_query("UPDATE {stormperson} SET
-      organization_nid=%d, organization_title='%s',
-      prefix='%s', email='%s', www='%s',
-      phone='%s', im='%s', user_uid=%d
-      WHERE vid = %d",
-      $node->organization_nid, $node->organization_title,
-      $node->prefix, $node->email, $node->www,
-      $node->phone, $node->im, $node->user_uid,
-      $node->vid);
+    db_update('stormperson')
+      ->fields(array(
+        'organization_nid' => $node->organization_nid,
+        'organization_title' => $node->organization_title,
+        'prefix' => $node->prefix,
+        'email' => $node->email,
+        'www' => $node->www,
+        'phone' => $node->phone,
+        'im' => $node->im,
+        'user_uid' => $node->user_uid,
+      ))
+      ->condition('vid', $node->vid)
+      ->execute();
 
     _stormperson_aftersave($node);
 
@@ -489,7 +493,8 @@ function _stormperson_beforesave(&$node) {
     ->condition('n.nid', $node->organization_nid)
     ->execute();
 
-  $record = $result->fetchCol();
+  $record = $result->fetchAssoc();
+
   $node->organization_title = $record['title'];
 }
 
