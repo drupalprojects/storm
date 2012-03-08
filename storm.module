@@ -1341,7 +1341,7 @@ function storm_form_alter(&$form, $form_state, $form_id) {
     }
   }
 }
-*/
+ */
 
 /**
  * Get a list of people and teams for select boxes
