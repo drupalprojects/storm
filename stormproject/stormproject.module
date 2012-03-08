@@ -22,27 +22,61 @@ function stormproject_help($path, $arg) {
 
 /**
  * @function
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
-function stormproject_perm() {
+function stormproject_permission() {
   return array(
-    'Storm project: access',
-    'Storm project: add',
-    'Storm project: delete all',
-    'Storm project: delete own',
-    'Storm project: delete of user organization',
-    'Storm project: delete if project manager',
-    'Storm project: delete if assigned to project',
-    'Storm project: edit all',
-    'Storm project: edit own',
-    'Storm project: edit of user organization',
-    'Storm project: edit if project manager',
-    'Storm project: edit if assigned to project',
-    'Storm project: view all',
-    'Storm project: view own',
-    'Storm project: view of user organization',
-    'Storm project: view if project manager',
-    'Storm project: view if assigned to project',
+    'Storm project: access' => array(
+      'title' => t('Access Storm Project Listings'),
+    ),
+    'Storm project: add' => array(
+      'title' => t('Add Storm Projects'),
+    ),
+    'Storm project: delete all' => array(
+      'title' => t('Delete Any Storm Project'),
+    ),
+    'Storm project: delete own' => array(
+      'title' => t('Delete Authored Storm Projects'),
+    ),
+    'Storm project: delete of user organization' => array(
+      'title' => t('Delete Storm Projects of user organization'),
+    ),
+    'Storm project: delete if project manager' => array(
+      'title' => t('Delete Storm Project if project manager'),
+    ),
+    'Storm project: delete if assigned to project' => array(
+      'title' => t('Delete Storm Project if assigned to project'),
+    ),
+    'Storm project: edit all' => array(
+      'title' => t('Edit Any Storm Project'),
+    ),
+    'Storm project: edit own' => array(
+      'title' => t('Edit Authored Storm Projects'),
+    ),
+    'Storm project: edit of user organization' => array(
+      'title' => t('Edit Storm Project of user organization'),
+    ),
+    'Storm project: edit if project manager' => array(
+      'title' => t('Edit Storm Project if project manager'),
+    ),
+    'Storm project: edit if assigned to project' => array(
+      'title' => t('Edit Storm Project if assigned to project'),
+    ),
+    'Storm project: view all' => array(
+      'title' => t('View Any Storm Project'),
+    ),
+    'Storm project: view own' => array(
+      'title' => t('View Authored Storm Project'),
+    ),
+    'Storm project: view of user organization' => array(
+      'title' => t('View Storm Project of user organization'),
+    ),
+    'Storm project: view if project manager' => array(
+      'title' => t('View Storm Project if project manager'),
+    ),
+    'Storm project: view if assigned to project' => array(
+      'title' => t('View Storm Project if assigned to project'),
+    ),
   );
 }
 
