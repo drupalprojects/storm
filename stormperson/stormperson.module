@@ -40,22 +40,50 @@ function stormperson_init() {
   drupal_add_js(drupal_get_path('module', 'stormperson') .'/stormperson.js', 'module', 'header', FALSE);
 }
 
-function stormperson_perm() {
+function stormperson_permission() {
   return array(
-    'Storm person: access',
-    'Storm person: add',
-    'Storm person: delete all',
-    'Storm person: delete own',
-    'Storm person: delete of user organization',
-    'Storm person: delete when linked to own user account',
-    'Storm person: edit all',
-    'Storm person: edit own',
-    'Storm person: edit of user organization',
-    'Storm person: edit when linked to own user account',
-    'Storm person: view all',
-    'Storm person: view own',
-    'Storm person: view of user organization',
-    'Storm person: view when linked to own user account',
+    'Storm person: access' => array(
+      'title' => t('Access Storm Person'),
+    ),
+    'Storm person: add' => array(
+      'title' => t('Add Storm Person'),
+    ),
+    'Storm person: delete all' => array(
+      'title' => t('Delete Any Storm Person'),
+    ),
+    'Storm person: delete own' => array(
+      'title' => t('Delete Authored Storm Person'),
+    ),
+    'Storm person: delete of user organization' => array(
+      'title' => t('Delete Storm Persons in user organization'),
+    ),
+    'Storm person: delete when linked to own user account' => array(
+      'title' => t('Delete Storm Person linked to own user account'),
+    ),
+    'Storm person: edit all' => array(
+      'title' => t('Edit Any Storm Person'),
+    ),
+    'Storm person: edit own' => array(
+      'title' => t('Edit Authored Storm Person'),
+    ),
+    'Storm person: edit of user organization' => array(
+      'title' => t('Edit Storm Persons in user organization'),
+    ),
+    'Storm person: edit when linked to own user account' => array(
+      'title' => t('Edit Storm Person linked to own user account'),
+    ),
+    'Storm person: view all' => array(
+      'title' => t('View Any Storm Person'),
+    ),
+    'Storm person: view own' => array(
+      'title' => t('View Authored Storm Person'),
+    ),
+    'Storm person: view of user organization' => array(
+      'title' => t('View Storm Persons in user organization'),
+    ),
+    'Storm person: view when linked to own user account' => array(
+      'title' => t('View Storm Person linked to own user account'),
+    ),
   );
 }
 
