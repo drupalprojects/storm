@@ -53,7 +53,7 @@ function theme_stormorganization_view($variables) {
   $node->content['links']['tasks'] = theme('storm_link', 'stormorganization', 'stormtask', $node->nid, $l_pos++);
   $node->content['links']['tickets'] = theme('storm_link', 'stormorganization', 'stormticket', $node->nid, $l_pos++);
   $node->content['links']['timetrackings'] = theme('storm_link', 'stormorganization', 'stormtimetracking', $node->nid, $l_pos++);
-*/
+ */
 
   $node->content['group2'] = array(
     '#prefix' => '<div class="stormfields">',
