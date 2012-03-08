@@ -4,3 +4,4 @@ dependencies[] = storm
 dependencies[] = stormorganization
 package = Storm
 core = 7.x
+files[] = stormproject.test
