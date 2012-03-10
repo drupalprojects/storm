@@ -15,8 +15,6 @@ class StormorganizationTestCase extends DrupalWebTestCase {
 
   public function setUp() {
     parent::setUp('storm', 'stormorganization');
-    $privileged_user = $this->drupalCreateUser(array('Storm organization: add'));
-    $this->drupalLogin($privileged_user);
   }
 
   public function testStormorganizationAccess() {
@@ -35,6 +33,9 @@ class StormorganizationTestCase extends DrupalWebTestCase {
   }
 
   public function testStormorganizationCreate() {
+    $privileged_user = $this->drupalCreateUser(array('Storm organization: add'));
+    $this->drupalLogin($privileged_user);
+
     $edit = array(
       'title' => $this->randomName(32),
 //      'body' => $this->randomName(64),
