@@ -715,34 +715,33 @@ function _stormproject_beforesave(&$node) {
   }
 }
 
-function stormproject_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if (!isset($node->nid)) {
-        $category_list = storm_attributes_bydomain('Project category');
-        $node->projectcategory = $category_list['default'];
+function stormproject_node_prepare($node) {
+  if (!isset($node->nid)) {
+    $category_list = storm_attributes_bydomain('Project category');
+    $node->projectcategory = $category_list['default'];
 
-        $status_list = storm_attributes_bydomain('Project status');
-        $node->projectstatus = $status_list['default'];
+    $status_list = storm_attributes_bydomain('Project status');
+    $node->projectstatus = $status_list['default'];
 
-        $priority_list = storm_attributes_bydomain('Project priority');
-        $node->projectpriority = $priority_list['default'];
+    $priority_list = storm_attributes_bydomain('Project priority');
+    $node->projectpriority = $priority_list['default'];
 
-        $durationunit_list = storm_attributes_bydomain('Duration unit');
-        $node->durationunit = $durationunit_list['default'];
+    $durationunit_list = storm_attributes_bydomain('Duration unit');
+    $node->durationunit = $durationunit_list['default'];
 
-        $pricemode_list = storm_attributes_bydomain('Price mode');
-        $node->pricemode = $pricemode_list['default'];
+    $pricemode_list = storm_attributes_bydomain('Price mode');
+    $node->pricemode = $pricemode_list['default'];
 
-        $currency_list = storm_attributes_bydomain('Currency');
-        $node->currency = $currency_list['default'];
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormproject} WHERE vid = %d', $node->vid);
-      break;
+    $currency_list = storm_attributes_bydomain('Currency');
+    $node->currency = $currency_list['default'];
   }
+}
+
+function stormproject_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_delete('stormproject')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 function stormproject_delete($node) {
