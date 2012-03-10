@@ -815,7 +815,7 @@ function _stormtask_beforesave(&$node) {
   $node->organization_title = $o->title;
 
   $pro_query = db_select('node', 'n');
-  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid')
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
   $pro_result = $pro_query
     ->fields('n', array('title'))
     ->fields('spr', array('organization_title'))
@@ -848,37 +848,36 @@ function _stormtask_beforesave(&$node) {
   }
 }
 
-function stormtask_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if (!isset($node->nid)) {
-        $node->iscustomer = 1;
-        $node->isactive = 1;
+function stormtask_node_prepare($node) {
+  if (!isset($node->nid)) {
+    $node->iscustomer = 1;
+    $node->isactive = 1;
 
-        $taskcategory_list = storm_attributes_bydomain('Task category');
-        $node->taskcategory = $taskcategory_list['default'];
+    $taskcategory_list = storm_attributes_bydomain('Task category');
+    $node->taskcategory = $taskcategory_list['default'];
 
-        $taskstatus_list = storm_attributes_bydomain('Task status');
-        $node->taskstatus = $taskstatus_list['default'];
+    $taskstatus_list = storm_attributes_bydomain('Task status');
+    $node->taskstatus = $taskstatus_list['default'];
 
-        $taskpriority_list = storm_attributes_bydomain('Task priority');
-        $node->taskpriority = $taskpriority_list['default'];
+    $taskpriority_list = storm_attributes_bydomain('Task priority');
+    $node->taskpriority = $taskpriority_list['default'];
 
-        $durationunit_list = storm_attributes_bydomain('Duration unit');
-        $node->durationunit = $durationunit_list['default'];
+    $durationunit_list = storm_attributes_bydomain('Duration unit');
+    $node->durationunit = $durationunit_list['default'];
 
-        $pricemode_list = storm_attributes_bydomain('Price mode');
-        $node->pricemode = $pricemode_list['default'];
+    $pricemode_list = storm_attributes_bydomain('Price mode');
+    $node->pricemode = $pricemode_list['default'];
 
-        $currency_list = storm_attributes_bydomain('Currency');
-        $node->currency = $currency_list['default'];
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormtask} WHERE vid = %d', $node->vid);
-      break;
+    $currency_list = storm_attributes_bydomain('Currency');
+    $node->currency = $currency_list['default'];
   }
+}
+
+function stormtask_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_delete('stormtask')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 function stormtask_delete($node) {
