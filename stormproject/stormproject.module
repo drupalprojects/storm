@@ -625,13 +625,19 @@ function stormproject_form(&$node) {
 function stormproject_insert($node) {
   _stormproject_beforesave($node);
 
-  $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
-  $r = db_query($s, $node->organization_nid);
-  $organization = db_fetch_object($r);
+  $org_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.nid', $node->organization_nid)
+    ->execute();
+  $organization = $org_result->fetchObject();
 
-  $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
-  $r = db_query($s, $node->manager_nid);
-  $manager = db_fetch_object($r);
+  $per_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormperson')
+    ->condition('n.nid', '$node->manager_nid')
+    ->execute();
+  $manager = $per_result->fetchObject();
   if (!$manager) {
     $manager->title = '';
   }
@@ -641,16 +647,30 @@ function stormproject_insert($node) {
     $assigned->title = '';
   }
 
-  db_query("INSERT INTO {stormproject}
-    (vid, nid, organization_nid, organization_title, projectcategory, projectstatus,
-    projectpriority, pricemode, price, currency, datebegin, dateend, durationunit, duration,
-    manager_nid, manager_title, assigned_nid, assigned_title, billable, billed)
-    VALUES
-    (%d, %d, %d, '%s', '%s', '%s', '%s', '%s', %f, '%s', %d, %d, '%s', %f, %d, '%s', %d, '%s', %d, %d)",
-    $node->vid, $node->nid, $node->organization_nid, $organization->title, $node->projectcategory,
-    $node->projectstatus, $node->projectpriority, $node->pricemode,
-    $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-    $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title, $node->billable, $node->billed);
+  db_insert('stormproject')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'organization_nid' => $node->organization_nid,
+      'organization_title' => $organization->title,
+      'projectcategory' => $node->projectcategory,
+      'projectstatus' => $node->projectstatus,
+      'projectpriority' => $node->projectpriority,
+      'pricemode' => $node->pricemode,
+      'price' => $node->price,
+      'currency' => $node->currency,
+      'datebegin' => $node->datebegin,
+      'dateend' => $node->dateend,
+      'durationunit' => $node->durationunit,
+      'duration' => $node->duration,
+      'manager_nid' => $node->manager_nid,
+      'manager_title' => $manager->title,
+      'assigned_nid' => $node->assigned_nid,
+      'assigned_title' => $assigned->title,
+      'billable' => $node->billable,
+      'billed' => $node->billed,
+    ))
+    ->execute();
 }
 
 function stormproject_update($node) {
