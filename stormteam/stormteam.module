@@ -370,7 +370,7 @@ function stormteam_form(&$node) {
 
   $form['title_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => (isset($node->title_old)) ? $node-title_old : NULL,
+    '#default_value' => (isset($node->title_old)) ? $node->title_old : NULL,
   );
 
   return $form;
