@@ -737,7 +737,7 @@ function stormtask_list_filter($form, &$form_state, $filterdesc = 'Filter') {
     '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+//    '#process' => array('storm_dependent_select_process'),
   );
 
   $form['filter']['group2'] = array(
