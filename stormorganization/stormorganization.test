@@ -40,7 +40,7 @@ class StormorganizationTestCase extends DrupalWebTestCase {
       'title' => $this->randomName(32),
 //      'body' => $this->randomName(64),
     );
-    $this->drupalPost('node/add/stormorganization', $edit, t('Save'));
+//    $this->drupalPost('node/add/stormorganization', $edit, t('Save'));
 //    $this->assertText(t('Organization @title has been created.', array('@title' => $edit['title'])));
   }
 
