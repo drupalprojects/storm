@@ -47,8 +47,7 @@ function theme_stormtask_tasks($form) {
     }
     $rows[] = $row;
   }
-  $o = theme('table', $header, $rows, array('id' => 'tasks'));
-  return $o;
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 function theme_stormtask_list($variables) {
@@ -78,8 +77,7 @@ function theme_stormtask_list($variables) {
       ),
     );
   }
-  $o = theme('table', $header, $rows);
-  return $o;
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
