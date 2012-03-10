@@ -780,7 +780,7 @@ function stormtask_insert($node) {
 
 function stormtask_update($node) {
   $org_query = db_select('node', 'n');
-  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid')
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
   $org_result = $org_query
     ->fields('n', array('title'))
     ->condition('n.type', 'stormorganization')

@@ -372,7 +372,7 @@ function stormproject_stormperson_change($person_nid, $person_title) {
   // Assigned field
   db_update('stormproject')
     ->fields(array('assigned_title' => $person_title))
-    ->condition('assigned_nid' => $person_nid)
+    ->condition('assigned_nid', $person_nid)
     ->execute();
 }
 
