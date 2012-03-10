@@ -294,7 +294,7 @@ function stormticket_theme() {
     ),
     'stormticket_view' => array(
       'file'      => 'stormticket.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
+      'variables' => array('node', 'view_mode'),
     ),
   );
 }
@@ -791,19 +791,29 @@ function stormticket_delete($node) {
     ->execute();
 }
 
-function stormticket_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormticket} WHERE vid = %d', $node->vid));
-  $additions->title_old = $node->title;
-  return $additions;
+function stormticket_load($nodes) {
+  foreach ($nodes as $nid => &$node) {
+    $result = db_select('stormticket', 'sti')
+      ->fields('sti')
+      ->condition('vid', $node->vid)
+      ->execute();
+    $record = $result->fetchAssoc();
+
+    foreach ($record as $key => $value) {
+      $node->$key = $value;
+    }
+
+    $node->title_old = $node->title;
+  }
 }
 
-function stormticket_view($node, $teaser = FALSE, $page = FALSE) {
+function stormticket_view($node, $view_mode) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Tickets'), 'storm/tickets');
   drupal_set_breadcrumb($breadcrumb);
 
-  return theme('stormticket_view', $node, $teaser, $page);
+  return theme('stormticket_view', array('node' => $node, 'view_mode' => $view_mode));
 }
 
 function stormticket_views_api() {
