@@ -9,11 +9,12 @@
  * @function
  * Theme function for the Storm Team node view
  */
-function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
+function theme_stormteam_view($variables) {
+  $node = $variables['node'];
+
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
 
-  $node = node_prepare($node, $teaser);
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   /* $node->content['links'] = array(
     '#prefix' => '<div class="stormlinks"><dl>',
@@ -42,14 +43,14 @@ function theme_stormteam_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['group1']['members'] = array(
       '#prefix' => '<div class="members">',
       '#suffix' => '</div>',
-      '#value' => theme('storm_view_item', t('Members'), implode(", ", $node->members_array)),
+      '#markup' => theme('storm_view_item', array('label' => t('Members'), 'value' =>  implode(", ", $node->members_array))),
     );
   }
 
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', $type->body_label, $node->content['body']['#value']),
+    '#markup' => theme('storm_view_item', array('label' => $type->body_label, 'value' => $node->content['body']['#value'])),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
   );
   unset($node->content['body']);
