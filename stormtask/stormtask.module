@@ -392,7 +392,7 @@ function stormtask_node_info() {
   return array(
     'stormtask' => array(
       'name' => t('Task'),
-      'module' => 'stormtask',
+      'base' => 'stormtask',
       'description' => t("A task for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
@@ -482,8 +482,14 @@ function stormtask_form(&$node) {
     if (isset($_SESSION['stormtask_list_filter']['project_nid']) && $_SESSION['stormtask_list_filter']['project_nid'] && !$node->project_nid) {
       $node->project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-      ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
+    $org_query = db_select('node', 'n');
+    $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+    $org_query
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.status', 1)
+      ->condition('sor.isactive', 1)
+      ->condition('n.type', 'stormorganization')
+      ->orderBy('n.title', 'ASC');
 
     $node->billable = variable_get('stormtask_billable_default', FALSE);
 
@@ -493,21 +499,21 @@ function stormtask_form(&$node) {
       ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
   $form['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $s_org = stormorganization_access_sql($s_org);
-  $s_org = db_rewrite_sql($s_org);
-  $r = db_query($s_org);
+//  $s_org = stormorganization_access_sql($s_org);
+//  $s_org = db_rewrite_sql($s_org);
+  $org_result = $org_query->execute();
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($org_result as $organization) {
     $organizations[$organization->nid] = $organization->title;
     if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
@@ -520,13 +526,20 @@ function stormtask_form(&$node) {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
-  WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $node->organization_nid);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $pro_result = $pro_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('spr.organization_nid', $node->organization_nid)
+    ->condition('n.type', 'stormproject')
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s = stormproject_access_sql($s);
+//  $s = db_rewrite_sql($s);
   $projects = array();
-  while ($project = db_fetch_object($r)) {
+  foreach ($pro_result as $project) {
     $projects[$project->nid] = $project->title;
     if (!isset($node->project_nid)) $node->project_nid = $project->nid;
   }
@@ -545,13 +558,13 @@ function stormtask_form(&$node) {
     '#default_value' => $node->project_nid,
   );
 
-  $tree = _stormtask_get_tree($node->project_nid);
-  $parent_tasks = _stormtask_plain_tree($tree);
+//  $tree = _stormtask_get_tree($node->project_nid);
+//  $parent_tasks = _stormtask_plain_tree($tree);
   $form['group1']['parent_nid'] = array(
     '#type' => 'select',
     '#title' => t('Parent task'),
     '#default_value' => isset($node->parent_nid) ? $node->parent_nid : 0,
-    '#options' => array(0 => '-') + $parent_tasks,
+    '#options' => array(0 => '-') + array(),// $parent_tasks,
     '#process' => array('storm_dependent_select_process'),
   );
 
@@ -579,7 +592,7 @@ function stormtask_form(&$node) {
 
   $form['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -17,
   );
 
@@ -609,7 +622,7 @@ function stormtask_form(&$node) {
 
   $form['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -16,
   );
 
@@ -644,7 +657,7 @@ function stormtask_form(&$node) {
 
   $form['group4'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
 
@@ -673,22 +686,22 @@ function stormtask_form(&$node) {
 
   $form['group5'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
 
-  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
+//  $options = storm_get_assignment_options($node->organization_nid, $node->project_nid);
 
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
-    '#options' => $options,
+    '#options' => array(),// $options,
     '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : 0,
   );
 
   $form['group6'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group6') : -15,
   );
 
