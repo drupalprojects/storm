@@ -6,3 +6,5 @@ package = Storm
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormperson
+
+files[] = stormteam.test
