@@ -6,4 +6,4 @@ dependencies[] = stormproject
 dependencies[] = stormtask
 package = Storm
 core = 7.x
-files[] = stormticket.info
+files[] = stormticket.test
