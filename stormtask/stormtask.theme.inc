@@ -51,7 +51,10 @@ function theme_stormtask_tasks($form) {
   return $o;
 }
 
-function theme_stormtask_list($header, $tasks) {
+function theme_stormtask_list($variables) {
+  $header = $variables['header'];
+  $tasks = $variables['tasks'];
+
   $rows = array();
   foreach ($tasks as $task) {
     $rows[] = array(
