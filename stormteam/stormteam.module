@@ -123,7 +123,7 @@ function stormteam_node_info() {
   return array(
     'stormteam' => array(
       'name' => t('Team'),
-      'module' => 'stormteam',
+      'base' => 'stormteam',
       'description' => t('A team for use within the Storm project management application'),
       'title_label' => t('Team Name'),
       'body_label' => t('Description'),
@@ -284,7 +284,7 @@ function stormteam_form(&$node) {
   );
   drupal_set_breadcrumb($breadcrumb);
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['title'] = array(
     '#type' => 'textfield',
@@ -301,23 +301,35 @@ function stormteam_form(&$node) {
 
   $options = array(0 => '-');
 
-  $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' AND n.status = 1 ORDER BY n.title";
-  $s_per = stormperson_access_sql($s_per);
-  $s_per = db_rewrite_sql($s_per);
-  $r_per = db_query($s_per);
+  $per_query = db_select('node', 'n');
+  $per_query->join('stormperson', 'spe', 'n.vid = spe.vid');
+  $per_result = $per_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', 'stormperson')
+    ->condition('n.status', 1)
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s_per = stormperson_access_sql($s_per);
+//  $s_per = db_rewrite_sql($s_per);
   $people = array();
-  while ($person = db_fetch_object($r_per)) {
+  foreach ($per_result as $person) {
     $people[$person->nid] = $person->title;
   }
 
   $options = $options + array(-1 => t('-PEOPLE-')) + $people;
 
-  $s_org = "SELECT n.nid, n.title FROM {node} n WHERE n.type='stormorganization' AND n.status = 1 ORDER BY n.title";
-  $s_org = stormorganization_access_sql($s_org);
-  $s_org = db_rewrite_sql($s_org);
-  $r_org = db_query($s_org);
+  $org_result = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.status', 1)
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s_org = stormorganization_access_sql($s_org);
+//  $s_org = db_rewrite_sql($s_org);
   $organizations = array();
-  while ($organization = db_fetch_object($r_org)) {
+  foreach ($org_result as $organization) {
     $organizations[$organization->nid] = $organization->title;
   }
 
