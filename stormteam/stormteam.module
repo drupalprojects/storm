@@ -477,7 +477,9 @@ function stormteam_update($node) {
 
     if (isset($node->vid) && (isset($node->nid)) && (isset($node->members_array))) {
       // Delete the old members
-      db_query("DELETE FROM {stormteam} WHERE nid = %d AND vid = %d", $node->nid, $node->vid);
+      db_delete('stormteam')
+        ->condition('vid', $node->vid)
+        ->execute();
 
       // Insert entries
       $member = new stdClass();
@@ -502,23 +504,20 @@ function stormteam_update($node) {
  */
 function stormteam_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormteam} WHERE nid = %d', $node->nid);
+  db_delete('stormteam')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**
  * @function
  * Implementation of hook_nodeapi().
  */
-function stormteam_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      // Place for setting parts of the $node object prior to hook_form being called
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
-      break;
-  }
+function stormteam_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_delete('stormorganization')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 /**
