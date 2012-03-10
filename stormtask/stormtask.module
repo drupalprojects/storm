@@ -414,18 +414,27 @@ function stormtask_content_extra_fields($type_name) {
 }
 
 function stormtask_stormorganization_change($organization_nid, $organization_title) {
-  $s = "UPDATE {stormtask} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
-  db_query($s, $organization_title, $organization_nid, $organization_title);
+  db_update('stormtask')
+    ->fields(array('organization_title' => $organization_title))
+    ->condition('organization_nid', $organization_nid)
+    ->execute();
 }
 
 function stormtask_stormproject_change($project_nid, $project_title) {
-  $s = "UPDATE {stormtask} SET project_title='%s' WHERE project_nid=%d AND project_title <> '%s'";
-  db_query($s, $project_title, $project_nid, $project_title);
+  db_update('stormproject')
+    ->fields(array('project_title' => $project_title))
+    ->condition('project_nid', $project_nid)
+    ->execute();
 }
 
 function stormtask_stormproject_change_hierarchy($project_nid, $organization_nid, $organization_title) {
-  $s = "UPDATE {stormtask} SET organization_nid=%d, organization_title='%s' WHERE project_nid=%d";
-  db_query($s, $organization_nid, $organization_title, $project_nid);
+  db_update('stormtask')
+    ->fields(array(
+      'organization_nid' => $organization_nid,
+      'organization_title' => $organization_title,
+    ))
+    ->condition('project_nid', $project_nid)
+    ->execute();
 }
 
 function stormtask_form(&$node) {
@@ -770,16 +779,26 @@ function stormtask_insert($node) {
 }
 
 function stormtask_update($node) {
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
-        WHERE type='stormorganization' AND n.nid=%d";
-  $r = db_query($s, $node->organization_nid);
-  $o = db_fetch_object($r);
+  $org_query = db_select('node', 'n');
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid')
+  $org_result = $org_query
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.nid', $node->organization_nid)
+    ->execute();
+
+  $o = $org_result->fetchObject();
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-        WHERE type='stormproject' AND n.nid=%d";
-  $r = db_query($s, $node->project_nid);
-  $p = db_fetch_object($r);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid')
+  $pro_result = $pro_query
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormproject')
+    ->condition('n.nid', $node->project_nid)
+    ->execute();
+
+  $p = $pro_result->fetchObject();
   $node->project_title = $p->title;
 
   if ($node->project_nid != $node->project_nid_old) {
@@ -791,23 +810,35 @@ function stormtask_update($node) {
   }
   else {
     _stormtask_beforesave($node);
-    db_query("UPDATE {stormtask} SET
-      stepno='%s', taskcategory='%s', taskstatus='%s', taskpriority='%s',
-      organization_nid=%d, organization_title='%s',
-      project_nid=%d, project_title='%s',
-      parent_nid=%d, weight=%d, datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
-      pricemode='%s', price=%f, currency='%s', assigned_nid=%d, assigned_title='%s',
-      billable=%d, billed=%d
-      WHERE vid = %d",
-      $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
-      $node->organization_nid, $node->organization_title,
-      $node->project_nid, $node->project_title,
-      $node->parent_nid,
-      $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-      $node->pricemode, $node->price, $node->currency,
-      $node->assigned_nid, $node->assigned_title,
-      $node->billable, $node->billed, $node->vid
-    );
+
+  db_update('stormtask')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'stepno' => $node->stepno,
+      'taskcategory' => $node->taskcategory,
+      'taskstatus' => $node->taskstatus,
+      'taskpriority' => $node->taskpriority,
+      'organization_nid' => $node->organization_nid,
+      'organization_title' => $node->organization_title,
+      'project_nid' => $node->project_nid,
+      'project_title' => $node->project_title,
+      'parent_nid' => $node->parent_nid,
+      'weight' => $node->weight,
+//      'datebegin' => $node->datebegin,
+//      'dateend' => $node->dateend,
+      'durationunit' => $node->durationunit,
+//      'duration' => $node->duration,
+      'pricemode' => $node->pricemode,
+//      'price' => $node->price,
+      'currency' => $node->currency,
+      'assigned_nid' => $node->assigned_nid,
+      'assigned_title' => $node->assigned_title,
+      'billable' => $node->billable,
+      'billed' => $node->billed,
+    ))
+    ->execute();
+
     if (($node->title != $node->title_old) || ($node->stepno != $node->stepno_old)) {
       module_invoke_all('stormtask_change', $node->nid, $node->title, $node->stepno);
     }

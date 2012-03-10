@@ -446,13 +446,29 @@ function stormorganization_update($node) {
     stormorganization_insert($node);
   }
   else {
-    db_query("UPDATE {stormorganization} SET
-              country='%s', www='%s', phone='%s', email='%s', currency = '%s',
-              provstate = '%s', zip = '%s', city = '%s', address = '%s', taxid = '%s', orglanguage = '%s',
-              iscustomer=%d, isprovider=%d, isactive=%d, pricemode='%s', price=%f WHERE vid = %d",
-              $node->country, $node->www, $node->phone, $node->email, $node->currency,
-              $node->provstate, $node->zip, $node->city, $node->address, $node->taxid, $node->orglanguage,
-              $node->iscustomer, $node->isprovider, $node->isactive, $node->pricemode, $node->price, $node->vid);
+    db_update('stormorganization')
+      ->fields(array(
+        'vid' => $node->vid,
+        'nid' => $node->nid,
+        'country' => $node->country,
+        'www' => $node->www,
+        'phone' => $node->phone,
+        'email' => $node->email,
+        'currency' => $node->currency,
+        'provstate' => $node->provstate,
+        'zip' => $node->zip,
+        'city' => $node->city,
+        'address' => $node->address,
+        'taxid' => $node->taxid,
+        'orglanguage' => $node->orglanguage,
+        'iscustomer' => $node->iscustomer,
+        'isprovider' => $node->isprovider,
+        'isactive' => $node->isactive,
+        'pricemode' => $node->pricemode,
+//        'price' => $node->price,
+      ))
+      ->execute();
+
     if ($node->title != $node->title_old) {
       module_invoke_all('stormorganization_change', $node->nid, $node->title);
     }
@@ -478,12 +494,16 @@ function stormorganization_node_prepare($node) {
 
 function stormorganization_node_revision_delete($node) {
   // Notice that we're matching a single revision based on the node's vid.
-  db_query('DELETE FROM {stormorganization} WHERE vid = %d', $node->vid);
+  db_delete('stormorganization')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 function stormorganization_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormorganization} WHERE nid = %d', $node->nid);
+  db_delete('stormorganization')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 function stormorganization_load($nodes) {

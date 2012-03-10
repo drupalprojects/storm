@@ -356,15 +356,24 @@ function stormproject_content_extra_fields($type_name) {
 }
 
 function stormproject_stormorganization_change($organization_nid, $organization_title) {
-  $s = "UPDATE {stormproject} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
-  db_query($s, $organization_title, $organization_nid, $organization_title);
+  db_update('stormproject')
+    ->fields(array('organization_title' => $organization_title))
+    ->condition('organization_nid', $organization_nid)
+    ->execute();
 }
 
 function stormproject_stormperson_change($person_nid, $person_title) {
-  $s = "UPDATE {stormproject} SET manager_title='%s' WHERE manager_nid=%d AND manager_title <> '%s'";
-  db_query($s, $person_title, $person_nid, $person_title);
-  $s = "UPDATE {stormproject} SET assigned_title='%s' WHERE assigned_nid=%d AND assigned_title <> '%s'";
-  db_query($s, $person_title, $person_nid, $person_title);
+  // Manager field
+  db_update('stormproject')
+    ->fields(array('manager_title' => $person_title))
+    ->condition('manager_nid', $person_nid)
+    ->execute();
+
+  // Assigned field
+  db_update('stormproject')
+    ->fields(array('assigned_title' => $person_title))
+    ->condition('assigned_nid' => $person_nid)
+    ->execute();
 }
 
 function stormproject_form(&$node) {
@@ -545,14 +554,20 @@ function stormproject_form(&$node) {
   );
 
   if (module_exists('stormperson')) {
-    $s_per = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} spe ON n.vid=spe.vid WHERE n.type='stormperson' ORDER BY n.title";
+    $per_query = db_select('node', 'n');
+    $per_query->join('stormperson', 'spe', 'n.vid = spe.vid');
+    $per_result = $per_query
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.type', 'stormperson')
+      ->orderBy('n.title', 'ASC')
+      ->execute();
+
 //    $s_per = stormperson_access_sql($s_per);
 //    $s_per = db_rewrite_sql($s_per);
-//    $r_per = db_query($s_per);
     $people = array();
-//    while ($person = db_fetch_object($r_per)) {
-//      $people[$person->nid] = $person->title;
-//    }
+    foreach ($per_result as $person) {
+      $people[$person->nid] = $person->title;
+    }
 
     $options = array(0 => '- none -', 'People:' => $people);
   }
@@ -568,14 +583,20 @@ function stormproject_form(&$node) {
   );
 
   if (module_exists('stormteam')) {
-    $s_team = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormteam} ste ON n.vid=ste.vid WHERE n.type='stormteam' ORDER BY n.title";
+    $team_query = db_select('node', 'n');
+    $team_query->join('stormteam', 'ste', 'n.vid = ste.vid');
+    $team_result = $team_query
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.type', 'stormperson')
+      ->orderBy('n.title', 'ASC')
+      ->execute();
+
 //    $s_team = stormteam_access_sql($s_team);
 //    $s_team = db_rewrite_sql($s_team);
-//    $r_team = db_query($s_team);
     $teams = array();
-//    while ($team = db_fetch_object($r_team)) {
-//      $teams[$team->nid] = $team->title;
-//    }
+    foreach ($team_result as $team) {
+      $teams[$team->nid] = $team->title;
+    }
 
     $options = array(0 => '- unassigned -', 'Teams:' => $teams, 'People:' => $people);
   }
@@ -676,38 +697,63 @@ function stormproject_insert($node) {
 function stormproject_update($node) {
   _stormproject_beforesave($node);
 
-  // this code needs to run whether or not revisions are being used
-  $s = "SELECT title FROM {node} WHERE type='stormorganization' AND nid=%d";
-  $r = db_query($s, $node->organization_nid);
-  $organization = db_fetch_object($r);
+  // This code needs to run whether or not revisions are being used
+  $org_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.nid', $node->organization_nid)
+    ->execute();
+  $organization = $org_result->fetchObject();
 
   // If the project has been moved to a different organization, all nodes that reference the project should be updated.
   if ($node->organization_nid != $node->organization_nid_old) {
     module_invoke_all('stormproject_change_hierarchy', $node->nid, $node->organization_nid, $organization->title);
   }
 
-  // if this is a new node or we're adding a new revision,
+  // If this is a new node or we're adding a new revision,
   if ($node->revision) {
     stormproject_insert($node);
   }
   else {
-    $s = "SELECT title FROM {node} WHERE type='stormperson' AND nid=%d";
-    $r = db_query($s, $node->manager_nid);
-    $manager = db_fetch_object($r);
+    $per_result = db_select('node', 'n')
+      ->fields('n', array('title'))
+      ->condition('n.type', 'stormperson')
+      ->condition('n.nid', '$node->manager_nid')
+      ->execute();
+    $manager = $per_result->fetchObject();
+    if (!$manager) {
+      $manager->title = '';
+    }
 
     $assigned = node_load($node->assigned_nid);
+    if (!$assigned) {
+      $assigned->title = '';
+    }
 
-    db_query("UPDATE {stormproject} SET
-      organization_nid=%d, organization_title='%s',
-      projectcategory='%s', projectstatus='%s', projectpriority='%s', pricemode='%s',
-      price=%f, currency='%s', datebegin=%d, dateend=%d, durationunit='%s', duration=%f,
-      manager_nid=%d, manager_title='%s', assigned_nid=%d, assigned_title='%s',
-      billable=%d, billed=%d WHERE vid = %d",
-      $node->organization_nid, $organization->title, $node->projectcategory, $node->projectstatus, $node->projectpriority,
-      $node->pricemode, $node->price, $node->currency, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-      $node->manager_nid, $manager->title, $node->assigned_nid, $assigned->title,
-      $node->billable, $node->billed, $node->vid
-    );
+    db_update('stormproject')
+      ->fields(array(
+        'vid' => $node->vid,
+        'nid' => $node->nid,
+        'organization_nid' => $node->organization_nid,
+        'organization_title' => $organization->title,
+        'projectcategory' => $node->projectcategory,
+        'projectstatus' => $node->projectstatus,
+        'projectpriority' => $node->projectpriority,
+        'pricemode' => $node->pricemode,
+//        'price' => $node->price,
+        'currency' => $node->currency,
+//        'datebegin' => $node->datebegin,
+//        'dateend' => $node->dateend,
+        'durationunit' => $node->durationunit,
+//        'duration' => $node->duration,
+        'manager_nid' => $node->manager_nid,
+        'manager_title' => $manager->title,
+        'assigned_nid' => $node->assigned_nid,
+        'assigned_title' => $assigned->title,
+        'billable' => $node->billable,
+        'billed' => $node->billed,
+      ))
+      ->execute();
 
     if ($node->title != $node->title_old) {
       module_invoke_all('stormproject_change', $node->nid, $node->title);
@@ -766,7 +812,9 @@ function stormproject_node_revision_delete($node) {
 
 function stormproject_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormproject} WHERE nid = %d', $node->nid);
+  db_delete('stormproject')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 function stormproject_load($nodes) {

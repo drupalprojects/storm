@@ -294,8 +294,10 @@ function stormperson_content_extra_fields($type_name) {
 }
 
 function stormperson_stormorganization_change($organization_nid, $organization_title) {
-  $s = "UPDATE {stormperson} SET organization_title='%s' WHERE organization_nid=%d AND organization_title <> '%s'";
-  db_query($s, $organization_title, $organization_nid, $organization_title);
+  db_update('stormperson')
+    ->fields(array('organization_title' => $organization_title))
+    ->condition('organization_nid', $organization_nid)
+    ->execute();
 }
 
 function stormperson_form(&$node) {
@@ -534,13 +536,11 @@ function _stormperson_aftersave(&$node) {
   }
 }
 
-function stormperson_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormperson} WHERE vid = %d', $node->vid);
-      break;
-  }
+function stormperson_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_delete('stormperson')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 function stormperson_delete($node) {
