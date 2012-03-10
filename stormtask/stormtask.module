@@ -739,22 +739,34 @@ function stormtask_form(&$node) {
 // INSERT / UPDATE FUNCTIONS
 function stormtask_insert($node) {
   _stormtask_beforesave($node);
-  db_query("INSERT INTO {stormtask}
-    (vid, nid, stepno, taskcategory, taskstatus, taskpriority,
-    organization_nid, organization_title,
-    project_nid, project_title, parent_nid, weight,
-    datebegin, dateend, durationunit, duration, pricemode, price, currency,
-    assigned_nid, assigned_title, billable, billed)
-    VALUES
-    (%d, %d, '%s', '%s', '%s', '%s',
-    %d, '%s',
-    %d, '%s', %d, %d, %d, %d, '%s', %f, '%s', %f, '%s', %d, '%s', %d, %d)",
-    $node->vid, $node->nid, $node->stepno, $node->taskcategory, $node->taskstatus, $node->taskpriority,
-    $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
-    $node->parent_nid, $node->weight, $node->datebegin, $node->dateend, $node->durationunit, $node->duration,
-    $node->pricemode, $node->price, $node->currency,
-    $node->assigned_nid, $node->assigned_title, $node->billable, $node->billed
-  );
+
+  db_insert('stormtask')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'stepno' => $node->stepno,
+      'taskcategory' => $node->taskcategory,
+      'taskstatus' => $node->taskstatus,
+      'taskpriority' => $node->taskpriority,
+      'organization_nid' => $node->organization_nid,
+      'organization_title' => $node->organization_title,
+      'project_nid' => $node->project_nid,
+      'project_title' => $node->project_title,
+      'parent_nid' => $node->parent_nid,
+      'weight' => $node->weight,
+//      'datebegin' => $node->datebegin,
+//      'dateend' => $node->dateend,
+      'durationunit' => $node->durationunit,
+//      'duration' => $node->duration,
+      'pricemode' => $node->pricemode,
+//      'price' => $node->price,
+      'currency' => $node->currency,
+      'assigned_nid' => $node->assigned_nid,
+      'assigned_title' => $node->assigned_title,
+      'billable' => $node->billable,
+      'billed' => $node->billed,
+    ))
+    ->execute();
 }
 
 function stormtask_update($node) {
@@ -882,7 +894,9 @@ function stormtask_node_revision_delete($node) {
 
 function stormtask_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormtask} WHERE nid = %d', $node->nid);
+  db_delete('stormtask')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 function stormtask_load($node) {
