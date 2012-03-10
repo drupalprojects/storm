@@ -47,21 +47,43 @@ function stormteam_menu() {
 
 /**
  * @function
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
 function stormteam_perm() {
   return array(
-    'Storm team: access',
-    'Storm team: add',
-    'Storm team: view all',
-    'Storm team: view own',
-    'Storm team: view belonged',
-    'Storm team: edit all',
-    'Storm team: edit own',
-    'Storm team: edit belonged',
-    'Storm team: delete all',
-    'Storm team: delete own',
-    'Storm team: delete belonged',
+    'Storm team: access' => array(
+      'title' => t('Access Storm Team lists'),
+    ),
+    'Storm team: add' => array(
+      'title' => t('Add Storm Teams'),
+    ),
+    'Storm team: view all' => array(
+      'title' => t('View Any Storm Team'),
+    ),
+    'Storm team: view own' => array(
+      'title' => t('View Authored Storm Team'),
+    ),
+    'Storm team: view belonged' => array(
+      'title' => t('View Storm Team if belonged to'),
+    ),
+    'Storm team: edit all' => array(
+      'title' => t('Edit Any Storm Team'),
+    ),
+    'Storm team: edit own' => array(
+      'title' => t('Edit Authored Storm Team'),
+    ),
+    'Storm team: edit belonged' => array(
+      'title' => t('Edit Storm Team if belonged to'),
+    ),
+    'Storm team: delete all' => array(
+      'title' => t('Edit Any Storm Team'),
+    ),
+    'Storm team: delete own' => array(
+      'title' => t('Delete Authored Storm Team'),
+    ),
+    'Storm team: delete belonged' => array(
+      'title' => t('Delete Storm Team if belonged to'),
+    ),
   );
 }
 
