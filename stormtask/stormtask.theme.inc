@@ -59,10 +59,10 @@ function theme_stormtask_list($variables) {
     $rows[] = array(
       // Add classes to each row in table.
       // Allows customisation of row via css depending on the task's attributes (category, status, priority)
-      'class' =>
-        'storm_category_'. preg_replace('/[^a-zA-Z]/', '', $task->taskcategory) . ' ' .
-        'storm_status_'. preg_replace('/[^a-zA-Z]/', '', $task->taskstatus) . ' ' .
-        'storm_priority_'. preg_replace('/[^a-zA-Z]/', '', $task->taskpriority),
+//      'class' =>
+//        'storm_category_'. preg_replace('/[^a-zA-Z]/', '', $task->taskcategory) . ' ' .
+//        'storm_status_'. preg_replace('/[^a-zA-Z]/', '', $task->taskstatus) . ' ' .
+//        'storm_priority_'. preg_replace('/[^a-zA-Z]/', '', $task->taskpriority),
       'data' => array(
         l($task->organization_title, 'node/'. $task->organization_nid),
         l($task->project_title, 'node/'. $task->project_nid),
@@ -72,7 +72,7 @@ function theme_stormtask_list($variables) {
         storm_icon('priority_'. $task->taskpriority, storm_attribute_value('Task priority', $task->taskpriority)),
         array(
           'data' => storm_icon_edit_node($task, $_GET) .'&nbsp;'. storm_icon_delete_node($task, $_GET),
-          'class' => 'storm_list_operations',
+//          'class' => 'storm_list_operations',
         ),
       ),
     );
