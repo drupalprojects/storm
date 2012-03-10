@@ -66,7 +66,7 @@ function theme_stormtask_list($variables) {
       'data' => array(
         l($task->organization_title, 'node/'. $task->organization_nid),
         l($task->project_title, 'node/'. $task->project_nid),
-        l($task->title, 'node/'. $task->nid) . theme('mark', node_mark($task->nid, $task->changed)),
+        l($task->title, 'node/'. $task->nid) . theme('mark', array('type' => node_mark($task->nid, $task->changed))),
         storm_icon('category_'. $task->taskcategory, storm_attribute_value('Task category', $task->taskcategory)),
         storm_icon('status_'. $task->taskstatus, storm_attribute_value('Task status', $task->taskstatus)),
         storm_icon('priority_'. $task->taskpriority, storm_attribute_value('Task priority', $task->taskpriority)),
