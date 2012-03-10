@@ -899,11 +899,21 @@ function stormtask_delete($node) {
     ->execute();
 }
 
-function stormtask_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormtask} WHERE vid = %d', $node->vid));
-  $additions->stepno_old = isset($node->stepno) ? $node->stepno : NULL;
-  $additions->title_old = $node->title;
-  return $additions;
+function stormtask_load($nodes) {
+  foreach ($nodes as $nid => &$node) {
+    $result = db_select('stormtask', 'sta')
+      ->fields('sta')
+      ->condition('vid', $node->vid)
+      ->execute();
+    $record = $result->fetchAssoc();
+
+    foreach ($record as $key => $value) {
+      $node->$key = $value;
+    }
+
+    $node->title_old = $node->title;
+    $node->stepno_old = isset($node->stepno) ? $node->stepno : NULL;
+  }
 }
 
 function stormtask_validate(&$node) {
