@@ -383,7 +383,7 @@ function stormtask_theme() {
     ),
     'stormtask_view' => array(
       'file'      => 'stormtask.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
+      'variables' => array('node', 'view_mode'),
     ),
   );
 }
@@ -922,13 +922,13 @@ function stormtask_validate(&$node) {
   }
 }
 
-function stormtask_view($node, $teaser = FALSE, $page = FALSE) {
+function stormtask_view($node, $view_mode) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Tasks'), 'storm/tasks');
   drupal_set_breadcrumb($breadcrumb);
 
-  return theme('stormtask_view', $node, $teaser, $page);
+  return theme('stormtask_view', array('node' => $node, 'view_mode' => $view_mode));
 }
 
 function _stormtask_tasks_access($node=NULL) {
