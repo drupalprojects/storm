@@ -5,7 +5,6 @@
  */
 
 function stormticket_list() {
-
   global $user;
 
   $breadcrumb = array();
@@ -82,7 +81,13 @@ function stormticket_list() {
   $args = array();
   $filterfields = array();
 
-  $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
+  $tic_query = db_select('node', 'n');
+  $tic_query->join('stormticket', 'sti', 'n.vid = sti.vid');
+  $tic_query
+    ->fields('n')
+    ->fields('sti')
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormticket');
 
   if (isset($_SESSION['stormticket_list_filter']['organization_nid']) && ($_SESSION['stormticket_list_filter']['organization_nid'] != 0)) {
     $where[] = 'sti.organization_nid=%d';
@@ -243,25 +248,26 @@ function stormticket_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $_SESSION['stormticket_list_filter']['itemsperpage']));
 
-  $o = drupal_get_form('stormticket_list_filter', $filterdesc);
+  $o = drupal_render(drupal_get_form('stormticket_list_filter', $filterdesc));
 
-  $s = stormticket_access_sql($s, $where);
-  $s = db_rewrite_sql($s);
+//  $s = stormticket_access_sql($s, $where);
+//  $s = db_rewrite_sql($s);
 
-  $tablesort = tablesort_sql($header);
-  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+//  $tablesort = tablesort_sql($header);
+//  $r = pager_query($s . $tablesort, $itemsperpage, 0, NULL, $args);
+  $tic_result = $tic_query->execute();
 
   $tickets = array();
-  while ($item = db_fetch_object($r)) {
+  foreach ($tic_result as $item) {
     $tickets[] = $item;
   }
 
-  $o .= theme('stormticket_list', $header, $tickets);
-  $o .= theme('pager', NULL, $itemsperpage, 0);
-  print theme('page', $o);
+  $o .= theme('stormticket_list', array('header' => $header, 'tickets' => $tickets));
+//  $o .= theme('pager', NULL, $itemsperpage, 0);
+  return $o;
 }
 
-function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
+function stormticket_list_filter($form, &$form_state, $filterdesc='Filter') {
   $organization_nid = isset($_SESSION['stormticket_list_filter']['organization_nid']) ? $_SESSION['stormticket_list_filter']['organization_nid'] : 0;
   $project_nid = isset($_SESSION['stormticket_list_filter']['project_nid']) ? $_SESSION['stormticket_list_filter']['project_nid'] : 0;
   $task_nid = isset($_SESSION['stormticket_list_filter']['task_nid']) ? $_SESSION['stormticket_list_filter']['task_nid'] : 0;
@@ -292,20 +298,27 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#title' => $filterdesc,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#theme' => 'stormticket_list_filter',
+//    '#theme' => 'stormticket_list_filter',
   );
 
   $form['filter']['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormorganization} AS sor ON sor.vid=n.vid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
-  $s = stormorganization_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s);
+  $org_query = db_select('node', 'n');
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+  $org_result = $org_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization')
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s = stormorganization_access_sql($s);
+//  $s = db_rewrite_sql($s);
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($org_result as $organization) {
     $organizations[$organization->nid] = $organization->title;
   }
   $organizations = array(0 => t('All')) + $organizations;
@@ -317,13 +330,20 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-task-nid', 'edit-assigned-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid
-  WHERE n.status=1 AND spr.organization_nid=%d AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $organization_nid);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $pro_result = $pro_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('spr.organization_nid', $organization_nid)
+    ->condition('n.type', 'stormproject')
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s = stormproject_access_sql($s);
+//  $s = db_rewrite_sql($s);
   $projects = array();
-  while ($project = db_fetch_object($r)) {
+  foreach ($pro_result as $project) {
     $projects[$project->nid] = $project->title;
   }
   $projects = array(0 => t('All')) + $projects;
@@ -336,13 +356,20 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
     '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, 'All')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormtask} AS sta
-  ON sta.vid=n.vid WHERE n.status=1 AND type='stormtask' AND sta.project_nid=%d ORDER BY title ";
-  $s = stormtask_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $project_nid);
+  $task_query = db_select('node', 'n');
+  $task_query->join('stormtask', 'sta', 'n.vid = sta.vid');
+  $task_result = $task_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormtask')
+    ->condition('sta.project_nid', $project_nid)
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s = stormtask_access_sql($s);
+//  $s = db_rewrite_sql($s);
   $tasks = array();
-  while ($task = db_fetch_object($r)) {
+  foreach ($task_result as $task) {
     $tasks[$task->nid] = $task->title;
   }
   $tasks = array(0 => t('All')) + $tasks;
@@ -355,7 +382,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter']['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group2']['ticketcategory'] = array(
@@ -381,7 +408,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter']['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group3']['datebeginfrom'] = array(
@@ -400,7 +427,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter']['group4'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group4']['dateendfrom'] = array(
@@ -419,16 +446,16 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter']['group4_1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   // ASSIGNED TO
-  $options = storm_get_assignment_options(0, 0);
+//  $options = storm_get_assignment_options(0, 0);
   $form['filter']['group4_1']['assigned_to'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
     '#default_value' => $assigned_to,
-    '#options' => $options,
+    '#options' => array(),// $options,
   );
 
   $form['filter']['group4_1']['billable'] = array(
@@ -447,7 +474,7 @@ function stormticket_list_filter(&$form_state, $filterdesc='Filter') {
 
   $form['filter']['group5'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
   );
 
   $form['filter']['group5']['submit'] = array(

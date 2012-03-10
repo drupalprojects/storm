@@ -4,7 +4,9 @@
  * @file
  */
 
-function theme_stormticket_list($header, $tickets) {
+function theme_stormticket_list($variables) {
+  $header = $variables['header'];
+  $tickets = $variables['tickets'];
 
   $rows = array();
   foreach ($tickets as $ticket) {
@@ -24,12 +26,11 @@ function theme_stormticket_list($header, $tickets) {
       storm_icon('priority_'. $ticket->ticketpriority, storm_attribute_value('Ticket priority', $ticket->ticketpriority)),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
-        'class' => 'storm_list_operations',
+//        'class' => 'storm_list_operations',
       ),
     );
   }
-  $o = theme('table', $header, $rows);
-  return $o;
+  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 function theme_stormticket_view($node, $teaser = FALSE, $page = FALSE) {

@@ -290,7 +290,7 @@ function stormticket_theme() {
   return array(
     'stormticket_list' => array(
       'file'      => 'stormticket.theme.inc',
-      'arguments' => array('header', 'tickets'),
+      'variables' => array('header', 'tickets'),
     ),
     'stormticket_view' => array(
       'file'      => 'stormticket.theme.inc',
