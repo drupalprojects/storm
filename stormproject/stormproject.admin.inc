@@ -49,7 +49,7 @@ function stormproject_list() {
     ->fields('n')
     ->condition('n.status', 1)
     ->condition('n.type', 'stormproject');
-//spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid
+// spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid
 
   $where = array();
   $args = array();
@@ -248,7 +248,7 @@ function stormproject_list_filter($form, &$form_state, $filterdesc = 'Filter') {
     ->condition('n.status', 1)
     ->condition('n.type', 'stormorganization')
     ->orderBy('title', 'ASC');
-//INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid
+// INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid
 
 //  $s = stormorganization_access_sql($s);
 //  $s = db_rewrite_sql($s);
