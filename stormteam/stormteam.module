@@ -595,7 +595,7 @@ function stormteam_list() {
  * Function to define form for setting Storm Team list filter.
  */
 function stormteam_list_filter($form, &$form_state, $filterdesc = 'Filter') {
-  $name = $_SESSION['stormteam_list_filter']['name'];
+  $name = isset($_SESSION['stormteam_list_filter']['name']) ? $_SESSION['stormteam_list_filter']['name'] : '';
 
   $itemsperpage = isset($_SESSION['stormteam_list_filter']['itemsperpage']) ? $_SESSION['stormteam_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
