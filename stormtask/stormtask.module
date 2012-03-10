@@ -791,7 +791,7 @@ function stormtask_update($node) {
   $node->organization_title = $o->title;
 
   $pro_query = db_select('node', 'n');
-  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid')
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
   $pro_result = $pro_query
     ->fields('n', array('title'))
     ->condition('n.type', 'stormproject')
