@@ -15,7 +15,7 @@ function theme_stormproject_list($variables) {
     $rows[] = array(
       storm_icon('projectcategory_'. $project->projectcategory, storm_attribute_value('Project category', $project->projectcategory)),
       l($project->organization_title, 'node/'. $project->organization_nid),
-      l($project->title, 'node/'. $project->nid) . theme('mark', node_mark($project->nid, $project->changed)),
+      l($project->title, 'node/'. $project->nid) . theme('mark', array('type' => node_mark($project->nid, $project->changed))),
       storm_icon('status_'. $project->projectstatus, storm_attribute_value('Project status', $project->projectstatus)),
       storm_icon('priority_'. $project->projectpriority, storm_attribute_value('Project priority', $project->projectpriority)),
       array(
