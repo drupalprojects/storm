@@ -80,10 +80,11 @@ function theme_stormtask_list($variables) {
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
-function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
+function theme_stormtask_view($variables) {
+  $node = $variables['node'];
+
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
 
-  $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
   $node->content['links'] = array(
@@ -92,10 +93,10 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
     '#weight' => -25,
   );
 
-  $node->content['links']['expenses'] = theme('storm_link', 'stormtask', 'stormexpense', $node->nid, $l_pos++);
-  $node->content['links']['notes'] = theme('storm_link', 'stormtask', 'stormnote', $node->nid, $l_pos++);
-  $node->content['links']['tickets'] = theme('storm_link', 'stormtask', 'stormticket', $node->nid, $l_pos++);
-  $node->content['links']['timetrackings'] = theme('storm_link', 'stormtask', 'stormtimetracking', $node->nid, $l_pos++);
+//  $node->content['links']['expenses'] = theme('storm_link', 'stormtask', 'stormexpense', $node->nid, $l_pos++);
+//  $node->content['links']['notes'] = theme('storm_link', 'stormtask', 'stormnote', $node->nid, $l_pos++);
+//  $node->content['links']['tickets'] = theme('storm_link', 'stormtask', 'stormticket', $node->nid, $l_pos++);
+//  $node->content['links']['timetrackings'] = theme('storm_link', 'stormtask', 'stormtimetracking', $node->nid, $l_pos++);
 
   // Code to create invoice auto_add link
   if (module_exists('storminvoice')) {
@@ -103,7 +104,7 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
     $node->content['links']['auto_invoice'] = array(
       '#prefix' => variable_get('storm_icons_display', TRUE) ? '<dt id="storminvoices" class="stormcomponent">' : '<dt class="stormcomponent">',
       '#suffix' => '</dt>',
-      '#value' => theme('storminvoice_autoadd_links', $node->nid, $node->billable, $node->billed),
+      '#markup' => theme('storminvoice_autoadd_links', array('label' => $node->nid, 'value' => $node->billable, $node->billed)),
       '#weight' => $l_pos++,
     );
   }
@@ -117,21 +118,21 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#markup' => theme('storm_view_item', array('label' => t('Organization'), 'value' => l($node->organization_title, 'node/'. $node->organization_nid))),
     '#weight' => 1,
   );
 
   $node->content['group1']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#markup' => theme('storm_view_item', array('label' => t('Project'), 'value' => l($node->project_title, 'node/'. $node->project_nid))),
     '#weight' => 2,
   );
 
   $node->content['group1']['stepno'] = array(
     '#prefix' => '<div class="stepno">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Step no.'), check_plain($node->stepno)),
+    '#markup' => theme('storm_view_item', array('label' => t('Step no.'), 'value' => check_plain($node->stepno))),
     '#weight' => 3,
   );
 
@@ -144,21 +145,21 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group2']['category'] = array(
     '#prefix' => '<div class="category">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Category'), check_plain(storm_attribute_value('Task category', $node->taskcategory))),
+    '#markup' => theme('storm_view_item', array('label' => t('Category'), 'value' => check_plain(storm_attribute_value('Task category', $node->taskcategory)))),
     '#weight' => 1,
   );
 
   $node->content['group2']['status'] = array(
     '#prefix' => '<div class="storm_status">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Status'), check_plain(storm_attribute_value('Task status', $node->taskstatus))),
+    '#markup' => theme('storm_view_item', array('label' => t('Status'), 'value' => check_plain(storm_attribute_value('Task status', $node->taskstatus)))),
     '#weight' => 2,
   );
 
   $node->content['group2']['priority'] = array(
     '#prefix' => '<div class="priority">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Priority'), check_plain(storm_attribute_value('Task priority', $node->taskpriority))),
+    '#markup' => theme('storm_view_item', array('label' => t('Priority'), 'value' => check_plain(storm_attribute_value('Task priority', $node->taskpriority)))),
     '#weight' => 3,
   );
 
@@ -171,14 +172,14 @@ function theme_stormtask_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group5']['assigned'] = array(
     '#prefix' => '<div class="assigned">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Assigned to'), l($node->assigned_title, 'node/'. $node->assigned_nid)),
+    '#markup' => theme('storm_view_item', array('label' => t('Assigned to'), 'value' => l($node->assigned_title, 'node/'. $node->assigned_nid))),
     '#weight' => 2,
   );
 
   $node->content['body_field'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Description'), $node->content['body']['#value']),
+    '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => $node->content['body']['#value'])),
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -15,
   );
   unset($node->content['body']);
