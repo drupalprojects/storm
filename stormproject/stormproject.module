@@ -325,7 +325,7 @@ function stormproject_theme() {
     ),
     'stormproject_view' => array(
       'file'      => 'stormproject.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
+      'variables' => array('node', 'view_mode'),
     ),
   );
 }
@@ -769,19 +769,29 @@ function stormproject_delete($node) {
   db_query('DELETE FROM {stormproject} WHERE nid = %d', $node->nid);
 }
 
-function stormproject_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormproject} WHERE vid = %d', $node->vid));
-  $additions->title_old = $node->title;
-  return $additions;
+function stormproject_load($nodes) {
+  foreach ($nodes as $nid => &$node) {
+    $result = db_select('stormproject', 'spr')
+      ->fields('spr')
+      ->condition('spr.vid', $node->vid)
+      ->execute();
+    $record = $result->fetchAssoc();
+
+    foreach ($record as $key => $value) {
+      $node->$key = $value;
+    }
+
+    $node->title_old = $node->title;
+  }
 }
 
-function stormproject_view($node, $teaser = FALSE, $page = FALSE) {
+function stormproject_view($node, $view_mode) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
   $breadcrumb[] = l(t('Projects'), 'storm/projects');
   drupal_set_breadcrumb($breadcrumb);
 
-  return theme('stormproject_view', $node, $teaser, $page);
+  return theme('stormproject_view', array('node' => $node, 'view_mode' => $view_mode));
 }
 
 function stormproject_views_api() {

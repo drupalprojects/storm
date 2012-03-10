@@ -49,7 +49,7 @@ function stormproject_list() {
   $query->join('stormproject', 'spr', 'n.vid = spr.vid');
   $query
     ->fields('n')
-    ->fields('spr', array('projectcategory', 'projectstatus', 'projectpriority'))
+    ->fields('spr', array('projectcategory', 'projectstatus', 'projectpriority', 'organization_nid', 'organization_title'))
     ->condition('n.status', 1)
     ->condition('n.type', 'stormproject');
 
