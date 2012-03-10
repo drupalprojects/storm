@@ -49,7 +49,7 @@ function stormteam_menu() {
  * @function
  * Implementation of hook_permission().
  */
-function stormteam_perm() {
+function stormteam_permission() {
   return array(
     'Storm team: access' => array(
       'title' => t('Access Storm Team lists'),
