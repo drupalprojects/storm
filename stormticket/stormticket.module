@@ -19,22 +19,50 @@ function stormticket_help($path, $arg) {
   return $o;
 }
 
-function stormticket_perm() {
+function stormticket_permission() {
   return array(
-    'Storm ticket: access',
-    'Storm ticket: add',
-    'Storm ticket: delete all',
-    'Storm ticket: delete own',
-    'Storm ticket: delete of user organization',
-    'Storm ticket: delete if assigned to ticket',
-    'Storm ticket: edit all',
-    'Storm ticket: edit own',
-    'Storm ticket: edit of user organization',
-    'Storm ticket: edit if assigned to ticket',
-    'Storm ticket: view all',
-    'Storm ticket: view own',
-    'Storm ticket: view of user organization',
-    'Storm ticket: view if assigned to ticket',
+    'Storm ticket: access' => array(
+      'title' => t('Access Storm Ticket lists'),
+    ),
+    'Storm ticket: add' => array(
+      'title' => t('Add Storm Ticket'),
+    ),
+    'Storm ticket: delete all' => array(
+      'title' => t('Delete Any Storm Ticket'),
+    ),
+    'Storm ticket: delete own' => array(
+      'title' => t('Delete Authored Storm Ticket'),
+    ),
+    'Storm ticket: delete of user organization' => array(
+      'title' => t('Delete Storm Ticket of user organization'),
+    ),
+    'Storm ticket: delete if assigned to ticket' => array(
+      'title' => t('Delete Storm Ticket if user assigned to ticket'),
+    ),
+    'Storm ticket: edit all' => array(
+      'title' => t('Edit Any Storm Ticket'),
+    ),
+    'Storm ticket: edit own' => array(
+      'title' => t('Edit Authored Storm Ticket'),
+    ),
+    'Storm ticket: edit of user organization' => array(
+      'title' => t('Edit Storm Ticket of user organization'),
+    ),
+    'Storm ticket: edit if assigned to ticket' => array(
+      'title' => t('Edit Storm Ticket if assigned to ticket'),
+    ),
+    'Storm ticket: view all' => array(
+      'title' => t('View Any Storm Ticket'),
+    ),
+    'Storm ticket: view own' => array(
+      'title' => t('View Authored Storm Ticket'),
+    ),
+    'Storm ticket: view of user organization' => array(
+      'title' => t('View Storm Ticket of user organization'),
+    ),
+    'Storm ticket: view if assigned to ticket' => array(
+      'title' => t('View Storm Ticket if assigned to user'),
+    ),
   );
 }
 
