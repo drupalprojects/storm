@@ -347,7 +347,7 @@ function stormtask_theme() {
   return array(
     'stormtask_list' => array(
       'file'      => 'stormtask.theme.inc',
-      'arguments' => array('header', 'tasks'),
+      'variables' => array('header', 'tasks'),
     ),
     'stormtask_tasks' => array(
       'file'      => 'stormtask.theme.inc',
