@@ -303,7 +303,7 @@ function stormticket_node_info() {
   return array(
     'stormticket' => array(
       'name' => t('Ticket'),
-      'module' => 'stormticket',
+      'base' => 'stormticket',
       'description' => t("A ticket for Storm."),
       'title_label' => t("Title"),
       'body_label' => t("Description"),
@@ -399,32 +399,44 @@ function stormticket_form(&$node) {
     if (array_key_exists('organization_nid', $_GET)) $node->organization_nid = $_GET['organization_nid'];
     if (array_key_exists('project_nid', $_GET)) $node->project_nid = $_GET['project_nid'];
     if (array_key_exists('task_nid', $_GET)) $node->task_nid = $_GET['task_nid'];
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-              ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
+
+    $org_query = db_select('node', 'n');
+    $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+    $org_query
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.status', 1)
+      ->condition('sor.isactive', 1)
+      ->condition('n.type', 'stormorganization')
+      ->orderBy('n.title', 'ASC');
 
     $node->billable = variable_get('stormticket_billable_default', FALSE);
 
   }
   else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-              ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
+    $org_query = db_select('node', 'n');
+    $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+    $org_query
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.status', 1)
+      ->condition('n.type', 'stormorganization')
+      ->orderBy('n.title', 'ASC');
   }
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
   $form['group1'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
-  $s_org = stormorganization_access_sql($s_org);
-  $s_org = db_rewrite_sql($s_org);
-  $r = db_query($s_org);
+//  $s_org = stormorganization_access_sql($s_org);
+//  $s_org = db_rewrite_sql($s_org);
+  $org_result = $org_query->execute();
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($org_result as $organization) {
     $organizations[$organization->nid] = $organization->title;
     if (!isset($node->organization_nid)) {
       $node->organization_nid = $organization->nid;
@@ -439,12 +451,20 @@ function stormticket_form(&$node) {
     '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $node->organization_nid);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $pro_result = $pro_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('spr.organization_nid', $node->organization_nid)
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormproject')
+    ->orderBy('n.title', 'ASC')
+    ->execute();
+
+//  $s = stormproject_access_sql($s);
+//  $s = db_rewrite_sql($s);
   $projects = array();
-  while ($project = db_fetch_object($r)) {
+  foreach ($pro_result as $project) {
     $projects[$project->nid] = $project->title;
   }
   $form['group1']['project_nid'] = array(
@@ -452,18 +472,18 @@ function stormticket_form(&$node) {
     '#title' => t('Project'),
     '#default_value' => isset($node->project_nid) ? $node->project_nid : 0,
     '#options' => array(0 => '-') + $projects,
-    '#process' => array('storm_dependent_select_process'),
+//    '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, '-')"),
   );
 
-  $tree = isset($node->project_nid) ? _stormtask_get_tree($node->project_nid) : array();
-  $tasks = _stormtask_plain_tree($tree);
+//  $tree = isset($node->project_nid) ? _stormtask_get_tree($node->project_nid) : array();
+//  $tasks = _stormtask_plain_tree($tree);
   $form['group1']['task_nid'] = array(
     '#type' => 'select',
     '#title' => t('Task'),
     '#default_value' => isset($node->task_nid) ? $node->task_nid : 0,
-    '#options' => array(0 => '-') + $tasks,
-    '#process' => array('storm_dependent_select_process'),
+    '#options' => array(0 => '-') + array(),// $tasks,
+//    '#process' => array('storm_dependent_select_process'),
   );
 
   $form['group1']['task_nid_old'] = array(
@@ -473,7 +493,7 @@ function stormticket_form(&$node) {
 
   $form['group2'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
@@ -511,7 +531,7 @@ function stormticket_form(&$node) {
 
   $form['group3'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -17,
   );
 
@@ -546,7 +566,7 @@ function stormticket_form(&$node) {
 
   $form['group4'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => 3,
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -16,
   );
@@ -576,22 +596,22 @@ function stormticket_form(&$node) {
 
   $form['group5'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -15,
   );
 
-  $options = isset($node->project_nid) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : storm_get_assignment_options($node->organization_nid);
+//  $options = isset($node->project_nid) ? storm_get_assignment_options($node->organization_nid, $node->project_nid) : storm_get_assignment_options($node->organization_nid);
 
   $form['group5']['assigned_nid'] = array(
     '#type' => 'select',
     '#title' => t('Assigned to'),
-    '#options' => $options,
+    '#options' => array(),// $options,
     '#default_value' => isset($node->assigned_nid) ? $node->assigned_nid : NULL,
   );
 
   $form['group6'] = array(
     '#type' => 'markup',
-    '#theme' => 'storm_form_group',
+//    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group6') : -14,
   );
 
@@ -625,20 +645,33 @@ function stormticket_form(&$node) {
 function stormticket_insert($node) {
   _stormticket_beforesave($node);
 
-  db_query("INSERT INTO {stormticket}
-    (vid, nid, organization_nid, organization_title, project_nid, project_title,
-    task_nid, task_title, task_stepno, ticketcategory, ticketstatus, ticketpriority,
-    datebegin, dateend, durationunit, duration, pricemode, price, currency,
-    assigned_nid, assigned_title, billable, billed)
-    VALUES
-    (%d, %d, %d, '%s', %d, '%s',
-    %d, '%s', '%s', '%s', '%s', '%s',
-    %d, %d, '%s', %f, '%s', %f, '%s', %d, '%s', %d, %d)",
-    $node->vid, $node->nid, $node->organization_nid, $node->organization_title, $node->project_nid, $node->project_title,
-    $node->task_nid, $node->task_title, $node->task_stepno, $node->ticketcategory, $node->ticketstatus, $node->ticketpriority,
-    $node->datebegin, $node->dateend, $node->durationunit, $node->duration, $node->pricemode, $node->price, $node->currency,
-    $node->assigned_nid, $node->assigned_title, $node->billable, $node->billed
-  );
+  db_insert('stormticket')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'organization_nid' => $node->organization_nid,
+      'organization_title' => $node->organization_title,
+      'project_nid' => $node->project_nid,
+      'project_title' => $node->project_title,
+      'task_nid' => $node->task_nid,
+      'task_title' => $node->task_title,
+      'task_stepno' => $node->stepno,
+      'ticketcategory' => $node->ticketcategory,
+      'ticketstatus' => $node->ticketstatus,
+      'ticketpriority' => $node->ticketpriority,
+      'datebegin' => $node->datebegin,
+      'dateend' => $node->dateend,
+      'durationunit' => $node->durationunit,
+//      'duration' => $node->duration,
+      'pricemode' => $node->pricemode,
+//      'price' => $node->price,
+      'currency' => $node->currency,
+//      'assigned_nid' => $node->assigned_nid,
+      'assigned_title' => $node->assigned_title,
+      'billable' => $node->billable,
+      'billed' => $node->billed,
+    ))
+    ->execute();
 }
 
 function stormticket_update($node) {
@@ -688,21 +721,35 @@ function stormticket_update($node) {
 }
 
 function _stormticket_beforesave(&$node) {
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
-        WHERE type='stormorganization' AND n.nid=%d";
-  $r = db_query($s, $node->organization_nid);
-  $o = db_fetch_object($r);
+  $org_query = db_select('node', 'n');
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+  $org_result = $org_query
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.nid', $node->organization_nid)
+    ->execute();
+  $o = $org_result->fetchObject();
   $node->organization_title = $o->title;
 
-  $s = "SELECT n.title, p.organization_title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-        WHERE type='stormproject' AND n.nid=%d";
-  $r = db_query($s, $node->project_nid);
-  $p = db_fetch_object($r);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $pro_result = $pro_query
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormproject')
+    ->condition('n.nid', $node->project_nid)
+    ->execute();
+  $p = $pro_result->fetchObject();
   $node->project_title = isset($p->title) ? $p->title : '';
 
-  $s = "SELECT title, stepno FROM {node} n INNER JOIN {stormtask} t ON n.nid=t.nid WHERE n.type='stormtask' AND n.nid=%d";
-  $r = db_query($s, $node->task_nid);
-  $ta = db_fetch_object($r);
+  $task_query = db_select('node', 'n');
+  $task_query->join('stormtask', 'sta', 'n.vid = sta.vid');
+  $task_result = $task_query
+    ->fields('n', array('title'))
+    ->fields('sta', array('stepno'))
+    ->condition('n.type', 'stormtask')
+    ->condition('n.nid', $node->task_nid)
+    ->execute();
+  $ta = $task_result->fetchObject();
   $node->task_title = isset($ta->title) ? $ta->title : '';
   $node->task_stepno = isset($ta->stepno) ? $ta->stepno : '';
 
@@ -717,30 +764,31 @@ function _stormticket_beforesave(&$node) {
   if (is_array($node->dateend)) $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
 }
 
-function stormticket_nodeapi(&$node, $op, $teaser, $page) {
-  switch ($op) {
-    case 'prepare':
-      if (!isset($node->nid)) {
-        $category_list = storm_attributes_bydomain('Ticket category');
-        $node->ticketcategory = $category_list['default'];
+function stormticket_node_prepare($node) {
+  if (!isset($node->nid)) {
+    $category_list = storm_attributes_bydomain('Ticket category');
+    $node->ticketcategory = $category_list['default'];
 
-        $status_list = storm_attributes_bydomain('Ticket status');
-        $node->ticketstatus = $status_list['default'];
+    $status_list = storm_attributes_bydomain('Ticket status');
+    $node->ticketstatus = $status_list['default'];
 
-        $priority_list = storm_attributes_bydomain('Ticket priority');
-        $node->ticketpriority = $priority_list['default'];
-      }
-      break;
-    case 'delete revision':
-      // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormticket} WHERE vid = %d', $node->vid);
-      break;
+    $priority_list = storm_attributes_bydomain('Ticket priority');
+    $node->ticketpriority = $priority_list['default'];
   }
+}
+
+function stormticket_node_revision_delete($node) {
+  // Notice that we're matching a single revision based on the node's vid.
+  db_delete('stormticket')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 function stormticket_delete($node) {
   // Notice that we're matching all revision, by using the node's nid.
-  db_query('DELETE FROM {stormticket} WHERE nid = %d', $node->nid);
+  db_delete('stormticket')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 function stormticket_load($node) {
