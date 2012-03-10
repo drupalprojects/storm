@@ -418,7 +418,12 @@ function _stormteam_beforesave(&$node) {
   $variable = 'members_array_'. $i;
 
   while (isset($node->$variable)) {
-    $title = db_fetch_object(db_query('SELECT n.title FROM {node} AS n WHERE nid = %d', $node->$variable));
+    $per_result = db_select('node', 'n')
+      ->fields('n', array('title'))
+      ->condition('n.nid', $node->$variable)
+      ->execute();
+
+    $title = $per_result->fetchObject();
     if (!empty($title)) {
       $node->members_array[$node->$variable] = $title->title;
     }
