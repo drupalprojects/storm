@@ -45,11 +45,13 @@ function stormproject_list() {
     ),
   );
 
-  $query = db_select('node', 'n')
+  $query = db_select('node', 'n');
+  $query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $query
     ->fields('n')
+    ->fields('spr', array('projectcategory', 'projectstatus', 'projectpriority'))
     ->condition('n.status', 1)
     ->condition('n.type', 'stormproject');
-// spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid
 
   $where = array();
   $args = array();
