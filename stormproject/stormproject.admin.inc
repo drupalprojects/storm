@@ -342,7 +342,7 @@ function stormproject_list_filter($form, &$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => t('Assigned to'),
     '#default_value' => $assigned_to,
-    '#options' => array(),//$options,
+    '#options' => array(),// $options,
   );
 
   $form['filter']['group4']['billable'] = array(
