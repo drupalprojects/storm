@@ -682,7 +682,7 @@ function stormticket_update($node) {
     ->condition('n.type', 'stormorganization')
     ->condition('n.nid', $node->organization_nid)
     ->execute();
- 
+
   $o = $org_result->fetchObject();
   $node->organization_title = $o->title;
 
