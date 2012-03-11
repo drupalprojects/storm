@@ -352,7 +352,7 @@ function stormticket_list_filter($form, &$form_state, $filterdesc='Filter') {
     '#title' => t('Project'),
     '#default_value' => $project_nid,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+//    '#process' => array('storm_dependent_select_process'),
     '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-task-nid', 'edit-assigned-nid', true, 'All')"),
   );
 

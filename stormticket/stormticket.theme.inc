@@ -20,7 +20,7 @@ function theme_stormticket_list($variables) {
       storm_icon('category_'. $ticket->ticketcategory, storm_attribute_value('Ticket category', $ticket->ticketcategory)),
       l($ticket->organization_title, 'node/'. $ticket->organization_nid),
       l($ticket->project_title, 'node/'. $ticket->project_nid),
-      l($ticket->title, 'node/'. $ticket->nid) . theme('mark', node_mark($ticket->nid, $ticket->changed)),
+      l($ticket->title, 'node/'. $ticket->nid) . theme('mark', array('type' => node_mark($ticket->nid, $ticket->changed))),
       format_date($ticket->created, 'small'),
       storm_icon('status_'. $ticket->ticketstatus, storm_attribute_value('Ticket status', $ticket->ticketstatus)),
       storm_icon('priority_'. $ticket->ticketpriority, storm_attribute_value('Ticket priority', $ticket->ticketpriority)),
