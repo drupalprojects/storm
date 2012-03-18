@@ -1,6 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Bug #1485608 by kfritsche: Fixed Form.inc errors when creating new People and Projects.
 - Bug #1463246 by kfritsche: Fixed E_STRICT Warnings in storm invoice.
 - Bug #1397960 by kfritsche: Bug fix follow-up to Combine storm attribute module into the storm module.
 
