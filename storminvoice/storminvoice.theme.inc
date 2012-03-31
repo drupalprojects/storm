@@ -88,7 +88,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
   );
 
   $rows = array();
-  $rows[] = array(
+  $row = array(
     array(
       'data' => t('Total to pay'),
       'style' => 'font-weight: bold;',
@@ -98,20 +98,21 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  $rows[key(end($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_topay->tax1),
     'style' => 'text-align: right;',
   );
-  $rows[key(end($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_topay->tax2),
     'style' => 'text-align: right;',
   );
-  $rows[key(end($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_topay->total),
     'style' => 'text-align: right;',
   );
+  $rows[] = $row;
 
-  $rows[] = array(
+  $row = array(
     array(
       'data' => t('Total paid'),
       'style' => 'font-weight: bold;',
@@ -121,20 +122,21 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_paid->tax1),
     'style' => 'text-align: right;',
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_paid->tax2),
     'style' => 'text-align: right;',
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals_paid->total),
     'style' => 'text-align: right;',
   );
+  $rows[] = $row;
 
-  $rows[] = array(
+  $row = array(
     array(
       'data' => t('Total'),
       'style' => 'font-weight: bold;',
@@ -144,18 +146,19 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       'style' => 'text-align: right;',
     ),
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals->tax1),
     'style' => 'text-align: right;',
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals->tax2),
     'style' => 'text-align: right;',
   );
-  $rows[end(array_keys($rows))][] = array(
+  $row[] = array(
     'data' => sprintf('%.2f', $totals->total),
     'style' => 'text-align: right;',
   );
+  $rows[] = $row;
 
   $o .= theme('table', $header, $rows);
 
