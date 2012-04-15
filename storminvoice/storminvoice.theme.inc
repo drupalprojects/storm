@@ -525,7 +525,7 @@ function theme_storminvoice_report_pdf($node, $language, $output = 'screen') {
   $o = t('Bill to', array(), $language);
   if ($language1) $o .= "\n". t('Bill to', array(), $language1);
   $pdf->MultiCell($pageWidth * .4, 0, $o, 'B', 'L', 0, 1, PDF_MARGIN_LEFT, $y);
-  $o =  $organization->fullname ."\n";
+  $o =  $organization->title ."\n";
   $o .= $organization->address ."\n";
   $o .= $organization->city ."\n";
   if ($organization->zip) $o .= $organization->zip .' ';
@@ -717,7 +717,7 @@ function theme_storminvoice_report_html($node, $language) {
   if ($language1) $o .= '<br />'. t('Bill to :', array(), $language1);
   $o .= '</td></tr>';
   $o .= '<tr><td>';
-  $o .= '<strong>'. $organization->fullname .'</strong>';
+  $o .= '<strong>'. $organization->title .'</strong>';
   $o .= '<br />';
   $o .= $organization->address;
   $o .= '<br />';
