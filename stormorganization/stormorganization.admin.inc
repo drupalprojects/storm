@@ -35,7 +35,10 @@ function stormorganization_list() {
     ),
   );
 
-  $s = "SELECT n.*, sor.* FROM {node} AS n INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid WHERE n.status=1 AND n.type='stormorganization'";
+  $s = "SELECT n.*, sor.*, nre.format FROM {node} AS n
+    INNER JOIN {stormorganization} AS sor ON n.vid=sor.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormorganization'";
 
   $where = array();
   $args = array();

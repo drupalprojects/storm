@@ -514,7 +514,9 @@ function stormteam_list() {
     ),
   );
 
-  $s = "SELECT DISTINCT(n.nid), n.title, n.type, nre.teaser FROM {node} AS n INNER JOIN {stormteam} as ste ON n.vid=ste.vid INNER JOIN {node_revisions} as nre ON n.vid = nre.vid
+  $s = "SELECT n.nid, n.title, n.type, nre.teaser, nre.format, n.uid FROM {node} AS n
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    LEFT JOIN {stormteam} AS ste ON n.vid = ste.vid
     WHERE n.status=1 AND n.type='stormteam'";
 
   $where = array();
@@ -527,11 +529,7 @@ function stormteam_list() {
     $filterfields[] = t('Team name');
   }
 
-  $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
-  if (!isset($itemsperpage)) {
-    // Sets value for fieldset label, does not affect filter itself.
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-  }
+  $itemsperpage = isset($_SESSION['stormteam_list_filter']['itemsperpage']) ? $_SESSION['stormteam_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   if (count($filterfields) == 0) {
     $filterdesc = t('Not filtered');
@@ -571,13 +569,10 @@ function stormteam_list() {
  * Function to define form for setting Storm Team list filter.
  */
 function stormteam_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $name = $_SESSION['stormteam_list_filter']['name'];
+  $name = isset($_SESSION['stormteam_list_filter']['name']) ? $_SESSION['stormteam_list_filter']['name'] : '';
 
-  $itemsperpage = $_SESSION['stormteam_list_filter']['itemsperpage'];
-  if (!isset($itemsperpage)) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormteam_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormteam_list_filter']['itemsperpage']) ? $_SESSION['stormteam_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
+  $_SESSION['stormteam_list_filter']['itemsperpage'] = $itemsperpage;
 
   $form = array();
 

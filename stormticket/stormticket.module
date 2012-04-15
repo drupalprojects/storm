@@ -76,13 +76,13 @@ function stormticket_access($op, $node, $account=NULL) {
     elseif (user_access('Storm ticket: delete of user organization') && ($account->stormorganization_nid == $node->organization_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm ticket: delete if assigned to ticket' && ($account->stormperson_nid == $node->assigned_nid))) {
+    elseif (user_access('Storm ticket: delete if assigned to ticket') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm ticket: delete if assigned to ticket' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
+    elseif (user_access('Storm ticket: delete if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm ticket: delete if assigned to ticket' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
+    elseif (user_access('Storm ticket: delete if assigned to ticket') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
@@ -153,7 +153,7 @@ function stormticket_access_sql($sql, $where=array()) {
 
     if (module_exists('stormteam')) {
       // Load teams that the account belongs to
-      $belonged_teams = stormteam_user_return_teams($account);
+      $belonged_teams = stormteam_user_return_teams();
       // Allow access if any of those teams is the one in question
       foreach ($belonged_teams as $belonged_team) {
         $cond .= ' OR sti.assigned_nid = '. $belonged_team;
@@ -333,10 +333,10 @@ function stormticket_form(&$node) {
   if (arg(1)=='add') {
     $node->datebegin = time();
 
-    if (array_key_exists('organization_nid', $_GET) && !$node->organization_nid) {
+    if (array_key_exists('organization_nid', $_GET) && empty($node->organization_nid)) {
       $node->organization_nid = $_GET['organization_nid'];
     }
-    if (array_key_exists('project_nid', $_GET) && !$node->project_nid) {
+    if (array_key_exists('project_nid', $_GET) && empty($node->project_nid)) {
       $node->project_nid = $_GET['project_nid'];
       $p = node_load($node->project_nid);
       $node->organization_nid = $p->organization_nid;
@@ -345,7 +345,7 @@ function stormticket_form(&$node) {
         drupal_goto('node/'. $node->project_nid);
       }
     }
-    if (array_key_exists('task_nid', $_GET) && !$node->task_nid) {
+    if (array_key_exists('task_nid', $_GET) && empty($node->task_nid)) {
       $node->task_nid = $_GET['task_nid'];
       $t = node_load($node->task_nid);
       $node->organization_nid = $t->organization_nid;

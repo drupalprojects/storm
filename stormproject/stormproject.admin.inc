@@ -45,7 +45,10 @@ function stormproject_list() {
     ),
   );
 
-  $s  = "SELECT n.*, spr.* FROM {node} AS n INNER JOIN {stormproject} AS spr ON n.vid=spr.vid WHERE n.status=1 AND n.type='stormproject'";
+  $s  = "SELECT n.*, spr.*, nre.format FROM {node} AS n
+    INNER JOIN {stormproject} AS spr ON n.vid=spr.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormproject'";
 
   $where = array();
   $args = array();

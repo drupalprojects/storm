@@ -25,12 +25,6 @@
 function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topay, $totals_paid, $totals) {
   $rows = array();
   foreach ($invoices as $invoice) {
-    $n = new stdClass();
-    $n->nid = $invoice->nid;
-    $n->uid = $invoice->uid;
-    $n->organization_nid = $invoice->organization_nid;
-    $n->project_nid = $invoice->project_nid;
-    $n->type = 'storminvoice';
 
     $invoice->status = 'open';
     if ($invoice->paymentdate) {
@@ -55,7 +49,7 @@ function theme_storminvoice_list($header, $invoices, $itemsperpage, $totals_topa
       format_date($invoice->requestdate, 'custom', 'Y-m-d'),
       array('data' => sprintf('%.2f', $invoice->total), 'align' => 'right'),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($invoice, $_GET) .'&nbsp;'. storm_icon_delete_node($invoice, $_GET),
         'class' => 'storm_list_operations',
       ),
     );

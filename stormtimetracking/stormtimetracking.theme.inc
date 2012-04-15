@@ -7,14 +7,6 @@
 function theme_stormtimetracking_list($header, $timetrackings, $billing_duration) {
   $rows = array();
   foreach ($timetrackings as $timetracking) {
-    $n = new stdClass();
-    $n->nid = $timetracking->nid;
-    $n->uid = $timetracking->uid;
-    $n->organization_nid = $timetracking->organization_nid;
-    $n->project_nid = $timetracking->project_nid;
-    $n->task_nid = $timetracking->task_nid;
-    $n->ticket_nid = $timetracking->ticket_nid;
-    $n->type = 'stormtimetracking';
     $rows[] = array(
       l($timetracking->organization_title, 'node/'. $timetracking->organization_nid),
       l($timetracking->project_title, 'node/'. $timetracking->project_nid),
@@ -22,7 +14,7 @@ function theme_stormtimetracking_list($header, $timetrackings, $billing_duration
       format_date($timetracking->trackingdate, 'small'),
       array('data' => sprintf('%.2f', $timetracking->billing_duration), 'align' => 'right'),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($timetracking, $_GET) .'&nbsp;'. storm_icon_delete_node($timetracking, $_GET),
         'class' => 'storm_list_operations',
       ),
     );

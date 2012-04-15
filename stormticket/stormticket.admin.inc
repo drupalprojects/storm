@@ -82,7 +82,10 @@ function stormticket_list() {
   $args = array();
   $filterfields = array();
 
-  $s = "SELECT n.*, sti.* FROM  {node} AS n INNER JOIN {stormticket} AS sti ON n.vid=sti.vid WHERE n.status=1 AND n.type='stormticket' ";
+  $s = "SELECT n.*, sti.*, nre.format FROM  {node} AS n
+    INNER JOIN {stormticket} AS sti ON n.vid=sti.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormticket' ";
 
   if (isset($_SESSION['stormticket_list_filter']['organization_nid']) && ($_SESSION['stormticket_list_filter']['organization_nid'] != 0)) {
     $where[] = 'sti.organization_nid=%d';

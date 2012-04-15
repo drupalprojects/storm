@@ -456,7 +456,7 @@ function storminvoice_form(&$node) {
 
   $count = (isset($node->items)) ? count($node->items) : 0;
   for ($k = $count; $k <= $count + 2; $k++) {
-    // $node->items[$k] = stdclass;
+    $node->items[$k] = new stdClass();
     $node->items[$k]->tax1app = variable_get('storm_tax1_app', 1);
     $node->items[$k]->tax1percent = variable_get('storm_tax1_percent', 20);
     $node->items[$k]->tax2app = variable_get('storm_tax2_app', 0);
@@ -719,6 +719,9 @@ function _storminvoice_beforesave(&$node) {
   $j = 0;
   $variable = 'items_'. $j . '_description';
   while (isset($node->$variable)) {
+    if (empty($node->items[$j])) {
+      $node->items[$j] = new stdClass();
+    }
     $node->items[$j]->description = $node->$variable;
     $variable = 'items_'. $j .'_amount';
     $node->items[$j]->amount = str_replace(',', '.', $node->$variable);

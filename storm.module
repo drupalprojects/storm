@@ -1090,27 +1090,21 @@ function storm_icon_delete_node($node, $params=array()) {
 
 function storm_icon_add($path, $item, $params=array()) {
   global $user;
-  $type = $item->type;
-  $af = $type .'_access';
-  if (!$af('create', $item, $user)) return '';
+  if (!node_access('create', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_add', $path, t('Add'), '', $params, $attributes);
 }
 
 function storm_icon_edit($path, $item, $params=array()) {
   global $user;
-  $type = $item->type;
-  $af = $type .'_access';
-  if (!$af('update', $item, $user)) return '';
+  if (!node_access('update', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_edit', $path, t('Edit'), '', $params, $attributes);
 }
 
 function storm_icon_delete($path, $item, $params=array()) {
   global $user;
-  $type = $item->type;
-  $af = $type .'_access';
-  if (!$af('delete', $item, $user)) return '';
+  if (!node_access('delete', $item, $user)) return '';
   $attributes = array('class' => 'popups-form');
   return storm_icon_l('application_delete', $path, t('Delete'), '', $params, $attributes);
 }

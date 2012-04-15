@@ -7,14 +7,6 @@
 function theme_stormexpense_list($header, $expenses, $totals) {
   $rows = array();
   foreach ($expenses as $expense) {
-    $n = new stdClass();
-    $n->nid = $expense->nid;
-    $n->uid = $expense->uid;
-    $n->organization_nid = $expense->organization_nid;
-    $n->project_nid = $expense->project_nid;
-    $n->task_nid = $expense->task_nid;
-    $n->ticket_nid = $expense->ticket_nid;
-    $n->type = 'stormexpense';
     $rows[] = array(
       l($expense->organization_title, 'node/'. $expense->organization_nid),
       l($expense->project_title, 'node/'. $expense->project_nid),
@@ -22,7 +14,7 @@ function theme_stormexpense_list($header, $expenses, $totals) {
       format_date($expense->expensedate, 'custom', 'Y-m-d'),
       array('data' => sprintf('%.2f', $expense->total), 'align' => 'right'),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($expense, $_GET) .'&nbsp;'. storm_icon_delete_node($expense, $_GET),
         'class' => 'storm_list_operations',
       ),
     );

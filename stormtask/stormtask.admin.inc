@@ -483,7 +483,10 @@ function stormtask_list() {
   $args = array();
   $filterfields = array();
 
-  $s  = "SELECT n.*, sta.* FROM {node} AS n INNER JOIN {stormtask} AS sta ON n.vid=sta.vid WHERE n.status=1 AND n.type='stormtask' ";
+  $s  = "SELECT n.*, sta.*, nre.format FROM {node} AS n
+    INNER JOIN {stormtask} AS sta ON n.vid=sta.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormtask' ";
   if (isset($_SESSION['stormtask_list_filter']['organization_nid']) && ($_SESSION['stormtask_list_filter']['organization_nid'] != 0)) {
     $where[] = 'sta.organization_nid=%d';
     $args[] = $_SESSION['stormtask_list_filter']['organization_nid'];

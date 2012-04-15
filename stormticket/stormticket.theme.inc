@@ -8,12 +8,6 @@ function theme_stormticket_list($header, $tickets) {
 
   $rows = array();
   foreach ($tickets as $ticket) {
-    $n = new stdClass();
-    $n->nid = $ticket->nid;
-    $n->uid = $ticket->uid;
-    $n->organization_nid = $ticket->organization_nid;
-    $n->type = 'stormticket';
-
     $rows[] = array(
       storm_icon('category_'. $ticket->ticketcategory, storm_attribute_value('Ticket category', $ticket->ticketcategory)),
       l($ticket->organization_title, 'node/'. $ticket->organization_nid),
@@ -23,7 +17,7 @@ function theme_stormticket_list($header, $tickets) {
       storm_icon('status_'. $ticket->ticketstatus, storm_attribute_value('Ticket status', $ticket->ticketstatus)),
       storm_icon('priority_'. $ticket->ticketpriority, storm_attribute_value('Ticket priority', $ticket->ticketpriority)),
       array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
+        'data' => storm_icon_edit_node($ticket, $_GET) .'&nbsp;'. storm_icon_delete_node($ticket, $_GET),
         'class' => 'storm_list_operations',
       ),
     );

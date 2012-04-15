@@ -34,12 +34,14 @@ class storm_handler_field_operation extends views_handler_field_node_link {
   }
 
   function render($values) {
+    global $user;
     // ensure user has access to edit this node.
     $node = new stdClass();
     $node->nid = $values->{$this->aliases['nid']};
     $node->uid = $values->{$this->aliases['uid']};
     $node->type = $values->{$this->aliases['type']};
     $node->format = $values->{$this->aliases['format']};
+    // TODO add stormorganization_nid and assigned_nid!
     $node->status = 1; // unpublished nodes ignore access control
     if ($this->options['display_icons']) {
       $value = "";
@@ -52,18 +54,14 @@ class storm_handler_field_operation extends views_handler_field_node_link {
       return $value;
     }
     else {
-      global $user;
-      $type = $node->type;
-      $af = $type .'_access';
-
       $value = "";
-      if ($af('update', $node, $user)) {
+      if (node_access('update', $node)) {
         $value .= l(t('edit'), "node/$node->nid/edit", array('query' => drupal_get_destination()));
       }
-      if (!empty($value)) {
-        $value .= '&nbsp;|&nbsp;';
-      }
-      if ($af('delete', $node, $user)) {
+      if (node_access('delete', $node)) {
+        if (!empty($value)) {
+          $value .= '&nbsp;|&nbsp;';
+        }
         $value .= l(t('delete'), "node/$node->nid/delete", array('query' => drupal_get_destination()));
       }
 

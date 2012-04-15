@@ -93,13 +93,13 @@ function stormproject_access($op, $node, $account=NULL) {
     elseif (user_access('Storm project: delete if project manager') && ($account->stormperson_nid == $node->manager_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm project: delete if assigned to project' && ($account->stormperson_nid == $node->assigned_nid))) {
+    elseif (user_access('Storm project: delete if assigned to project') && ($account->stormperson_nid == $node->assigned_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid))) {
+    elseif (user_access('Storm project: delete if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormperson_nid)) {
       return TRUE;
     }
-    elseif (user_access('Storm project: delete if assigned to project' && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid))) {
+    elseif (user_access('Storm project: delete if assigned to project') && module_exists('stormteam') && stormteam_user_belongs_to_team($node->assigned_nid, $account->stormorganization_nid)) {
       return TRUE;
     }
   }
@@ -180,7 +180,7 @@ function stormproject_access_sql($sql, $where = array()) {
 
     if (module_exists('stormteam')) {
       // Load teams that the account belongs to
-      $belonged_teams = stormteam_user_return_teams($account);
+      $belonged_teams = stormteam_user_return_teams();
       // Allow access if any of those teams is the one in question
       foreach ($belonged_teams as $belonged_team) {
         $cond .= ' OR spr.assigned_nid = '. $belonged_team;
@@ -343,10 +343,10 @@ function stormproject_form(&$node) {
     $node->datebegin = time();
     $node->dateend = time();
 
-    if (array_key_exists('organization_nid', $_GET) && !$node->organization) {
+    if (array_key_exists('organization_nid', $_GET) && empty($node->organization_nid)) {
       $node->organization_nid = $_GET['organization_nid'];
     }
-    if (isset($_SESSION['stormproject_list_filter']['organization_nid']) && !$node->organization_nid) {
+    if (isset($_SESSION['stormproject_list_filter']['organization_nid']) && empty($node->organization_nid)) {
       $node->organization_nid = $_SESSION['stormproject_list_filter']['organization_nid'];
     }
     $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
@@ -588,11 +588,13 @@ function stormproject_insert($node) {
   $r = db_query($s, $node->manager_nid);
   $manager = db_fetch_object($r);
   if (!$manager) {
+    $manager = new stdClass();
     $manager->title = '';
   }
 
   $assigned = node_load($node->assigned_nid);
   if (!$assigned) {
+    $assigned = new stdClass();
     $assigned->title = '';
   }
 

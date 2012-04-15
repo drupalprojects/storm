@@ -68,7 +68,10 @@ function stormnote_list() {
     ),
   );
 
-  $s  = "SELECT n.title, sno.* FROM {node} AS n INNER JOIN {stormnote} AS sno ON n.vid=sno.vid WHERE n.status=1 AND n.type='stormnote' ";
+  $s  = "SELECT n.title, n.type, n.uid, sno.*, nre.format FROM {node} AS n
+    INNER JOIN {stormnote} AS sno ON n.vid=sno.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormnote' ";
 
   $where = array();
   $args = array();

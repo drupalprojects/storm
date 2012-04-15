@@ -86,8 +86,10 @@ function stormtimetracking_list() {
     ),
   );
 
-  $s = "SELECT n.*,  stt.* FROM {node} n INNER JOIN {stormtimetracking} stt ON n.vid=stt.vid
-  WHERE n.status=1 AND n.type='stormtimetracking' ";
+  $s = "SELECT n.*,  stt.*, nre.format FROM {node} n
+    INNER JOIN {stormtimetracking} stt ON n.vid=stt.vid
+    INNER JOIN {node_revisions} AS nre ON n.vid = nre.vid
+    WHERE n.status=1 AND n.type='stormtimetracking' ";
 
   $s_duration = "SELECT SUM(billing_duration) FROM {stormtimetracking} stt INNER JOIN {node} n ON n.vid=stt.vid WHERE n.status=1 AND n.type='stormtimetracking' ";
 
@@ -142,11 +144,7 @@ function stormtimetracking_list() {
     $filterfields[] = t('Billed');
   }
 
-  $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
-  if (!isset($itemsperpage)) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormtimetracking_list_filter']['itemsperpage'] =  $itemsperpage;
-  }
+  $itemsperpage = isset($_SESSION['stormtimetracking_list_filter']['itemsperpage']) ? $_SESSION['stormtimetracking_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   if (isset($_SESSION['stormtimetracking_list_filter']['user']) && $_SESSION['stormtimetracking_list_filter']['user'] != '') {
     $trackinguser = user_load(array('name' => $_SESSION['stormtimetracking_list_filter']['user']));
@@ -162,7 +160,7 @@ function stormtimetracking_list() {
   else {
     $filterdesc = t('Filtered by !fields', array('!fields' => implode(", ", array_unique($filterfields))));
   }
-  $filterdesc .= ' | '. t('!items items per page', array('!items' => $_SESSION['stormtimetracking_list_filter']['itemsperpage']));
+  $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
   $o = drupal_get_form('stormtimetracking_list_filter', $filterdesc);
 
@@ -191,20 +189,18 @@ function stormtimetracking_list() {
 }
 
 function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
-  $organization_nid = $_SESSION['stormtimetracking_list_filter']['organization_nid'];
-  $project_nid = $_SESSION['stormtimetracking_list_filter']['project_nid'];
-  $task_nid = $_SESSION['stormtimetracking_list_filter']['task_nid'];
-  $ticket_nid = $_SESSION['stormtimetracking_list_filter']['ticket_nid'];
-  $itemsperpage = $_SESSION['stormtimetracking_list_filter']['itemsperpage'];
-  if (!isset($itemsperpage)) {
-    $itemsperpage = variable_get('storm_default_items_per_page', 10);
-    $_SESSION['stormtimetracking_list_filter']['itemsperpage'] = $itemsperpage;
-  }
+  $organization_nid = isset($_SESSION['stormtimetracking_list_filter']['organization_nid']) ? $_SESSION['stormtimetracking_list_filter']['organization_nid'] : 0;
+  $project_nid = isset($_SESSION['stormtimetracking_list_filter']['project_nid']) ? $_SESSION['stormtimetracking_list_filter']['project_nid'] : 0 ;
+  $task_nid = isset($_SESSION['stormtimetracking_list_filter']['task_nid']) ? $_SESSION['stormtimetracking_list_filter']['task_nid'] : 0;
+  $ticket_nid = isset($_SESSION['stormtimetracking_list_filter']['ticket_nid']) ? $_SESSION['stormtimetracking_list_filter']['ticket_nid'] : 0;
+  $itemsperpage = isset($_SESSION['stormtimetracking_list_filter']['itemsperpage']) ? $_SESSION['stormtimetracking_list_filter']['itemsperpage'] : variable_get('storm_default_items_per_page', 10);
 
   $datefrom = isset($_SESSION['stormtimetracking_list_filter']['datefrom']) ? $_SESSION['stormtimetracking_list_filter']['datefrom'] : NULL;
   $dateto = isset($_SESSION['stormtimetracking_list_filter']['dateto']) ? $_SESSION['stormtimetracking_list_filter']['dateto'] : NULL ;
 
-  $trackinguser = $_SESSION['stormtimetracking_list_filter']['user'];
+  $trackinguser = isset($_SESSION['stormtimetracking_list_filter']['user']) ? $_SESSION['stormtimetracking_list_filter']['user'] : '';
+  $billable = isset($_SESSION['stormtimetracking_list_filter']['billable']) ? $_SESSION['stormtimetracking_list_filter']['billable'] : '-';
+  $billed = isset($_SESSION['stormtimetracking_list_filter']['billed']) ? $_SESSION['stormtimetracking_list_filter']['billed'] : '-';
 
   $form = array();
 
@@ -326,14 +322,14 @@ function stormtimetracking_list_filter(&$form_state, $filterdesc = 'Filter') {
     '#type' => 'select',
     '#title' => 'Billable',
     '#options' => array('-' => t('all'), '1' => t('billable'), '0' => t('not billable')),
-    '#default_value' => $_SESSION['stormtimetracking_list_filter']['billable'],
+    '#default_value' => $billable,
   );
 
   $form['filter']['group3']['billed'] = array(
     '#type' => 'select',
     '#title' => 'Billed',
     '#options' => array('-' => t('all'), '1' => t('billed'), '0' => t('not billed')),
-    '#default_value' => $_SESSION['stormtimetracking_list_filter']['billed'],
+    '#default_value' => $billed,
   );
 
   $form['filter']['group4'] = array(
