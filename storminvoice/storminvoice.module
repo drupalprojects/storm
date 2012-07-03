@@ -848,6 +848,14 @@ function storminvoice_admin_settings() {
     '#size' => 5,
   );
 
+  $form['storminvoice_hours_per_day'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of hours in a day'),
+    '#default_value' => variable_get('storminvoice_hours_per_day', 8),
+    '#description' => t('Number of hours in a day, used for calculating the daily rate.'),
+    '#size' => 3,
+  );
+
   $form['storminvoice_payment_modes'] = array(
     '#type' => 'textarea',
     '#title' => t('Modes for invoice payment'),
@@ -938,7 +946,7 @@ function storminvoice_get_invoice_number($requestdate) {
 function storminvoice_get_rate($node) {
   $rate_array = array('pricemode_used' => '', 'rate_to_use' => 0);
 
-  $hours_per_day = 8;
+  $hours_per_day = variable_get('storminvoice_hours_per_day', 8);
   $found = FALSE;
 
   $node_list = array();
@@ -956,20 +964,32 @@ function storminvoice_get_rate($node) {
     case 'stormticket':
       $node_list = array('ticket' => $node->nid, 'task' => $node->task_nid, 'project' => $node->project_nid, 'organization' => $node->organization_nid);
       break;
-    }
+  }
 
-    foreach ($node_list as $type => $nid) {
+  foreach ($node_list as $type => $nid) {
     if ($nid) {
       $parent_item = node_load($nid);
       switch ($parent_item->pricemode) {
         case 'hourly':
-          $found = TRUE;
-          $rate_array['rate_to_use'] = $parent_item->price;
+          if ($parent_item->durationunit == 'hour') {
+            $found = TRUE;
+            $rate_array['rate_to_use'] = $parent_item->price;
+          }
+          elseif ($parent_item->durationunit == 'day') {
+            $found = TRUE;
+            $rate_array['rate_to_use'] = $parent_item->price * $hours_per_day;
+          }
           break;
 
         case 'daily':
-          $found = TRUE;
-          $rate_array['rate_to_use'] = $parent_item->price / $hours_per_day;
+          if ($parent_item->durationunit == 'hour') {
+            $found = TRUE;
+            $rate_array['rate_to_use'] = $parent_item->price / $hours_per_day;
+          }
+          elseif ($parent_item->durationunit == 'day') {
+            $found = TRUE;
+            $rate_array['rate_to_use'] = $parent_item->price;
+          }
           break;
 
         case 'fixed':
@@ -986,14 +1006,14 @@ function storminvoice_get_rate($node) {
           continue;
       }
     }
-  if ($found == TRUE) {
-    $rate_array['pricemode_used'] = $parent_item->pricemode;
-    break;
+    if ($found == TRUE) {
+      $rate_array['pricemode_used'] = $parent_item->pricemode;
+      break;
     }
   }
   if ($found == FALSE) {
     drupal_set_message(t('Error whilst finding a rate from ticket, task, project and organization. Consider setting the pricemode and price for your client organizations to avoid this error.'), 'error');
-    }
+  }
   return $rate_array;
 }
 
@@ -1002,25 +1022,26 @@ function storminvoice_get_item_desc($rate_array, $node) {
   switch ($rate_array['pricemode_used']) {
     case 'hourly':
       if ($node->type == 'stormtimetracking') {
-        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur @units work at @rate per hour on @desc', array('@dur' => $node->billing_duration, '@unit' => $node->durationunit, '@rate' => $node->price, '@desc' => $node->title));
       }
       else {
-        $description = date('d M y') . ': ' . t('@dur hours work at @rate per hour on @desc', array('@dur' => $node->duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+        $description = date('d M y') . ': ' . t('@dur @units work at @rate per hour on @desc', array('@dur' => $node->duration, '@unit' => $node->durationunit, '@rate' => $node->price, '@desc' => $node->title));
       }
       break;
     case 'daily':
       if ($node->type == 'stormtimetracking') {
-        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur @units work at @rate per day on @desc', array('@dur' => $node->billing_duration, '@unit' => $node->durationunit, '@rate' => $node->price, '@desc' => $node->title));
       }
       else {
-        $description = date('d M y') . ': ' . t('@dur hours work at @rate per day on @desc', array('@dur' => $node->duration, '@rate' => $rate_array['rate_to_use'], '@desc' => $node->title));
+        $description = date('d M y') . ': ' . t('@dur @units work at @rate per day on @desc', array('@dur' => $node->duration, '@unit' => $node->durationunit, '@rate' => $node->price, '@desc' => $node->title));
       }
+      break;
     case 'fixed':
       if ($node->type == 'stormtimetracking') {
-        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur hours unbilled work on @desc', array('@dur' => $node->billing_duration, '@desc' => $node->title));
+        $description = date('d M y', $node->trackingdate) . ': ' . t('@dur @units unbilled work on @desc', array('@dur' => $node->billing_duration, '@unit' => $node->durationunit, '@desc' => $node->title));
       }
       else {
-        $description = date('d M y') . ': ' . t('@dur hours unbilled work on @desc', array('@dur' => $node->duration, '@desc' => $node->title));
+        $description = date('d M y') . ': ' . t('@dur @units unbilled work on @desc', array('@dur' => $node->duration, '@unit' => $node->durationunit, '@desc' => $node->title));
       }
       break;
     case 'fixed_price':

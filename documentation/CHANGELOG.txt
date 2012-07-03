@@ -1,6 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Bug #1621074 by Raphael Dürst: Fixed Calculation of hourly and daily rates.
 - Bug #1505446 by juliangb | modctek: Fixed Fullname still being called on Invoice template.
 - Bug #1448764 by kfritsche: Fixed Ticketlist doesn't show edit link.
 - Bug #1485608 by kfritsche: Fixed Form.inc errors when creating new People and Projects.
