@@ -660,14 +660,14 @@ function _stormproject_beforesave(&$node) {
   if (is_array($node->datebegin)) {
       $node->datebegin = _storm_date_to_gmtimestamp($node->datebegin);
   }
-  else {
+  elseif (is_string($node->datebegin)) {
       $node->datebegin = strtotime($node->datebegin);
   }
 
   if (is_array($node->dateend)) {
       $node->dateend = _storm_date_to_gmtimestamp($node->dateend);
   }
-  else {
+  elseif (is_string($node->dateend)) {
       $node->dateend = strtotime($node->dateend);
   }
 }
