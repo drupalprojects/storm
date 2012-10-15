@@ -84,12 +84,12 @@ function stormticket_views_data() {
     'help' => t('Storm Ticket category'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Ticket Category',
       'icon' => 'category',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Ticket Category',
     ),
     'sort' => array(
@@ -102,12 +102,12 @@ function stormticket_views_data() {
     'help' => t('Storm Ticket Status'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Ticket Status',
       'icon' => 'status',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Ticket Status',
     ),
     'sort' => array(
@@ -120,12 +120,12 @@ function stormticket_views_data() {
     'help' => t('Storm Ticket priority'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Ticket Priority',
       'icon' => 'priority',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Ticket Priority',
     ),
     'sort' => array(
@@ -185,11 +185,11 @@ function stormticket_views_data() {
     'help' => t('Storm Ticket duration unit'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Duration unit',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Duration unit',
     ),
     'sort' => array(
@@ -282,13 +282,13 @@ function stormticket_views_data() {
 function stormticket_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'stormattribute'),
+      'path' => drupal_get_path('module', 'storm'),
     ),
     'handlers' => array(
-      'stormattribute_handler_field_attributes_domain' => array(
+      'storm_handler_field_attributes_domain' => array(
         'parent' => 'views_handler_field',
       ),
-      'stormattribute_handler_filter_attributes_domain' => array(
+      'storm_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
       'storm_handler_field_operation' => array(

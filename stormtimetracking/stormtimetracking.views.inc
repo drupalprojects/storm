@@ -243,10 +243,10 @@ function stormtimetracking_views_data() {
 function stormtimetracking_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'stormattribute'),
+      'path' => drupal_get_path('module', 'storm'),
     ),
     'handlers' => array(
-      'stormattribute_handler_filter_attributes_domain' => array(
+      'storm_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
       'storm_handler_field_operation' => array(

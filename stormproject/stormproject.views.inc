@@ -46,12 +46,12 @@ function stormproject_views_data() {
     'help' => t('Storm Project Status'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Project Status',
       'icon' => 'status',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Project Status',
     ),
     'sort' => array(
@@ -64,12 +64,12 @@ function stormproject_views_data() {
     'help' => t('Storm Project Category'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Project Category',
       'icon' => 'projectcategory',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Project Category',
     ),
     'sort' => array(
@@ -82,12 +82,12 @@ function stormproject_views_data() {
     'help' => t('Storm Project Priority'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Project Priority',
       'icon' => 'priority'
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Project Priority',
     ),
     'sort' => array(
@@ -309,13 +309,13 @@ function stormproject_views_data() {
 function stormproject_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'stormattribute'),
+      'path' => drupal_get_path('module', 'storm'),
     ),
     'handlers' => array(
-      'stormattribute_handler_field_attributes_domain' => array(
+      'storm_handler_field_attributes_domain' => array(
         'parent' => 'views_handler_field',
       ),
-      'stormattribute_handler_filter_attributes_domain' => array(
+      'storm_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
       'storm_handler_field_operation' => array(
