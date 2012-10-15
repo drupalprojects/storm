@@ -1,5 +1,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
+Version 6.x-2.x:
+- No changes since 6.x-2.1
+
 Version 6.x-2.1:
 - Bug #1508998 by m.koo, juliangb | copeasetic: Fixed Views - Broken/Missing handler on Status field.
 - Bug #1596208 by Raphael Dürst: Fixed Bug with datebegin/dateend and _stormproject_beforesave().
