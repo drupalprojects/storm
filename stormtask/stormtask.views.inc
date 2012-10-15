@@ -118,7 +118,7 @@ function stormtask_views_data() {
     'help' => t('Storm Task Status'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Task Status',
       'icon' => 'status',
     ),
@@ -126,7 +126,7 @@ function stormtask_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Task Status',
     ),
   );
@@ -136,7 +136,7 @@ function stormtask_views_data() {
     'help' => t('Storm Task Category'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Task Category',
       'icon' => 'category',
     ),
@@ -144,7 +144,7 @@ function stormtask_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Task Category',
     ),
   );
@@ -154,7 +154,7 @@ function stormtask_views_data() {
     'help' => t('Storm Task Priority'),
     'field' => array(
       'click sortable' => TRUE,
-      'handler' => 'stormattribute_handler_field_attributes_domain',
+      'handler' => 'storm_handler_field_attributes_domain',
       'domain' => 'Task Priority',
       'icon' => 'priority',
     ),
@@ -162,7 +162,7 @@ function stormtask_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'stormattribute_handler_filter_attributes_domain',
+      'handler' => 'storm_handler_filter_attributes_domain',
       'domain' => 'Task Priority',
     ),
   );
@@ -353,13 +353,13 @@ function stormtask_views_data() {
 function stormtask_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'stormattribute'),
+      'path' => drupal_get_path('module', 'storm'),
     ),
     'handlers' => array(
-      'stormattribute_handler_field_attributes_domain' => array(
+      'storm_handler_field_attributes_domain' => array(
         'parent' => 'views_handler_field',
       ),
-      'stormattribute_handler_filter_attributes_domain' => array(
+      'storm_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
       ),
       'storm_handler_field_operation' => array(

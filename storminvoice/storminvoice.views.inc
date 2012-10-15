@@ -419,9 +419,9 @@ function storminvoice_views_handlers() {
       'path' => drupal_get_path('module', 'storminvoice'),
     ),
     'handlers' => array(
-      'stormattribute_handler_filter_attributes_domain' => array(
+      'storm_handler_filter_attributes_domain' => array(
         'parent' => 'views_handler_filter_in_operator',
-        'path' => drupal_get_path('module', 'stormattribute'),
+        'path' => drupal_get_path('module', 'storm'),
       ),
       'storm_handler_field_operation' => array(
         'parent' => 'views_handler_field_node_link',
