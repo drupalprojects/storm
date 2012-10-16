@@ -448,8 +448,6 @@ function stormorganization_update($node) {
   else {
     db_update('stormorganization')
       ->fields(array(
-        'vid' => $node->vid,
-        'nid' => $node->nid,
         'country' => $node->country,
         'www' => $node->www,
         'phone' => $node->phone,
@@ -467,6 +465,7 @@ function stormorganization_update($node) {
         'pricemode' => $node->pricemode,
 //        'price' => $node->price,
       ))
+      ->condition('vid', $node->vid, '=')
       ->execute();
 
     if ($node->title != $node->title_old) {
