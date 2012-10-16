@@ -348,7 +348,7 @@ function stormorganization_form(&$node) {
     '#default_value' => isset($node->www) ? $node->www : NULL,
   );
 
-  $form['group4']['mail'] = array(
+  $form['group4']['email'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail'),
     '#size' => 30,
