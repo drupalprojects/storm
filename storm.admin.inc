@@ -175,16 +175,30 @@ function storm_attribute_list_submit($form, &$form_state) {
     }
   }
 
-  $s = "UPDATE {stormattribute} SET isactive=%d, weight=%d WHERE aid=%d";
   foreach ($attributes as $aid => $values) {
-    db_query($s, $values['isactive'], $values['weight'], $aid);
+    db_update('stormattribute')
+      ->fields(array(
+        'isactive' => array_key_exists('isactive', $values) ? $values['isactive'] : 0,
+        'weight' => $values['weight'],
+      ))
+      ->condition('aid', $aid, '=')
+      ->execute();
   }
 
   foreach ($default_for_domain as $domain => $aid) {
-    $s = "UPDATE {stormattribute} SET isdefault=0 WHERE domain='%s'";
-    db_query($s, $domain);
-    $s = "UPDATE {stormattribute} SET isdefault=1 WHERE aid=%d";
-    db_query($s, $aid);
+    db_update('stormattribute')
+      ->fields(array(
+        'isdefault' => 0,
+      ))
+      ->condition('domain', $domain, '=')
+      ->execute();
+
+    db_update('stormattribute')
+      ->fields(array(
+        'isdefault' => 1,
+      ))
+      ->condition('aid', $aid, '=')
+      ->execute();
   }
 
   drupal_set_message(t('Attributes saved'));
