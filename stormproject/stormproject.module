@@ -39,7 +39,7 @@ function stormproject_permission() {
       'title' => t('Delete Authored Storm Projects'),
     ),
     'Storm project: delete of user organization' => array(
-      'title' => t('Delete Storm Projects of user organization'),
+      'title' => t('Delete Storm Projects in own Organization'),
     ),
     'Storm project: delete if project manager' => array(
       'title' => t('Delete Storm Project if project manager'),
@@ -54,7 +54,7 @@ function stormproject_permission() {
       'title' => t('Edit Authored Storm Projects'),
     ),
     'Storm project: edit of user organization' => array(
-      'title' => t('Edit Storm Project of user organization'),
+      'title' => t('Edit Storm Project in own Organization'),
     ),
     'Storm project: edit if project manager' => array(
       'title' => t('Edit Storm Project if project manager'),
@@ -69,7 +69,7 @@ function stormproject_permission() {
       'title' => t('View Authored Storm Project'),
     ),
     'Storm project: view of user organization' => array(
-      'title' => t('View Storm Project of user organization'),
+      'title' => t('View Storm Project in own Organization'),
     ),
     'Storm project: view if project manager' => array(
       'title' => t('View Storm Project if project manager'),

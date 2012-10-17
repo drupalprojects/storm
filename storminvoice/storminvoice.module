@@ -26,19 +26,41 @@ function storminvoice_help($path, $arg) {
   return $o;
 }
 
-function storminvoice_perm() {
+function storminvoice_permission() {
   return array(
-    'Storm invoice: access',
-    'Storm invoice: add',
-    'Storm invoice: delete all',
-    'Storm invoice: delete own',
-    'Storm invoice: delete of user organization',
-    'Storm invoice: edit all',
-    'Storm invoice: edit own',
-    'Storm invoice: edit of user organization',
-    'Storm invoice: view all',
-    'Storm invoice: view own',
-    'Storm invoice: view of user organization',
+    'Storm invoice: access' => array(
+      'title' => t('Access Storm Invoice'),
+    ),
+    'Storm invoice: add' => array(
+      'title' => t('Add Storm Invoices'),
+    ),
+    'Storm invoice: delete all' => array(
+      'title' => t('Delete Any Storm Invoice'),
+    ),
+    'Storm invoice: delete own' => array(
+      'title' => t('Delete Authored Storm Invoices'),
+    ),
+    'Storm invoice: delete of user organization' => array(
+      'title' => t('Delete Storm Invoices in own Organization'),
+    ),
+    'Storm invoice: edit all' => array(
+      'title' => t('Edit Any Storm Invoice'),
+    ),
+    'Storm invoice: edit own' => array(
+      'title' => t('Edit Authored Storm Invoices'),
+    ),
+    'Storm invoice: edit of user organization' => array(
+      'title' => t('Edit Storm Invoices in own Organization'),
+    ),
+    'Storm invoice: view all' => array(
+      'title' => t('View Any Storm Invoice'),
+    ),
+    'Storm invoice: view own' => array(
+      'title' => t('View Authored Storm Invoices'),
+    ),
+    'Storm invoice: view of user organization' => array(
+      'title' => t('View Storm Invoices in own Organization'),
+    ),
   );
 }
 

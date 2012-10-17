@@ -34,7 +34,7 @@ function stormticket_permission() {
       'title' => t('Delete Authored Storm Ticket'),
     ),
     'Storm ticket: delete of user organization' => array(
-      'title' => t('Delete Storm Ticket of user organization'),
+      'title' => t('Delete Storm Ticket in own organization'),
     ),
     'Storm ticket: delete if assigned to ticket' => array(
       'title' => t('Delete Storm Ticket if user assigned to ticket'),
@@ -46,7 +46,7 @@ function stormticket_permission() {
       'title' => t('Edit Authored Storm Ticket'),
     ),
     'Storm ticket: edit of user organization' => array(
-      'title' => t('Edit Storm Ticket of user organization'),
+      'title' => t('Edit Storm Ticket in own Organization'),
     ),
     'Storm ticket: edit if assigned to ticket' => array(
       'title' => t('Edit Storm Ticket if assigned to ticket'),
@@ -58,7 +58,7 @@ function stormticket_permission() {
       'title' => t('View Authored Storm Ticket'),
     ),
     'Storm ticket: view of user organization' => array(
-      'title' => t('View Storm Ticket of user organization'),
+      'title' => t('View Storm Ticket in own Organization'),
     ),
     'Storm ticket: view if assigned to ticket' => array(
       'title' => t('View Storm Ticket if assigned to user'),

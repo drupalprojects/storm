@@ -55,7 +55,7 @@ function stormperson_permission() {
       'title' => t('Delete Authored Storm Person'),
     ),
     'Storm person: delete of user organization' => array(
-      'title' => t('Delete Storm Persons in user organization'),
+      'title' => t('Delete Storm Persons in own Organization'),
     ),
     'Storm person: delete when linked to own user account' => array(
       'title' => t('Delete Storm Person linked to own user account'),
@@ -67,7 +67,7 @@ function stormperson_permission() {
       'title' => t('Edit Authored Storm Person'),
     ),
     'Storm person: edit of user organization' => array(
-      'title' => t('Edit Storm Persons in user organization'),
+      'title' => t('Edit Storm Persons in own Organization'),
     ),
     'Storm person: edit when linked to own user account' => array(
       'title' => t('Edit Storm Person linked to own user account'),
@@ -79,7 +79,7 @@ function stormperson_permission() {
       'title' => t('View Authored Storm Person'),
     ),
     'Storm person: view of user organization' => array(
-      'title' => t('View Storm Persons in user organization'),
+      'title' => t('View Storm Persons in own Organization'),
     ),
     'Storm person: view when linked to own user account' => array(
       'title' => t('View Storm Person linked to own user account'),

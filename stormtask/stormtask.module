@@ -30,7 +30,7 @@ function stormtask_permission() {
       'title' => t('Delete Authored Storm Task'),
     ),
     'Storm task: delete of user organization' => array(
-      'title' => t('Delete Storm Task of user organization'),
+      'title' => t('Delete Storm Task in own Organization'),
     ),
     'Storm task: delete if assigned to task' => array(
       'title' => t('Delete Storm Task if user assigned to task'),
@@ -42,7 +42,7 @@ function stormtask_permission() {
       'title' => t('Edit Authored Storm Task'),
     ),
     'Storm task: edit of user organization' => array(
-      'title' => t('Edit Storm Task of user organization'),
+      'title' => t('Edit Storm Task in own Organization'),
     ),
     'Storm task: edit if assigned to task' => array(
       'title' => t('Edit Storm Task if user assigned to task'),
@@ -54,7 +54,7 @@ function stormtask_permission() {
       'title' => t('View Authored'),
     ),
     'Storm task: view of user organization' => array(
-      'title' => t('View Storm Task of user organization'),
+      'title' => t('View Storm Task in own Organization'),
     ),
     'Storm task: view if assigned to task' => array(
       'title' => t('View Storm Task if user assigned to task'),

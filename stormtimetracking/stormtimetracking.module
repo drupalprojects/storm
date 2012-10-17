@@ -16,19 +16,41 @@ function stormtimetracking_help($path, $arg) {
   return $o;
 }
 
-function stormtimetracking_perm() {
+function stormtimetracking_permission() {
   return array(
-    'Storm timetracking: access',
-    'Storm timetracking: add',
-    'Storm timetracking: delete all',
-    'Storm timetracking: delete own',
-    'Storm timetracking: delete of user organization',
-    'Storm timetracking: edit all',
-    'Storm timetracking: edit own',
-    'Storm timetracking: edit of user organization',
-    'Storm timetracking: view all',
-    'Storm timetracking: view own',
-    'Storm timetracking: view of user organization',
+    'Storm timetracking: access' => array(
+      'title' => t('Access Storm Timetracking'),
+    ),
+    'Storm timetracking: add' => array(
+      'title' => t('Add Storm Timetracking'),
+    ),
+    'Storm timetracking: delete all' => array(
+      'title' => t('Delete Any Storm Timetracking'),
+    ),
+    'Storm timetracking: delete own' => array(
+      'title' => t('Delete Authored Storm Timetrackings'),
+    ),
+    'Storm timetracking: delete of user organization' => array(
+      'title' => t('Delete Storm Timetrackings in own Organization'),
+    ),
+    'Storm timetracking: edit all' => array(
+      'title' => t('Edit Any Storm Timetracking'),
+    ),
+    'Storm timetracking: edit own' => array(
+      'title' => t('Edit Authored Storm Timetrackings'),
+    ),
+    'Storm timetracking: edit of user organization' => array(
+      'title' => t('Edit Storm Timetrackings in own Organization'),
+    ),
+    'Storm timetracking: view all' => array(
+      'title' => t('View Any Storm Timetracking'),
+    ),
+    'Storm timetracking: view own' => array(
+      'title' => t('View Authored Storm Timetrackings'),
+    ),
+    'Storm timetracking: view of user organization' => array(
+      'title' => t('View Storm Timetrackings in own Organization'),
+    ),
   );
 }
 

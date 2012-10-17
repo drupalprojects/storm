@@ -16,19 +16,41 @@ function stormnote_help($path, $arg) {
   return $o;
 }
 
-function stormnote_perm() {
+function stormnote_permission() {
   return array(
-    'Storm note: access',
-    'Storm note: add',
-    'Storm note: delete all',
-    'Storm note: delete own',
-    'Storm note: delete of user organization',
-    'Storm note: edit all',
-    'Storm note: edit own',
-    'Storm note: edit of user organization',
-    'Storm note: view all',
-    'Storm note: view own',
-    'Storm note: view of user organization',
+    'Storm note: access' => array(
+      'title' => t('Access Storm Note'),
+    ),
+    'Storm note: add' => array(
+      'title' => t('Add Storm Notes'),
+    ),
+    'Storm note: delete all' => array(
+      'title' => t('Delete Any Storm Note'),
+    ),
+    'Storm note: delete own' => array(
+      'title' => t('Delete Authored Storm Notes'),
+    ),
+    'Storm note: delete of user organization' => array(
+      'title' => t('Delete Storm Note in own Organization'),
+    ),
+    'Storm note: edit all' => array(
+      'title' => t('Edit Any Storm Note'),
+    ),
+    'Storm note: edit own' => array(
+      'title' => t('Edit Authored Storm Notes'),
+    ),
+    'Storm note: edit of user organization' => array(
+      'title' => t('Edit Storm Notes in own Organization'),
+    ),
+    'Storm note: view all' => array(
+      'title' => t('View Any Storm Note'),
+    ),
+    'Storm note: view own' => array(
+      'title' => t('View Authored Storm Notes'),
+    ),
+    'Storm note: view of user organization' => array(
+      'title' => t('View Storm Notes in own Organization'),
+    ),
   );
 }
 

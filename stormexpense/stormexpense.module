@@ -16,19 +16,41 @@ function stormexpense_help($path, $arg) {
   return $o;
 }
 
-function stormexpense_perm() {
+function stormexpense_permission() {
   return array(
-    'Storm expense: access',
-    'Storm expense: add',
-    'Storm expense: delete all',
-    'Storm expense: delete own',
-    'Storm expense: delete of user organization',
-    'Storm expense: edit all',
-    'Storm expense: edit own',
-    'Storm expense: edit of user organization',
-    'Storm expense: view all',
-    'Storm expense: view own',
-    'Storm expense: view of user organization',
+    'Storm expense: access' => array(
+      'title' => t('Access Storm Expense'),
+    ),
+    'Storm expense: add' => array(
+      'title' => t('Add Storm Expense'),
+    ),
+    'Storm expense: delete all' => array(
+      'title' => t('Delete Any Storm Expense'),
+    ),
+    'Storm expense: delete own' => array(
+      'title' => t('Delete Authored Storm Expenses'),
+    ),
+    'Storm expense: delete of user organization' => array(
+      'title' => t('Delete  Storm Expenses in own Organization'),
+    ),
+    'Storm expense: edit all' => array(
+      'title' => t('Edit Any Storm Expense'),
+    ),
+    'Storm expense: edit own' => array(
+      'title' => t('Edit Authored Storm Expenses'),
+    ),
+    'Storm expense: edit of user organization' => array(
+      'title' => t('Edit Storm Expenses in own Organization'),
+    ),
+    'Storm expense: view all' => array(
+      'title' => t('View Any Storm Expense'),
+    ),
+    'Storm expense: view own' => array(
+      'title' => t('View Authored Storm Expenses'),
+    ),
+    'Storm expense: view of user organization' => array(
+      'title' => t('View Storm Expenses in own Organization'),
+    ),
   );
 }
 
