@@ -195,7 +195,9 @@ function stormproject_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('stormproject_list_filter', $filterdesc));
+  $stormproject_list_filter = drupal_get_form('stormproject_list_filter', $filterdesc);
+
+  $o = drupal_render($stormproject_list_filter);
 
 //  $tablesort = tablesort_sql($header);
 

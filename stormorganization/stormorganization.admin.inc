@@ -104,7 +104,9 @@ function stormorganization_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('stormorganization_list_filter', $filterdesc));
+  $stormorganization_list_filter = drupal_get_form('stormorganization_list_filter', $filterdesc);
+
+  $o = drupal_render($stormorganization_list_filter);
 
 //  $s = stormorganization_access_sql($s, $where);
 //  $s = db_rewrite_sql($s);

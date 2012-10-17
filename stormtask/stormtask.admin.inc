@@ -632,8 +632,9 @@ function stormtask_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('stormtask_list_filter', $filterdesc));
+  $stormtask_list_filter = drupal_get_form('stormtask_list_filter', $filterdesc);
 
+  $o = drupal_render($stormtask_list_filter);
 //  $s = stormtask_access_sql($s, $where);
 //  $s = db_rewrite_sql($s);
 

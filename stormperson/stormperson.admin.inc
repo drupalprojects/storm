@@ -73,7 +73,9 @@ function stormperson_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('stormperson_list_filter', $filterdesc));
+  $stormperson_list_filter = drupal_get_form('stormperson_list_filter', $filterdesc);
+
+  $o = drupal_render($stormperson_list_filter);
 
 //  $s = stormperson_access_sql($s, $where);
 //  $s = db_rewrite_sql($s);

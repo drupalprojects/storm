@@ -89,7 +89,9 @@ function storm_attribute_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('storm_attribute_list_filter', $filterdesc));
+  $storm_attribute_list_filter = drupal_get_form('storm_attribute_list_filter', $filterdesc);
+
+  $o = drupal_render($storm_attribute_list_filter);
 
   $result = $query->execute();
 
@@ -98,7 +100,9 @@ function storm_attribute_list() {
     $attributes[] = $attribute;
   }
 
-  $o .= drupal_render(drupal_get_form('storm_attribute_list_form', $header, $attributes));
+  $storm_attribute_list_form = drupal_get_form('storm_attribute_list_form', $header, $attributes);
+
+  $o .= drupal_render($storm_atrribute_list_form);
   $o .= theme('pager', array());
   return $o;
 }

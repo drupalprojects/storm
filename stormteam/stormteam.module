@@ -587,7 +587,9 @@ function stormteam_list() {
   }
   $filterdesc .= ' | '. t('!items items per page', array('!items' => $itemsperpage));
 
-  $o = drupal_render(drupal_get_form('stormteam_list_filter', $filterdesc));
+  $stormteam_list_filter = drupal_get_form('stormteam_list_filter', $filterdesc);
+
+  $o = drupal_render($stormteam_list_filter);
 
 //  $s = stormteam_access_sql($s, $where);
 //  $s = db_rewrite_sql($s);
