@@ -255,7 +255,7 @@ function stormorganization_form(&$node) {
 
   $form['group1'] = array(
     '#type' => 'markup',
-//    '#theme' => 'storm_form_group',
+    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
 
@@ -279,13 +279,13 @@ function stormorganization_form(&$node) {
 
   $form['group2'] = array(
     '#type' => 'markup',
-//    '#theme' => 'storm_form_group',
+    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
   $form['group3'] = array(
     '#type' => 'markup',
-//    '#theme' => 'storm_form_group',
+    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group3') : -18,
   );
 
@@ -331,7 +331,7 @@ function stormorganization_form(&$node) {
 
   $form['group4'] = array(
     '#type' => 'markup',
-//    '#theme' => 'storm_form_group',
+    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group4') : -17,
   );
 
@@ -357,7 +357,7 @@ function stormorganization_form(&$node) {
 
   $form['group5'] = array(
     '#type' => 'markup',
-//    '#theme' => 'storm_form_group',
+    '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group5') : -16,
   );
 

@@ -5,17 +5,29 @@
  * Provides theme functions for Storm modules
  */
 
-function theme_storm_form_group($form) {
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
-  $output = NULL; // Variable set as per issue 684016.
+function theme_storm_form_group($variables) {
+  $element = $variables['element'];
+
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css');
 
   $row = array();
-  foreach (element_children($form) as $key) {
-    array_push($row, drupal_render($form[$key]));
+  foreach (element_children($element) as $key) {
+    array_push($row, drupal_render($element[$key]));
   }
-  $rows[] = array('data' => $row, 'class' => 'formgroup');
-  $output .= theme('table', array(), $rows, array('class' => 'formgroup'));
-  return $output;
+
+  $rows = array(
+    array(
+      'data' => $row,
+      'class' => array('formgroup'),
+      'no_striping' => TRUE,
+    )
+  );
+
+  return theme('table', array(
+    'header' => array(),
+    'rows' => $rows,
+    'attributes' => array('class' => array('formgroup'))
+  ));
 }
 
 function theme_datetime($element) {

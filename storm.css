@@ -2,11 +2,13 @@ table.formgroup {
 width: auto;
 margin: 0;
 clear: both;
+border: none;
 }
 
 table.formgroup tr td {
 padding-left: 0px;
 padding-right: 5px;
+border: none;
 }
 
 table.formgroup tr td div.form-item{

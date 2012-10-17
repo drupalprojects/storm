@@ -161,7 +161,7 @@ function storm_theme() {
   return array(
     'storm_form_group' => array(
       'file'      => 'storm.theme.inc',
-      'arguments' => array('header', 'form'),
+      'render element' => 'element',
     ),
     'datetime' => array(
       'file'      => 'storm.theme.inc',
