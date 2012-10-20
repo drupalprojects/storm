@@ -1,7 +1,7 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
-- No changes since 6.x-2.1
+- Feature #1817840 by willwh: Add drush command for reinstalling Storm.
 
 Version 6.x-2.1:
 - Bug #1508998 by m.koo, juliangb | copeasetic: Fixed Views - Broken/Missing handler on Status field.
