@@ -6,6 +6,12 @@
 function stormorganization_install() {
   variable_set('node_options_stormorganization', array('status'));
 
+  // Uncache node types
+  node_types_rebuild();
+  // Fetch list of current node types and add body field to Storm Organization
+  $types = node_type_get_types();
+  node_add_body_field($types['stormorganization'], 'Note');
+
   $attributes = array();
 
   $attributes['Price mode'] = array(
@@ -329,4 +335,17 @@ function stormorganization_schema() {
 
 function stormorganization_update_last_removed() {
   return 6202;
+}
+
+/**
+ * Adds Drupal 7 style body field to Storm Organization nodes
+ */
+function stormorganization_update_7100() {
+  // Uncache node types
+  node_types_rebuild();
+  // Fetch list of current node types and add body field to Storm Organization
+  $types = node_type_get_types();
+  node_add_body_field($types['stormorganization'], 'Note');
+
+  return 'Added D7 style body field to Storm Organization nodes';
 }
