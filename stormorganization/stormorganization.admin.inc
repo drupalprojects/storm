@@ -258,15 +258,19 @@ function stormorganization_list_filter_reset($form, &$form_state) {
 function stormorganization_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $s = "SELECT title FROM {node} AS n WHERE n.type='stormorganization' AND LOWER(title) LIKE LOWER('%s%%')";
-    $s = stormorganization_access_sql($s);
-    $s = db_rewrite_sql($s);
+    $query = db_select('node', 'n');
 
-    $result = db_query_range($s, $string, 0, 10);
-    while ($org = db_fetch_object($result)) {
-      $matches[$org->title] = check_plain($org->title);
+    $return = $query
+      ->addTag('node_access')
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.type', 'stormorganization')
+      ->condition('title', '%' . db_like($string) . '%', 'LIKE')
+      ->range(0, 10)
+      ->execute();
+
+      foreach($return as $row) {
+        $matches[$row->title] = check_plain($row->title);
+      }
     }
-  }
-
-  drupal_json($matches);
+  drupal_json_output($matches);
 }

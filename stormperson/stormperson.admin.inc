@@ -190,17 +190,21 @@ function _stormperson_organization_people_js($organization_nid=0) {
   $people = array();
 
   if ($organization_nid) {
-    $s = "SELECT n.nid, n.title FROM {node} n INNER JOIN {stormperson} AS spe ON n.vid=spe.vid WHERE n.status=1 AND n.type='stormperson' AND spe.organization_nid=%d ORDER BY n.title";
-    $s = stormperson_access_sql($s);
-    $s = db_rewrite_sql($s);
-    $r = db_query($s, $organization_nid);
+      $query = db_select('node', 'n')
+        ->fields('n', array('nid', 'title'))
+        ->condition('n.status', 1)
+        ->condition('n.type', 'organization')
+        ->condition('spe.organization', $organization_nid)
+        ->join('stormperson', 'spe', 'n.vid = spe.vid')
+        ->addTag('node_access');
 
-    while ($item = db_fetch_object($r)) {
-      $nid = $item->nid;
-      $people[$nid] = $item->title;
+  $result = $query->execute();
+    foreach($result as $row) {
+      $nid = $row->name;
+      $people[$nid] = $row->title;
     }
   }
-  print drupal_to_js($people);
+  print drupal_json_encode($people);
   exit();
 }
 
