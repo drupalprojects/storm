@@ -20,7 +20,7 @@ function theme_stormorganization_list($variables) {
 
     $rows[] = array(
       l($organization->title, 'node/'. $organization->nid),
-      check_plain($countries['values'][$organization->country]),
+      isset($countries['values'][$organization->country]) ? check_plain($countries['values'][$organization->country]) : check_plain($organization->country),
       array(
         'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
         'class' => 'storm_list_operations',
