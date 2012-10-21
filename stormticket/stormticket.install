@@ -84,7 +84,9 @@ function stormticket_disable() {
 function stormticket_uninstall() {
   drupal_uninstall_schema('stormticket');
 
-  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Ticket status', 'Ticket status search', 'Ticket priority', 'Ticket priority search', 'Ticket category', 'Ticket category search')");
+  db_delete('stormattribute')
+    ->condition('domain', array('Ticket status', 'Ticket status search', 'Ticket category', 'Ticket category search', 'Ticket priority', 'Ticket priority search'), 'IN')
+    ->execute();
 }
 
 function stormticket_schema() {

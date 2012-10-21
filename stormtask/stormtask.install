@@ -73,7 +73,11 @@ function stormtask_install() {
     $prevdomain = $domain;
   }
 
-  db_query("UPDATE {stormattribute} SET isdefault = 1 WHERE domain = 'Task category' and akey = 'task'");
+  db_update('stormattribute')
+    ->fields(array('isdefault' => '1'))
+    ->condition('domain', 'task category')
+    ->condition('akey', 'task')
+    ->execute();
 }
 
 function stormtask_disable() {
@@ -83,7 +87,9 @@ function stormtask_disable() {
 function stormtask_uninstall() {
   drupal_uninstall_schema('stormtask');
 
-  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Task status', 'Task status search', 'Task category', 'Task category search', 'Task priority', 'Task priority search')");
+  db_delete('stormattribute')
+    ->condition('domain', array('Task status', 'Task status search', 'Task category', 'Task category search', 'Task priority', 'Task priority search'), 'IN')
+    ->execute();
 }
 
 function stormtask_schema() {

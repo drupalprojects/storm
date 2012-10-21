@@ -81,7 +81,9 @@ function stormproject_disable() {
 function stormproject_uninstall() {
   drupal_uninstall_schema('stormproject');
 
-  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Project status', 'Project status search', 'Project category', 'Project category search', 'Project priority', 'Project priority search', 'Duration unit')");
+  db_delete('stormattribute')
+    ->condition('domain', array('Project status', 'Project status search', 'Project category', 'Project category search', 'Project priority', 'Project priority search', 'Duration unit'), 'IN')
+    ->execute();
 }
 
 function stormproject_schema() {

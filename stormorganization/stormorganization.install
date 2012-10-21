@@ -289,7 +289,9 @@ function stormorganization_disable() {
 function stormorganization_uninstall() {
   drupal_uninstall_schema('stormorganization');
 
-  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Price mode', 'Currency', 'Country')");
+  db_delete('stormattribute')
+    ->condition('domain', array('Price mode', 'Currency', 'Country'), 'IN')
+    ->execute();
 }
 
 function stormorganization_schema() {

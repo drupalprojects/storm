@@ -45,7 +45,9 @@ function stormexpense_disable() {
 function stormexpense_uninstall() {
   drupal_uninstall_schema('stormexpense');
 
-  db_query($s = "DELETE FROM {stormattribute} WHERE domain IN ('Expense status', 'Expense status search')");
+  db_delete('stormattribute')
+    ->condition('domain', array('Expense status', 'Expense status search'), 'IN')
+    ->execute();
 }
 
 function stormexpense_schema() {
