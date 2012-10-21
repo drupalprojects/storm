@@ -102,7 +102,7 @@ function storm_attribute_list() {
 
   $storm_attribute_list_form = drupal_get_form('storm_attribute_list_form', $header, $attributes);
 
-  $o .= drupal_render($storm_atrribute_list_form);
+  $o .= drupal_render($storm_attribute_list_form);
   $o .= theme('pager', array());
   return $o;
 }
