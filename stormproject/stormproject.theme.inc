@@ -119,13 +119,15 @@ function theme_stormproject_view($variables) {
     '#weight' => 2,
   );
 
-  $node->content['body_field'] = array(
-    '#prefix' => '<div class="stormbody">',
-    '#suffix' => '</div>',
-    '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => $node->content['body']['#value'])),
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -18,
-  );
-  unset($node->content['body']);
+  $body = field_get_items('node',$node,'body');
+  if($body){
+    $node->content['body'] = array (
+      '#prefix' => '<div class="stormbody">',
+      '#suffix' => '</div>',
+      '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => check_plain($node->body['und'][0]['value']))),
+      '#weight' => 4,
+    );
+  }
 
   return $node;
 }
