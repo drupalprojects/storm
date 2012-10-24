@@ -420,8 +420,10 @@ function stormperson_form(&$node) {
     '#default_value' => isset($node->im) ? $node->im : '',
   );
 
-  if ($type->has_body) {
-    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+  //Check to see if the body field is still there, if so, display it.
+  $body = field_get_items('stormperson',$node,'body');
+  if($body) {
+    $form['body_field'] = $body;
   }
 
   $form['title_old'] = array(
