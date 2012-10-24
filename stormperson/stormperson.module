@@ -554,7 +554,7 @@ function _stormperson_beforesave(&$node) {
 function _stormperson_aftersave(&$node) {
   global $user;
   if ($user->uid == $node->user_uid) {
-    $user->stormperson_nid = $node->user_nid;
+    $user->stormperson_nid = $node->nid;
     $user->stormorganization_nid = $node->organization_nid;
   }
 }
