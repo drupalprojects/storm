@@ -363,6 +363,11 @@ function stormperson_form(&$node) {
     $organizations[$organization->nid] = $organization->title;
     if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
+  if (empty($organizations)) {
+    $message = t('Before you add a Person, you must first !link.', array('!link' => l('add an Organization', 'node/add/stormorganization')));
+    drupal_set_message($message, 'error');
+  }
+
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
     '#title' => t('Organization'),
