@@ -371,7 +371,7 @@ function stormperson_form(&$node) {
   $form['group2']['organization_nid'] = array(
     '#type' => 'select',
     '#title' => t('Organization'),
-    '#default_value' => $node->organization_nid,
+    '#default_value' => isset($node->organization_nid) ? $node->organization_nid : NULL,
     '#options' => $organizations,
     '#required' => TRUE,
     '#attributes' => array('onchange' => "stormperson_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', true, '-')"),
