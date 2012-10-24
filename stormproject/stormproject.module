@@ -437,7 +437,6 @@ function stormproject_form(&$node) {
     '#title' => t('Organization'),
     '#options' => $organizations,
     '#default_value' => $node->organization_nid,
-    '#process' => array('storm_dependent_select_process'),
   );
 
   $form['group1']['organization_nid_old'] = array(
