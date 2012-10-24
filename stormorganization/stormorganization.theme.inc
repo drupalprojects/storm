@@ -8,7 +8,7 @@ function theme_stormorganization_list($variables) {
   $header = $variables['header'];
   $organizations = $variables['organizations'];
 
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css');
 
   $rows = array();
   $countries = storm_attributes_bydomain('Country');
