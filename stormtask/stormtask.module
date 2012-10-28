@@ -555,7 +555,7 @@ function stormtask_form(&$node) {
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project'),
-    '#default_value' => $node->project_nid,
+    '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
     '#options' => $projects,
     '#process' => array('storm_dependent_select_process'),
     '#required' => TRUE,
@@ -564,7 +564,7 @@ function stormtask_form(&$node) {
 
   $form['group1']['project_nid_old'] = array(
     '#type' => 'hidden',
-    '#default_value' => $node->project_nid,
+    '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
   );
 
 //  $tree = _stormtask_get_tree($node->project_nid);
