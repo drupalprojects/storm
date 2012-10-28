@@ -34,7 +34,7 @@ function theme_stormorganization_list($variables) {
 function theme_stormorganization_view($variables) {
   $node = $variables['node'];
 
-  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css');
 
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
