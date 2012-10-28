@@ -931,7 +931,11 @@ function theme_storminvoice_report_html($node, $language) {
  * @return varchar
  *   html coding for the link
  */
-function theme_storminvoice_autoadd_links($nid, $billable, $billed) {
+function theme_storminvoice_autoadd_links($variables) {
+  $nid = $variables['nid'];
+  $billable = $variables['billable'];
+  $billed = $variables['billed'];
+
   if (user_access('Storm invoice: add')) {
     if ($billable && !$billed) {
       $v = '';

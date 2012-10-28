@@ -168,7 +168,11 @@ function storminvoice_theme() {
     ),
     'storminvoice_autoadd_links' => array(
       'file'      => 'storminvoice.theme.inc',
-      'arguments' => array('nid', 'billable', 'billed'),
+      'variables' => array(
+        'nid' => NULL,
+        'billable' => NULL,
+        'billed' => NULL,
+      ),
     ),
   );
 }
