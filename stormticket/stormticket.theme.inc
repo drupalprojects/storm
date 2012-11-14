@@ -124,13 +124,15 @@ function theme_stormticket_view($variables) {
     '#markup' => theme('storm_view_item', array('label' => t('Assigned to'), 'value' => l($node->assigned_title, 'node/'. $node->assigned_nid))),
   );
 
-  $node->content['body_field'] = array(
-    '#prefix' => '<div class="stormbody">',
-    '#suffix' => '</div>',
-    '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => $node->content['body']['#value'])),
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : -15,
-  );
-  unset($node->content['body']);
+  $body = field_get_items('node', $node, 'body');
+  if($body) {
+    $node->content['body'] = array (
+      '#prefix' => '<div class="stormbody">',
+      '#suffix' => '</div>',
+      '#markup' => theme('storm_view_item', array('label' => t('Description'), 'value' => check_plain($node->body['und'][0]['value']))),
+      '#weight' => -15,
+    );
+  }
 
   return $node;
 }

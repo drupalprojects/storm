@@ -6,6 +6,13 @@
 function stormticket_install() {
   variable_set('node_options_stormticket', array('status'));
 
+  //Uncache node types
+  node_types_rebuild();
+
+  //Fetch list of current node types and add body field to stormticket
+  $types = node_type_get_types();
+  node_add_body_field($types['stormticket'],'Description');
+
   $attributes = array();
 
   $attributes['Ticket status'] = array(
@@ -132,3 +139,18 @@ function stormticket_schema() {
 function stormticket_update_last_removed() {
   return 6202;
 }
+
+/**
+ * Adds Drupal 7 style body field to Storm Ticket nodes
+ */
+function stormticket_update_7100() {
+  // Uncache node types
+  node_types_rebuild();
+
+  //Fetch list of current node types and add body field to Storm Task
+  $types = node_type_get_types();
+  node_add_body_field($types['stormticket'],'Description');
+
+  return 'Added D7 style body field to Storm Ticket nodes';
+}
+
