@@ -10,6 +10,13 @@
  */
 function stormteam_install() {
   variable_set('node_options_stormteam', array('status'));
+
+  // Uncache node types
+  node_types_rebuild();
+
+  // Fetch the list of current node types and add the body field to stormteam
+  $types = node_type_get_types();
+  node_add_body_field($types['stormteam'],'Description');
 }
 
 /**
@@ -71,4 +78,16 @@ function stormteam_schema() {
  */
 function stormteam_update_last_removed() {
   return 6201;
+}
+
+/**
+ * Adds Drupal 7 style body field to Storm Team nodes
+ */
+function stormteam_update_7100() {
+  // Uncache node types
+  node_types_rebuild();
+
+  //Fetch a list of current node types and add a body field to Storm Team
+  $types = node_type_get_types();
+  node_add_body_field($types['stormteam'],'Description');
 }

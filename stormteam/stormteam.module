@@ -364,8 +364,9 @@ function stormteam_form(&$node) {
     $i++;
   }
 
-  if ($type->has_body) {
-    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+  $body = field_get_items('stormteam',$node,'body');
+  if($body) {
+    $form['body_field'] = $body;
   }
 
   $form['title_old'] = array(

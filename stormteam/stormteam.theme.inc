@@ -47,13 +47,18 @@ function theme_stormteam_view($variables) {
     );
   }
 
-  $node->content['body_field'] = array(
+$body = field_get_items('node', $node, 'body');
+if($body){
+  $node->content['body'] = array(
     '#prefix' => '<div class="stormbody">',
     '#suffix' => '</div>',
-    '#markup' => theme('storm_view_item', array('label' => $type->body_label, 'value' => $node->content['body']['#value'])),
-    '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'body_field') : 0,
+    '#markup' => theme('storm_view_item', array(
+      'label' => t('Description'),
+      'value' => check_plain($node->body['und'][0]['value'])
+    )),
+    '#weight' => -15,
   );
-  unset($node->content['body']);
+}
 
   return $node;
 }
