@@ -62,17 +62,6 @@ function stormtask_permission() {
   );
 }
 
-function stormtask_init() {
-  $settings = array(
-    'storm' => array(
-      'project_tasks_url' => url('storm/project_tasks_js/'),
-      'project_assignments_url' => url('storm/project_assignments_js/'),
-    ),
-  );
-  drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'stormtask') .'/stormtask.js', 'module', 'header', FALSE);
-}
-
 function stormtask_access($op, $node, $account=NULL) {
   if (empty($account)) {
     global $user;
@@ -437,7 +426,7 @@ function stormtask_stormproject_change_hierarchy($project_nid, $organization_nid
     ->execute();
 }
 
-function stormtask_form(&$node) {
+function stormtask_form(&$node, $form_state) {
   $breadcrumb = array();
   $breadcrumb[] = l(t('Storm'), 'storm');
 
@@ -491,21 +480,8 @@ function stormtask_form(&$node) {
     if (isset($_SESSION['stormtask_list_filter']['project_nid']) && $_SESSION['stormtask_list_filter']['project_nid'] && !$node->project_nid) {
       $node->project_nid = $_SESSION['stormtask_list_filter']['project_nid'];
     }
-    $org_query = db_select('node', 'n');
-    $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
-    $org_query
-      ->fields('n', array('nid', 'title'))
-      ->condition('n.status', 1)
-      ->condition('sor.isactive', 1)
-      ->condition('n.type', 'stormorganization')
-      ->orderBy('n.title', 'ASC');
 
     $node->billable = variable_get('stormtask_billable_default', FALSE);
-
-  }
-  else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-      ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
   $type = node_type_get_type($node);
@@ -517,6 +493,15 @@ function stormtask_form(&$node) {
     '#theme' => 'storm_form_group',
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group1') : -20,
   );
+
+  $org_query = db_select('node', 'n');
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+  $org_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('sor.isactive', 1)
+    ->condition('n.type', 'stormorganization')
+    ->orderBy('n.title', 'ASC');
 
 //  $s_org = stormorganization_access_sql($s_org);
 //  $s_org = db_rewrite_sql($s_org);
@@ -532,15 +517,20 @@ function stormtask_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => TRUE,
-    '#attributes' => array('onchange' => "stormtask_organization_project_tasks(this, 'edit-project-nid', 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
+    '#ajax' => array(
+      'callback' => 'stormtask_ajax_organization_nid',
+      'wrapper' => 'stormtask-project-nid',
+    ),
   );
+
+  $organization_nid = isset($form_state['values']['organization_nid']) ? $form_state['values']['organization_nid'] : $node->organization_nid;
 
   $pro_query = db_select('node', 'n');
   $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
   $pro_result = $pro_query
     ->fields('n', array('nid', 'title'))
     ->condition('n.status', 1)
-    ->condition('spr.organization_nid', $node->organization_nid)
+    ->condition('spr.organization_nid', $organization_nid)
     ->condition('n.type', 'stormproject')
     ->orderBy('n.title', 'ASC')
     ->execute();
@@ -557,9 +547,9 @@ function stormtask_form(&$node) {
     '#title' => t('Project'),
     '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
     '#required' => TRUE,
-    '#attributes' => array('onchange' => "stormtask_project_tasks('edit-organization-nid', this, 'edit-parent-nid', 'edit-assigned-nid', true, '-')"),
+    '#prefix' => '<div id="stormtask-project-nid">',
+    '#suffix' => '</div>',
   );
 
   $form['group1']['project_nid_old'] = array(
@@ -574,7 +564,8 @@ function stormtask_form(&$node) {
     '#title' => t('Parent task'),
     '#default_value' => isset($node->parent_nid) ? $node->parent_nid : 0,
     '#options' => array(0 => '-') + array(),// $parent_tasks,
-    '#process' => array('storm_dependent_select_process'),
+    '#prefix' => '<div id="stormtask-parent-nid">',
+    '#suffix' => '</div>',
   );
 
   $form['group1']['weight'] = array(
@@ -745,6 +736,10 @@ function stormtask_form(&$node) {
   );
 
   return $form;
+}
+
+function stormtask_ajax_organization_nid(&$form, &$form_state) {
+  return $form['group1']['project_nid'];
 }
 
 // INSERT / UPDATE FUNCTIONS
