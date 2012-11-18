@@ -810,8 +810,6 @@ function stormtask_update($node) {
 
   db_update('stormtask')
     ->fields(array(
-      'vid' => $node->vid,
-      'nid' => $node->nid,
       'stepno' => $node->stepno,
       'taskcategory' => $node->taskcategory,
       'taskstatus' => $node->taskstatus,
@@ -834,6 +832,7 @@ function stormtask_update($node) {
       'billable' => $node->billable,
       'billed' => $node->billed,
     ))
+    ->condition('vid', $node->vid)
     ->execute();
 
     if (($node->title != $node->title_old) || ($node->stepno != $node->stepno_old)) {
@@ -851,7 +850,7 @@ function _stormtask_beforesave(&$node) {
     ->condition('n.nid', $node->organization_nid)
     ->execute();
 
-  $o = $org_result->fetchObject;
+  $o = $org_result->fetchObject();
   $node->organization_title = $o->title;
 
   $pro_query = db_select('node', 'n');
