@@ -630,7 +630,8 @@ function _stormperson_user_load(&$account) {
     }
   }
   else {
-    $a = db_fetch_object(db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=%d", $account->uid));
+    $result = db_query("SELECT nid, organization_nid FROM {stormperson} WHERE user_uid=:uid", array(':uid' => $account->uid));
+    $a = $result->fetchObject();
     if ($a) {
       $loaded_persons[$account->uid] = new stdClass();
       $loaded_persons[$account->uid]->nid = $a->nid;
