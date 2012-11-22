@@ -3,6 +3,7 @@ description = "Allows recording of teams made up of Storm Organizations and Stor
 core = 7.x
 package = Storm
 
+dependencies[] = views
 dependencies[] = storm
 dependencies[] = stormorganization
 dependencies[] = stormperson

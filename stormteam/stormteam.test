@@ -14,7 +14,7 @@ class StormteamTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormorganization', 'stormperson', 'stormteam');
+    parent::setUp('views', 'storm', 'stormorganization', 'stormperson', 'stormteam');
   }
 
   public function testStormteamCreate() {
