@@ -3,34 +3,6 @@
 /**
  * @file
  */
-
-function theme_stormorganization_list($variables) {
-  $header = $variables['header'];
-  $organizations = $variables['organizations'];
-
-  drupal_add_css(drupal_get_path('module', 'storm') .'/storm.css');
-
-  $rows = array();
-  $countries = storm_attributes_bydomain('Country');
-  foreach ($organizations as $key => $organization) {
-    $n = new stdClass();
-    $n->nid = $organization->nid;
-    $n->uid = $organization->uid;
-    $n->type = 'stormorganization';
-
-    $rows[] = array(
-      l($organization->title, 'node/'. $organization->nid),
-      isset($countries['values'][$organization->country]) ? check_plain($countries['values'][$organization->country]) : check_plain($organization->country),
-      array(
-        'data' => storm_icon_edit_node($n, $_GET) .'&nbsp;'. storm_icon_delete_node($n, $_GET),
-        'class' => 'storm_list_operations',
-      ),
-    );
-  }
-  $o  = theme('table', array('header' => $header, 'rows' => $rows));
-  return $o;
-}
-
 function theme_stormorganization_view($variables) {
   $node = $variables['node'];
 

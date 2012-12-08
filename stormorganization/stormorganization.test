@@ -14,7 +14,7 @@ class StormorganizationTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormorganization');
+    parent::setUp('views','storm', 'stormorganization');
   }
 
   public function testStormorganizationAccess() {

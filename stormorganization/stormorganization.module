@@ -168,15 +168,6 @@ function stormorganization_storm_rewrite_where_sql($query, $primary_table, $acco
 
 function stormorganization_menu() {
   $items = array();
-  $items['storm/organizations'] = array(
-    'title' => 'Organizations',
-    'description' => 'Storm organizations',
-    'page callback' => 'stormorganization_list',
-    'access arguments' => array('Storm organization: access'),
-    'file' => 'stormorganization.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => 0,
-  );
 
   $items['storm/organizations/autocomplete'] = array(
     'title' => 'Organization autocomplete',
@@ -185,7 +176,6 @@ function stormorganization_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'stormorganization.admin.inc',
   );
-
   $items['admin/config/storm/organization'] = array(
     'title' => 'Storm organization',
     'description' => 'Storm organization administration page',
@@ -194,16 +184,11 @@ function stormorganization_menu() {
     'access arguments' => array('Storm: access administration pages'),
     'type' => MENU_LOCAL_TASK,
   );
-
   return $items;
 }
 
 function stormorganization_theme() {
   return array(
-    'stormorganization_list' => array(
-      'file'      => 'stormorganization.theme.inc',
-      'variables' => array('header', 'organizations'),
-    ),
     'stormorganization_view' => array(
       'file'      => 'stormorganization.theme.inc',
       'variables' => array('node', 'view_mode'),
@@ -513,10 +498,12 @@ function stormorganization_load($nodes) {
       ->fields('sor')
       ->condition('vid', $node->vid)
       ->execute();
+    $record = array();
     $record = $result->fetchAssoc();
-
-    foreach ($record as $key => $value) {
-      $node->$key = $value;
+    if($record) {
+      foreach ($record as $key => $value) {
+        $node->$key = $value;
+      }
     }
 
     $node->title_old = $node->title;
