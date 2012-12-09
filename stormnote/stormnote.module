@@ -169,28 +169,8 @@ function stormnote_storm_rewrite_where_sql($query, $primary_table, $account) {
   return $cond;
 }
 
-function stormnote_menu() {
-  $items = array();
-
-  $items['storm/notes'] = array(
-    'title' => 'Notes',
-    'description' => 'Storm notes',
-    'page callback' => 'stormnote_list',
-    'access arguments' => array('Storm note: access'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'stormnote.admin.inc',
-    'weight' => 7,
-  );
-
-  return $items;
-}
-
 function stormnote_theme() {
   return array(
-    'stormnote_list' => array(
-      'file'      => 'stormnote.theme.inc',
-      'arguments' => array('header', 'notes'),
-    ),
     'stormnote_view' => array(
       'file'      => 'stormnote.theme.inc',
       'arguments' => array('node', 'teaser', 'page'),
