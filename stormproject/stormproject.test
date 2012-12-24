@@ -14,7 +14,7 @@ class StormprojectTestCase extends DrupalWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp('storm', 'stormorganization', 'stormproject');
+    parent::setUp('views', 'storm', 'stormorganization', 'stormproject');
   }
 
   public function testStormprojectAccess() {

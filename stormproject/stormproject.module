@@ -286,16 +286,6 @@ function stormproject_storm_rewrite_where_sql($query, $primary_table, $account) 
 function stormproject_menu() {
   $items = array();
 
-  $items['storm/projects'] = array(
-    'title' => 'Projects',
-    'description' => 'Storm projects',
-    'page callback' => 'stormproject_list',
-    'access arguments' => array('Storm project: access'),
-    'file' => 'stormproject.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => 3,
-  );
-
   $items['storm/organization_projects_js/%'] = array(
     'title' => 'Projects',
     'page callback' => '_stormproject_organization_projects_js',
@@ -319,10 +309,6 @@ function stormproject_menu() {
 
 function stormproject_theme() {
   return array(
-    'stormproject_list' => array(
-      'file'      => 'stormproject.theme.inc',
-      'variables' => array('header', 'projects'),
-    ),
     'stormproject_view' => array(
       'file'      => 'stormproject.theme.inc',
       'variables' => array('node', 'view_mode'),
