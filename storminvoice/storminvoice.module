@@ -181,10 +181,9 @@ function storminvoice_node_info() {
   return array(
     'storminvoice' => array(
       'name' => t('Invoice'),
-      'module' => 'storminvoice',
+      'base' => 'storminvoice',
       'description' => t("An invoice for Storm."),
       'title_label' => t("Description"),
-      'has_body' => FALSE,
     ),
   );
 }
@@ -367,15 +366,9 @@ function storminvoice_form(&$node) {
     if (isset($_SESSION['storminvoice_list_filter']['project_nid']) && !$node->project_nid) {
       $node->project_nid = $_SESSION['storminvoice_list_filter']['project_nid'];
     }
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-      ON so.nid=n.nid WHERE n.status=1 AND so.isactive=1 AND n.type='stormorganization' ORDER BY n.title";
-  }
-  else {
-    $s_org = "SELECT n.nid, n.title FROM {stormorganization} so INNER JOIN {node} n
-      ON so.nid=n.nid WHERE n.status=1 AND n.type='stormorganization' ORDER BY n.title";
   }
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['#attributes']['class'] = 'stormcomponent_node_form';
 
@@ -407,11 +400,21 @@ function storminvoice_form(&$node) {
     '#weight' => module_exists('content') ? content_extra_field_weight($node->type, 'group2') : -19,
   );
 
-  $s_org = stormorganization_access_sql($s_org);
-  $s_org = db_rewrite_sql($s_org);
-  $r = db_query($s_org);
+  $org_query = db_select('node', 'n');
+  $org_query->join('stormorganization', 'sor', 'n.vid = sor.vid');
+  $org_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormorganization')
+    ->condition('sor.isactive', 1)
+    ->orderBy('n.title', 'ASC')
+    ->addTag('node_access');
+
+//  $s_org = stormorganization_access_sql($s_org);
+  $org_result = $org_query->execute();
+
   $organizations = array();
-  while ($organization = db_fetch_object($r)) {
+  foreach ($org_result as $organization) {
     $organizations[$organization->nid] = $organization->title;
     if (!isset($node->organization_nid)) $node->organization_nid = $organization->nid;
   }
@@ -421,15 +424,23 @@ function storminvoice_form(&$node) {
     '#default_value' => $node->organization_nid,
     '#options' => $organizations,
     '#required' => TRUE,
-    '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, '-')"),
+//    '#attributes' => array('onchange' => "stormproject_organization_projects(this, 'edit-project-nid', true, '-')"),
   );
 
-  $s = "SELECT n.nid, n.title FROM {node} AS n INNER JOIN {stormproject} AS spr ON spr.vid=n.vid WHERE spr.organization_nid=%d AND n.status=1 AND n.type='stormproject' ORDER BY n.title";
-  $s = stormproject_access_sql($s);
-  $s = db_rewrite_sql($s);
-  $r = db_query($s, $node->organization_nid);
+  $pro_query = db_select('node', 'n');
+  $pro_query->join('stormproject', 'spr', 'n.vid = spr.vid');
+  $pro_query
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'stormproject')
+    ->condition('spr.organization_nid', $node->organization_nid)
+    ->orderBy('n.title', 'ASC')
+    ->addTag('node_access');
+
+//  $s = stormproject_access_sql($s);
+  $pro_result = $pro_query->execute();
   $projects = array();
-  while ($project = db_fetch_object($r)) {
+  foreach ($pro_result as $project) {
     $projects[$project->nid] = $project->title;
   }
   $projects = array(0 => '-') + $projects;
@@ -438,7 +449,7 @@ function storminvoice_form(&$node) {
     '#title' => t('Project'),
     '#default_value' => isset($node->project_nid) ? $node->project_nid : NULL,
     '#options' => $projects,
-    '#process' => array('storm_dependent_select_process'),
+//    '#process' => array('storm_dependent_select_process'),
   );
 
   $form['group2']['reference'] = array(
@@ -612,7 +623,6 @@ function storminvoice_form(&$node) {
   $form['group5']['amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Amount'),
-    /* '#attributes' => array('readonly' => 'readonly'), */ // See #450778
     '#size' => 15,
     '#default_value' => isset($node->amount) ? $node->amount : NULL,
   );
@@ -620,7 +630,6 @@ function storminvoice_form(&$node) {
   $form['group5']['tax1'] = array(
     '#type' => 'textfield',
     '#title' => variable_get('storm_tax1_name', 'Tax 1'),
-    /* '#attributes' => array('readonly' => 'readonly'), */ // See #450778
     '#size' => 15,
     '#default_value' => isset($node->tax1) ? $node->tax1 : NULL,
   );
@@ -628,7 +637,6 @@ function storminvoice_form(&$node) {
   $form['group5']['tax2'] = array(
     '#type' => 'textfield',
     '#title' => variable_get('storm_tax2_name', 'Tax 2'),
-    /* '#attributes' => array('readonly' => 'readonly'), */ // See #450778
     '#size' => 15,
     '#default_value' => isset($node->tax2) ? $node->tax2 : NULL,
   );
@@ -636,7 +644,6 @@ function storminvoice_form(&$node) {
   $form['group5']['total'] = array(
     '#type' => 'textfield',
     '#title' => t('Total'),
-    /* '#attributes' => array('readonly' => 'readonly'), */ // See #450778
     '#size' => 15,
     '#default_value' => isset($node->total) ? $node->total : NULL,
   );
@@ -939,6 +946,7 @@ function storminvoice_getitems($invoice_vid) {
   }
   return $items;
 }
+
 /**
  * @function
  * Creates next incremental invoice number
@@ -946,10 +954,27 @@ function storminvoice_getitems($invoice_vid) {
  * @return varchar text value of the calculated invoice number
  */
 function storminvoice_get_invoice_number($requestdate) {
-  $s = "SELECT MAX(CAST(SUBSTRING_INDEX(sin.number, '/', 1) AS SIGNED)) FROM {node} n INNER JOIN {storminvoice} sin ON n.nid=sin.nid
-    WHERE n.type='storminvoice' AND YEAR(FROM_UNIXTIME(sin.requestdate))=YEAR(FROM_UNIXTIME(%d))";
   $date = getdate($requestdate);
-  $new_invoice_number = (db_result(db_query($s, $requestdate)) + 1) .'/'. $date['year'];
+
+  $result = db_select('storminvoice', 'sin')
+  ->fields('sin', array('number'))
+  ->execute();
+
+  $existing = array(0);
+
+  foreach ($result as $record) {
+    $pos = substr($record->number, '/');
+    $left = $pos;
+    $right = strlen($record->number) - $pos;
+
+    if (right($record->number, $right) == $date['year']) {
+      $existing[] = left($record->number, $left);
+    }
+  }
+
+  $increment = max($existing) + 1;
+
+  $new_invoice_number = $increment .'/'. $date['year'];
 
   return $new_invoice_number;
 }
