@@ -376,7 +376,7 @@ function storm_storm_dashboard_types() {
       // URL: menu path which should be used, if omitted no menu item will be created
       'url'         => 'storm',
       // title: Required. Title of menu item, page title and title for the storm settings
-      'title'       => 'Storm dashboard',
+      'title'       => t('Storm dashboard'),
       // description: Required. Description for the fieldset in the storm settings
       'description' => t('You can disable or reorder the links from the !dashboard here', array('!dashboard' => l(t('dashboard'), 'storm'))),
       // theme: theme which should be used to display this dashboard. If omitted uses standard theme storm_dashboard
@@ -384,12 +384,12 @@ function storm_storm_dashboard_types() {
       // menu_options: This array will be merged into the default menu item array. If the menu should have special access arguments, title, it can be set here.
       // page callback and page argument shouldn't been overwritten.
       'menu_options' => array(
-        'title'       => 'Storm',
-        'description' => 'Storm dashboard',
+        'title'       => t('Storm'),
+        'description' => t('Storm dashboard'),
       ),
     ),
     'block' => array(
-      'title'       => 'Dashboard block',
+      'title'       => t('Dashboard block'),
       'description' => t('You can disable or reorder the links from the dashboard !block here', array('!block' => l(t('block'), 'admin/build/block'))),
       'theme'       => 'storm_dashboard_block',
     ),
