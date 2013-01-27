@@ -13,7 +13,7 @@ function storm_install() {
   variable_set('storm_icons_path', drupal_get_path('module', 'storm') .'/icons');
   variable_set('storm_organization_nid', 0);
   variable_set('storm_yearsrangebegin', 2001);
-  variable_set('storm_yearsrangeend', 2012);
+  variable_set('storm_yearsrangeend', 2015);
 }
 
 /**
