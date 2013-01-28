@@ -3,10 +3,12 @@
 /**
  * @file
  */
-function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
+function theme_stormnote_view($variables) {
+  $node = $variables['node'];
+  $view_mode = $variables['view_mode'];
+
   drupal_add_css(drupal_get_path('module', 'storm') . '/storm-node.css', 'module');
 
-  $node = node_prepare($node, $teaser);
   $l_pos = 1; // Used to increase the link position number (see issue 814820)
 
   $node->content['links'] = array(
@@ -24,21 +26,21 @@ function theme_stormnote_view($node, $teaser = FALSE, $page = FALSE) {
   $node->content['group1']['organization'] = array(
     '#prefix' => '<div class="organization">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Organization'), l($node->organization_title, 'node/'. $node->organization_nid)),
+    '#value' => theme('storm_view_item', array('label' => t('Organization'), 'value' => l($node->organization_title, 'node/'. $node->organization_nid))),
     '#weight' => 1,
   );
 
   $node->content['group1']['project'] = array(
     '#prefix' => '<div class="project">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Project'), l($node->project_title, 'node/'. $node->project_nid)),
+    '#value' => theme('storm_view_item', array('label' => t('Project'), 'value' => l($node->project_title, 'node/'. $node->project_nid))),
     '#weight' => 2,
   );
 
   $node->content['group1']['task'] = array(
     '#prefix' => '<div class="task">',
     '#suffix' => '</div>',
-    '#value' => theme('storm_view_item', t('Task'), l($node->task_title, 'node/'. $node->task_nid)),
+    '#value' => theme('storm_view_item', array('label' => t('Task'), 'value' => l($node->task_title, 'node/'. $node->task_nid))),
     '#weight' => 3,
   );
 

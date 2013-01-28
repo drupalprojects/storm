@@ -173,7 +173,7 @@ function stormnote_theme() {
   return array(
     'stormnote_view' => array(
       'file'      => 'stormnote.theme.inc',
-      'arguments' => array('node', 'teaser', 'page'),
+      'variables' => array('node', 'view_mode'),
     ),
   );
 }
@@ -376,22 +376,18 @@ function stormnote_ajax_project_nid(&$form, &$form_state) {
 function stormnote_insert($node) {
   _stormnote_beforesave($node);
 
-  db_query("INSERT INTO {stormnote}
-           (vid, nid,
-           organization_nid, organization_title,
-           project_nid, project_title,
-           task_nid, task_title
-           ) VALUES
-           (%d, %d,
-           %d, '%s',
-           %d, '%s',
-           %d, '%s'
-           )",
-            $node->vid, $node->nid,
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title
-            );
+  db_insert('stormnote')
+    ->fields(array(
+      'vid' => $node->vid,
+      'nid' => $node->nid,
+      'organization_nid' => $node->organization_nid,
+      'organization_title' => $node->organization_title,
+      'project_nid' => $node->project_nid,
+      'project_title' => $node->project_title,
+      'task_nid' => $node->task_nid,
+      'task_title' => $node->task_title,
+    ))
+    ->execute();
 }
 
 function stormnote_update($node) {
@@ -401,63 +397,88 @@ function stormnote_update($node) {
     stormnote_insert($node);
   }
   else {
-    db_query("UPDATE {stormnote} SET
-            organization_nid=%d, organization_title='%s',
-            project_nid=%d, project_title='%s',
-            task_nid=%d, task_title='%s'
-            WHERE vid = %d",
-            $node->organization_nid, $node->organization_title,
-            $node->project_nid, $node->project_title,
-            $node->task_nid, $node->task_title,
-            $node->vid);
+    db_update('stormnote')
+      ->fields(array(
+        'organization_nid' => $node->organization_nid,
+        'organization_title' => $node->organization_title,
+        'project_nid' => $node->project_nid,
+        'project_title' => $node->project_title,
+        'task_nid' => $node->task_nid,
+        'task_title' => $node->task_title,
+      ))
+      ->condition('vid', $node->vid)
+      ->execute();
   }
 }
 
 function _stormnote_beforesave(&$node) {
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormorganization} o ON n.nid=o.nid
-        WHERE type='stormorganization' AND n.nid=%d";
-  $r = db_query($s, $node->organization_nid);
-  $o = db_fetch_object($r);
-  $node->organization_title = $o->title;
+  $org_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormorganization')
+    ->condition('n.nid', $node->organization_nid)
+    ->execute();
+  $organization = $org_result->fetchObject();
+  $node->organization_title = $organization->title;
 
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormproject} p ON n.nid=p.nid
-        WHERE type='stormproject' AND n.nid=%d";
-  $r = db_query($s, $node->project_nid);
-  $p = db_fetch_object($r);
-  $node->project_title = isset($p->title) ? $p->title : '';
+  $pro_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormproject')
+    ->condition('n.nid', $node->project_nid)
+    ->execute();
+  $project = $pro_result->fetchObject();
+  $node->project_title = isset($project->title) ? $project->title : '';
 
-  $s = "SELECT n.title FROM {node} n INNER JOIN {stormtask} p ON n.nid=p.nid
-        WHERE type='stormtask' AND n.nid=%d";
-  $r = db_query($s, $node->task_nid);
-  $t = db_fetch_object($r);
-  $node->task_title = isset($t->title) ? $t->title : '';
+  $task_result = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('n.type', 'stormtask')
+    ->condition('n.nid', $node->task_nid)
+    ->execute();
+  $task = $task_result->fetchObject();
+  $node->task_title = isset($task->title) ? $task->title : '';
 }
 
 function stormnote_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'delete revision':
       // Notice that we're matching a single revision based on the node's vid.
-      db_query('DELETE FROM {stormnote} WHERE vid = %d', $node->vid);
+      db_delete('stormnote')
+        ->condition('vid', $node->vid)
+        ->execute();
       break;
   }
 }
 
 function stormnote_delete($node) {
-  db_query('DELETE FROM {stormnote} WHERE nid = %d', $node->nid);
+  db_delete('stormnote')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
-function stormnote_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {stormnote} WHERE vid = %d', $node->vid));
-  return $additions;
+function stormnote_load($nodes) {
+  foreach ($nodes as $nid => &$node) {
+    $result = db_select('stormnote', 'sno')
+      ->fields('sno')
+      ->condition('sno.vid', $node->vid)
+      ->execute();
+    $record = $result->fetchAssoc();
+
+    foreach ($record as $key => $value) {
+      $node->$key = $value;
+    }
+
+    $node->title_old = $node->title;
+  }
 }
 
-function stormnote_view($node, $teaser = FALSE, $page = FALSE) {
-  $breadcrumb = array();
-  $breadcrumb[] = l(t('Storm'), 'storm');
-  $breadcrumb[] = l(t('Notes'), 'storm/notes');
-  drupal_set_breadcrumb($breadcrumb);
+function stormnote_view($node, $view_mode = 'full') {
+  if ($view_mode = 'full') {
+    $breadcrumb = array();
+    $breadcrumb[] = l(t('Storm'), 'storm');
+    $breadcrumb[] = l(t('Notes'), 'storm/notes');
+    drupal_set_breadcrumb($breadcrumb);
+  }
 
-  return theme('stormnote_view', $node, $teaser = FALSE, $page = FALSE);
+  return theme('stormnote_view', array('node' => $node, 'view_mode' => $view_mode));
 }
 
 function stormnote_views_api() {
