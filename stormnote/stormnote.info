@@ -1,9 +1,0 @@
-name = Storm Note
-description = "Allows creation of notes about organizations, projects or tasks."
-dependencies[] = views
-dependencies[] = storm
-dependencies[] = stormorganization
-dependencies[] = stormproject
-dependencies[] = stormtask
-package = Storm
-core = 7.x

@@ -1,9 +1,0 @@
-name = Storm Ticket
-description = "Allows creation of tickets for Storm Projects and Tasks"
-dependencies[] = storm
-dependencies[] = stormorganization
-dependencies[] = stormproject
-dependencies[] = stormtask
-package = Storm
-core = 7.x
-files[] = stormticket.test

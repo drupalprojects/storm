@@ -1,8 +1,0 @@
-name = Storm Organization
-description = "Allows storing of organizations for use within Storm"
-dependencies[] = storm
-dependencies[] = views
-package = Storm
-core = 7.x
-configure = admin/config/storm/stormorganization
-files[] = stormorganization.test

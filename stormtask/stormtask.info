@@ -1,8 +1,0 @@
-name = Storm Task
-description = "Allows recording of tasks for Storm Organizations and Projects"
-dependencies[] = storm
-dependencies[] = stormorganization
-dependencies[] = stormproject
-package = Storm
-core = 7.x
-files[] = stormtask.test
