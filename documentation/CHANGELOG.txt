@@ -1,6 +1,8 @@
 ** New issues added should be added at the TOP of the list for each version as they are committed. **
 
 Version 6.x-2.x:
+- Bug #1879254 by juliangb | christopher.boss: Fixed Allow dashboard title to use string overrides.
+- Task #1894816 by juliangb | BrdNLSrg: Change default end year to 2013.
 - Feature #1817840 by willwh: Add drush command for reinstalling Storm.
 
 Version 6.x-2.1:
