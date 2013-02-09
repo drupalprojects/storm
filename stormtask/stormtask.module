@@ -503,6 +503,7 @@ function stormtask_form(&$node) {
     $projects[$project->nid] = $project->title;
     if (!isset($node->project_nid)) $node->project_nid = $project->nid;
   }
+  if (!isset($node->project_nid)) $node->project_nid = NULL;
   $form['group1']['project_nid'] = array(
     '#type' => 'select',
     '#title' => t('Project'),
