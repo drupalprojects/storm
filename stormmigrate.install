@@ -24,23 +24,28 @@ function stormmigrate_requirements($phase) {
 }
 
 /**
- * Implements hook_install().
+ * Implements hook_enable().
  */
-function stormmigrate_install() {
+function stormmigrate_enable() {
 
   // @todo Rename content types
 
   // Rename variables.
   $variables = array(
     // 'storm' => 'pm', // Example
+    'storm_icons_path' => 'pm_icons_path',
+    'storm_organization_nid' => 'pm_organization_nid',
+    'storm_report_header' => 'pm_report_header',
+    'storm_yearsrangebegin' => 'pm_yearsrangebegin',
+    'storm_yearsrangeend' => 'pm_yearsrangeend',
   );
   foreach ($variables as $old => $new) {
     _stormmigrate_variable_rename($old, $new);
   }
 
   // Change icon location, but only if the default setting has not been changed.
-  if (strstr(variable_get('pm_icons_display'), 'modules/storm/icons') <> FALSE) {
-    variable_set('pm_icons_display', drupal_get_path('module', 'pm') . '/icons');
+  if (strstr(variable_get('pm_icons_path'), 'modules/storm/icons') <> FALSE) {
+    variable_set('pm_icons_path', drupal_get_path('module', 'pm') . '/icons');
   }
 
   // @todo Check which Storm modules were enabled in system table.
@@ -54,7 +59,7 @@ function stormmigrate_install() {
 function _stormmigrate_variable_rename($old, $new) {
   $var = variable_get($old);
 
-  if ($var <> NULL) {
+  if ($var !== NULL) {
     variable_set($new, $var);
     variable_del($old);
     return TRUE;
