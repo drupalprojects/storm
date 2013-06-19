@@ -1,0 +1,65 @@
+<?php
+/**
+ * Installation functions for the Storm Migrate module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function stormmigrate_requirements($phase) {
+  $error_no_pm = (drupal_get_filename('module', 'pm') === NULL);
+  $error_pm_installed = (drupal_get_installed_schema_version('pm', TRUE) <> SCHEMA_UNINSTALLED);
+  $error_storm_present = (drupal_get_filename('module', 'storm') <> NULL);
+
+  $error = $error_no_pm || $error_pm_installed || $error_storm_present;
+
+  return array(
+    'pm' => array(
+      'title' => 'Storm Migrate',
+      'value' => $error ? ($error_pm_installed ? 'Project Management already installed. Uninstall and try again' : ($error_storm_present ? 'Storm files are stil present. Delete and try again' : 'Project Management files are not present. Download and try again.')) : 'Everything is OK',
+      'description' => 'In order for the Storm Migrate module to function correctly, you must first download (but NOT enable or install) the Project Management modules from http://drupal.org/project/pm. The previous Storm modules (apart from the Storm Migrate module) must be removed from the file system.',
+      'severity' => $error ? REQUIREMENT_ERROR : REQUIREMENT_OK,
+    )
+  );
+}
+
+/**
+ * Implements hook_install().
+ */
+function stormmigrate_install() {
+
+  // @todo Rename content types
+
+  // Rename variables.
+  $variables = array(
+    // 'storm' => 'pm', // Example
+  );
+  foreach ($variables as $old => $new) {
+    _stormmigrate_variable_rename($old, $new);
+  }
+
+  // Change icon location, but only if the default setting has not been changed.
+  if (strstr(variable_get('pm_icons_display'), 'modules/storm/icons') <> FALSE) {
+    variable_set('pm_icons_display', drupal_get_path('module', 'pm') . '/icons');
+  }
+
+  // @todo Check which Storm modules were enabled in system table.
+  // @todo Copy latest schema information to Project Management rows in system table.
+  // @todo Enable relevant Project Management modules directly in system table.
+}
+
+/**
+ * Helper function to rename Drupal variables.
+ */
+function _stormmigrate_variable_rename($old, $new) {
+  $var = variable_get($old);
+
+  if ($var <> NULL) {
+    variable_set($new, $var);
+    variable_del($old);
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
