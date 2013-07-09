@@ -28,9 +28,7 @@ function stormmigrate_requirements($phase) {
  */
 function stormmigrate_enable() {
 
-  // @todo Rename content types
-
-  // Rename variables.
+  // Define the variables that need to be migrated.
   $variables = array(
     // 'storm' => 'pm', // Example
     'storm_icons_path' => 'pm_icons_path',
@@ -39,6 +37,8 @@ function stormmigrate_enable() {
     'storm_yearsrangebegin' => 'pm_yearsrangebegin',
     'storm_yearsrangeend' => 'pm_yearsrangeend',
   );
+
+  // Rename each variable.
   foreach ($variables as $old => $new) {
     _stormmigrate_variable_rename($old, $new);
   }
@@ -48,9 +48,77 @@ function stormmigrate_enable() {
     variable_set('pm_icons_path', drupal_get_path('module', 'pm') . '/icons');
   }
 
-  // @todo Check which Storm modules were enabled in system table.
-  // @todo Copy latest schema information to Project Management rows in system table.
-  // @todo Enable relevant Project Management modules directly in system table.
+  // Define the modules that need to be migrated.
+  $modules = array(
+    'storm' => 'pm',
+    'stormexpense' => 'pmexpense',
+    'storminvoice' => 'pminvoice',
+    'stormnote' => 'pmnote',
+    'stormorganization' => 'pmorganization',
+    'stormperson' => 'pmperson',
+    'stormproject' => 'pmproject',
+    'stormtask' => 'pmtask',
+    'stormteam' => 'pmteam',
+    'stormticket' => 'pmticket',
+    'stormtimetracking' => 'pmtimetracking',
+  );
+
+  // Act on each module individually.
+  foreach ($modules as $old => $new) {
+    // Move each node to the new content type name.
+    db_update('node')
+      ->fields(array('type' => $new))
+      ->condition('type', $old)
+      ->execute();
+
+    // Delete existing content type records.
+    // New records will be created when the new modules are enabled.
+    db_delete('node_type')
+      ->condition('type', $old)
+      ->execute();
+
+    // Find information on the old module from the system table.
+    $system_result = db_select('system', 'sys')
+      ->fields('sys')
+      ->condition('name', $old)
+      ->execute();
+
+    $system_record = $system_result->fetchObject();
+
+    if ($system_record) {
+      // Copy status and schema information to new module record
+      // We cannot tell exactly whether the previous modules were enabled,
+      //   so the assumption is that installed modules were also still enabled.
+      if ($system_record->schema_version <> -1) {
+        if (db_table_exists($old)) {
+          db_rename_table($old, $new);
+        }
+
+        db_update('system')
+          ->fields(array(
+            'status' => 1,
+            'schema_version' => $system_record->schema_version,
+          ))
+          ->condition('name', $new)
+          ->execute();
+      }
+    }
+  }
+
+  // Rename some tables where the name is not also the name of a module.
+  if (db_table_exists('stormattribute')) {
+    db_rename_table('stormattribute', 'pmattribute');
+  }
+/*  if (db_table_exists($old)) {
+    db_rename_table($old, $new);
+  }*/
+
+  // Self destruct. The site owner could now delete the Storm folder.
+  module_disable(array('stormmigrate'), FALSE);
+
+  // Clear all caches.
+  // The site owner should also do this again manually via the UI.
+  drupal_flush_all_caches();
 }
 
 /**
