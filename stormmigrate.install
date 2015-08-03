@@ -109,6 +109,9 @@ function stormmigrate_enable() {
   if (db_table_exists('stormattribute')) {
     db_rename_table('stormattribute', 'pmattribute');
   }
+  if (db_table_exists('storminvoice_items')) {
+    db_rename_table('storminvoice_items', 'pminvoice_items');
+  }
 /*  if (db_table_exists($old)) {
     db_rename_table($old, $new);
   }*/
